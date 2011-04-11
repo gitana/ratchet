@@ -1,4 +1,4 @@
-MVC.TilesRegistry.register({
+Ratchet.TilesRegistry.register({
 
     "main": {
         "template": "layouts/main.html",

@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Gitana MVC - Example #5</title>
+        <title>Gitana Ratchet MVC - Example #5</title>
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
@@ -35,19 +35,34 @@
 
             $(document).ready(function() {
 
-                // instantiate MVC
-                var mvc = new MVC.Dispatcher({
+                // MVC configuration
+                var config = {};
 
-                    // register any controllers
-                    "controllers": [],
+                // EXAMPLE: this is how you would define a controller mapping through configuration
+                /*
+                config.controllers = [];
+                config.controllers.push({
+                    "method": "GET",
+                    "uri": "/",
+                    "controller": "index",
+                    "handler": "index"
+                };
+                */
 
-                    // register any view resolver
-                    "viewResolvers": ["tiles"]
-
+                // map every view to the tiles view resolver
+                config.viewResolvers = [];
+                config.viewResolvers.push({
+                    "uri": "**",
+                    "viewResolver": "tiles",
+                    "handler": "tiles"
                 });
 
-                // start it up
-                mvc.get("/");
+                // instantiate MVC and start it up
+                var ratchet = new Ratchet.Dispatcher(config);
+                ratchet.get("/");
+
+                // or use jquery
+                //$(document.body).ratchet(config).get("/");
             });
 
         </script>

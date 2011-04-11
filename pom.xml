@@ -26,6 +26,7 @@
 							<jsSourceDir>/js</jsSourceDir>
 							<jsSourceFiles>
 
+                                <!-- Ratchet Core -->
 								<param>../js_src/license.js</param>
 								<param>../js_src/thirdparty/base.js</param>
                                 <param>../js_src/thirdparty/json2.js</param>
@@ -39,9 +40,11 @@
                                 <param>../js_src/ViewResolverRegistry.js</param>
                                 <param>../js_src/ViewResolver.js</param>
 
+                                <!-- Ratchet Tiles Support -->
                                 <param>../js_src/TilesRegistry.js</param>
                                 <param>../js_src/TilesViewResolver.js</param>
 
+                                <!-- jQuery Support -->
                                 <param>../js_src/jQueryAdapter.js</param>
 
 							</jsSourceFiles>

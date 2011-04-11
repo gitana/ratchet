@@ -1,21 +1,23 @@
 (function($)
 {
-    MVC.ControllerRegistry = {};
-    MVC.ControllerRegistry.registry = {};
+    Ratchet.ControllerRegistry = {};
+    Ratchet.ControllerRegistry.registry = {};
 
-    MVC.ControllerRegistry.register = function(id, classObject)
+    Ratchet.ControllerRegistry.register = function(id, classObject)
     {
-        MVC.ControllerRegistry.registry[id] = classObject;
+        Ratchet.ControllerRegistry.registry[id] = classObject;
     };
 
-    MVC.ControllerRegistry.produce = function(id, dispatcher)
+    Ratchet.ControllerRegistry.produce = function(id, dispatcher)
     {
         var instance = null;
 
-        var classObject = MVC.ControllerRegistry.registry[id];
+        var classObject = Ratchet.ControllerRegistry.registry[id];
         if (classObject)
         {
             instance = new classObject(dispatcher);
+
+            instance.registerMappings();
         }
 
         return instance;

@@ -1,12 +1,16 @@
 (function($)
 {
-    MVC.Controller = MVC.Abstract.extend(
+    Ratchet.Controller = Ratchet.Abstract.extend(
     {
         constructor: function(dispatcher)
         {
             this.base();
 
             this.dispatcher = dispatcher;
+        },
+
+        registerMappings: function()
+        {
         },
 
         getDispatcher: function()

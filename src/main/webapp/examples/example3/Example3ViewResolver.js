@@ -1,11 +1,17 @@
 (function($)
 {
-    Example3ViewResolver = MVC.ViewResolver.extend(
+    Example3ViewResolver = Ratchet.ViewResolver.extend(
     {
         constructor: function(dispatcher)
         {
             this.base(dispatcher);
+        },
 
+        /**
+         * @override
+         */
+        registerMappings: function()
+        {
             // register views
             this.register("index", this.index);
             this.register("page", this.page);
@@ -30,6 +36,6 @@
 
     });
 
-    MVC.ViewResolverRegistry.register("example3", Example3ViewResolver);
+    Ratchet.ViewResolverRegistry.register("example3", Example3ViewResolver);
 
 })(jQuery);

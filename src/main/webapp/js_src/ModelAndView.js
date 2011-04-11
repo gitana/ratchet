@@ -1,20 +1,15 @@
 (function($)
 {
-    MVC.ModelAndView = MVC.Abstract.extend(
+    Ratchet.ModelAndView = Ratchet.Abstract.extend(
     {
         constructor: function()
         {
             this.base();
 
-            var model = {};
+            // private variables
             var view = null;
             var tokens = {};
             var data = null;
-
-            this._getModel = function()
-            {
-                return model;
-            };
 
             this._getView = function()
             {
@@ -45,21 +40,6 @@
             {
                 data = d;
             };
-        },
-
-        set: function(key, value)
-        {
-            this.getModel()[key] = value;
-        },
-
-        get: function(key)
-        {
-            return this.getModel()[key];
-        },
-
-        getModel: function()
-        {
-            return this._getModel();
         },
 
         getView: function()

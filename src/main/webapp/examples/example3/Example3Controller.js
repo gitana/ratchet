@@ -1,19 +1,25 @@
 (function($)
 {
-    Example3Controller = MVC.Controller.extend(
+    Example3Controller = Ratchet.Controller.extend(
     {
         constructor: function(dispatcher)
         {
             this.base(dispatcher);
+        },
 
-            // registration using a tokenized handler
-
+        /**
+         * @override
+         */
+        registerMappings: function()
+        {
             this.register("/", "GET", "index");
+
+            // tokenized handler
             this.register("/pages/{page}", "GET", "page");
         }
 
     });
 
-    MVC.ControllerRegistry.register("example3", Example3Controller);
+    Ratchet.ControllerRegistry.register("example3", Example3Controller);
 
 })(jQuery);

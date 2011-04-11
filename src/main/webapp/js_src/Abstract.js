@@ -1,13 +1,13 @@
 (function(window)
 {
-    if (typeof MVC === "undefined")
+    if (typeof Ratchet === "undefined")
     {
         /** @namespace */
-        MVC = {};
-        MVC.uniqueIdCounter = 0;
+        Ratchet = {};
+        Ratchet.uniqueIdCounter = 0;
     }
 
-    MVC.Abstract = Base.extend(
+    Ratchet.Abstract = Base.extend(
     {
         constructor: function()
         {
@@ -130,8 +130,8 @@
 
             this.generateId = function()
             {
-                MVC.uniqueIdCounter++;
-                return "mvc-" + MVC.uniqueIdCounter;
+                Ratchet.uniqueIdCounter++;
+                return "ratchet-" + Ratchet.uniqueIdCounter;
             };
 
             this.isNode = function(o)
@@ -160,6 +160,6 @@
 
     });
 
-    window.MVC = MVC;
+    window.Ratchet = Ratchet;
 
 })(window);

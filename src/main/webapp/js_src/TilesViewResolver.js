@@ -1,21 +1,27 @@
 (function($)
 {
-    MVC.TilesViewResolver = MVC.ViewResolver.extend(
+    Ratchet.TilesViewResolver = Ratchet.ViewResolver.extend(
     {
         constructor: function(dispatcher)
         {
             this.base(dispatcher);
+        },
 
-            // take over all view mappings
-            this.register("**", this.tiles);
+        /**
+         * @override
+         */
+        registerMappings: function()
+        {
         },
 
         tiles: function(modelAndView)
         {
-            this.renderTemplate(modelAndView);
+            $(this.getEl()).html("");
+
+            this.renderTemplate(this.getEl(), modelAndView);
         },
 
-        renderTemplate: function(modelAndView)
+        renderTemplate: function(container, modelAndView)
         {
             var _this = this;
 
@@ -24,17 +30,14 @@
             var view = modelAndView.getView();
 
             // fetch the compiled definition
-            var definition = MVC.TilesRegistry.load(view);
+            var definition = Ratchet.TilesRegistry.load(view);
             if (definition)
             {
                 // store definition onto the model
                 modelAndView["tiles"] = definition;
 
-                // clear the element
-                $(_this.getEl()).html("");
-
                 // render the template (starting point)
-                this.renderTilesDefinition(_this.getEl(), modelAndView, definition, definition["template"]);
+                this.renderTilesDefinition(container, modelAndView, definition, definition["template"]);
             }
             else
             {
@@ -85,9 +88,9 @@
                 "success": function(html) {
 
                     // data model for template
-                    var data = {
-                        "model": modelAndView
-                    };
+                    // copy over properties from the model
+                    var data = {};
+                    _this.copyInto(data, modelAndView);
 
                     // clear out our container
                     $(container).html("");
@@ -118,8 +121,6 @@
                         {
                             var url = definition.attributes[attributeName];
 
-                            console.log(attributeName);
-
                             $.each($(container).find(".tile-" + attributeName), function() {
 
                                 _this.renderTilesDefinition($(this), modelAndView, null, url);
@@ -127,12 +128,25 @@
                             });
                         }
                     }
+
+                    // apply any other post-processing
+                    _this.postProcess(modelAndView);
                 }
             });
+        },
+
+        /**
+         * @EXTENSION POINT
+         *
+         * @param modelAndView
+         */
+        postProcess: function(modelAndView)
+        {
+
         }
 
     });
 
-    MVC.ViewResolverRegistry.register("tiles", MVC.TilesViewResolver);
+    Ratchet.ViewResolverRegistry.register("tiles", Ratchet.TilesViewResolver);
 
 })(jQuery);

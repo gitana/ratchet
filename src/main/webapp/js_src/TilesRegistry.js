@@ -1,14 +1,14 @@
 (function($)
 {
-    MVC.TilesRegistry = {};
-    MVC.TilesRegistry.registry = {};
-    MVC.TilesRegistry.register = function(definitionsObject)
+    Ratchet.TilesRegistry = {};
+    Ratchet.TilesRegistry.registry = {};
+    Ratchet.TilesRegistry.register = function(definitionsObject)
     {
         for (var name in definitionsObject)
         {
             // TODO: check for duplicate declarations?
 
-            MVC.TilesRegistry.registry[name] = definitionsObject[name]
+            Ratchet.TilesRegistry.registry[name] = definitionsObject[name]
         }
     };
 
@@ -26,28 +26,34 @@
                 }
             }
         }
-     */
-    MVC.TilesRegistry.load = function(name)
-    {
-        var compiled = {};
 
-        var entry = MVC.TilesRegistry.registry[name];
-        MVC.TilesRegistry.compile(entry, compiled);
+     NOTE: it can come back null if no definition with this name found
+     */
+    Ratchet.TilesRegistry.load = function(name)
+    {
+        var compiled = null;
+
+        var entry = Ratchet.TilesRegistry.registry[name];
+        if (entry)
+        {
+            compiled = {};
+            Ratchet.TilesRegistry.compile(entry, compiled);
+        }
 
         return compiled;
     },
 
-    MVC.TilesRegistry.compile = function(entry, compiled)
+    Ratchet.TilesRegistry.compile = function(entry, compiled)
     {
         var parent = entry["extends"];
 
         if (parent)
         {
-            var parentEntry= MVC.TilesRegistry.registry[parent];
+            var parentEntry= Ratchet.TilesRegistry.registry[parent];
             if (parentEntry)
             {
                 // recurse
-                MVC.TilesRegistry.compile(parentEntry, compiled);
+                Ratchet.TilesRegistry.compile(parentEntry, compiled);
             }
         }
 

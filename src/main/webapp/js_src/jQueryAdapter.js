@@ -1,11 +1,11 @@
 (function($)
 {
-    //$.mvc = MVC.Dispatcher;
+    $.ratchet = Ratchet.Dispatcher;
 
-    $.fn.mvc = function() {
+    $.fn.ratchet = function(config) {
 
         // instantate the console on top of the "this" jQuery element
-        return new MVC.Dispatcher(this);
+        return new Ratchet.Dispatcher(this, config);
 
     };
 

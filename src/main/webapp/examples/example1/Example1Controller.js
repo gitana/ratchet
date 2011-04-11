@@ -1,29 +1,32 @@
 (function($)
 {
-    Example1Controller = MVC.Controller.extend(
+    Example1Controller = Ratchet.Controller.extend(
     {
         constructor: function(dispatcher)
         {
             this.base(dispatcher);
-
-            // register a handler for the "/" path
-            this.register("/", "GET", this.index);
         },
 
         /**
          * @override
          */
-        index: function(modelAndView, onSuccess, onFailure)
+        registerMappings: function()
         {
-            modelAndView.set("title", "Welcome to the index page");
+            // register a handler for the "/" path
+            this.register("/", "GET", this.index);
+        },
+
+        index: function(modelAndView)
+        {
+            modelAndView["title"] = "Welcome to the index page";
             modelAndView.setView("index");
 
             // render the view
-            this.renderView(modelAndView, onSuccess, onFailure);
+            this.renderView(modelAndView);
         }
 
     });
 
-    MVC.ControllerRegistry.register("example1", Example1Controller);
+    Ratchet.ControllerRegistry.register("example1", Example1Controller);
 
 })(jQuery);

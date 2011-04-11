@@ -1,9 +1,9 @@
 (function($)
 {
-    MVC.Dispatcher = MVC.Abstract.extend(
+    Ratchet.Dispatcher = Ratchet.Abstract.extend(
     {
         /**
-         * Instantiates the MVC dispatcher.
+         * Instantiates the Ratchet dispatcher.
          *
          * @param [DOMElement] el the dom element to bind to
          * @param [Object] options any options
@@ -49,8 +49,15 @@
             // controller mappings
             this.controllerMappings = {};
 
-            // view mappings
-            this.viewMappings = {};
+            // view resolver mappings
+            this.viewResolverMappings = {};
+
+            // controller instances
+            this.controllerInstances = {};
+
+            // view resolver instances
+            this.viewResolverInstances = {};
+
 
             /**
              * Called with a matcher like: /pages/{page}/components/{component}
@@ -201,16 +208,16 @@
                 return wrappedHandler;
             };
 
-            // find a matching view for a uri
-            this.matchView = function(modelAndView)
+            // find a matching view resolver for a uri
+            this.matchViewResolver = function(modelAndView)
             {
                 _this.debug("Looking for view (uri=" + modelAndView.getView() + ")");
 
                 // walk through the view mappings and find the one that matches
                 var found = null;
-                for (var mapping in _this.viewMappings)
+                for (var mapping in _this.viewResolverMappings)
                 {
-                    var entry = _this.viewMappings[mapping];
+                    var entry = _this.viewResolverMappings[mapping];
 
                     var tokens = _this.executeMatch(entry.uri, modelAndView.getView());
                     if (tokens)
@@ -258,7 +265,7 @@
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // build model and view
-                var modelAndView = new MVC.ModelAndView();
+                var modelAndView = new Ratchet.ModelAndView();
                 modelAndView.setData(data);
 
                 // find the controller handler method that matches this uri
@@ -297,36 +304,87 @@
         {
             var _this = this;
 
-            if (!this.options.controllers)
+            // instantiate all of the controllers
+            $.each(Ratchet.ControllerRegistry.registry, function(id, classObject)
             {
-                // register all controllers
-                $.each(MVC.ControllerRegistry.registry, function(id, classObject)
-                {
-                    MVC.ControllerRegistry.produce(id, _this);
-                });
-            }
-            else
+                var instance = Ratchet.ControllerRegistry.produce(id, _this);
+                _this.controllerInstances[id] = instance;
+            });
+
+            // instantiate all of the view resolvers
+            $.each(Ratchet.ViewResolverRegistry.registry, function(id, classObject)
             {
-                // register the specified controllers
-                $.each(this.options.controllers, function(index, id)
-                {
-                    MVC.ControllerRegistry.produce(id, _this);
+                var instance = Ratchet.ViewResolverRegistry.produce(id, _this);
+                _this.viewResolverInstances[id] = instance;
+            });
+
+            // set up any configuration mappings for controllers
+            if (this.options.controllers)
+            {
+                $.each(this.options.controllers, function(index, o) {
+
+                    var controllerId = o.controller;
+
+                    // get the controller instance
+                    var controllerInstance = _this.controllerInstances[controllerId];
+                    if (controllerInstance)
+                    {
+                        // convention
+                        var handlerId = o.handler;
+                        if (!handlerId)
+                        {
+                            handlerId = controllerId;
+                        }
+
+                        var handler = controllerInstance[handlerId];
+                        if (handler)
+                        {
+                            _this.mapController(controllerInstance, o.uri, o.method, handler);
+                        }
+                        else
+                        {
+                            _this.debug("Cannot find handler method: " + handlerId + " on controller instance: " + controllerId);
+                        }
+                    }
+                    else
+                    {
+                        _this.debug("Cannot find controller instance: " + controllerId);
+                    }
                 });
             }
 
-            // register all view resolvers
-            if (!this.options.viewResolvers)
+            // set up any configuration mappings for view resolvers
+            if (this.options.viewResolvers)
             {
-                $.each(MVC.ViewResolverRegistry.registry, function(id, classObject)
-                {
-                    MVC.ViewResolverRegistry.produce(id, _this);
-                });
-            }
-            else
-            {
-                $.each(this.options.viewResolvers, function(index, id)
-                {
-                    MVC.ViewResolverRegistry.produce(id, _this);
+                $.each(this.options.viewResolvers, function(index, o) {
+
+                    var viewResolverId = o.viewResolver;
+
+                    // get the view resolver instance
+                    var viewResolverInstance = _this.viewResolverInstances[viewResolverId];
+                    if (viewResolverInstance)
+                    {
+                        // convention
+                        var handlerId = o.handler;
+                        if (!handlerId)
+                        {
+                            handlerId = viewResolverId;
+                        }
+
+                        var handler = viewResolverInstance[handlerId];
+                        if (handler)
+                        {
+                            _this.mapViewResolver(viewResolverInstance, o.uri, handler)
+                        }
+                        else
+                        {
+                            _this.debug("Cannot find handler method: " + handlerId + " on view resolver instance: " + viewResolverId);
+                        }
+                    }
+                    else
+                    {
+                        _this.debug("Cannot find view resolver instance: " + viewResolverId);
+                    }
                 });
             }
 
@@ -385,11 +443,11 @@
          * @param uri
          * @param handler
          */
-        mapView: function(that, uri, handler)
+        mapViewResolver: function(that, uri, handler)
         {
             var mappingId = "mapping-" + this.generateId();
 
-            this.viewMappings[mappingId] = {
+            this.viewResolverMappings[mappingId] = {
                 "uri": uri,
                 "handler": handler,
                 "that": that
@@ -460,7 +518,7 @@
         renderView: function(modelAndView)
         {
             // find the view handler method that matches this uri
-            var wrappedHandler = this.matchView(modelAndView);
+            var wrappedHandler = this.matchViewResolver(modelAndView);
             if (wrappedHandler)
             {
                 wrappedHandler();

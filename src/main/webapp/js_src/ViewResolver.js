@@ -1,12 +1,16 @@
 (function($)
 {
-    MVC.ViewResolver = MVC.Abstract.extend(
+    Ratchet.ViewResolver = Ratchet.Abstract.extend(
     {
         constructor: function(dispatcher)
         {
             this.base();
 
             this.dispatcher = dispatcher;
+        },
+
+        registerMappings: function()
+        {
         },
 
         getDispatcher: function()
@@ -21,7 +25,7 @@
 
         register: function(uri, handler)
         {
-            this.getDispatcher().mapView(this, uri, handler);
+            this.getDispatcher().mapViewResolver(this, uri, handler);
         }
 
         /**

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Gitana MVC - Example #5</title>
+
+        <!-- jquery -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
+        <!-- <script type="text/javascript" src="/js_src/thirdparty/jquery.tmplPlus.js"></script> -->
+
+        <!-- mvc -->
+        <script type="text/javascript" src="/js_src/license.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
+        <script type="text/javascript" src="/js_src/Abstract.js"></script>
+        <script type="text/javascript" src="/js_src/Dispatcher.js"></script>
+        <script type="text/javascript" src="/js_src/ModelAndView.js"></script>
+        <script type="text/javascript" src="/js_src/ControllerRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/Controller.js"></script>
+        <script type="text/javascript" src="/js_src/ViewResolverRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/ViewResolver.js"></script>
+        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
+
+        <!-- include support for tiles -->
+        <script type="text/javascript" src="/js_src/TilesRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/TilesViewResolver.js"></script>
+
+        <!-- include tiles definitions -->
+        <script type="text/javascript" src="/examples/example5/tiles.js"></script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function() {
+
+                // instantiate MVC
+                var mvc = new MVC.Dispatcher({
+
+                    // register any controllers
+                    "controllers": [],
+
+                    // register any view resolver
+                    "viewResolvers": ["tiles"]
+
+                });
+
+                // start it up
+                mvc.get("/");
+            });
+
+        </script>
+    </head>
+
+    <body>
+    </body>
+</html>
+

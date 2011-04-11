@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.gitana</groupId>
+	<artifactId>ratchet</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>Ratchet MVC</name>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>maven-minify-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>ratchet-minify</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+						<configuration>
+							<jsSourceDir>/js</jsSourceDir>
+							<jsSourceFiles>
+
+								<param>../js_src/license.js</param>
+								<param>../js_src/thirdparty/base.js</param>
+                                <param>../js_src/thirdparty/json2.js</param>
+                                <param>../js_src/thirdparty/jquery.history.js</param>
+                                <param>../js_src/thirdparty/jquery.tmpl-beta.js</param>
+                                <param>../js_src/Abstract.js</param>
+                                <param>../js_src/Dispatcher.js</param>
+                                <param>../js_src/ModelAndView.js</param>
+                                <param>../js_src/ControllerRegistry.js</param>
+                                <param>../js_src/Controller.js</param>
+                                <param>../js_src/ViewResolverRegistry.js</param>
+                                <param>../js_src/ViewResolver.js</param>
+
+                                <param>../js_src/TilesRegistry.js</param>
+                                <param>../js_src/TilesViewResolver.js</param>
+
+                                <param>../js_src/jQueryAdapter.js</param>
+
+							</jsSourceFiles>
+							<jsFinalFile>ratchet-${project.version}.js</jsFinalFile>
+							<linebreak>-1</linebreak>
+							<nomunge>false</nomunge>
+							<verbose>true</verbose>
+							<preserveAllSemiColons>false</preserveAllSemiColons>
+							<disableOptimizations>false</disableOptimizations>
+							<bufferSize>4096</bufferSize>
+						</configuration>
+					</execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>license</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<target>
+						<!-- Update the minified file to include license information -->
+						<concat
+							destfile="${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.updated.js"
+							fixlastline="yes">
+							<filelist dir="."
+								files="src/main/webapp/js_src/license.js ${project.build.directory}/${project.build.finalName}/ratchet/js/ratchet-${project.version}.min.js" />
+						</concat>
+						<delete
+							file="${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.js" />
+						<move
+							file="${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.updated.js"
+							tofile="${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.js" />
+
+						<!-- Copy other directories into place -->
+						<copy
+							todir="${project.build.directory}/${project.build.finalName}">
+							<fileset dir="src/main/webapp">
+								<exclude name="css/**/*.css" />
+								<exclude name="js/**/*.js" />
+								<exclude name="css_src/**/*.css" />
+								<exclude name="js_src/**/*.js" />
+							</fileset>
+						</copy>
+					</target>
+				</configuration>
+			</plugin>		
+			<!-- Jetty Plugin for smoke screen tests -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>7.0.1.v20091125</version>
+				<configuration>
+					<scanIntervalSeconds>1</scanIntervalSeconds>
+					<stopPort>9977</stopPort>
+					<stopKey>foo</stopKey>
+					<webAppConfig>
+						<contextPath>/</contextPath>
+					</webAppConfig>
+					<connectors>
+						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+							<port>8280</port>
+						</connector>
+					</connectors>
+					<scanTargets>
+						<scanTarget>src/main/webapp</scanTarget>
+					</scanTargets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

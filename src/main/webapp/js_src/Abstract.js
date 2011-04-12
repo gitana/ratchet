@@ -154,7 +154,15 @@
                 {
                     console.log(str);
                 }
-            }
+            };
+
+            this.error = function(str)
+            {
+                if (!this.isUndefined(console))
+                {
+                    console.error(str);
+                }
+            };
 
         }
 

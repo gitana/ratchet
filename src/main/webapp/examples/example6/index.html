@@ -3,16 +3,19 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Gitana Ratchet MVC - Example #1</title>
+        <title>Gitana Ratchet MVC - Example #6</title>
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
         <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
+        <!-- <script type="text/javascript" src="/js_src/thirdparty/jquery.tmplPlus.js"></script> -->
 
         <!-- mvc -->
         <script type="text/javascript" src="/js_src/license.js"></script>
         <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
         <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
         <script type="text/javascript" src="/js_src/Abstract.js"></script>
         <script type="text/javascript" src="/js_src/Dispatcher.js"></script>
         <script type="text/javascript" src="/js_src/ModelAndView.js"></script>
@@ -27,14 +30,17 @@
         <script type="text/javascript" src="/js_src/ObservationPool.js"></script>
 
         <!-- examples -->
-        <script type="text/javascript" src="Example1Controller.js"></script>
-        <script type="text/javascript" src="Example1ViewResolver.js"></script>
+        <script type="text/javascript" src="Example6Controller.js"></script>
+        <script type="text/javascript" src="Example6ViewResolver.js"></script>
+        <script type="text/javascript" src="FormGadget.js"></script>
+        <script type="text/javascript" src="PropertiesGadget.js"></script>
 
+        <!-- work it -->
         <script type="text/javascript">
 
             $(document).ready(function() {
 
-                $("#example").ratchet().get("#/");
+                $(document).ratchet().get("/");
 
             });
 
@@ -42,7 +48,18 @@
     </head>
 
     <body>
-        <div id="example"></div>
+
+        <table>
+            <tr>
+                <td width="50%">
+                    <span gadget="form"></span>
+                </td>
+                <td width="50%">
+                    <span gadget="properties"></span>
+                </td>
+            </tr>
+        </table>
+
     </body>
 </html>
 

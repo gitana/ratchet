@@ -46,18 +46,19 @@
             // public properties
             this.VERSION = "0.1.0";
 
-            // controller mappings
+            // controller stuff
             this.controllerMappings = {};
-
-            // view resolver mappings
-            this.viewResolverMappings = {};
-
-            // controller instances
             this.controllerInstances = {};
 
-            // view resolver instances
+            // view resolver stuff
+            this.viewResolverMappings = {};
             this.viewResolverInstances = {};
 
+            // gadget stuff
+            this.gadgetInstances = {};
+
+            // observation pool
+            this.observationPool = new Ratchet.ObservationPool();
 
             /**
              * Called with a matcher like: /pages/{page}/components/{component}
@@ -249,6 +250,8 @@
             // dispatch
             this.dispatch = function(config)
             {
+                console.log("METHOD: " + config.method);
+
                 var method = config.method;
                 var uri = config.uri;
                 var data = config.data;
@@ -265,7 +268,7 @@
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // build model and view
-                var modelAndView = new Ratchet.ModelAndView();
+                var modelAndView = new Ratchet.ModelAndView(_this.observationPool);
                 modelAndView.setData(data);
 
                 // find the controller handler method that matches this uri
@@ -387,6 +390,7 @@
                     }
                 });
             }
+
 
             // history support
             $.history.init(function(hash) {
@@ -523,7 +527,13 @@
             {
                 wrappedHandler();
             }
+        },
+
+        instantiateGadget: function(id, container)
+        {
+            return Ratchet.GadgetRegistry.produce(id, this, container);
         }
+
     });
 
 })(jQuery);

@@ -27,21 +27,6 @@
         {
             this.getDispatcher().mapViewResolver(this, uri, handler);
         }
-
-        /**
-         * Handles the render of the view.
-         *
-         * @param uri
-         * @param method
-         * @param modelAndView
-         */
-        /*
-        handle: function(uri, modelAndView)
-        {
-            // TODO: override me
-        }
-        */
-
     });
 
 })(jQuery);

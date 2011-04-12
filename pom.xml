@@ -32,6 +32,7 @@
                                 <param>../js_src/thirdparty/json2.js</param>
                                 <param>../js_src/thirdparty/jquery.history.js</param>
                                 <param>../js_src/thirdparty/jquery.tmpl-beta.js</param>
+                                <param>../js_src/thirdparty/form2object.js</param>
                                 <param>../js_src/Abstract.js</param>
                                 <param>../js_src/Dispatcher.js</param>
                                 <param>../js_src/ModelAndView.js</param>

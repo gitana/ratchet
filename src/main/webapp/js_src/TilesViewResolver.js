@@ -25,8 +25,6 @@
         {
             var _this = this;
 
-            // get the view that we want to render
-            // we assume "index" for root paths
             var view = modelAndView.getView();
 
             // fetch the compiled definition
@@ -90,7 +88,7 @@
                     // data model for template
                     // copy over properties from the model
                     var data = {};
-                    _this.copyInto(data, modelAndView);
+                    //_this.copyInto(data, modelAndView.getVariables());
 
                     // clear out our container
                     $(container).html("");

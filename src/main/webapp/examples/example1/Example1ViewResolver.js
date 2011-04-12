@@ -18,7 +18,7 @@
 
         index: function(modelAndView)
         {
-            $(this.getEl()).html(modelAndView["title"]);
+            $(this.getEl()).html(modelAndView.observable("title").get());
         }
 
     });

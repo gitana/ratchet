@@ -18,11 +18,11 @@
 
         index: function(modelAndView)
         {
-            modelAndView["title"] = "Welcome to the index page";
+            modelAndView.observable("title", "Welcome to the index page");
             modelAndView.setView("index");
 
-            // render the view
-            this.renderView(modelAndView);
+            // end controller
+            this.endController(modelAndView);
         }
 
     });

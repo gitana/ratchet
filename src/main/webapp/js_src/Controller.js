@@ -31,7 +31,7 @@
             this.getDispatcher().mapController(this, uri, method, handler);
         },
 
-        renderView: function(modelAndView)
+        endController: function(modelAndView)
         {
             this.getDispatcher().renderView(modelAndView);
         },
@@ -46,10 +46,11 @@
             {
                 return function(modelAndView)
                 {
-                    console.log("Handing view: " + viewname);
-
+                    // set view name
                     modelAndView.setView(viewname);
-                    _this.renderView(modelAndView);
+
+                    // finish controller
+                    _this.endController(modelAndView);
                 };
             };
 

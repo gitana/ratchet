@@ -10,12 +10,12 @@
             this.base(ratchet, container);
 
             // custom registrations
-            this.route("/", "GET", this.view);
-            this.route("/test/{test1}/{test2}/{test3}", "GET", this.viewTest);
-            this.route("/wiki/**", "GET", this.viewWiki);
+            this.route("/", "GET", this.index);
+            this.route("/test/{test1}/{test2}/{test3}", "GET", this.test);
+            this.route("/wiki/**", "GET", this.wiki);
         },
 
-        view: function(context, model)
+        index: function(context, model)
         {
             $(this.getContainer()).html("Index");
             $(this.getContainer()).append("<br/>");
@@ -29,7 +29,7 @@
             this.success(context, model);
         },
 
-        viewTest: function(context, model)
+        test: function(context, model)
         {
             $(this.getContainer()).html("Tokens");
             $(this.getContainer()).append("<br>");
@@ -43,7 +43,7 @@
             this.success(context, model);
         },
 
-        viewWiki: function(context, model)
+        wiki: function(context, model)
         {
             $(this.getContainer()).html("Wiki Page");
             $(this.getContainer()).append("<br>");

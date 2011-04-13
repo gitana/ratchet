@@ -10,11 +10,11 @@
             this.base(ratchet, container);
 
             // custom registrations
-            this.route("/", "GET", this.view);
-            this.route("/pages/{page}", "GET", this.viewPage);
+            this.route("/", "GET", this.index);
+            this.route("/pages/{page}", "GET", this.page);
         },
 
-        view: function(context, model)
+        index: function(context, model)
         {
             $(this.getContainer()).html("Index");
             $(this.getContainer()).append("<br/>");
@@ -28,7 +28,7 @@
             this.success(context, model);
         },
 
-        viewPage: function(context, model)
+        page: function(context, model)
         {
             $(this.getContainer()).html("Page: " + model.getToken("page"));
 

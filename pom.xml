@@ -26,24 +26,21 @@
 							<jsSourceDir>/js</jsSourceDir>
 							<jsSourceFiles>
 
-                                <!-- Ratchet Core -->
-								<param>../js_src/license.js</param>
+                                <!-- third party -->
 								<param>../js_src/thirdparty/base.js</param>
                                 <param>../js_src/thirdparty/json2.js</param>
                                 <param>../js_src/thirdparty/jquery.history.js</param>
-                                <param>../js_src/thirdparty/jquery.tmpl-beta.js</param>
+                                <param>../js_src/thirdparty/jquery.tmpl.js</param>
                                 <param>../js_src/thirdparty/form2object.js</param>
-                                <param>../js_src/Abstract.js</param>
-                                <param>../js_src/Dispatcher.js</param>
-                                <param>../js_src/ModelAndView.js</param>
-                                <param>../js_src/ControllerRegistry.js</param>
-                                <param>../js_src/Controller.js</param>
-                                <param>../js_src/ViewResolverRegistry.js</param>
-                                <param>../js_src/ViewResolver.js</param>
 
-                                <!-- Ratchet Tiles Support -->
-                                <param>../js_src/TilesRegistry.js</param>
-                                <param>../js_src/TilesViewResolver.js</param>
+                                <!-- Ratchet Core -->
+                                <param>../js_src/Ratchet.js</param>
+                                <param>../js_src/Utils.js</param>
+                                <param>../js_src/Observable.js</param>
+                                <param>../js_src/ObservationPool.js</param>
+                                <param>../js_src/Model.js</param>
+                                <param>../js_src/Gadget.js</param>
+                                <param>../js_src/GadgetRegistry.js</param>
 
                                 <!-- jQuery Support -->
                                 <param>../js_src/jQueryAdapter.js</param>

@@ -7,72 +7,75 @@
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
-        <!-- <script type="text/javascript" src="/js_src/thirdparty/jquery.tmplPlus.js"></script> -->
 
-        <!-- mvc -->
-        <script type="text/javascript" src="/js_src/license.js"></script>
+        <!-- third party -->
         <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
         <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
-        <script type="text/javascript" src="/js_src/Abstract.js"></script>
-        <script type="text/javascript" src="/js_src/Dispatcher.js"></script>
-        <script type="text/javascript" src="/js_src/ModelAndView.js"></script>
-        <script type="text/javascript" src="/js_src/ControllerRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/Controller.js"></script>
-        <script type="text/javascript" src="/js_src/ViewResolverRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/ViewResolver.js"></script>
-        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
-        <script type="text/javascript" src="/js_src/Gadget.js"></script>
-        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
+
+        <!-- ratchet -->
+        <script type="text/javascript" src="/js_src/Ratchet.js"></script>
+        <script type="text/javascript" src="/js_src/Utils.js"></script>
         <script type="text/javascript" src="/js_src/Observable.js"></script>
         <script type="text/javascript" src="/js_src/ObservationPool.js"></script>
-
-        <!-- include support for tiles -->
-        <script type="text/javascript" src="/js_src/TilesRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/TilesViewResolver.js"></script>
-
-        <!-- include tiles definitions -->
-        <script type="text/javascript" src="/examples/example5/tiles.js"></script>
+        <script type="text/javascript" src="/js_src/Model.js"></script>
+        <script type="text/javascript" src="/js_src/Gadget.js"></script>
+        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
         <script type="text/javascript">
 
             $(document).ready(function() {
 
-                // MVC configuration
-                var config = {};
+                var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa. Integer ut purus ac augue commodo commodo. Nunc nec mi eu justo tempor consectetuer. Etiam vitae nisl. In dignissim lacus ut ante. Cras elit lectus, bibendum a, adipiscing vitae, commodo et, dui. Ut tincidunt tortor. Donec nonummy, enim in lacinia pulvinar, velit tellus scelerisque augue, ac posuere libero urna eget neque. Cras ipsum. Vestibulum pretium, lectus nec venenatis volutpat, purus lectus ultrices risus, a condimentum risus mi et quam. Pellentesque auctor fringilla neque. Duis eu massa ut lorem iaculis vestibulum. Maecenas facilisis elit sed justo. Quisque volutpat malesuada velit.";
 
-                // EXAMPLE: this is how you would define a controller mapping through configuration
-                /*
-                config.controllers = [];
-                config.controllers.push({
-                    "method": "GET",
-                    "uri": "/",
-                    "controller": "index",
-                    "handler": "index"
-                };
-                */
+                // section 1
+                $("#section1").ratchet(function() {
+                    this.route(this.container, "/", "GET", function() {
+                        $(this).html(lorem);
+                    })
+                }).get("/");
 
-                // map every view to the tiles view resolver
-                config.viewResolvers = [];
-                config.viewResolvers.push({
-                    "uri": "**",
-                    "viewResolver": "tiles",
-                    "handler": "tiles"
-                });
+                // section 2
+                $("#section2").ratchet(function() {
+                    this.route(this.container, "/", "GET", function() {
+                        $(this).html("<B>" + lorem + "</B>");
+                    })
+                }).get("/");
 
-                // instantiate MVC and start it up
-                var ratchet = new Ratchet.Dispatcher(config);
-                ratchet.get("/");
+                // section 3
+                $("#section3").ratchet(function() {
+                    this.route(this.container, "/", "GET", function() {
+                        $(this).html("<I>" + lorem + "</I>");
+                    })
+                }).get("/");
 
-                // or use jquery
-                //$(document.body).ratchet(config).get("/");
+                // section 4
+                $("#section4").ratchet(function() {
+                    this.route(this.container, "/", "GET", function() {
+                        $(this).html("<U>" + lorem + "</U>");
+                    })
+                }).get("/");
+
             });
 
         </script>
+
     </head>
 
     <body>
+        <table width="100%">
+            <tr>
+                <td id="section1"></td>
+                <td id="section2"></td>
+            </tr>
+            <tr>
+                <td id="section3"></td>
+                <td id="section4"></td>
+            </tr>
+        </table>
     </body>
 </html>
 

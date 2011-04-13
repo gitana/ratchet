@@ -7,59 +7,59 @@
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
-        <!-- <script type="text/javascript" src="/js_src/thirdparty/jquery.tmplPlus.js"></script> -->
 
-        <!-- mvc -->
-        <script type="text/javascript" src="/js_src/license.js"></script>
+        <!-- third party -->
         <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
         <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
         <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
-        <script type="text/javascript" src="/js_src/Abstract.js"></script>
-        <script type="text/javascript" src="/js_src/Dispatcher.js"></script>
-        <script type="text/javascript" src="/js_src/ModelAndView.js"></script>
-        <script type="text/javascript" src="/js_src/ControllerRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/Controller.js"></script>
-        <script type="text/javascript" src="/js_src/ViewResolverRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/ViewResolver.js"></script>
-        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
-        <script type="text/javascript" src="/js_src/Gadget.js"></script>
-        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+
+        <!-- ratchet -->
+        <script type="text/javascript" src="/js_src/Ratchet.js"></script>
+        <script type="text/javascript" src="/js_src/Utils.js"></script>
         <script type="text/javascript" src="/js_src/Observable.js"></script>
         <script type="text/javascript" src="/js_src/ObservationPool.js"></script>
+        <script type="text/javascript" src="/js_src/Model.js"></script>
+        <script type="text/javascript" src="/js_src/Gadget.js"></script>
+        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
         <!-- examples -->
-        <script type="text/javascript" src="Example6Controller.js"></script>
-        <script type="text/javascript" src="Example6ViewResolver.js"></script>
-        <script type="text/javascript" src="FormGadget.js"></script>
-        <script type="text/javascript" src="PropertiesGadget.js"></script>
+        <script type="text/javascript" src="gadgets/Application.js"></script>
+        <script type="text/javascript" src="gadgets/Form.js"></script>
+        <script type="text/javascript" src="gadgets/Properties.js"></script>
 
         <!-- work it -->
         <script type="text/javascript">
 
             $(document).ready(function() {
 
-                $(document).ratchet().get("/");
+                var app = new Ratchet($("#app"), function() {
 
+                    // TODO: any setup
+
+                });
+
+                // start it off
+                app.get("/");
             });
 
         </script>
     </head>
 
     <body>
-
-        <table>
-            <tr>
-                <td width="50%">
-                    <span gadget="form"></span>
-                </td>
-                <td width="50%">
-                    <span gadget="properties"></span>
-                </td>
-            </tr>
-        </table>
-
+        This example demonstrates observers.  There is a parent gadget with two child gadgets.
+        <br/>
+        Entering and submitting values in the form on the left causes the observers to be updated in the model.
+        <br/>
+        The gadget on the right listens for these updates and redraws.
+        <br/>
+        <br/>
+        <div id="app">
+            The application will render here.
+        </div>
     </body>
+
 </html>
 

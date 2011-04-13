@@ -1,11 +1,11 @@
 (function($)
 {
-    $.ratchet = Ratchet.Dispatcher;
+    $.ratchet = Ratchet;
 
-    $.fn.ratchet = function(config) {
+    $.fn.ratchet = function(func) {
 
         // instantate the console on top of the "this" jQuery element
-        return new Ratchet.Dispatcher(this, config);
+        return new Ratchet(this, func);
 
     };
 

@@ -1,6 +1,6 @@
 (function($)
 {
-    Ratchet.ObservationPool = Ratchet.Abstract.extend(
+    Ratchet.ObservationPool = Base.extend(
     {
         constructor: function()
         {
@@ -33,7 +33,7 @@
                 var observable = this.observable(id);
 
                 // wrap the model
-                var m = new Ratchet.ModelAndView(pool);
+                var m = new Ratchet.Model(pool);
                 m.observable = function(x, y)
                 {
                     var o = this._observable(x, y);
@@ -51,6 +51,11 @@
             }
 
             return this.observables[id];
+        },
+
+        getObservables: function()
+        {
+            return this.observables;
         },
 
         remove: function(id)

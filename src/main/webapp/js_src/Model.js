@@ -1,6 +1,6 @@
 (function($)
 {
-    Ratchet.ModelAndView = Ratchet.Abstract.extend(
+    Ratchet.Model = Base.extend(
     {
         constructor: function(observationPool)
         {
@@ -11,19 +11,8 @@
             this.observationPool = observationPool;
 
             // private variables
-            var view = null;
             var tokens = {};
             var data = null;
-
-            this._getView = function()
-            {
-                return view;
-            };
-
-            this._setView = function(v)
-            {
-                view = v;
-            };
 
             this._getTokens = function()
             {
@@ -55,6 +44,10 @@
                 return _this.observationPool.dependentObservable(id, func, pool);
             };
 
+            this._getObservables = function()
+            {
+                return _this.observationPool.getObservables();
+            };
         },
 
         observable: function(id, value)
@@ -67,14 +60,9 @@
             return this._dependentObservable(id, func, pool);
         },
 
-        getView: function()
+        getObservables: function()
         {
-            return this._getView();
-        },
-
-        setView: function(view)
-        {
-            this._setView(view);
+            return this._getObservables();
         },
 
         getToken: function(token)

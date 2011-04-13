@@ -1,7 +1,7 @@
 (function($)
 {
     Ratchet.ObservableID = 0;
-    Ratchet.Observable = Ratchet.Abstract.extend(
+    Ratchet.Observable = Base.extend(
     {
         constructor: function()
         {
@@ -12,22 +12,28 @@
             Ratchet.ObservableID++;
             this.id = "observable-" + Ratchet.ObservableID;
 
+            Ratchet.debug("created: " + this.id);
+
             this.value = null;
             this.subscribers = {};
 
             // array that contains observable whose value is dependent on our value
-            this.dependentOnUs = [];
+            this.dependentOnUs = {};
 
 
             // privileged functions
 
             this.notifySubscribers = function()
             {
-                _this.debug("Notifying subscribers for: " + this.id);
+                var count = 0;
+                $.each(this.subscribers, function() {
+                    count++;
+                });
+                Ratchet.debug("Notifying " + count + " subscribers for: " + this.id);
 
                 $.each(this.subscribers, function(id, handler) {
 
-                    _this.debug(" -> subscriber: " + id);
+                    Ratchet.debug(" -> subscriber: " + id);
 
                     handler(_this.value);
                 })
@@ -35,11 +41,15 @@
 
             this.notifyDependents = function()
             {
-                _this.debug("Notifying dependent observers for: " + this.id);
+                var count = 0;
+                $.each(this.dependentOnUs, function() {
+                    count++;
+                });
+                Ratchet.debug("Notifying " + count + " dependent observers for: " + this.id);
 
-                $.each(this.dependentOnUs, function(index, observer) {
+                $.each(this.dependentOnUs, function(key, observer) {
 
-                    _this.debug(" -> dependent observer: " + observer.id);
+                    Ratchet.debug(" -> dependent observer: " + key);
 
                     observer.onDependencyChange();
                 });
@@ -64,6 +74,8 @@
         subscribe: function(id, handler)
         {
             this.subscribers[id] = handler;
+
+            Ratchet.debug("SUBSCRIBE: " + id + " subscribed to observable: " + this.id);
         },
 
         unsubscribe: function(id)
@@ -73,7 +85,7 @@
 
         markDependentOnUs: function(observable)
         {
-            this.dependentOnUs.push(observable);
+            this.dependentOnUs[observable.id] = observable;
         },
 
         /**

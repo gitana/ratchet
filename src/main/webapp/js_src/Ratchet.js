@@ -59,6 +59,9 @@
             this.gadgetInstances = [];
             this.gadgetMappings = {};
 
+            // authentication filters
+            this.authRequiredPatterns = [];
+
             /**
              * Called with a matcher like: /pages/{page}/components/{component}
              * and text like: /pages/page1/components/component2
@@ -290,15 +293,24 @@
                     context.uri = context.uri.substring(1);
                 }
 
-                // find the controller handler method that matches this uri
-                var wrappedHandler = _this.findHandler(context);
-                if (wrappedHandler)
-                {
-                    // invoke the handler
-                    wrappedHandler();
-                }
+                _this.ensureAuthentication(context, function() {
+
+                    // find the controller handler method that matches this uri
+                    var wrappedHandler = _this.findHandler(context);
+                    if (wrappedHandler)
+                    {
+                        // invoke the handler
+                        wrappedHandler();
+                    }
+
+                }, function() {
+
+                    alert("Authentication failed - not authenticated");
+
+                });
             };
 
+            // init
             this.init();
         },
 
@@ -362,7 +374,6 @@
             {
                 var subGadgetType = $(this).attr("gadget");
 
-                // remove the special "gadget" attribute
                 $(this).removeAttr("gadget");
 
                 // instantiate a child ratchet on top of this element
@@ -513,7 +524,91 @@
             }
 
             return Ratchet.ScopedObservables.get(scope);
+        },
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // AUTHENTICATION
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        requireAuthentication: function(pattern)
+        {
+            this.authRequiredPatterns.push(pattern);
+        },
+
+        /**
+         * @extension_point
+         *
+         * Plug in authentication modal, fire callback when done.
+         *
+         * @param context
+         * @param successCallback
+         * @param failureCallback
+         */
+        ensureAuthentication: function(context, successCallback, failureCallback)
+        {
+            var _this = this;
+
+            // short cut
+            if (this.authRequiredPatterns.length == 0)
+            {
+                successCallback();
+            }
+
+            // walk the patterns and see if any trip
+            var tripped = false;
+            for (var i = 0; i < this.authRequiredPatterns.length; i++)
+            {
+                var pattern = this.authRequiredPatterns[i];
+
+                var tokens = this.executeMatch(pattern, context.uri);
+                if (tokens)
+                {
+                    tripped = true;
+                }
+            }
+
+            if (tripped)
+            {
+                // we require authentication
+                this.authenticate(context, function() {
+
+                    successCallback();
+
+                }, function() {
+
+                    failureCallback();
+
+                });
+            }
+            else
+            {
+                successCallback();
+            }
+        },
+
+        authenticate: function(context, successCallback, failureCallback)
+        {
+            // check whether they have existing authentication
+            if (typeof(AuthObject) === "undefined")
+            {
+                // Note: normally, you'd pop up a modal dialog here
+                alert("Close to authenticate");
+
+                // set authentication
+                AuthObject = true;
+
+                successCallback();
+            }
+            else
+            {
+                successCallback();
+            }
         }
+
 
     });
 

@@ -122,6 +122,8 @@
                 "dataType": "html",
                 "success": function(html)
                 {
+                    Ratchet.debug("Rendering template: " + view + " with model: " + Ratchet.stringify(model));
+
                     var form = $(html).tmpl(model);
                     $(_this.getContainer()).html("");
                     $(_this.getContainer()).append(form);
@@ -156,10 +158,7 @@
          */
         get: function(uri)
         {
-            this.getApplicationRatchet().dispatch({
-                "method": "GET",
-                "uri": uri
-            });
+            this.getApplicationRatchet().get(uri);
         },
 
         /**

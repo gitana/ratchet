@@ -38,6 +38,25 @@
                     // require authentication for any uris that matches this expression
                     this.requireAuthentication("/1b/2b/**");
 
+                    this.authenticate = function(context, successCallback, failureCallback)
+                    {
+                        // check whether they have existing authentication
+                        if (typeof(AuthObject) === "undefined")
+                        {
+                            // Note: normally, you'd pop up a modal dialog here
+                            alert("Close to authenticate");
+
+                            // set authentication
+                            AuthObject = true;
+
+                            successCallback();
+                        }
+                        else
+                        {
+                            successCallback();
+                        }
+                    };
+
                 }).get("/");
             });
 

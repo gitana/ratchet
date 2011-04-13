@@ -534,6 +534,11 @@
         //
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
+        /**
+         * Marks a URI patterns as requiring authentication.  Supports wildcards.
+         *
+         * @param pattern
+         */
         requireAuthentication: function(pattern)
         {
             this.authRequiredPatterns.push(pattern);
@@ -590,23 +595,20 @@
             }
         },
 
+        /**
+         * @extension_point
+         *
+         * This gets called when a decision is made to challenge the user for authentication.
+         * This method should first check whether authentication already exists and if so, just fire the callback.
+         *
+         * @param context
+         * @param successCallback
+         * @param failureCallback
+         */
         authenticate: function(context, successCallback, failureCallback)
         {
-            // check whether they have existing authentication
-            if (typeof(AuthObject) === "undefined")
-            {
-                // Note: normally, you'd pop up a modal dialog here
-                alert("Close to authenticate");
-
-                // set authentication
-                AuthObject = true;
-
-                successCallback();
-            }
-            else
-            {
-                successCallback();
-            }
+            // default logic, just fire back
+            successCallback();
         }
 
 

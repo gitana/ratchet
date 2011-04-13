@@ -55,8 +55,8 @@
             this.VERSION = "0.1.0";
 
             // gadget stuff
-            this.gadgetId = "application"; // assumed default
-            this.gadgetInstance = null;
+            this.gadgetType = "application"; // assumed default
+            this.gadgetInstances = [];
             this.gadgetMappings = {};
 
             /**
@@ -162,7 +162,7 @@
             // find a matching gadget for a uri and gadget scope
             this.findHandler = function(context)
             {
-                Ratchet.debug("Looking for gadget handler (id=" + _this.gadgetId + ", method=" + context.method + ", uri=" + context.uri + ")");
+                Ratchet.debug("Looking for gadget handler (type=" + _this.gadgetType + ", method=" + context.method + ", uri=" + context.uri + ")");
 
                 var handler = null;
                 var tokens = null;
@@ -179,16 +179,20 @@
                         tokens = _this.executeMatch(entry.uri, context.uri);
                         if (tokens)
                         {
-                            Ratchet.debug(" -> Match (id=" + _this.gadgetId + ", method=" + entry.method + ", uri=" + entry.uri + ")");
+                            Ratchet.debug(" -> Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
                             Ratchet.debug(" -> Tokens: " + Ratchet.stringify(tokens));
                             found = entry;
                             break;
                         }
                     }
 
-                    Ratchet.debug(" -> No Match (id=" + _this.gadgetId + ", method=" + entry.method + ", uri=" + entry.uri + ")");
+                    Ratchet.debug(" -> No Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
                 }
 
+                // build an empty model
+                var model = {};
+
+                // if we have a matching gadget...
                 if (found)
                 {
                     if (!tokens)
@@ -197,13 +201,42 @@
                     }
                     context.tokens = tokens;
 
-                    // build an empty model
-                    var model = {};
-
                     var that = found.that;
 
                     var viewHandler = null;
                     var controllerHandler = null;
+
+                    if (found.viewHandler)
+                    {
+                        // create a copy of the context especially for the view handler
+                        var viewHandlerContext = {};
+                        Ratchet.copyInto(viewHandlerContext, context);
+
+                        viewHandler = function()
+                        {
+                            viewHandlerContext.successHandler = function() {
+
+                                // gadget-specific post-render stuff
+                                if (that.postRender)
+                                {
+                                    that.postRender(context, model);
+                                }
+
+                                // standard post-render stuff
+                                _this.postRender(context, model);
+
+                            };
+                            viewHandlerContext.failureHandler = function() {
+
+                                _this.error("Problem during view handler: " + error);
+                            };
+
+                            found.viewHandler.call(that, viewHandlerContext, model);
+                        };
+
+                        // assume view handler
+                        handler = viewHandler;
+                    }
 
                     if (found.controllerHandler)
                     {
@@ -225,35 +258,23 @@
                             found.controllerHandler.call(that, controllerHandlerContext, model);
                         };
 
+                        // use a controller handler instead
+                        // this calls through to the view handler upon completion
                         handler = controllerHandler;
                     }
+                }
+                else
+                {
+                    // no gadget handler was found
 
-                    if (found.viewHandler)
+                    // as a result, we can produce a in-place gadget handler that simply assumes that the dom stuff contained
+                    // in the container is already correct and marked up.
+                    // we then just do post processing on it
+
+                    handler = function()
                     {
-                        // create a copy of the context especially for the view handler
-                        var viewHandlerContext = {};
-                        Ratchet.copyInto(viewHandlerContext, context);
-
-                        viewHandler = function()
-                        {
-                            viewHandlerContext.successHandler = function() {
-
-                                _this.gadgetInstance.postRender(context, model);
-                            };
-                            viewHandlerContext.failureHandler = function() {
-
-                                _this.error("Problem during view handler: " + error);
-                            };
-
-                            found.viewHandler.call(that, viewHandlerContext, model);
-                        };
-
-                        // if we already have a controller handler selected, don't reassign
-                        if (!handler)
-                        {
-                            handler = viewHandler;
-                        }
-                    }
+                        _this.postRender(context, model);
+                    };
                 }
 
 
@@ -295,8 +316,8 @@
                 this.setupFunction.call(this);
             }
 
-            // instantiate our gadget
-            this.gadgetInstance = Ratchet.GadgetRegistry.produce(this.gadgetId, this, this.container);
+            // instantiate any gadgets for that match the type of gadget we're supposed to be dispatching for
+            this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this, this.container);
 
             // history support
             // NOTE: only for the top-most dispatcher
@@ -325,6 +346,36 @@
             }
         },
 
+        /**
+         * Performs standard post-render manipulation of the dom.
+         *
+         * This gets called AFTER the gadget gets the post-render call.
+         *
+         * @param context
+         * @param model
+         */
+        postRender: function(context, model)
+        {
+            // kick off dispatchers for any sub-gadgets
+            var _this = this;
+            $(_this.getContainer()).find("[gadget]").each(function()
+            {
+                var subGadgetType = $(this).attr("gadget");
+
+                // remove the special "gadget" attribute
+                $(this).removeAttr("gadget");
+
+                // instantiate a child ratchet on top of this element
+                var childRatchet = new Ratchet($(this), function() {
+                    this.setParent(_this);
+                    this.setGadgetType(subGadgetType);
+                });
+
+                // dispatch the child ratchet
+                childRatchet.dispatch(context);
+            });
+        },
+
         getContainer: function()
         {
             return this.container;
@@ -345,14 +396,14 @@
             this.parent = parent;
         },
 
-        getGadgetId: function()
+        getGadgetType: function()
         {
-            return this.gadgetId;
+            return this.gadgetType;
         },
 
-        setGadgetId: function(gadgetId)
+        setGadgetType: function(gadgetType)
         {
-            this.gadgetId = gadgetId;
+            this.gadgetType = gadgetType;
         },
 
         /**

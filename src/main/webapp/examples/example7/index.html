@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Gitana Ratchet MVC - Example #6</title>
+
+        <!-- jquery -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+
+        <!-- third party -->
+        <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
+        <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
+
+        <!-- ratchet -->
+        <script type="text/javascript" src="/js_src/Ratchet.js"></script>
+        <script type="text/javascript" src="/js_src/Utils.js"></script>
+        <script type="text/javascript" src="/js_src/Observable.js"></script>
+        <script type="text/javascript" src="/js_src/Observables.js"></script>
+        <script type="text/javascript" src="/js_src/ScopedObservables.js"></script>
+        <script type="text/javascript" src="/js_src/Gadget.js"></script>
+        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
+
+        <!-- examples -->
+        <script type="text/javascript" src="gadgets/Body.js"></script>
+        <script type="text/javascript" src="gadgets/Header.js"></script>
+
+        <!-- work it -->
+        <script type="text/javascript">
+
+            $(document).ready(function() {
+
+                $(document.body).ratchet().get("/");
+            });
+
+        </script>
+    </head>
+
+    <body>
+
+        <div style="background-color: red">
+            <span gadget="header"></span>
+        </div>
+
+        <div style="background-color: yellow">
+            <span gadget="body"></span>
+        </div>
+    </body>
+
+</html>
+

@@ -3,22 +3,45 @@
     Ratchet.GadgetRegistry = {};
     Ratchet.GadgetRegistry.registry = {};
 
-    Ratchet.GadgetRegistry.register = function(id, classObject)
+    /**
+     * Classifies a gadget implementation class as being of a particular type (i.e. "sidebar").
+     *
+     * @param type
+     * @param classObject
+     */
+    Ratchet.GadgetRegistry.register = function(type, classObject)
     {
-        Ratchet.GadgetRegistry.registry[id] = classObject;
-    };
-
-    Ratchet.GadgetRegistry.produce = function(id, ratchet, container)
-    {
-        var instance = null;
-
-        var classObject = Ratchet.GadgetRegistry.registry[id];
-        if (classObject)
+        if(!Ratchet.GadgetRegistry.registry[type])
         {
-            instance = new classObject(ratchet, container);
+            Ratchet.GadgetRegistry.registry[type] = [];
         }
 
-        return instance;
+        Ratchet.GadgetRegistry.registry[type].push(classObject);
+    };
+
+    /**
+     * Instantiates all of the gadgets of a particular type and hands back an array.
+     *
+     * @param id
+     * @param ratchet
+     * @param container
+     */
+    Ratchet.GadgetRegistry.instantiate = function(type, ratchet, container)
+    {
+        var instances = [];
+
+        var classObjects = Ratchet.GadgetRegistry.registry[type];
+        if (classObjects)
+        {
+            $.each(classObjects, function(index, classObject) {
+
+                var instance = new classObject(ratchet, container);
+                instances.push(instance);
+
+            });
+        }
+
+        return instances;
     };
 
 })(jQuery);

@@ -51,9 +51,6 @@
             // parent
             this.parent = null;
 
-            // observation pool
-            this.observationPool = new Ratchet.ObservationPool();
-
             // public properties
             this.VERSION = "0.1.0";
 
@@ -163,7 +160,7 @@
             };
 
             // find a matching gadget for a uri and gadget scope
-            this.findHandler = function(model, context)
+            this.findHandler = function(context)
             {
                 Ratchet.debug("Looking for gadget handler (id=" + _this.gadgetId + ", method=" + context.method + ", uri=" + context.uri + ")");
 
@@ -198,7 +195,10 @@
                     {
                         tokens = {};
                     }
-                    model.setTokens(tokens);
+                    context.tokens = tokens;
+
+                    // build an empty model
+                    var model = {};
 
                     var that = found.that;
 
@@ -213,6 +213,7 @@
 
                         controllerHandler = function()
                         {
+                            // NOTE: model comes back on the success handler
                             controllerHandlerContext.successHandler = function()
                             {
                                 viewHandler.call(that, context, model);
@@ -268,12 +269,8 @@
                     context.uri = context.uri.substring(1);
                 }
 
-                // build the model
-                var model = new Ratchet.Model(_this.observationPool);
-                model.setData(context.data);
-
                 // find the controller handler method that matches this uri
-                var wrappedHandler = _this.findHandler(model, context);
+                var wrappedHandler = _this.findHandler(context);
                 if (wrappedHandler)
                 {
                     // invoke the handler
@@ -346,12 +343,6 @@
         setParent: function(parent)
         {
             this.parent = parent;
-
-            // use parent observation pool
-            if (this.parent)
-            {
-                this.observationPool = this.parent.observationPool;
-            }
         },
 
         getGadgetId: function()
@@ -385,6 +376,13 @@
                 "controllerHandler": controllerHandler
             };
         },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // DISPATCH SHORTCUT METHODS
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
          * Dispatches a GET to a URI.
@@ -440,7 +438,32 @@
                 "method": "DELETE",
                 "uri": uri
             });
+        },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // OBSERVABLES HELPER FUNCTIONS
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Gets all of the observables in the given scope.
+         *
+         * If no scope is provided, the "global" scope is assumed.
+         *
+         * @param scope
+         */
+        scope: function(scope)
+        {
+            if (!scope)
+            {
+                scope = "global";
+            }
+
+            return Ratchet.ScopedObservables.get(scope);
         }
+
     });
 
 })(jQuery);

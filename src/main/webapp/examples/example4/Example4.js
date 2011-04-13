@@ -33,11 +33,11 @@
         {
             $(this.getContainer()).html("Tokens");
             $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("test1: " + model.getToken("test1"));
+            $(this.getContainer()).append("test1: " + context.tokens["test1"]);
             $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("test2: " + model.getToken("test2"));
+            $(this.getContainer()).append("test2: " + context.tokens["test2"]);
             $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("test3: " + model.getToken("test3"));
+            $(this.getContainer()).append("test3: " + context.tokens["test3"]);
             $(this.getContainer()).append("<br>");
 
             this.success(context, model);
@@ -47,7 +47,7 @@
         {
             $(this.getContainer()).html("Wiki Page");
             $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("**: " + model.getToken("**"));
+            $(this.getContainer()).append("**: " + context.tokens["**"]);
 
             this.success(context, model);
         }

@@ -30,7 +30,7 @@
 
         page: function(context, model)
         {
-            $(this.getContainer()).html("Page: " + model.getToken("page"));
+            $(this.getContainer()).html("Page: " + context["tokens"]["page"]);
 
             this.success(context, model);
         }

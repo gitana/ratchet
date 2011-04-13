@@ -10,19 +10,33 @@
             this.base(ratchet, container);
 
             // custom registrations
-            this.route("/", "GET", this.view, this.controller);
+            this.route("/", "GET", this.index, this._index);
         },
 
-        controller: function(context, model)
+        /**
+         * Controller method for index view.
+         *
+         * Note: by convention, controller methods start with _.
+         *
+         * @param context
+         * @param model
+         */
+        _index: function(context, model)
         {
-            model.observable("title", "Welcome to the index page");
+            model["title"] = "Welcome to the title page";
 
             this.success(context, model);
         },
 
-        view: function(context, model)
+        /**
+         * View method for index view.
+         *
+         * @param context
+         * @param model
+         */
+        index: function(context, model)
         {
-            $(this.getContainer()).html(model.observable("title").get());
+            $(this.getContainer()).html(model["title"]);
 
             this.success(context, model);
         }

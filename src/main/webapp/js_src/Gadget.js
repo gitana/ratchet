@@ -40,6 +40,11 @@
             return this.ratchet;
         },
 
+        createModel: function()
+        {
+            return this.getRatchet().createModel();
+        },
+
         success: function(context, model)
         {
             if (context.successHandler)
@@ -135,20 +140,12 @@
             // TODO
             // support for multiple rendering engines and all that
 
-            // construct a common model
-            var templateModel = {};
-
-            // walk all observables
-            $.each(model.getObservables(), function(key, observable) {
-                templateModel[key] = observable.get();
-            });
-
             $.ajax({
                 "url": "" + view + ".html",
                 "dataType": "html",
                 "success": function(html)
                 {
-                    var form = $(html).tmpl(templateModel);
+                    var form = $(html).tmpl(model);
                     $(_this.getContainer()).html("");
                     $(_this.getContainer()).append(form);
 
@@ -170,6 +167,10 @@
             return ratchet;
         },
 
+        scope: function(scope)
+        {
+            return this.getRatchet().scope(scope);
+        },
 
         /**
          * Dispatches a GET to a URI.

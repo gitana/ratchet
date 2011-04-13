@@ -1,6 +1,9 @@
 (function($)
 {
-    Ratchet.ObservationPool = Base.extend(
+    /**
+     * Collection of observables.
+     */
+    Ratchet.Observables = Base.extend(
     {
         constructor: function()
         {
@@ -23,20 +26,23 @@
                 this.observables[id] = observable;
             }
 
+            // hand back from map
             return this.observables[id];
         },
 
         dependentObservable: function(id, func, pool)
         {
+            var _this = this;
+
             if (!this.observables[id])
             {
                 var observable = this.observable(id);
 
                 // wrap the model
-                var m = new Ratchet.Model(pool);
+                var m = new Ratchet.Observables();
                 m.observable = function(x, y)
                 {
-                    var o = this._observable(x, y);
+                    var o = _this.observable(x, y);
                     o.markDependentOnUs(observable);
 
                     return o;
@@ -53,7 +59,7 @@
             return this.observables[id];
         },
 
-        getObservables: function()
+        observables: function()
         {
             return this.observables;
         },

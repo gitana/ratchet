@@ -7,30 +7,39 @@
             this.base(ratchet, container);
 
             // custom registrations
-            this.route("/", "GET", "templates/application", this.index);
+            this.route("/", "GET", "templates/application", this._index);
             this.route("/", "POST", this.submit);
+
+            // custom observables
+            this.firstName = this.scope().observable("firstName");
+            this.lastName = this.scope().observable("lastName");
+            this.fullName = this.scope().dependentObservable("fullName", function() {
+                return this.observable("firstName").get() + " " + this.observable("lastName").get();
+            }, this.scope());
         },
 
-        index: function(context, model)
+        /**
+         * Controller method for index view.
+         *
+         * @param context
+         * @param model
+         */
+        _index: function(context, model)
         {
-            // add anything we want to the model
-            // i.e. declare any observables, populate observables, make available to templating engine
-            model.observable("firstName");
-            model.observable("lastName");
-            model.dependentObservable("fullName", function() {
-                return this.observable("firstName").get() + " " + this.observable("lastName").get();
-            }, model);
+            // assign observable values into model
+            model["firstName"] = this.firstName.get();
+            model["lastName"] = this.lastName.get();
 
             this.success(context, model);
         },
 
         submit: function(context, model)
         {
-            var data = model.getData();
+            var data = context["data"];
 
             // update observables
-            model.observable("firstName").set(data.firstName);
-            model.observable("lastName").set(data.lastName);
+            this.firstName.set(data.firstName);
+            this.lastName.set(data.lastName);
 
             // mark as having succeeded
             this.success(context, model);

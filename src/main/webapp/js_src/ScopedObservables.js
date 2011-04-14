@@ -7,7 +7,7 @@
     {
         if (!Ratchet.ScopedObservables.map[scope])
         {
-            Ratchet.ScopedObservables.map[scope] = new Ratchet.Observables();
+            Ratchet.ScopedObservables.map[scope] = new Ratchet.Observables(scope);
         }
 
         return Ratchet.ScopedObservables.map[scope];

@@ -5,9 +5,11 @@
      */
     Ratchet.Observables = Base.extend(
     {
-        constructor: function()
+        constructor: function(scope)
         {
             this.base();
+
+            this.scope = scope;
 
             this.observables = {};
         },
@@ -16,7 +18,7 @@
         {
             if (!this.observables[id])
             {
-                var observable = new Ratchet.Observable();
+                var observable = new Ratchet.Observable(this.scope, id);
 
                 if (initialValue)
                 {
@@ -39,7 +41,7 @@
                 var observable = this.observable(id);
 
                 // wrap the model
-                var m = new Ratchet.Observables();
+                var m = new Ratchet.Observables(this.scope);
                 m.observable = function(x, y)
                 {
                     var o = _this.observable(x, y);

@@ -1,18 +1,16 @@
 (function($)
 {
-    Ratchet.ObservableID = 0;
     Ratchet.Observable = Base.extend(
     {
-        constructor: function()
+        constructor: function(scope, id)
         {
             var _this = this;
 
             this.base();
 
-            Ratchet.ObservableID++;
-            this.id = "observable-" + Ratchet.ObservableID;
+            this.id = scope + "-" + id;
 
-            Ratchet.debug("created: " + this.id);
+            //Ratchet.debug("created: " + this.id);
 
             this.value = null;
             this.subscribers = {};

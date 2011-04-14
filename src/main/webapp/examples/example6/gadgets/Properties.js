@@ -20,11 +20,13 @@
             var _this = this;
 
             // make sure we're subscribed to receive notifications of updates to these observers
-            //this.firstName.subscribe("properties", function() { _this.renderIndex.call(_this, context, model); });
-            //this.lastName.subscribe("properties", function() { _this.renderIndex.call(_this, context, model); });
 
-            this.firstName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
-            this.lastName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
+            // NOTE: we could do the following
+            //this.firstName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
+            //this.lastName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
+
+            // OR: we could just observe "fullName" since it itself is dependent on firstName and lastName
+            this.fullName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
 
             // mark as having succeeded
             this.success(context, model);

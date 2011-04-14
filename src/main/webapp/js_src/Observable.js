@@ -23,24 +23,31 @@
 
             this.notifySubscribers = function()
             {
+                /*
                 var count = 0;
                 $.each(this.subscribers, function() {
                     count++;
                 });
                 Ratchet.debug("Notifying " + count + " subscribers for: " + this.id);
+                */
+
+                var _this = this;
 
                 $.each(this.subscribers, function(id, handler) {
+                    Ratchet.debug("Notifying subscriber: " + id + " of update to: " + _this.id);
                     handler(_this.value);
                 })
             };
 
             this.notifyDependents = function()
             {
+                /*
                 var count = 0;
                 $.each(this.dependentOnUs, function() {
                     count++;
                 });
                 Ratchet.debug("Notifying " + count + " dependent observers for: " + this.id);
+                */
 
                 $.each(this.dependentOnUs, function(key, observer) {
                     observer.onDependencyChange();

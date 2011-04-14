@@ -40,11 +40,6 @@
             return this.ratchet;
         },
 
-        createModel: function()
-        {
-            return this.getRatchet().createModel();
-        },
-
         success: function(context, model)
         {
             if (context.successHandler)

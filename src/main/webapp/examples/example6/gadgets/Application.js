@@ -7,7 +7,7 @@
             this.base(ratchet, container);
 
             // custom registrations
-            this.route("/", "GET", "templates/application", this._index);
+            this.route("/", "GET", "templates/application", this.index);
             this.route("/", "POST", this.submit);
 
             // custom observables
@@ -24,7 +24,7 @@
          * @param context
          * @param model
          */
-        _index: function(context, model)
+        index: function(context, model)
         {
             // assign observable values into model
             model["firstName"] = this.firstName.get();

@@ -168,7 +168,7 @@
             // find a matching gadget for a uri and gadget scope
             this.findHandler = function(context)
             {
-                Ratchet.debug("Looking for gadget handler (type=" + _this.gadgetType + ", method=" + context.method + ", uri=" + context.uri + ")");
+                //Ratchet.debug("Looking for gadget handler (type=" + _this.gadgetType + ", method=" + context.method + ", uri=" + context.uri + ")");
 
                 var handler = null;
                 var tokens = null;
@@ -185,14 +185,14 @@
                         tokens = _this.executeMatch(entry.uri, context.uri);
                         if (tokens)
                         {
-                            Ratchet.debug(" -> Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
-                            Ratchet.debug(" -> Tokens: " + Ratchet.stringify(tokens));
+                            //Ratchet.debug(" -> Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
+                            //Ratchet.debug(" -> Tokens: " + Ratchet.stringify(tokens));
                             found = entry;
                             break;
                         }
                     }
 
-                    Ratchet.debug(" -> No Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
+                    //Ratchet.debug(" -> No Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
                 }
 
                 // build an empty model
@@ -282,7 +282,6 @@
                         _this.postRender(context, model);
                     };
                 }
-
 
                 return handler;
             };
@@ -383,6 +382,8 @@
                     this.setParent(_this);
                     this.setGadgetType(subGadgetType);
                 });
+
+                Ratchet.debug("Adding child ratchet of type: " + subGadgetType + " to parent: " + _this.getGadgetType());
 
                 _this.childRatchets.push(childRatchet);
             });
@@ -570,36 +571,38 @@
             {
                 successCallback();
             }
-
-            // walk the patterns and see if any trip
-            var tripped = false;
-            for (var i = 0; i < this.authRequiredPatterns.length; i++)
-            {
-                var pattern = this.authRequiredPatterns[i];
-
-                var tokens = this.executeMatch(pattern, context.uri);
-                if (tokens)
-                {
-                    tripped = true;
-                }
-            }
-
-            if (tripped)
-            {
-                // we require authentication
-                this.authenticate.call(_this, context, function() {
-
-                    successCallback();
-
-                }, function() {
-
-                    failureCallback();
-
-                });
-            }
             else
             {
-                successCallback();
+                // walk the patterns and see if any trip
+                var tripped = false;
+                for (var i = 0; i < this.authRequiredPatterns.length; i++)
+                {
+                    var pattern = this.authRequiredPatterns[i];
+
+                    var tokens = this.executeMatch(pattern, context.uri);
+                    if (tokens)
+                    {
+                        tripped = true;
+                    }
+                }
+
+                if (tripped)
+                {
+                    // we require authentication
+                    this.authenticate.call(_this, context, function() {
+
+                        successCallback();
+
+                    }, function() {
+
+                        failureCallback();
+
+                    });
+                }
+                else
+                {
+                    successCallback();
+                }
             }
         },
 

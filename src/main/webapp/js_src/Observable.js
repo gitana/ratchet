@@ -32,9 +32,6 @@
                 Ratchet.debug("Notifying " + count + " subscribers for: " + this.id);
 
                 $.each(this.subscribers, function(id, handler) {
-
-                    Ratchet.debug(" -> subscriber: " + id);
-
                     handler(_this.value);
                 })
             };
@@ -48,9 +45,6 @@
                 Ratchet.debug("Notifying " + count + " dependent observers for: " + this.id);
 
                 $.each(this.dependentOnUs, function(key, observer) {
-
-                    Ratchet.debug(" -> dependent observer: " + key);
-
                     observer.onDependencyChange();
                 });
             };
@@ -73,14 +67,21 @@
          */
         subscribe: function(id, handler)
         {
-            this.subscribers[id] = handler;
-
-            Ratchet.debug("SUBSCRIBE: " + id + " subscribed to observable: " + this.id);
+            if (!this.isSubscribed(id))
+            {
+                this.subscribers[id] = handler;
+                Ratchet.debug("SUBSCRIBE: " + id + " subscribed to observable: " + this.id);
+            }
         },
 
         unsubscribe: function(id)
         {
             delete this.subscribers[id];
+        },
+
+        isSubscribed: function(id)
+        {
+            return this.subscribers[id];
         },
 
         markDependentOnUs: function(observable)

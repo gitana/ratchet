@@ -64,11 +64,6 @@
         observables: function()
         {
             return this.observables;
-        },
-
-        remove: function(id)
-        {
-            delete this.observables[id];
         }
 
     });

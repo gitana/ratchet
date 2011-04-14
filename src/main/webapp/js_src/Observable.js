@@ -118,15 +118,25 @@
             this.notifySubscribers();
         },
 
-        get: function()
+        get: function(_default)
         {
             var v = this.value;
             if (!v)
             {
-                v = "";
+                v = _default;
             }
-
             return v;
+        },
+
+        clear: function()
+        {
+            delete this.value;
+
+            // notify all dependents (observers that depend on our value)
+            this.notifyDependents();
+
+            // notify all subscribers of the updated value
+            this.notifySubscribers();
         }
 
     });

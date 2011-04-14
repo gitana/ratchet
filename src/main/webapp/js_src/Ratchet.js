@@ -458,10 +458,25 @@
         /**
          * Dispatches a GET to a URI.
          *
+         * If the URI is null, then the URI is inferred from window location.
+         *
          * @param uri
          */
         get: function(uri)
         {
+            if (!uri)
+            {
+                uri = window.location.href;
+                if (uri.indexOf("#"))
+                {
+                    uri = uri.substring(uri.indexOf("#") + 1);
+                }
+                else
+                {
+                    uri = "/";
+                }
+            }
+
             // NOTE: We actually increment the history here and let the history callback handler
             // do the get for us.
 

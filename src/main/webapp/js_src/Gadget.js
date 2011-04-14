@@ -129,24 +129,47 @@
                 this.error("No view provided");
             }
 
+            var templateId = view;
+
+            var renderTemplate = function(templateId, context, model)
+            {
+                var markup = $.tmpl(templateId, model);
+
+                $(_this.getContainer()).html("");
+                $(_this.getContainer()).append(markup);
+
+                // mark as having succeeded
+                _this.success(context, model);
+
+            };
+
             // TODO
             // support for multiple rendering engines and all that
 
-            $.ajax({
-                "url": "" + view + ".html",
-                "dataType": "html",
-                "success": function(html)
-                {
-                    //Ratchet.debug("Rendering template: " + view + " with model: " + Ratchet.stringify(model));
+            if ($.template[templateId])
+            {
+                renderTemplate(templateId, context, model);
+            }
+            else
+            {
+                $.ajax({
+                    "url": "" + view + ".html",
+                    "dataType": "html",
+                    "success": function(html)
+                    {
+                        // convert to a dom briefly
+                        // this is because it starts with <script> and we only want what is inside
+                        var dom = $(html);
+                        html = dom.html();
 
-                    var form = $(html).tmpl(model);
-                    $(_this.getContainer()).html("");
-                    $(_this.getContainer()).append(form);
+                        // compile template
+                        $.template(templateId, html);
 
-                    // mark as having succeeded
-                    _this.success(context, model);
-                }
-            });
+                        // render template
+                        renderTemplate(templateId, context, model);
+                    }
+                });
+            }
 
         },
 

@@ -34,9 +34,9 @@
 
         renderIndex: function(context, model)
         {
-            model["firstName"] = this.firstName.get();
-            model["lastName"] = this.lastName.get();
-            model["fullName"] = this.fullName.get();
+            model["firstName"] = this.firstName.get("");
+            model["lastName"] = this.lastName.get("");
+            model["fullName"] = this.fullName.get("");
 
             this.renderTemplate(context, model, "templates/properties");
         }

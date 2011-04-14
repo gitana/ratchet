@@ -14,7 +14,7 @@
             this.firstName = this.scope().observable("firstName");
             this.lastName = this.scope().observable("lastName");
             this.fullName = this.scope().dependentObservable("fullName", function() {
-                return this.observable("firstName").get() + " " + this.observable("lastName").get();
+                return this.observable("firstName").get("") + " " + this.observable("lastName").get("");
             }, this.scope());
         },
 

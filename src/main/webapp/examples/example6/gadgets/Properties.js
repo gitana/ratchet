@@ -20,8 +20,11 @@
             var _this = this;
 
             // make sure we're subscribed to receive notifications of updates to these observers
-            this.firstName.subscribe("properties", function() { _this.renderIndex.call(_this, context, model); });
-            this.lastName.subscribe("properties", function() { _this.renderIndex.call(_this, context, model); });
+            //this.firstName.subscribe("properties", function() { _this.renderIndex.call(_this, context, model); });
+            //this.lastName.subscribe("properties", function() { _this.renderIndex.call(_this, context, model); });
+
+            this.firstName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
+            this.lastName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
 
             // mark as having succeeded
             this.success(context, model);

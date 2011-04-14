@@ -74,6 +74,21 @@
         },
 
         /**
+         * Helper function to create an observation handler.
+         *
+         * @param that
+         * @param context
+         * @param model
+         * @param handler
+         */
+        observationHandler: function(that, context, model, handler)
+        {
+            return function() {
+                handler.call(that, context, model);
+            };
+        },
+
+        /**
          * TODO
          * Renders a given view using a template engine.
          *
@@ -122,7 +137,7 @@
                 "dataType": "html",
                 "success": function(html)
                 {
-                    Ratchet.debug("Rendering template: " + view + " with model: " + Ratchet.stringify(model));
+                    //Ratchet.debug("Rendering template: " + view + " with model: " + Ratchet.stringify(model));
 
                     var form = $(html).tmpl(model);
                     $(_this.getContainer()).html("");

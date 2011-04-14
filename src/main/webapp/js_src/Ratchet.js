@@ -59,6 +59,9 @@
             this.gadgetInstances = [];
             this.gadgetMappings = {};
 
+            // child ratchets
+            this.childRatchets = [];
+
             // authentication filters
             this.authRequiredPatterns = [];
 
@@ -293,7 +296,7 @@
                     context.uri = context.uri.substring(1);
                 }
 
-                _this.ensureAuthentication(context, function() {
+                _this.ensureAuthentication.call(_this, context, function() {
 
                     // find the controller handler method that matches this uri
                     var wrappedHandler = _this.findHandler(context);
@@ -368,12 +371,11 @@
          */
         postRender: function(context, model)
         {
-            // kick off dispatchers for any sub-gadgets
+            // walk any un-ratcheted subgadgets and ratchet them
             var _this = this;
             $(_this.getContainer()).find("[gadget]").each(function()
             {
                 var subGadgetType = $(this).attr("gadget");
-
                 $(this).removeAttr("gadget");
 
                 // instantiate a child ratchet on top of this element
@@ -382,7 +384,11 @@
                     this.setGadgetType(subGadgetType);
                 });
 
-                // dispatch the child ratchet
+                _this.childRatchets.push(childRatchet);
+            });
+
+            // dispatch the child ratchets
+            $.each(_this.childRatchets, function(i, childRatchet) {
                 childRatchet.dispatch(context);
             });
         },
@@ -437,6 +443,8 @@
                 "viewHandler": viewHandler,
                 "controllerHandler": controllerHandler
             };
+
+            Ratchet.debug("Mapped gadget handler: " + method + " " + uri);
         },
 
 
@@ -579,7 +587,7 @@
             if (tripped)
             {
                 // we require authentication
-                this.authenticate(context, function() {
+                this.authenticate.call(_this, context, function() {
 
                     successCallback();
 

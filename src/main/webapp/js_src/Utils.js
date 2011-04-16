@@ -11,8 +11,8 @@
      *
      * @returns {Array} an array
      */
-    Ratchet.makeArray = function(arguments) {
-        return Array.prototype.slice.call(arguments);
+    Ratchet.makeArray = function(args) {
+        return Array.prototype.slice.call(args);
     };
 
     /**

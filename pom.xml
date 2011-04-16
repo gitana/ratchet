@@ -76,7 +76,7 @@
 							destfile="${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.updated.js"
 							fixlastline="yes">
 							<filelist dir="."
-								files="src/main/webapp/js_src/license.js ${project.build.directory}/${project.build.finalName}/ratchet/js/ratchet-${project.version}.min.js" />
+								files="src/main/webapp/js_src/license.js ${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.js" />
 						</concat>
 						<delete
 							file="${project.build.directory}/${project.build.finalName}/js/ratchet-${project.version}.min.js" />

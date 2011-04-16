@@ -355,8 +355,7 @@
             var _this = this;
 
             // walk any un-ratcheted subgadgets and ratchet them
-            // NOTE: make sure to only go one level deep
-            $(context).find("> [gadget]").each(function()
+            $(context.closestDescendants("[gadget]")).each(function()
             {
                 var subGadgetId = $(this).attr("gadget");
                 //$(this).removeAttr("gadget");

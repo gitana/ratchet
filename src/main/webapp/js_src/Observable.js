@@ -60,13 +60,11 @@
             if (!this.isSubscribed(id))
             {
                 this.subscribers[id] = handler;
-                Ratchet.debug("SUBSCRIBE: " + id);
             }
         },
 
         unsubscribe: function(id)
         {
-            Ratchet.debug("UNSUBSCRIBE: " + id);
             delete this.subscribers[id];
         },
 

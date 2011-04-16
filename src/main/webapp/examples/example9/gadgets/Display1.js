@@ -10,7 +10,10 @@
         setup: function()
         {
             this.get(this.index);
+        },
 
+        index: function(el)
+        {
             // subscribe to observable
             this.subscribe("value", function() {
 
@@ -18,10 +21,7 @@
 
                 this.run("GET", "/");
             });
-        },
 
-        index: function(el)
-        {
             el.model["value"] = this.observable("value").get();
 
             el.transform("templates/display1", function() {

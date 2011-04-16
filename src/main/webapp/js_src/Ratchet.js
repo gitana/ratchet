@@ -323,11 +323,11 @@
                 childRatchet.teardown();
             });
 
-            // releases any routes
-            $.each(this.routes, function(i, route) {
-                delete _this.routes[i];
+            // delete child ratchets
+            $.each(this.childRatchets, function(_gadgetId, childRatchet) {
+                delete childRatchet;
             });
-            this.routes = {};
+            this.childRatchets = {};
 
             // releases any subscribed observables
             $.each(this.subscriptions, function(callbackKey, observable) {
@@ -339,6 +339,12 @@
                 gadgetInstance.teardown();
             });
             this.gadgetInstances = [];
+
+            // releases any routes
+            $.each(this.routes, function(i, route) {
+                delete _this.routes[i];
+            });
+            this.routes = {};
         },
 
         /**
@@ -346,9 +352,11 @@
          */
         processGadgets: function(context)
         {
-            // walk any un-ratcheted subgadgets and ratchet them
             var _this = this;
-            $(context).find("[gadget]").each(function()
+
+            // walk any un-ratcheted subgadgets and ratchet them
+            // NOTE: make sure to only go one level deep
+            $(context).find("> [gadget]").each(function()
             {
                 var subGadgetId = $(this).attr("gadget");
                 //$(this).removeAttr("gadget");
@@ -554,7 +562,6 @@
 
             // setup: new observers, routes and gadget instances
             this.setup();
-
 
             // clean up URI
             if (Ratchet.startsWith(config.uri, "#"))

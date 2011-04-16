@@ -117,7 +117,6 @@
                 {
                     if (successCallback)
                     {
-                        debugger;
                         successCallback.call(successCallback, _this, data);
                     }
                 },

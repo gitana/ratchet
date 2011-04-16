@@ -39,6 +39,7 @@
                                 <param>../js_src/Observable.js</param>
                                 <param>../js_src/Observables.js</param>
                                 <param>../js_src/ScopedObservables.js</param>
+                                <param>../js_src/RenderContext.js</param>
                                 <param>../js_src/Gadget.js</param>
                                 <param>../js_src/GadgetRegistry.js</param>
 

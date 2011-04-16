@@ -34,9 +34,9 @@
 
                     this.get("/", function(el) {
 
-                        el.fetch("data.json", function(json) {
+                        el.fetch("data.json", function(el, json) {
 
-                            el.transform("template", json, function() {
+                            el.transform("template", json, function(el) {
 
                                 el.swap();
 

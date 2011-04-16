@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Gitana Ratchet MVC - Example #6</title>
+        <title>Ratchet - Basic Example #5</title>
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
@@ -26,45 +26,36 @@
         <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
         <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
-        <!-- examples -->
-        <script type="text/javascript" src="gadgets/Page.js"></script>
-
-        <!-- work it -->
         <script type="text/javascript">
 
             $(document).ready(function() {
 
                 $(document.body).ratchet(function() {
 
-                    // require authentication for any uris that matches this expression
-                    this.requireAuthentication("/1b/2b/**");
+                    this.get("/", function() {
 
-                    this.authenticate = function(context, successCallback, failureCallback)
-                    {
-                        // check whether they have existing authentication
-                        if (typeof(AuthObject) === "undefined")
-                        {
-                            // Note: normally, you'd pop up a modal dialog here
-                            alert("Close to authenticate");
+                        this.html("Click a page");
+                        this.append("<br/>");
+                        this.append("<a href='#/page1'>Page1</a>");
+                        this.append("<br/>");
+                        this.append("<a href='#/page2'>Page2</a>");
 
-                            // set authentication
-                            AuthObject = true;
+                        // swap our content in
+                        this.swap();
+                    });
 
-                            successCallback();
-                        }
-                        else
-                        {
-                            successCallback();
-                        }
-                    };
+                    this.get("/{page}", function() {
+                        this.html("You clicked: " + this.model.tokens['page']).swap();
+                    });
 
                 }).run("/");
+
             });
 
         </script>
     </head>
 
-    <body gadget="page"></body>
+    <body></body>
 
 </html>
 

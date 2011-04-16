@@ -23,14 +23,6 @@
 
             this.notifySubscribers = function()
             {
-                /*
-                var count = 0;
-                $.each(this.subscribers, function() {
-                    count++;
-                });
-                Ratchet.debug("Notifying " + count + " subscribers for: " + this.id);
-                */
-
                 var _this = this;
 
                 $.each(this.subscribers, function(id, handler) {
@@ -41,15 +33,8 @@
 
             this.notifyDependents = function()
             {
-                /*
-                var count = 0;
-                $.each(this.dependentOnUs, function() {
-                    count++;
-                });
-                Ratchet.debug("Notifying " + count + " dependent observers for: " + this.id);
-                */
-
                 $.each(this.dependentOnUs, function(key, observer) {
+                    Ratchet.debug("Notifying dependent:  " + key + " of update to: " + _this.id);
                     observer.onDependencyChange();
                 });
             };
@@ -75,12 +60,13 @@
             if (!this.isSubscribed(id))
             {
                 this.subscribers[id] = handler;
-                Ratchet.debug("SUBSCRIBE: " + id + " subscribed to observable: " + this.id);
+                Ratchet.debug("SUBSCRIBE: " + id);
             }
         },
 
         unsubscribe: function(id)
         {
+            Ratchet.debug("UNSUBSCRIBE: " + id);
             delete this.subscribers[id];
         },
 

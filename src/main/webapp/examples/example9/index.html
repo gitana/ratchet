@@ -27,44 +27,35 @@
         <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
         <!-- examples -->
-        <script type="text/javascript" src="gadgets/Page.js"></script>
+        <script type="text/javascript" src="gadgets/Page1.js"></script>
+        <script type="text/javascript" src="gadgets/Page2.js"></script>
+        <script type="text/javascript" src="gadgets/Form.js"></script>
+        <script type="text/javascript" src="gadgets/Display1.js"></script>
+        <script type="text/javascript" src="gadgets/Display2.js"></script>
 
         <!-- work it -->
         <script type="text/javascript">
 
             $(document).ready(function() {
 
-                $(document.body).ratchet(function() {
+                $(document.body).ratchet().run("/");
 
-                    // require authentication for any uris that matches this expression
-                    this.requireAuthentication("/1b/2b/**");
-
-                    this.authenticate = function(context, successCallback, failureCallback)
-                    {
-                        // check whether they have existing authentication
-                        if (typeof(AuthObject) === "undefined")
-                        {
-                            // Note: normally, you'd pop up a modal dialog here
-                            alert("Close to authenticate");
-
-                            // set authentication
-                            AuthObject = true;
-
-                            successCallback();
-                        }
-                        else
-                        {
-                            successCallback();
-                        }
-                    };
-
-                }).run("/");
             });
 
         </script>
     </head>
 
-    <body gadget="page"></body>
+    <body>
+        <a href="#/page1">Page 1</a>
+        <br />
+        <a href="#/page2">Page 2</a>
+        <br />
+
+        <hr />
+
+        <div gadget="page"></div>
+
+    </body>
 
 </html>
 

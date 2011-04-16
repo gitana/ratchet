@@ -1,38 +1,35 @@
 (function($)
 {
-    /**
-     * Example of a gadget that tokenizes the URL and displays token info.
-     */
     Example3 = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
+        constructor: function(id, ratchet)
         {
-            this.base(ratchet, container);
-
-            // custom registrations
-            this.route("/", "GET", this.index);
-            this.route("/pages/{page}", "GET", this.page);
+            this.base(id, ratchet);
         },
 
-        index: function(context, model)
+        setup: function()
         {
-            $(this.getContainer()).html("Index");
-            $(this.getContainer()).append("<br/>");
-            $(this.getContainer()).append("<a href='#/pages/page1'>Page 1</a>");
-            $(this.getContainer()).append("<br/>");
-            $(this.getContainer()).append("<a href='#/pages/page2'>Page 2</a>");
-            $(this.getContainer()).append("<br/>");
-            $(this.getContainer()).append("<a href='#/pages/page3'>Page 3</a>");
-            $(this.getContainer()).append("<br/>");
-
-            this.success(context, model);
+            this.get("/", this.index);
+            this.get("/pages/{page}", this.page);
         },
 
-        page: function(context, model)
+        index: function()
         {
-            $(this.getContainer()).html("Page: " + context["tokens"]["page"]);
+            this.html("Index");
+            this.append("<br/>");
+            this.append("<a href='#/pages/page1'>Page 1</a>");
+            this.append("<br/>");
+            this.append("<a href='#/pages/page2'>Page 2</a>");
+            this.append("<br/>");
+            this.append("<a href='#/pages/page3'>Page 3</a>");
+            this.append("<br/>");
 
-            this.success(context, model);
+            this.swap();
+        },
+
+        page: function()
+        {
+            this.html("Page: " + this.model.tokens["page"]).swap();
         }
 
     });

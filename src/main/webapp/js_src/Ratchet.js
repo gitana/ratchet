@@ -11,7 +11,8 @@
          * If a function is provided, it will be invoked post-constructor to allow for any setup or configuration
          * of the ratchet.
          *
-         * @param [DOMElement] container the dom element into which we will render
+         * @param [DOMElement|String] container either a dom element or selector into which we will render
+         * @param [Object] parent the parent ratchet if any
          * @param [Function] setupFunction setup function
          */
         constructor: function()
@@ -22,54 +23,70 @@
 
             // figure out arguments
             var args = Ratchet.makeArray(arguments);
-            var a1 = args.shift();
-            var a2 = args.shift();
-            var a3 = args.shift();
 
-            if (a1 && a2)
+            do
             {
-                this.container = a1;
-                this.setupFunction = a2;
-            }
-            else if (a1)
-            {
-                if (Ratchet.isNode(a1) || Ratchet.isElement(a1))
+                var arg = args.shift();
+                if (arg)
                 {
-                    this.container = a1;
+                    if (Ratchet.isArray(arg) && (Ratchet.isNode(arg[0]) || Ratchet.isElement(arg[0])))
+                    {
+                        this.el = arg[0];
+                    }
+                    else if (Ratchet.isNode(arg) || Ratchet.isElement(arg))
+                    {
+                        this.el = arg;
+                    }
+                    else if (Ratchet.isFunction(arg))
+                    {
+                        this.setupFunction = arg;
+                    }
+                    else
+                    {
+                        this.parent = arg;
+                    }
                 }
-                else if (Ratchet.isFunction(a1))
-                {
-                    this.setupFunction = a1;
-                }
-            }
 
-            if (!this.container)
+            } while (arg);
+
+            // if no container, assume document body
+            if (!this.el)
             {
-                this.container = document.body;
+                this.el = document.body;
             }
-
-            // parent
-            this.parent = null;
-
-            // public properties
-            this.VERSION = "0.1.0";
-
-            // gadget stuff
-            this.gadgetType = "application"; // assumed default
-            this.gadgetInstances = [];
-            this.gadgetMappings = {};
 
             // child ratchets
-            this.childRatchets = [];
+            this.childRatchets = {};
 
             // authentication filters
             this.authRequiredPatterns = [];
+
+            // routes
+            this.routes = {};
+
+            // id (this will be the same as gadget id)
+            this.id = null;
+
+            // gadget instance
+            this.gadgetInstances = [];
+
+            // subscriptions
+            this.subscriptions = {};
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////
+            //
+            // PRIVILEGED METHODS
+            //
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
             /**
              * Called with a matcher like: /pages/{page}/components/{component}
              * and text like: /pages/page1/components/component2
              *
-             * If there is a match, the collected tokens are popualted into the tokens map.
+             * If there is a match, the collected tokens are populated into the tokens map.
              * It looks like this:
              *
              *   {
@@ -165,160 +182,74 @@
                 return tokens;
             };
 
-            // find a matching gadget for a uri and gadget scope
+            /**
+             * Finds a matching handler method for a given dispatch context
+             *
+             * @param context
+             */
             this.findHandler = function(context)
             {
-                //Ratchet.debug("Looking for gadget handler (type=" + _this.gadgetType + ", method=" + context.method + ", uri=" + context.uri + ")");
-
                 var handler = null;
+
+                // walk through the routes and find one that matches this URI and method
                 var tokens = null;
-
-                // walk through the gadget mappings for this scope
-                // find one that matches this URI and method
-                var found = null;
-                for (var mapping in _this.gadgetMappings)
+                var discoveredHandler = null;
+                for (var routeId in _this.routes)
                 {
-                    var entry = _this.gadgetMappings[mapping];
-
-                    if (entry.method == context.method)
+                    var route = _this.routes[routeId];
+                    if (route.method == context.route.method)
                     {
-                        tokens = _this.executeMatch(entry.uri, context.uri);
+                        tokens = _this.executeMatch(route.uri, context.route.uri);
                         if (tokens)
                         {
-                            //Ratchet.debug(" -> Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
-                            //Ratchet.debug(" -> Tokens: " + Ratchet.stringify(tokens));
-                            found = entry;
+                            discoveredHandler = route.handler;
                             break;
                         }
                     }
-
-                    //Ratchet.debug(" -> No Match (type=" + _this.gadgetType + ", method=" + entry.method + ", uri=" + entry.uri + ")");
                 }
 
-                // build an empty model
-                var model = {};
-
-                // if we have a matching gadget...
-                if (found)
+                // find a matching handler method
+                if (discoveredHandler)
                 {
-                    if (!tokens)
+                    // create an invocation context
+                    // this is a copy of the original context which will be used by the handler
+                    var invocationContext = new Ratchet.RenderContext(this, context.route);
+                    Ratchet.copyInto(invocationContext.model, context.model);
+                    invocationContext.tokens = tokens;
+                    invocationContext.model.tokens = tokens;
+
+                    // wrap the handler into a closure (convenience function)
+                    handler = function(invocationContext)
                     {
-                        tokens = {};
-                    }
-                    context.tokens = tokens;
-
-                    var that = found.that;
-
-                    var viewHandler = null;
-                    var controllerHandler = null;
-
-                    if (found.viewHandler)
-                    {
-                        // create a copy of the context especially for the view handler
-                        var viewHandlerContext = {};
-                        Ratchet.copyInto(viewHandlerContext, context);
-
-                        viewHandler = function()
+                        return function()
                         {
-                            viewHandlerContext.successHandler = function() {
-
-                                // gadget-specific post-render stuff
-                                if (that.postRender)
-                                {
-                                    that.postRender(context, model);
-                                }
-
-                                // standard post-render stuff
-                                _this.postRender(context, model);
-
-                            };
-                            viewHandlerContext.failureHandler = function() {
-
-                                _this.error("Problem during view handler: " + error);
-                            };
-
-                            found.viewHandler.call(that, viewHandlerContext, model);
+                            discoveredHandler.call(invocationContext, invocationContext.route.data);
                         };
-
-                        // assume view handler
-                        handler = viewHandler;
-                    }
-
-                    if (found.controllerHandler)
-                    {
-                        // create a copy of the context especially for the controller handler
-                        var controllerHandlerContext = {};
-                        Ratchet.copyInto(controllerHandlerContext, context);
-
-                        controllerHandler = function()
-                        {
-                            // NOTE: model comes back on the success handler
-                            controllerHandlerContext.successHandler = function()
-                            {
-                                viewHandler.call(that, context, model);
-                            };
-                            controllerHandlerContext.failureHandler = function()
-                            {
-                                _this.error("Problem during controller handler: " + error);
-                            };
-                            found.controllerHandler.call(that, controllerHandlerContext, model);
-                        };
-
-                        // use a controller handler instead
-                        // this calls through to the view handler upon completion
-                        handler = controllerHandler;
-                    }
+                    }(invocationContext);
                 }
                 else
                 {
                     // no gadget handler was found
 
-                    // as a result, we can produce a in-place gadget handler that simply assumes that the dom stuff contained
-                    // in the container is already correct and marked up.
-                    // we then just do post processing on it
+                    // create an invocation context that assumes the current dom is just fine
+                    var invocationContext = new Ratchet.RenderContext(this, context.route, this.el);
+                    Ratchet.copyInto(invocationContext.model, context.model);
 
-                    handler = function()
-                    {
-                        _this.postRender(context, model);
-                    };
+                    // manually swap
+                    // NOTE: this calls "processGadgets" for us
+                    invocationContext.swap();
                 }
 
                 return handler;
             };
 
-            // dispatch
-            this.dispatch = function(context)
-            {
-                // clean up URI
-                if (Ratchet.startsWith(context.uri, "#"))
-                {
-                    context.uri = context.uri.substring(1);
-                }
-
-                _this.ensureAuthentication.call(_this, context, function() {
-
-                    // find the controller handler method that matches this uri
-                    var wrappedHandler = _this.findHandler(context);
-                    if (wrappedHandler)
-                    {
-                        // invoke the handler
-                        wrappedHandler();
-                    }
-
-                }, function() {
-
-                    alert("Authentication failed - not authenticated");
-
-                });
-            };
 
             // init
             this.init();
         },
 
         /**
-         * Walks through all of the controllers and views and instantiates them.
-         * This lets them register their mappings (routes) with the dispatcher.
+         * The init method is called once when the dispatcher is started up.
          */
         init: function()
         {
@@ -327,15 +258,12 @@
             // invoke setup function
             if (this.setupFunction)
             {
-                this.setupFunction.call(this);
+                this.setupFunction.call(_this);
             }
-
-            // instantiate any gadgets for that match the type of gadget we're supposed to be dispatching for
-            this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this, this.container);
 
             // history support
             // NOTE: only for the top-most dispatcher
-            if (!this.getParent())
+            if (!this.parent)
             {
                 $.history.init(function(hash) {
 
@@ -361,91 +289,217 @@
         },
 
         /**
-         * Performs standard post-render manipulation of the dom.
-         *
-         * This gets called AFTER the gadget gets the post-render call.
-         *
-         * @param context
-         * @param model
+         * The setup function is called prior to the dispatch() method being invoked.
+         * It is the inverse of the teardown method.
          */
-        postRender: function(context, model)
+        setup: function()
+        {
+            // if we don't have a gadget id, we should check the DOM to see if one is configured on the DOM element
+            // to which we are bound
+            if (!this.id)
+            {
+                this.id = $(this.el).attr("gadget");
+            }
+
+            // if there is a gadget configured for this dom element, boot it up
+            if (this.id)
+            {
+                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.id, this);
+                $.each(this.gadgetInstances, function(x, y) {
+                    y.setup.call(y);
+                });
+            }
+        },
+
+        /**
+         * Dismantles this ratchet.  Destroys any containers, gadget instances or mappings set up during init.
+         */
+        teardown: function()
+        {
+            var _this = this;
+
+            // iterate to tear down any child ratchets
+            // destroy all child ratchets
+            $.each(this.childRatchets, function(_gadgetId, childRatchet) {
+                childRatchet.teardown();
+            });
+
+            // releases any routes
+            $.each(this.routes, function(i, route) {
+                delete _this.routes[i];
+            });
+            this.routes = {};
+
+            // releases any subscribed observables
+            $.each(this.subscriptions, function(callbackKey, observable) {
+                observable.unsubscribe(callbackKey);
+            });
+
+            // tear down any gadget instances
+            $.each(this.gadgetInstances, function(i, gadgetInstance) {
+                gadgetInstance.teardown();
+            });
+            this.gadgetInstances = [];
+        },
+
+        /**
+         * Processes any downstream gadgets.
+         */
+        processGadgets: function(context)
         {
             // walk any un-ratcheted subgadgets and ratchet them
             var _this = this;
-            $(_this.getContainer()).find("[gadget]").each(function()
+            $(context).find("[gadget]").each(function()
             {
-                var subGadgetType = $(this).attr("gadget");
-                $(this).removeAttr("gadget");
+                var subGadgetId = $(this).attr("gadget");
+                //$(this).removeAttr("gadget");
 
-                // instantiate a child ratchet on top of this element
-                var childRatchet = new Ratchet($(this), function() {
-                    this.setParent(_this);
-                    this.setGadgetType(subGadgetType);
-                });
+                // check if we already have a child ratchet for this gadget
+                var childRatchet = _this.childRatchets[subGadgetId];
+                if (!childRatchet)
+                {
+                    // instantiate a child ratchet on top of this element
+                    childRatchet = new Ratchet($(this), _this, function() {
+                        this.id = subGadgetId;
+                    });
 
-                Ratchet.debug("Adding child ratchet of type: " + subGadgetType + " to parent: " + _this.getGadgetType());
-
-                _this.childRatchets.push(childRatchet);
+                    _this.childRatchets[subGadgetId] = childRatchet;
+                }
+                else
+                {
+                    // make sure the child ratchet is pointing to our dom element
+                    childRatchet.el = this;
+                }
             });
 
             // dispatch the child ratchets
-            $.each(_this.childRatchets, function(i, childRatchet) {
-                childRatchet.dispatch(context);
+            $.each(_this.childRatchets, function(subGadgetId, childRatchet) {
+                //Ratchet.debug("Dispatching child ratchet: " + subGadgetId + " (" + context.route.method + " " + context.route.uri + ")");
+                childRatchet.dispatch(context.route);
             });
         },
 
-        getContainer: function()
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // ROUTE CREATION METHODS
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Registers a GET route.
+         *
+         * @param [String] uri
+         * @param {Function} handler
+         */
+        get: function()
         {
-            return this.container;
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 1)
+            {
+                args.unshift("**");
+            }
+            args.unshift("GET");
+
+            this.route.apply(this, args);
         },
 
-        setContainer: function(container)
+        /**
+         * Registers a POST route.
+         *
+         * @param [String] uri
+         * @param {Function} handler
+         */
+        post: function()
         {
-            this.container = container;
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 1)
+            {
+                args.unshift("**");
+            }
+            args.unshift("POST");
+
+            this.route.apply(this, args);
         },
 
-        getParent: function()
+        /**
+         * Registers a PUT route.
+         *
+         * @param [String] uri
+         * @param {Function} handler
+         */
+        put: function(uri, handler)
         {
-            return this.parent;
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 1)
+            {
+                args.unshift("**");
+            }
+            args.unshift("PUT");
+
+            this.route.apply(this, args);
         },
 
-        setParent: function(parent)
+        /**
+         * Registers a DELETE route.
+         *
+         * @param [String] uri
+         * @param {Function} handler
+         */
+        del: function(uri, handler)
         {
-            this.parent = parent;
-        },
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 1)
+            {
+                args.unshift("**");
+            }
+            args.unshift("DELETE");
 
-        getGadgetType: function()
-        {
-            return this.gadgetType;
-        },
-
-        setGadgetType: function(gadgetType)
-        {
-            this.gadgetType = gadgetType;
+            this.route.apply(this, args);
         },
 
         /**
          * Registers a route for a gadget.
          *
-         * @param that (the "this" reference for the function)
-         * @param uri
-         * @param method
-         * @param viewHandler
-         * @param controllerHandler
+         * @param {String} method the method to bind to
+         * @param [String] uri the uri to bind to (if none, will use "**")
+         * @param {Function} handler
          */
-        route: function(that, uri, method, viewHandler, controllerHandler)
+        route: function()
         {
-            var mappingId = "route-" + Ratchet.generateId();
+            var method = null;
+            var uri = null;
+            var handler = null;
 
-            this.gadgetMappings[mappingId] = {
-                "that": that,
+            var args = Ratchet.makeArray(arguments);
+
+            if (args.length == 2)
+            {
+                method = args.shift();
+                uri = "**";
+                handler = args.shift();
+            }
+            else if (args.length == 3)
+            {
+                method = args.shift();
+                uri = args.shift();
+                handler = args.shift();
+            }
+            else
+            {
+                Ratchet.debug("Wrong number of arguments");
+            }
+
+            var routeId = method + "-" + uri;
+
+            this.routes[routeId] = {
                 "uri": uri,
                 "method": method,
-                "viewHandler": viewHandler,
-                "controllerHandler": controllerHandler
+                "handler": handler
             };
 
-            Ratchet.debug("Mapped gadget handler: " + method + " " + uri);
+            //Ratchet.debug("Mapped gadget handler: " + method + " " + uri);
         },
 
 
@@ -456,15 +510,70 @@
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
-         * Dispatches a GET to a URI.
+         * Performs a generalized dispatch.
          *
-         * If the URI is null, then the URI is inferred from window location.
+         * Configuration object:
+         * {
+         *   "uri": <uri>,
+         *   "method": <method>,
+         *   "data": <any data>
+         * }
          *
-         * @param uri
+         * @param config
          */
-        get: function(uri)
+        dispatch: function(config)
         {
-            if (!uri)
+            var _this = this;
+
+            // teardown: clean up old observers, routes, gadget instances and the like
+            this.teardown();
+
+            // setup: new observers, routes and gadget instances
+            this.setup();
+
+
+            // clean up URI
+            if (Ratchet.startsWith(config.uri, "#"))
+            {
+                config.uri = config.uri.substring(1);
+            }
+
+            var context = new Ratchet.RenderContext(this, config);
+
+            // ensure authentication filter passes
+            this.ensureAuthentication.call(this, context, function() {
+
+                // find the controller handler method that matches this uri
+                var wrappedHandler = _this.findHandler(context);
+                if (wrappedHandler)
+                {
+                    // invoke the handler
+                    wrappedHandler();
+                }
+
+            }, function() {
+
+                alert("Authentication failed - not authenticated");
+
+            });
+        },
+
+        /**
+         * Runs a route.
+         *
+         * @param [String] method assumes GET
+         * @param {String} uri
+         * @param [Object] data
+         */
+        run: function()
+        {
+            var config = {
+                "method": "GET",
+                "data": {}
+            };
+
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 0)
             {
                 uri = window.location.href;
                 if (uri.indexOf("#"))
@@ -475,55 +584,45 @@
                 {
                     uri = "/";
                 }
+                config.uri = uri;
+            }
+            else if (args.length == 1)
+            {
+                config.uri = args.shift();
+            }
+            else if (args.length == 2)
+            {
+                var a1 = args.shift();
+                var a2 = args.shift();
+
+                if (Ratchet.isString(a2))
+                {
+                    config.method = a1;
+                    config.uri = a2;
+                }
+                else
+                {
+                    config.uri = a1;
+                    config.data = a2;
+                }
+            }
+            else if (args.length == 3)
+            {
+                config.method = args.shift();
+                config.uri = args.shift();
+                config.data = args.shift();
             }
 
-            // NOTE: We actually increment the history here and let the history callback handler
-            // do the get for us.
-
-            $.history.load(uri);
-        },
-
-        /**
-         * Dispatches a POST to a URI.
-         *
-         * @param uri
-         * @param data
-         */
-        post: function(uri, data)
-        {
-            this.dispatch({
-                "method": "POST",
-                "uri": uri,
-                "data": data
-            });
-        },
-
-        /**
-         * Dispatches a PUT to a URI.
-         *
-         * @param uri
-         * @param data
-         */
-        put: function(uri, data)
-        {
-            this.dispatch({
-                "method": "PUT",
-                "uri": uri,
-                "data": data
-            });
-        },
-
-        /**
-         * Dispatches a DELETE to a URI.
-         *
-         * @param uri
-         */
-        del: function(uri)
-        {
-            this.dispatch({
-                "method": "DELETE",
-                "uri": uri
-            });
+            // if we're the top dispatcher (app scope) and we're doing a get, store onto history
+            // this lets the history callback make the dispatch for us
+            if (config.method == "GET" && !this.parent)
+            {
+                $.history.load(config.uri);
+            }
+            else
+            {
+                this.dispatch(config);
+            }
         },
 
 
@@ -534,20 +633,97 @@
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
-         * Gets all of the observables in the given scope.
+         * Declares and gets an observable in a given scope.
+         * Optionally registers a callback function.
          *
-         * If no scope is provided, the "global" scope is assumed.
-         *
-         * @param scope
+         * @param [String] scope optional scope
+         * @param {String} id the variable id
+         * @param [String] callbackKey callback key
+         * @param [Function] callbackFunction a callback function to fire when the value of this observable changes
          */
-        scope: function(scope)
+        observable: function()
         {
-            if (!scope)
+            var scope;
+            var id;
+            var callbackKey;
+            var callbackFunction;
+
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 1)
             {
                 scope = "global";
+                id = args.shift();
+            }
+            else if (args.length == 2)
+            {
+                scope = args.shift();
+                id = args.shift();
+            }
+            else if (args.length == 3)
+            {
+                scope = "global";
+                id = args.shift();
+                callbackKey = args.shift();
+                callbackFunction = args.shift();
+            }
+            else if (args.length == 4)
+            {
+                scope = args.shift();
+                id = args.shift();
+                callbackKey = args.shift();
+                callbackFunction = args.shift();
             }
 
-            return Ratchet.ScopedObservables.get(scope);
+            var observables = Ratchet.ScopedObservables.get(scope);
+            var observable = observables.observable(id);
+
+            // binding a function handler
+            if (callbackKey && callbackFunction)
+            {
+                // subscribe
+                observable.subscribe(callbackKey, callbackFunction);
+
+                // remember we subscribed
+                this.subscriptions[callbackKey] = observable;
+            }
+
+            return observable;
+        },
+
+        /**
+         * Declares and gets a dependent observable in a given scope
+         *
+         * @param scope
+         * @param id
+         * @param func
+         */
+        dependentObservable: function()
+        {
+            var scope = null;
+            var id = null;
+            var func = null;
+
+            var args = Ratchet.makeArray(arguments);
+            if (args.length == 2)
+            {
+                scope = "global";
+                id = args.shift();
+                func = args.shift();
+            }
+            else if (args.length == 3)
+            {
+                scope = args.shift();
+                id = args.shift();
+                func = args.shift();
+            }
+            else
+            {
+                Ratchet.debug("Wrong number of arguments");
+            }
+
+            var observables = Ratchet.ScopedObservables.get(scope);
+
+            return observables.dependentObservable(id, func);
         },
 
 
@@ -594,7 +770,7 @@
                 {
                     var pattern = this.authRequiredPatterns[i];
 
-                    var tokens = this.executeMatch(pattern, context.uri);
+                    var tokens = this.executeMatch(pattern, context.route.uri);
                     if (tokens)
                     {
                         tripped = true;
@@ -636,7 +812,6 @@
             // default logic, just fire back
             successCallback();
         }
-
 
     });
 

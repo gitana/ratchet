@@ -97,6 +97,11 @@
         }
     };
 
+    Ratchet.isArray = function(obj)
+    {
+        return obj.push && obj.slice;
+    };
+
     Ratchet.isUndefined = function(obj)
     {
         return (typeof obj == "undefined");

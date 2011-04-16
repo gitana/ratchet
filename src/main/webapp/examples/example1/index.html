@@ -21,6 +21,7 @@
         <script type="text/javascript" src="/js_src/Observable.js"></script>
         <script type="text/javascript" src="/js_src/Observables.js"></script>
         <script type="text/javascript" src="/js_src/ScopedObservables.js"></script>
+        <script type="text/javascript" src="/js_src/RenderContext.js"></script>
         <script type="text/javascript" src="/js_src/Gadget.js"></script>
         <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
         <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
@@ -32,14 +33,14 @@
 
             $(document).ready(function() {
 
-                $(document.body).ratchet().get("/");
+                $(document.body).ratchet().run("/");
 
             });
 
         </script>
     </head>
 
-    <body></body>
+    <body gadget="application"></body>
 
 </html>
 

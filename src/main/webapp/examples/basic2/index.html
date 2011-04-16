@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Gitana Ratchet MVC - Example #6</title>
+        <title>Ratchet - Basic Example #2</title>
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
@@ -26,45 +26,29 @@
         <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
         <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
-        <!-- examples -->
-        <script type="text/javascript" src="gadgets/Page.js"></script>
-
-        <!-- work it -->
         <script type="text/javascript">
 
             $(document).ready(function() {
 
                 $(document.body).ratchet(function() {
 
-                    // require authentication for any uris that matches this expression
-                    this.requireAuthentication("/1b/2b/**");
+                    this.get("/", function() {
 
-                    this.authenticate = function(context, successCallback, failureCallback)
-                    {
-                        // check whether they have existing authentication
-                        if (typeof(AuthObject) === "undefined")
-                        {
-                            // Note: normally, you'd pop up a modal dialog here
-                            alert("Close to authenticate");
+                        this.html("Here is some <span>text</span>").swap(function() {
 
-                            // set authentication
-                            AuthObject = true;
+                            this.find("span").html("HTML");
 
-                            successCallback();
-                        }
-                        else
-                        {
-                            successCallback();
-                        }
-                    };
+                        });
+                    });
 
                 }).run("/");
+
             });
 
         </script>
     </head>
 
-    <body gadget="page"></body>
+    <body></body>
 
 </html>
 

@@ -32,7 +32,7 @@
             return this.observables[id];
         },
 
-        dependentObservable: function(id, func, pool)
+        dependentObservable: function(id, func)
         {
             var _this = this;
 
@@ -44,6 +44,7 @@
                 var m = new Ratchet.Observables(this.scope);
                 m.observable = function(x, y)
                 {
+                    //Ratchet.debug("Observable: " + observable.id + " depends on observable: " + x);
                     var o = _this.observable(x, y);
                     o.markDependentOnUs(observable);
 

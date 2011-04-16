@@ -1,55 +1,54 @@
 (function($)
 {
-    /**
-     * Example of a gadget that tokenizes the URL and displays token info.
-     */
     Example4 = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
+        constructor: function(id, ratchet)
         {
-            this.base(ratchet, container);
-
-            // custom registrations
-            this.route("/", "GET", this.index);
-            this.route("/test/{test1}/{test2}/{test3}", "GET", this.test);
-            this.route("/wiki/**", "GET", this.wiki);
+            this.base(id, ratchet);
         },
 
-        index: function(context, model)
+        setup: function()
         {
-            $(this.getContainer()).html("Index");
-            $(this.getContainer()).append("<br/>");
-            $(this.getContainer()).append("<a href='#/test/1/2/3'>Nested Test</a>");
-            $(this.getContainer()).append("<br/>");
-            $(this.getContainer()).append("<a href='#/wiki/a/whole/bunch/of/things'>Wiki Nested Test 1</a>");
-            $(this.getContainer()).append("<br/>");
-            $(this.getContainer()).append("<a href='#/wiki/and/some/more/things'>Wiki Nested Test 2</a>");
-            $(this.getContainer()).append("<br/>");
-
-            this.success(context, model);
+            this.get("/", this.index);
+            this.get("/test/{test1}/{test2}/{test3}", this.test);
+            this.get("/wiki/**", this.wiki);
         },
 
-        test: function(context, model)
+        index: function()
         {
-            $(this.getContainer()).html("Tokens");
-            $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("test1: " + context.tokens["test1"]);
-            $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("test2: " + context.tokens["test2"]);
-            $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("test3: " + context.tokens["test3"]);
-            $(this.getContainer()).append("<br>");
+            this.html("Index");
+            this.append("<br/>");
+            this.append("<a href='#/test/1/2/3'>Nested Test</a>");
+            this.append("<br/>");
+            this.append("<a href='#/wiki/a/whole/bunch/of/things'>Wiki Nested Test 1</a>");
+            this.append("<br/>");
+            this.append("<a href='#/wiki/and/some/more/things'>Wiki Nested Test 2</a>");
+            this.append("<br/>");
 
-            this.success(context, model);
+            this.swap();
         },
 
-        wiki: function(context, model)
+        test: function()
         {
-            $(this.getContainer()).html("Wiki Page");
-            $(this.getContainer()).append("<br>");
-            $(this.getContainer()).append("**: " + context.tokens["**"]);
+            this.html("Tokens");
+            this.append("<br>");
+            this.append("test1: " + this.model.tokens["test1"]);
+            this.append("<br>");
+            this.append("test2: " + this.model.tokens["test2"]);
+            this.append("<br>");
+            this.append("test3: " + this.model.tokens["test3"]);
+            this.append("<br>");
 
-            this.success(context, model);
+            this.swap();
+        },
+
+        wiki: function()
+        {
+            this.html("Wiki Page");
+            this.append("<br>");
+            this.append("**: " + this.model.tokens["**"]);
+
+            this.swap();
         }
 
     });

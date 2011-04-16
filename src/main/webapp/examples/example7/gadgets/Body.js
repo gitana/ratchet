@@ -2,12 +2,21 @@
 {
     Body = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
+        constructor: function(id, ratchet)
         {
-            this.base(ratchet, container);
+            this.base(id, ratchet);
+        },
 
-            // custom registration
-            this.route("/", "GET", "templates/body");
+        setup: function()
+        {
+            this.get(this.index);
+        },
+
+        index: function()
+        {
+            this.transform("templates/body", function() {
+                this.swap();
+            });
         }
     });
 

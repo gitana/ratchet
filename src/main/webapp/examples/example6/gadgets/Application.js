@@ -2,49 +2,22 @@
 {
     Application = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
+        constructor: function(id, ratchet)
         {
-            this.base(ratchet, container);
-
-            // custom registrations
-            this.route("/", "GET", "templates/application", this.index);
-            this.route("/", "POST", this.submit);
-
-            // custom observables
-            this.firstName = this.scope().observable("firstName");
-            this.lastName = this.scope().observable("lastName");
-            this.fullName = this.scope().dependentObservable("fullName", function() {
-                return this.observable("firstName").get("") + " " + this.observable("lastName").get("");
-            }, this.scope());
+            this.base(id, ratchet);
         },
 
-        /**
-         * Controller method for index view.
-         *
-         * @param context
-         * @param model
-         */
-        index: function(context, model)
+        setup: function()
         {
-            // assign observable values into model
-            model["firstName"] = this.firstName.get();
-            model["lastName"] = this.lastName.get();
-
-            this.success(context, model);
+            this.get("/", this.index);
         },
 
-        submit: function(context, model)
+        index: function()
         {
-            var data = context["data"];
-
-            // update observables
-            this.firstName.set(data.firstName);
-            this.lastName.set(data.lastName);
-
-            // mark as having succeeded
-            this.success(context, model);
+            this.transform("templates/application", function() {
+                this.swap();
+            });
         }
-
     });
 
     Ratchet.GadgetRegistry.register("application", Application);

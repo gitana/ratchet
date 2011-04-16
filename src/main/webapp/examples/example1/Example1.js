@@ -1,44 +1,18 @@
 (function($)
 {
-    /**
-     * Example of a gadget that executes a controller and a view.
-     */
     Example1 = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
+        constructor: function(id, ratchet)
         {
-            this.base(ratchet, container);
-
-            // custom registrations
-            this.route("/", "GET", this.index, this._index);
+            this.base(id, ratchet);
         },
 
-        /**
-         * Controller method for index view.
-         *
-         * Note: by convention, controller methods start with _.
-         *
-         * @param context
-         * @param model
-         */
-        _index: function(context, model)
+        setup: function()
         {
-            model["title"] = "Welcome to the title page";
-
-            this.success(context, model);
-        },
-
-        /**
-         * View method for index view.
-         *
-         * @param context
-         * @param model
-         */
-        index: function(context, model)
-        {
-            $(this.getContainer()).html(model["title"]);
-
-            this.success(context, model);
+            // define a route
+            this.get("/", function() {
+                this.html("Welcome to the title page").swap();
+            });
         }
     });
 

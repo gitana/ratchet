@@ -3,7 +3,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Gitana Ratchet MVC - Example #6</title>
+        <title>Ratchet - Basic Example #3</title>
 
         <!-- jquery -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
@@ -26,45 +26,33 @@
         <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
         <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
-        <!-- examples -->
-        <script type="text/javascript" src="gadgets/Page.js"></script>
-
-        <!-- work it -->
         <script type="text/javascript">
 
             $(document).ready(function() {
 
                 $(document.body).ratchet(function() {
 
-                    // require authentication for any uris that matches this expression
-                    this.requireAuthentication("/1b/2b/**");
+                    var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
 
-                    this.authenticate = function(context, successCallback, failureCallback)
-                    {
-                        // check whether they have existing authentication
-                        if (typeof(AuthObject) === "undefined")
+                    this.get("/", function() {
+
+                        for (var i = 0; i < 10; i++)
                         {
-                            // Note: normally, you'd pop up a modal dialog here
-                            alert("Close to authenticate");
-
-                            // set authentication
-                            AuthObject = true;
-
-                            successCallback();
+                            $("<div></div>").html(lorem).appendTo(this);
                         }
-                        else
-                        {
-                            successCallback();
-                        }
-                    };
+
+                        // swap our content in
+                        this.swap();
+                    });
 
                 }).run("/");
+
             });
 
         </script>
     </head>
 
-    <body gadget="page"></body>
+    <body></body>
 
 </html>
 

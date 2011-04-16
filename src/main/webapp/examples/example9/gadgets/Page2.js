@@ -1,25 +1,25 @@
 (function($)
 {
-    Header = Ratchet.Gadget.extend(
+    Page2 = Ratchet.Gadget.extend(
     {
         constructor: function(id, ratchet)
         {
-            this.base(id, ratchet);
+            this.base(id ,ratchet);
         },
 
         setup: function()
         {
-            this.get(this.index);
+            this.get("/page2", this.index);
         },
 
         index: function()
         {
-            this.transform("templates/header", function() {
+            this.transform("templates/page2", function() {
                 this.swap();
             });
         }
     });
 
-    Ratchet.GadgetRegistry.register("header", Header);
+    Ratchet.GadgetRegistry.register("page", Page2);
 
 })(jQuery);

@@ -2,22 +2,26 @@
 {
     Page = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
+        constructor: function(id, ratchet)
         {
-            this.base(ratchet, container);
-
-            // custom registration
-            this.route("**", "GET", "templates/page", this.controller);
+            this.base(id, ratchet);
         },
 
-        controller: function(context, model)
+        setup: function()
         {
-            model["uri"] = context.uri;
+            this.get(this.page);
+        },
 
-            this.success(context, model);
+        page: function()
+        {
+            this.model["uri"] = this.route.uri;
+
+            this.transform("templates/page", function() {
+                this.swap();
+            });
         }
     });
 
-    Ratchet.GadgetRegistry.register("application", Page);
+    Ratchet.GadgetRegistry.register("page", Page);
 
 })(jQuery);

@@ -5,42 +5,29 @@
         constructor: function(ratchet, container)
         {
             this.base(ratchet, container);
-
-            // custom registration
-            this.route("/", "GET", this.renderIndex, this.index);
-
-            // custom observables
-            this.firstName = this.scope().observable("firstName");
-            this.lastName = this.scope().observable("lastName");
-            this.fullName = this.scope().observable("fullName");
         },
 
-        index: function(context, model)
+        setup: function()
         {
-            var _this = this;
+            this.get(this.index);
 
-            // make sure we're subscribed to receive notifications of updates to these observers
-
-            // NOTE: we could do the following
-            //this.firstName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
-            //this.lastName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
-
-            // OR: we could just observe "fullName" since it itself is dependent on firstName and lastName
-            this.fullName.subscribe("properties", this.observationHandler(this, context, model, _this.renderIndex));
-
-            // mark as having succeeded
-            this.success(context, model);
+            // subscribe to observable
+            this.subscribe("fullName", function() {
+                this.run("GET", "/");
+            });
         },
 
-        renderIndex: function(context, model)
+        index: function()
         {
-            model["firstName"] = this.firstName.get("");
-            model["lastName"] = this.lastName.get("");
-            model["fullName"] = this.fullName.get("");
+            // setup model
+            this.model["firstName"] = this.observable("firstName").get("");
+            this.model["lastName"] = this.observable("lastName").get("");
+            this.model["fullName"] = this.observable("fullName").get("");
 
-            this.renderTemplate(context, model, "templates/properties");
+            this.transform("templates/properties", function() {
+                this.swap();
+            });
         }
-
     });
 
     Ratchet.GadgetRegistry.register("properties", Properties);

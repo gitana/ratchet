@@ -20,18 +20,18 @@
             });
         },
 
-        index: function()
+        index: function(el)
         {
             var _this = this;
 
-            this.model["firstName"] = this.observable("firstName").get();
-            this.model["lastName"] = this.observable("lastName").get();
+            el.model["firstName"] = this.observable("firstName").get();
+            el.model["lastName"] = this.observable("lastName").get();
 
             // transform
-            this.transform("templates/form", function() {
+            el.transform("templates/form", function(el) {
 
                 // override the submit handlers
-                var form = this.find("form");
+                var form = el.find("form");
                 $(form).find("input[type=submit]").click(function(event)
                 {
                     event.preventDefault();
@@ -47,11 +47,11 @@
                     _this.run("POST", "/", form.serializeObject());
                 });
 
-                this.swap();
+                el.swap();
             });
         },
 
-        submit: function(data)
+        submit: function(el, data)
         {
             this.observable("firstName").set(data.firstName);
             this.observable("lastName").set(data.lastName);

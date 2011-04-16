@@ -36,14 +36,8 @@
 
             $(document).ready(function() {
 
-                var app = new Ratchet($("#app"), function() {
+                $("#app").ratchet().run("/");
 
-                    // TODO: any setup
-
-                });
-
-                // start it off
-                app.run("/");
             });
 
         </script>

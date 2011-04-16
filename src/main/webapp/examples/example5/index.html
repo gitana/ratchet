@@ -34,29 +34,29 @@
 
                 // section 1
                 $("#section1").ratchet(function() {
-                    this.get("/", function() {
-                        this.html(lorem).swap();
+                    this.get("/", function(el) {
+                        el.html(lorem).swap();
                     });
                 }).run("/");
 
                 // section 2
                 $("#section2").ratchet(function() {
-                    this.get("/", function() {
-                        this.html("<B>" + lorem + "</B>").swap();
+                    this.get("/", function(el) {
+                        el.html("<B>" + lorem + "</B>").swap();
                     });
                 }).run("/");
 
                 // section 3
                 $("#section3").ratchet(function() {
-                    this.get("/", function() {
-                        this.html("<I>" + lorem + "</I>").swap();
+                    this.get("/", function(el) {
+                        el.html("<I>" + lorem + "</I>").swap();
                     });
                 }).run("/");
 
                 // section 4
                 $("#section4").ratchet(function() {
-                    this.get("/", function() {
-                        this.html("<U>" + lorem + "</U>").swap();
+                    this.get("/", function(el) {
+                        el.html("<U>" + lorem + "</U>").swap();
                     });
                 }).run("/");
 

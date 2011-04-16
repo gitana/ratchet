@@ -32,24 +32,24 @@
 
                 $(document.body).ratchet(function() {
 
-                    this.get("/", function() {
+                    this.get("/", function(el) {
 
-                        this.html("Click a page");
-                        this.append("<br/>");
-                        this.append("<a href='#/page1'>Page1</a>");
-                        this.append("<br/>");
-                        this.append("<a href='#/page2'>Page2</a>");
+                        el.html("Click a page")
+                                .append("<br/>")
+                                .append("<a href='#/page1'>Page1</a>")
+                                .append("<br/>")
+                                .append("<a href='#/page2'>Page2</a>");
 
                         // swap our content in
-                        this.swap();
+                        el.swap();
                     });
 
-                    this.get("/page1", function() {
-                        this.html("You clicked page 1").swap();
+                    this.get("/page1", function(el) {
+                        el.html("You clicked page 1").swap();
                     });
 
-                    this.get("/page2", function() {
-                        this.html("You clicked page 2").swap();
+                    this.get("/page2", function(el) {
+                        el.html("You clicked page 2").swap();
                     });
 
                 }).run("/");

@@ -32,13 +32,13 @@
 
                 $(document.body).ratchet(function() {
 
-                    this.get("/", function() {
+                    this.get("/", function(el) {
 
-                        this.fetch("data.json", function(json) {
+                        el.fetch("data.json", function(json) {
 
-                            this.transform("template", json, function() {
+                            el.transform("template", json, function() {
 
-                                this.swap();
+                                el.swap();
 
                             });
 

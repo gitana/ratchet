@@ -12,10 +12,10 @@
             this.get("/page1", this.index);
         },
 
-        index: function()
+        index: function(el)
         {
-            this.transform("templates/page1", function() {
-                this.swap();
+            el.transform("templates/page1", function(el) {
+                el.swap();
             });
         }
     });

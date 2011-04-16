@@ -17,15 +17,15 @@
             });
         },
 
-        index: function()
+        index: function(el)
         {
             // setup model
-            this.model["firstName"] = this.observable("firstName").get("");
-            this.model["lastName"] = this.observable("lastName").get("");
-            this.model["fullName"] = this.observable("fullName").get("");
+            el.model["firstName"] = this.observable("firstName").get("");
+            el.model["lastName"] = this.observable("lastName").get("");
+            el.model["fullName"] = this.observable("fullName").get("");
 
-            this.transform("templates/properties", function() {
-                this.swap();
+            el.transform("templates/properties", function(el) {
+                el.swap();
             });
         }
     });

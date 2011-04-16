@@ -32,9 +32,10 @@
 
                 $(document.body).ratchet(function() {
 
-                    this.get("/", function() {
+                    this.get("/", function(el) {
 
-                        this.html("Here is some <span>text</span>").swap();
+                        el.html("Here is some <span>text</span>").swap();
+
                     });
 
                 }).run("/");

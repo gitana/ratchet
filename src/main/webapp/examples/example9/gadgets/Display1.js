@@ -20,12 +20,12 @@
             });
         },
 
-        index: function()
+        index: function(el)
         {
-            this.model["value"] = this.observable("value").get();
+            el.model["value"] = this.observable("value").get();
 
-            this.transform("templates/display1", function() {
-                this.swap();
+            el.transform("templates/display1", function() {
+                el.swap();
             });
 
         }

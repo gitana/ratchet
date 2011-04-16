@@ -15,32 +15,31 @@
             this.get("/pages/page2", this.page2);
         },
 
-        index: function()
+        index: function(el)
         {
-            this.html("Index");
-            this.append("<br/>");
-            this.append("<a href='#/pages'>Pages</a>");
-            this.append("<br/>");
-            this.append("<a href='#/pages/page1'>Page 1</a>");
-            this.append("<br/>");
-            this.append("<a href='#/pages/page2'>Page 2</a>");
-
-            this.swap();
+            el.html("Index")
+                .append("<br/>")
+                .append("<a href='#/pages'>Pages</a>")
+                .append("<br/>")
+                .append("<a href='#/pages/page1'>Page 1</a>")
+                .append("<br/>")
+                .append("<a href='#/pages/page2'>Page 2</a>")
+                .swap();
         },
 
-        pages: function()
+        pages: function(el)
         {
-            this.html("Pages").swap();
+            el.html("Pages").swap();
         },
 
-        page1: function()
+        page1: function(el)
         {
-            this.html("Page 1").swap();
+            el.html("Page 1").swap();
         },
 
-        page2: function()
+        page2: function(el)
         {
-            this.html("Page 2").swap();
+            el.html("Page 2").swap();
         }
 
     });

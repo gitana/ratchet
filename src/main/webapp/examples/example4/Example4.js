@@ -14,41 +14,38 @@
             this.get("/wiki/**", this.wiki);
         },
 
-        index: function()
+        index: function(el)
         {
-            this.html("Index");
-            this.append("<br/>");
-            this.append("<a href='#/test/1/2/3'>Nested Test</a>");
-            this.append("<br/>");
-            this.append("<a href='#/wiki/a/whole/bunch/of/things'>Wiki Nested Test 1</a>");
-            this.append("<br/>");
-            this.append("<a href='#/wiki/and/some/more/things'>Wiki Nested Test 2</a>");
-            this.append("<br/>");
-
-            this.swap();
+            el.html("Index")
+                .append("<br/>")
+                .append("<a href='#/test/1/2/3'>Nested Test</a>")
+                .append("<br/>")
+                .append("<a href='#/wiki/a/whole/bunch/of/things'>Wiki Nested Test 1</a>")
+                .append("<br/>")
+                .append("<a href='#/wiki/and/some/more/things'>Wiki Nested Test 2</a>")
+                .append("<br/>")
+                .swap();
         },
 
-        test: function()
+        test: function(el)
         {
-            this.html("Tokens");
-            this.append("<br>");
-            this.append("test1: " + this.model.tokens["test1"]);
-            this.append("<br>");
-            this.append("test2: " + this.model.tokens["test2"]);
-            this.append("<br>");
-            this.append("test3: " + this.model.tokens["test3"]);
-            this.append("<br>");
-
-            this.swap();
+            el.html("Tokens")
+                .append("<br>")
+                .append("test1: " + el.tokens["test1"])
+                .append("<br>")
+                .append("test2: " + el.tokens["test2"])
+                .append("<br>")
+                .append("test3: " + el.tokens["test3"])
+                .append("<br>")
+                .swap();
         },
 
-        wiki: function()
+        wiki: function(el)
         {
-            this.html("Wiki Page");
-            this.append("<br>");
-            this.append("**: " + this.model.tokens["**"]);
-
-            this.swap();
+            el.html("Wiki Page")
+                .append("<br>")
+                .append("**: " + el.tokens["**"])
+                .swap();
         }
 
     });

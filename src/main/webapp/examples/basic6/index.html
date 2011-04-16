@@ -32,24 +32,24 @@
 
                 $(document.body).ratchet(function() {
 
-                    this.get("/", function() {
+                    this.get("/", function(el) {
 
-                        this.html("Click a page");
-                        this.append("<br/>");
-                        this.append("<a href='#/page1'>/page1</a>");
-                        this.append("<br/>");
-                        this.append("<a href='#/page2'>/page2</a>");
-                        this.append("<br/>");
-                        this.append("<a href='#/a/longer/url'>/a/longer/url</a>");
-                        this.append("<br/>");
-                        this.append("<a href='#/something/else/that/we/want/to/invoke'>/something/else/that/we/want/to/invoke</a>");
+                        el.html("Click a page")
+                            .append("<br/>")
+                            .append("<a href='#/page1'>/page1</a>")
+                            .append("<br/>")
+                            .append("<a href='#/page2'>/page2</a>")
+                            .append("<br/>")
+                            .append("<a href='#/a/longer/url'>/a/longer/url</a>")
+                            .append("<br/>")
+                            .append("<a href='#/something/else/that/we/want/to/invoke'>/something/else/that/we/want/to/invoke</a>");
 
                         // swap our content in
-                        this.swap();
+                        el.swap();
                     });
 
-                    this.get("/**", function() {
-                        this.html("You clicked: " + this.model.tokens['**']).swap();
+                    this.get("/**", function(el) {
+                        el.html("You clicked: " + el.tokens['**']).swap();
                     });
 
                 }).run("/");

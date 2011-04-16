@@ -13,23 +13,22 @@
             this.get("/pages/{page}", this.page);
         },
 
-        index: function()
+        index: function(el)
         {
-            this.html("Index");
-            this.append("<br/>");
-            this.append("<a href='#/pages/page1'>Page 1</a>");
-            this.append("<br/>");
-            this.append("<a href='#/pages/page2'>Page 2</a>");
-            this.append("<br/>");
-            this.append("<a href='#/pages/page3'>Page 3</a>");
-            this.append("<br/>");
-
-            this.swap();
+            el.html("Index")
+                .append("<br/>")
+                .append("<a href='#/pages/page1'>Page 1</a>")
+                .append("<br/>")
+                .append("<a href='#/pages/page2'>Page 2</a>")
+                .append("<br/>")
+                .append("<a href='#/pages/page3'>Page 3</a>")
+                .append("<br/>")
+                .swap();
         },
 
-        page: function()
+        page: function(el)
         {
-            this.html("Page: " + this.model.tokens["page"]).swap();
+            el.html("Page: " + el.tokens["page"]).swap();
         }
 
     });

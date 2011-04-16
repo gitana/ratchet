@@ -34,15 +34,15 @@
 
                     var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
 
-                    this.get("/", function() {
+                    this.get("/", function(el) {
 
                         for (var i = 0; i < 10; i++)
                         {
-                            $("<div></div>").html(lorem).appendTo(this);
+                            $("<div></div>").html(lorem).appendTo(el);
                         }
 
                         // swap our content in
-                        this.swap();
+                        el.swap();
                     });
 
                 }).run("/");

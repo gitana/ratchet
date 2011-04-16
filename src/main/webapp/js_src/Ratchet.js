@@ -216,20 +216,19 @@
                     var invocationContext = new Ratchet.RenderContext(this, context.route);
                     Ratchet.copyInto(invocationContext.model, context.model);
                     invocationContext.tokens = tokens;
-                    invocationContext.model.tokens = tokens;
 
                     // wrap the handler into a closure (convenience function)
                     handler = function(invocationContext)
                     {
                         return function()
                         {
-                            discoveredHandler.call(invocationContext, invocationContext.route.data);
+                            discoveredHandler.call(discoveredHandler, invocationContext, invocationContext.route.data);
                         };
                     }(invocationContext);
                 }
                 else
                 {
-                    // no gadget handler was found
+                    // no matching route found
 
                     // create an invocation context that assumes the current dom is just fine
                     var invocationContext = new Ratchet.RenderContext(this, context.route, this.el);
@@ -254,12 +253,6 @@
         init: function()
         {
             var _this = this;
-
-            // invoke setup function
-            if (this.setupFunction)
-            {
-                this.setupFunction.call(_this);
-            }
 
             // history support
             // NOTE: only for the top-most dispatcher
@@ -294,6 +287,12 @@
          */
         setup: function()
         {
+            // invoke setup function
+            if (this.setupFunction)
+            {
+                this.setupFunction.call(this);
+            }
+
             // if we don't have a gadget id, we should check the DOM to see if one is configured on the DOM element
             // to which we are bound
             if (!this.id)
@@ -392,11 +391,12 @@
          *
          * @param [String] uri
          * @param {Function} handler
+         * @param [Object] that
          */
         get: function()
         {
             var args = Ratchet.makeArray(arguments);
-            if (args.length == 1)
+            if (Ratchet.isFunction(args[0]))
             {
                 args.unshift("**");
             }
@@ -410,11 +410,12 @@
          *
          * @param [String] uri
          * @param {Function} handler
+         * @param [Object] that
          */
         post: function()
         {
             var args = Ratchet.makeArray(arguments);
-            if (args.length == 1)
+            if (Ratchet.isFunction(args[0]))
             {
                 args.unshift("**");
             }
@@ -428,11 +429,12 @@
          *
          * @param [String] uri
          * @param {Function} handler
+         * @param [Object] that
          */
         put: function(uri, handler)
         {
             var args = Ratchet.makeArray(arguments);
-            if (args.length == 1)
+            if (Ratchet.isFunction(args[0]))
             {
                 args.unshift("**");
             }
@@ -446,11 +448,12 @@
          *
          * @param [String] uri
          * @param {Function} handler
+         * @param [Object] that
          */
         del: function(uri, handler)
         {
             var args = Ratchet.makeArray(arguments);
-            if (args.length == 1)
+            if (Ratchet.isFunction(args[0]))
             {
                 args.unshift("**");
             }
@@ -465,12 +468,14 @@
          * @param {String} method the method to bind to
          * @param [String] uri the uri to bind to (if none, will use "**")
          * @param {Function} handler
+         * @param [Object] that
          */
         route: function()
         {
             var method = null;
             var uri = null;
             var handler = null;
+            var that = null;
 
             var args = Ratchet.makeArray(arguments);
 
@@ -486,17 +491,36 @@
                 uri = args.shift();
                 handler = args.shift();
             }
+            else if (args.length == 4)
+            {
+                method = args.shift();
+                uri = args.shift();
+                handler = args.shift();
+                that = args.shift();
+            }
             else
             {
                 Ratchet.debug("Wrong number of arguments");
             }
+
+            if (!that)
+            {
+                that = handler;
+            }
+
+            // wrap handler in closure
+            var func = function(that, handler) {
+                return function(el, data) {
+                    handler.call(that, el, data);
+                };
+            }(that, handler);
 
             var routeId = method + "-" + uri;
 
             this.routes[routeId] = {
                 "uri": uri,
                 "method": method,
-                "handler": handler
+                "handler": func
             };
 
             //Ratchet.debug("Mapped gadget handler: " + method + " " + uri);

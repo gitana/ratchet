@@ -32,16 +32,16 @@
 
                 $(document.body).ratchet(function() {
 
-                    this.get("/", function() {
+                    this.get("/", function(el) {
 
                         var clickable = $("<span>Click on me to pop up an alert</span>");
                         clickable.click(function() {
                             alert("Here it is");
                         });
 
-                        this.append(clickable);
+                        el.append(clickable);
 
-                        this.swap();
+                        el.swap();
                     });
 
                 }).run("/");

@@ -12,19 +12,19 @@
             this.get(this.index);
         },
 
-        index: function()
+        index: function(el)
         {
             var _this = this;
 
-            this.model["value"] = this.observable("value").get();
+            el.model["value"] = this.observable("value").get();
 
-            this.transform("templates/form", function() {
+            el.transform("templates/form", function(el) {
 
-                $(this).find("input").keyup(function() {
+                el.find("input").keyup(function() {
                     _this.observable("value").set(this.value);
                 });
 
-                this.swap();
+                el.swap();
             });
         }
 

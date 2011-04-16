@@ -185,26 +185,40 @@
         //
         //    /a/b/c may mean one thing to gadget #1 and something else to gadget #2
         //
+        // NOTE: these methods make sure to wrap the handler in a closure so that "this" is the gadget
+        //
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
         get: function()
         {
-            this.ratchet().get.apply(this.ratchet(), arguments);
+            var array = Ratchet.makeArray(arguments);
+            array.push(this);
+
+            this.ratchet().get.apply(this.ratchet(), array);
         },
 
         post: function()
         {
-            this.ratchet().post.apply(this.ratchet(), arguments);
+            var array = Ratchet.makeArray(arguments);
+            array.push(this);
+
+            this.ratchet().post.apply(this.ratchet(), array);
         },
 
         put: function(uri, handler)
         {
-            this.ratchet().put.apply(this.ratchet(), arguments);
+            var array = Ratchet.makeArray(arguments);
+            array.push(this);
+
+            this.ratchet().put.apply(this.ratchet(), array);
         },
 
         del: function(uri, handler)
         {
-            this.ratchet().del.apply(this.ratchet(), arguments);
+            var array = Ratchet.makeArray(arguments);
+            array.push(this);
+
+            this.ratchet().del.apply(this.ratchet(), array);
         }
 
     });

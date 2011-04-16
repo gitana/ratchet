@@ -10,8 +10,8 @@
         setup: function()
         {
             // define a route
-            this.get("/", function() {
-                this.html("Welcome to the title page").swap();
+            this.get("/", function(el) {
+                el.html("Welcome to the title page").swap();
             });
         }
     });

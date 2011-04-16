@@ -53,7 +53,7 @@
             // custom callback
             if (callback)
             {
-                callback.call(this);
+                callback.call(callback, this);
             }
 
             // process any gadgets
@@ -117,14 +117,15 @@
                 {
                     if (successCallback)
                     {
-                        successCallback.call(_this, data);
+                        debugger;
+                        successCallback.call(successCallback, _this, data);
                     }
                 },
                 "failure": function(http)
                 {
                     if (failureCallback)
                     {
-                        failureCallback.call(_this, http);
+                        failureCallback.call(failureCallback, _this, http);
                     }
                 }
             }, options));
@@ -174,7 +175,7 @@
 
                 if (successCallback)
                 {
-                    successCallback.call(_this)
+                    successCallback.call(successCallback, _this)
                 }
             };
 
@@ -204,7 +205,7 @@
                     {
                         if (failureCallback)
                         {
-                            failureCallback.call(_this, http);
+                            failureCallback.call(failureCallback, _this, http);
                         }
                     }
                 });

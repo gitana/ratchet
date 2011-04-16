@@ -12,12 +12,12 @@
             this.get(this.page);
         },
 
-        page: function()
+        page: function(el)
         {
-            this.model["uri"] = this.route.uri;
+            el.model["uri"] = el.route.uri;
 
-            this.transform("templates/page", function() {
-                this.swap();
+            el.transform("templates/page", function(el) {
+                el.swap();
             });
         }
     });

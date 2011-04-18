@@ -30,7 +30,6 @@
 								<param>../js_src/thirdparty/base.js</param>
                                 <param>../js_src/thirdparty/json2.js</param>
                                 <param>../js_src/thirdparty/jquery.history.js</param>
-                                <param>../js_src/thirdparty/jquery.tmpl.js</param>
                                 <param>../js_src/thirdparty/form2object.js</param>
 
                                 <!-- Ratchet Core -->
@@ -95,6 +94,15 @@
 								<exclude name="js_src/**/*.js" />
 							</fileset>
 						</copy>
+
+                        <!-- Copy across any plugins -->
+                        <copy
+                            todir="${project.build.directory}/${project.build.finalName}/js/plugins">
+                            <fileset dir="src/main/webapp/js_src/plugins">
+                                <include name="*.js" />
+                            </fileset>
+                        </copy>
+
 					</target>
 				</configuration>
 			</plugin>		

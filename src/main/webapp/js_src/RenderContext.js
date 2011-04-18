@@ -163,54 +163,36 @@
                 failureCallback = args.shift();
             }
 
-            var templateURL = templateId + ".html";
-
-            var renderTemplate = function(templateId, model)
+            // NOTE: this requires the jQuery template engine plugin
+            if (Ratchet.isUndefined(Ratchet.jQueryTemplateEngine))
             {
-                var markup = $.tmpl(templateId, model);
+                Ratchet.error("Cannot render template, the jQueryTemplateEngine plugin must be included");
+                return;
+            }
 
-                _this.html("");
-                _this.append(markup);
+            var engine = Ratchet.jQueryTemplateEngine.instance;
+            if (!engine)
+            {
+                engine = new Ratchet.jQueryTemplateEngine("default");
+                Ratchet.jQueryTemplateEngine.instance = engine;
+            }
+
+            // do the render
+            engine.render(_this, templateId, model, function(el) {
 
                 if (successCallback)
                 {
-                    successCallback.call(successCallback, _this)
+                    successCallback(el);
                 }
-            };
 
-            if ($.template[templateId])
-            {
-                renderTemplate(templateId, model);
-            }
-            else
-            {
-                $.ajax({
-                    "url": "" + templateURL,
-                    "dataType": "html",
-                    "success": function(html)
-                    {
-                        // convert to a dom briefly
-                        // this is because it starts with <script> and we only want what is inside
-                        var dom = $(html);
-                        html = dom.html();
+            }, function(el, http) {
 
-                        // compile template
-                        $.template(templateId, html);
+                if (failureCallback)
+                {
+                    failureCallback(el, http);
+                }
 
-                        // render template
-                        renderTemplate(templateId, model);
-                    },
-                    "failure": function(http)
-                    {
-                        if (failureCallback)
-                        {
-                            failureCallback.call(failureCallback, _this, http);
-                        }
-                    }
-                });
-
-                return false;
-            }
+            });
         },
 
         /**

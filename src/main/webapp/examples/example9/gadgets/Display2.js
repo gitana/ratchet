@@ -14,10 +14,12 @@
         
         index: function(el)
         {
+            var _this = this;
+
             // subscribe to observable
             this.subscribe("value", function() {
 
-                Ratchet.debug("Display 2 updating: " + this.observable("value").get());
+                Ratchet.debug("Display 2 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
 
                 this.run("GET", "/");
             });

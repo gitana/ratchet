@@ -159,7 +159,7 @@
                 callbackFunction = args.shift();
             }
 
-            var callbackKey = this.getGadgetId();
+            var callbackKey = this.ratchet().id + "-" + this.getGadgetId();
 
             return this.ratchet().observable(scope, id, callbackKey, callbackFunction);
         },
@@ -171,6 +171,72 @@
         {
             return this.ratchet().dependentObservable.apply(this.ratchet(), arguments);
         },
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // EVENT HANDLERS - manufacturing methods (produce handlers)
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        /**
+         * Produces a refresh handler that reloads this gadget with the last
+         * dispatched method, uri and data.
+         *
+         * @param gadget
+         * @param route
+         */
+        refreshHandler: function(el)
+        {
+            return function(el)
+            {
+                return function()
+                {
+                    /**
+                     * PROBLEM: the issue is that gadgets are bound to ratchets when they instantiate
+                     * They hold this reference to the ratchet and the reference is further passed into the
+                     * RenderContext object.
+                     *
+                     * Thus, when you do something like shown below, this dispatches against the original ratchet().
+                     *
+                     * However, if someone runs a route() such as when a page runs route "/security" from "/", this
+                     * causes the top most ratchet to reload all of its child ratchets and do its whole
+                     * process subgadgets thing.
+                     *
+                     * When it does this, it first tears down any existing ratchets and destroys and gadget instances.
+                     * And then it rebuilds everything by walking the [gadget] tags and reinstantiating any gadgets.
+                     *
+                     * The original reference (hit from below) is bound to the wrong div element.
+                     *
+                     * Should there be any notion of gadgets not being destroyed until they go off-page?
+                     *
+                     * --
+                     *
+                     * the toolbar is originally ratchet-6
+                     *
+                     * by the time we click through a few pages, the toolbar ratchet has been updated to toolbar-24 or something
+                     * however, the el used by the observer is still bound to ratchet-6!
+                     *
+                     * if things are working correctly, the subscriber should be shut down and re-created against the new
+                     * ratchet each time.
+                     *
+                     * q: is this happening and if so, is it somehow using the old ratchet?  why?
+                     *
+                     * problem: the old ratchet has an old DOM element that isn't applicable anymore!
+                     * so things get written into nowhere/nothingness
+                     *
+                     *
+                     *
+                     */
+                    el.run(el.route.method, el.route.uri, el.route.data);
+                };
+
+            }(el);
+        },
+
 
 
 
@@ -189,6 +255,8 @@
         {
             this.ratchet().run.apply(this.ratchet(), arguments);
         },
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         //

@@ -64,14 +64,18 @@
             // routes
             this.routes = {};
 
-            // id (this will be the same as gadget id)
-            this.id = null;
+            // ratchet id
+            this.id = Ratchet.generateId();
 
-            // gadget instance
+            // gadget instance and type
             this.gadgetInstances = [];
+            this.gadgetType = null;
 
             // subscriptions
             this.subscriptions = {};
+
+            // claim the element by marking it with the ratchet id
+            $(this.el).attr("ratchet", this.id);
 
 
 
@@ -293,17 +297,17 @@
                 this.setupFunction.call(this);
             }
 
-            // if we don't have a gadget id, we should check the DOM to see if one is configured on the DOM element
+            // if we don't have a gadget type, we should check the DOM to see if one is configured on the DOM element
             // to which we are bound
-            if (!this.id)
+            if (!this.gadgetType)
             {
-                this.id = $(this.el).attr("gadget");
+                this.gadgetType = $(this.el).attr("gadget");
             }
 
             // if there is a gadget configured for this dom element, boot it up
-            if (this.id)
+            if (this.gadgetType)
             {
-                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.id, this);
+                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this);
                 $.each(this.gadgetInstances, function(x, y) {
                     y.setup.call(y);
                 });
@@ -328,6 +332,9 @@
                 delete childRatchet;
             });
             this.childRatchets = {};
+
+            // remove the ratchet id from our dom element
+            //$(this.el).removeAttr("ratchet");
 
             // releases any subscribed observables
             $.each(this.subscriptions, function(callbackKey, observable) {
@@ -354,27 +361,38 @@
         {
             var _this = this;
 
-            // walk any un-ratcheted subgadgets and ratchet them
+            // deal with an tagged sub-gadgets
             $(context.closestDescendants("[gadget]")).each(function()
             {
-                var subGadgetId = $(this).attr("gadget");
+                var subGadgetType = $(this).attr("gadget");
                 //$(this).removeAttr("gadget");
 
                 // check if we already have a child ratchet for this gadget
-                var childRatchet = _this.childRatchets[subGadgetId];
-                if (!childRatchet)
+                var ratcheted = false;
+                var subRatchetId = $(this).attr("ratchet");
+                if (subRatchetId)
+                {
+                    var childRatchet = _this.childRatchets[subRatchetId];
+                    if (childRatchet)
+                    {
+                        // make sure the child ratchet is pointing to our dom element
+                        childRatchet.el = this;
+
+                        // make sure our new dom element has the updated ratchet id
+                        $(childRatchet.el).attr("ratchet", subRatchetId);
+
+                        ratcheted = true;
+                    }
+                }
+
+                if (!ratcheted)
                 {
                     // instantiate a child ratchet on top of this element
                     childRatchet = new Ratchet($(this), _this, function() {
-                        this.id = subGadgetId;
+                        this.gadgetType = subGadgetType;
                     });
 
-                    _this.childRatchets[subGadgetId] = childRatchet;
-                }
-                else
-                {
-                    // make sure the child ratchet is pointing to our dom element
-                    childRatchet.el = this;
+                    _this.childRatchets[childRatchet.id] = childRatchet;
                 }
             });
 
@@ -606,7 +624,7 @@
             if (args.length == 0)
             {
                 uri = window.location.href;
-                if (uri.indexOf("#"))
+                if (uri.indexOf("#") > -1)
                 {
                     uri = uri.substring(uri.indexOf("#") + 1);
                 }

@@ -525,7 +525,8 @@
             }
             else
             {
-                Ratchet.debug("Wrong number of arguments");
+                Ratchet.error("Wrong number of arguments");
+                return;
             }
 
             if (!that)
@@ -766,7 +767,8 @@
             }
             else
             {
-                Ratchet.debug("Wrong number of arguments");
+                Ratchet.error("Wrong number of arguments");
+                return;
             }
 
             var observables = Ratchet.ScopedObservables.get(scope);

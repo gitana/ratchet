@@ -19,7 +19,7 @@
             // subscribe to observable
             this.subscribe("value", function() {
 
-                Ratchet.debug("Display 1 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
+                //Ratchet.debug("Display 1 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
 
                 this.run("GET", "/");
             });

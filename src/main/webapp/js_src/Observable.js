@@ -26,7 +26,7 @@
                 var _this = this;
 
                 $.each(this.subscribers, function(id, handler) {
-                    Ratchet.debug("Notifying subscriber: " + id + " of update to: " + _this.id);
+                    //Ratchet.debug("Notifying subscriber: " + id + " of update to: " + _this.id);
                     handler(_this.value);
                 })
             };
@@ -34,7 +34,7 @@
             this.notifyDependents = function()
             {
                 $.each(this.dependentOnUs, function(key, observer) {
-                    Ratchet.debug("Notifying dependent:  " + key + " of update to: " + _this.id);
+                    //Ratchet.debug("Notifying dependent:  " + key + " of update to: " + _this.id);
                     observer.onDependencyChange();
                 });
             };

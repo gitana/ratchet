@@ -148,4 +148,15 @@
         }
     };
 
+    Ratchet.copyAttributes = function(sourceEl, targetEl)
+    {
+        for (var a = 0; a < $(sourceEl)[0].attributes.length; a++)
+        {
+            var key = $(sourceEl)[0].attributes[a].name;
+            var value = $(sourceEl)[0].attributes[a].value;
+
+            $(targetEl).attr(key, value);
+        }
+    };
+
 })(window);

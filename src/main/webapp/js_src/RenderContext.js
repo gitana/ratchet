@@ -67,6 +67,8 @@
             $(this.ratchet().el).append(holder);
             $(holder).replaceWith(this[0].childNodes);
 
+            // copy attributes
+            Ratchet.copyAttributes(this, this.ratchet().el);
         },
 
         /**

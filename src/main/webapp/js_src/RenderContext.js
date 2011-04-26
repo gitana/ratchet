@@ -166,6 +166,7 @@
             }
 
             // NOTE: this requires the jQuery template engine plugin
+            /*
             if (Ratchet.isUndefined(Ratchet.jQueryTemplateEngine))
             {
                 Ratchet.error("Cannot render template, the jQueryTemplateEngine plugin must be included");
@@ -177,6 +178,21 @@
             {
                 engine = new Ratchet.jQueryTemplateEngine("default");
                 Ratchet.jQueryTemplateEngine.instance = engine;
+            }
+            */
+            var engine = Ratchet.renditionEngine;
+            if (!engine)
+            {
+                if (Ratchet.isUndefined(Ratchet.jQueryTemplateEngine))
+                {
+                    Ratchet.error("No rendition engine is provided and cannot create a default jQueryTemplateEngine since the plugin is not included.");
+                    return;
+                }
+                else
+                {
+                    engine = new Ratchet.jQueryTemplateEngine("default");
+                    Ratchet.renditionEngine = engine;
+                }
             }
 
             // do the render

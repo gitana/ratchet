@@ -69,6 +69,8 @@
 
             // copy attributes
             Ratchet.copyAttributes(this, this.ratchet().el);
+            // fire post-swap custom event
+            $('body').trigger('swap', [this.ratchet()]);
         },
 
         /**

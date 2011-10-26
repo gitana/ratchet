@@ -233,6 +233,9 @@
                 else
                 {
                     // no matching route found
+                    // fire no-match custom event
+                    $('body').trigger('no-match', [context]);
+                    console.log('Trigger event for ' + context.route.uri);
 
                     // create an invocation context that assumes the current dom is just fine
                     var invocationContext = new Ratchet.RenderContext(this, context.route, this.el);

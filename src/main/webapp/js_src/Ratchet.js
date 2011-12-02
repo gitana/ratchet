@@ -150,7 +150,8 @@
                         else if (pattern == "**")
                         {
                             // wildcard - match everything else, so break out
-                            tokens["**"] = "/" + Array.concat(value, array2).join("/");
+                            tokens["**"] = "/" + [].concat(value, array2).join("/");
+                            //tokens["**"] = "/" + Array.concat(value, array2).join("/");
                             break;
                         }
                         else if (Ratchet.startsWith(pattern, "{"))
@@ -235,7 +236,7 @@
                     // no matching route found
                     // fire no-match custom event
                     $('body').trigger('no-match', [context]);
-                    console.log('Trigger event for ' + context.route.uri);
+                    //console.log('Trigger event for ' + context.route.uri);
 
                     // create an invocation context that assumes the current dom is just fine
                     var invocationContext = new Ratchet.RenderContext(this, context.route, this.el);

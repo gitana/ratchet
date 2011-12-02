@@ -45,6 +45,12 @@
                 return container;
             };
 
+            // Fix for IE 8
+            this.children = function()
+            {
+                return container.children();
+            };
+
             this.model = {};
         },
 

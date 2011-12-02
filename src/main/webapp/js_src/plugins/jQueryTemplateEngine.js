@@ -25,6 +25,8 @@
                 $(el).html("");
                 $(el).append(markup);
 
+                //el.html(markup.html())
+
                 if (successCallback)
                 {
                     successCallback.call(successCallback, el)

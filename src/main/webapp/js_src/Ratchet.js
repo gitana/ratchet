@@ -834,15 +834,30 @@
                 if (tripped)
                 {
                     // we require authentication
-                    this.authenticate.call(_this, context, function() {
+                    if (this.authenticator && this.authenticator.authenticate)
+                    {
+                        this.authenticator.authenticate(context, function() {
 
-                        successCallback();
+                            successCallback();
 
-                    }, function() {
+                        }, function() {
 
-                        failureCallback();
+                            failureCallback();
 
-                    });
+                        });
+                    }
+                    else
+                    {
+                        this.authenticate.call(_this, context, function() {
+
+                            successCallback();
+
+                        }, function() {
+
+                            failureCallback();
+
+                        });
+                    }
                 }
                 else
                 {

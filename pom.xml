@@ -55,6 +55,46 @@
 							<bufferSize>4096</bufferSize>
 						</configuration>
 					</execution>
+					<execution>
+						<id>ratchet-minify-jquery-emplate-engine</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+						<configuration>
+							<jsSourceDir>/js/plugins</jsSourceDir>
+							<jsSourceFiles>
+                                <param>../../js_src/plugins/AlpacaEngine.js</param>
+							</jsSourceFiles>
+							<jsFinalFile>AlpacaEngine.js</jsFinalFile>
+							<linebreak>-1</linebreak>
+							<nomunge>false</nomunge>
+							<verbose>true</verbose>
+							<preserveAllSemiColons>false</preserveAllSemiColons>
+							<disableOptimizations>false</disableOptimizations>
+							<bufferSize>4096</bufferSize>
+						</configuration>
+					</execution>
+					<execution>
+						<id>ratchet-minify-alpaca-engine</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+						<configuration>
+							<jsSourceDir>/js/plugins</jsSourceDir>
+							<jsSourceFiles>
+                                <param>../../js_src/plugins/jQueryTemplateEngine.js</param>
+							</jsSourceFiles>
+							<jsFinalFile>jQueryTemplateEngine.js</jsFinalFile>
+							<linebreak>-1</linebreak>
+							<nomunge>false</nomunge>
+							<verbose>true</verbose>
+							<preserveAllSemiColons>false</preserveAllSemiColons>
+							<disableOptimizations>false</disableOptimizations>
+							<bufferSize>4096</bufferSize>
+						</configuration>
+					</execution>
                 </executions>
             </plugin>
 			<plugin>
@@ -95,14 +135,14 @@
 							</fileset>
 						</copy>
 
-                        <!-- Copy across any plugins -->
+                        <!-- Copy across any plugins
                         <copy
                             todir="${project.build.directory}/${project.build.finalName}/js/plugins">
                             <fileset dir="src/main/webapp/js_src/plugins">
                                 <include name="*.js" />
                             </fileset>
                         </copy>
-
+                        -->
 					</target>
 				</configuration>
 			</plugin>		

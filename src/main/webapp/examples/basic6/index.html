@@ -1,64 +1,118 @@
 <!DOCTYPE HTML>
 <html>
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Ratchet - Basic Example #6</title>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Ratchet - Basic Example #6</title>
 
-        <!-- jquery -->
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <!-- code prettifier -->
+    <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
 
-        <!-- third party -->
-        <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
+    <link href="../css/example.css" rel="stylesheet">
 
-        <!-- ratchet -->
-        <script type="text/javascript" src="/js_src/Ratchet.js"></script>
-        <script type="text/javascript" src="/js_src/Utils.js"></script>
-        <script type="text/javascript" src="/js_src/Observable.js"></script>
-        <script type="text/javascript" src="/js_src/Observables.js"></script>
-        <script type="text/javascript" src="/js_src/ScopedObservables.js"></script>
-        <script type="text/javascript" src="/js_src/RenderContext.js"></script>
-        <script type="text/javascript" src="/js_src/Gadget.js"></script>
-        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
+    <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
 
-        <script type="text/javascript">
+    <!-- jquery -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-            $(document).ready(function() {
+    <!-- sample utilities -->
+    <script type="text/javascript" src="../js/example.js"></script>
 
-                $(document.body).ratchet(function() {
+    <!-- third party -->
+    <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
+    <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
+    <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+    <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
 
-                    this.get("/", function(el) {
+    <!-- ratchet -->
+    <script type="text/javascript" src="/js_src/Ratchet.js"></script>
+    <script type="text/javascript" src="/js_src/Utils.js"></script>
+    <script type="text/javascript" src="/js_src/Observable.js"></script>
+    <script type="text/javascript" src="/js_src/Observables.js"></script>
+    <script type="text/javascript" src="/js_src/ScopedObservables.js"></script>
+    <script type="text/javascript" src="/js_src/RenderContext.js"></script>
+    <script type="text/javascript" src="/js_src/Gadget.js"></script>
+    <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+    <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
-                        el.html("Click a page")
-                            .append("<br/>")
-                            .append("<a href='#/page1'>/page1</a>")
-                            .append("<br/>")
-                            .append("<a href='#/page2'>/page2</a>")
-                            .append("<br/>")
-                            .append("<a href='#/a/longer/url'>/a/longer/url</a>")
-                            .append("<br/>")
-                            .append("<a href='#/something/else/that/we/want/to/invoke'>/something/else/that/we/want/to/invoke</a>");
+    <script type="text/javascript">
 
-                        // swap our content in
-                        el.swap();
-                    });
+        $(document).ready(function() {
 
-                    this.get("/**", function(el) {
-                        el.html("You clicked: " + el.tokens['**']).swap();
-                    });
+            $('#sample').ratchet(
+                    function() {
 
-                }).run("/");
+                        this.get("/", function(el) {
 
-            });
+                            el.html("Click a page")
+                                    .append("<br/>")
+                                    .append("<a href='#/page1'>/page1</a>")
+                                    .append("<br/>")
+                                    .append("<a href='#/page2'>/page2</a>")
+                                    .append("<br/>")
+                                    .append("<a href='#/a/longer/url'>/a/longer/url</a>")
+                                    .append("<br/>")
+                                    .append("<a href='#/something/else/that/we/want/to/invoke'>/something/else/that/we/want/to/invoke</a>");
 
-        </script>
-    </head>
+                            // swap our content in
+                            el.swap();
+                        });
 
-    <body></body>
+                        this.get("/**", function(el) {
+                            el.html("You clicked: " + el.tokens['**']).swap();
+                        });
+
+                    }).run("/");
+
+        });
+
+    </script>
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <a class="brand" href="../index.html">
+            <span class="logo"></span>
+            Ratchet Examples
+        </a>
+        <div class="nav-collapse">
+            <ul class="nav">
+                <li class="active">
+                    <a href="../index.html">Home</a>
+                </li>
+                <li>
+            </ul>
+        </div>
+    </div>
+</div>
+<h2>Basic Example #6</h2>
+<div id="sample"></div>
+<pre class="prettyprint linenums">
+$(document).ready(function() {
+    $('#sample').ratchet(function() {
+        this.get("/", function(el) {
+            el.html("Click a page")
+            .append("<br/>")
+            .append("<a href='#/page1'>/page1</a>")
+            .append("<br/>")
+            .append("<a href='#/page2'>/page2</a>")
+            .append("<br/>")
+            .append("<a href='#/a/longer/url'>/a/longer/url</a>")
+            .append("<br/>")
+            .append("<a href='#/something/else/that/we/want/to/invoke'>/something/else/that/we/want/to/invoke</a>");
+            // swap our content in
+            el.swap();
+        });
+
+        this.get("/**", function(el) {
+            el.html("You clicked: " + el.tokens['**']).swap();
+        });
+
+    }).run("/");
+});
+</pre>
+</body>
 
 </html>
 

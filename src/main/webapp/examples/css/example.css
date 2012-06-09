@@ -1,0 +1,186 @@
+body {
+    color: #333333;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    padding-bottom: 40px;
+    padding-top: 60px;
+}
+
+html {
+    font-size: 100%;
+}
+
+.navbar-fixed-top {
+    top: 0;
+}
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+    left: 0;
+    margin-bottom: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1030;
+}
+
+.navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+    border-radius: 0 0 0 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.navbar {
+    color: #999999;
+}
+
+.navbar {
+    margin-bottom: 18px;
+    overflow: visible;
+}
+
+.navbar-inner {
+    background-color: #2C2C2C;
+    background-image: -moz-linear-gradient(center top, #333333, #222222);
+    background-repeat: repeat-x;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+    min-height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.navbar .brand {
+    color: #999999;
+    display: block;
+    float: left;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 1;
+    margin-left: -20px;
+    padding: 8px 20px 12px;
+}
+
+.navbar .nav {
+    display: block;
+    float: left;
+    left: 0;
+    margin: 0 10px 0 0;
+    position: relative;
+}
+
+.nav {
+    list-style: none outside none;
+    margin-bottom: 18px;
+    margin-left: 0;
+}
+
+.navbar .nav .active > a, .navbar .nav .active > a:hover {
+    background-color: #222222;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.navbar .nav > li > a {
+    color: #999999;
+    float: none;
+    line-height: 19px;
+    padding: 9px 10px 11px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.nav > li > a {
+    display: block;
+}
+
+ol {
+    list-style: decimal outside none;
+}
+
+ul, ol {
+    margin: 0 0 9px 25px;
+    padding: 0;
+}
+
+pre {
+    background-color: #F5F5F5;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px 4px 4px 4px;
+    display: block;
+    font-size: 12.025px;
+    line-height: 18px;
+    margin: 0 0 9px;
+    padding: 8.5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+code, pre {
+    border-radius: 3px 3px 3px 3px;
+    color: #333333;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 12px;
+    padding: 0 3px 2px;
+}
+
+#sample {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px 4px 4px 4px;
+    color: #333333;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 12px;
+    padding: 15px;
+    margin: 0px 0 30px;
+}
+
+.top-nav {
+    padding: 10px;
+}
+
+.top-nav span {
+    display: block;
+    float: right;
+}
+
+a {
+    text-decoration: none;
+}
+
+.logo {
+    background: url("../img/ratchet.png") no-repeat scroll 0 0 transparent;
+    padding: 5px 10px 5px 40px;
+}
+
+table {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-collapse: separate;
+    border-color: #DDDDDD #DDDDDD #DDDDDD -moz-use-text-color;
+    border-radius: 4px 4px 4px 4px;
+    border-style: solid solid solid none;
+    border-width: 1px 1px 1px 0;
+}
+
+table {
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+table {
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+    max-width: 100%;
+}
+
+table td {
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    line-height: 18px;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}

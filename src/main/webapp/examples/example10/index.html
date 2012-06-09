@@ -1,55 +1,160 @@
 <!DOCTYPE HTML>
 <html>
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Gitana Ratchet MVC - Example #10</title>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Gitana Ratchet MVC - Example #10</title>
 
-        <!-- jquery -->
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <!-- code prettifier -->
+    <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
 
-        <!-- third party -->
-        <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
-        <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
+    <link href="../css/example.css" rel="stylesheet">
 
-        <!-- ratchet -->
-        <script type="text/javascript" src="/js_src/Ratchet.js"></script>
-        <script type="text/javascript" src="/js_src/Utils.js"></script>
-        <script type="text/javascript" src="/js_src/Observable.js"></script>
-        <script type="text/javascript" src="/js_src/Observables.js"></script>
-        <script type="text/javascript" src="/js_src/ScopedObservables.js"></script>
-        <script type="text/javascript" src="/js_src/RenderContext.js"></script>
-        <script type="text/javascript" src="/js_src/Gadget.js"></script>
-        <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
-        <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
+    <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
 
-        <!-- jQuery Templating Plugin -->
-        <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
-        <script type="text/javascript" src="/js_src/plugins/jQueryTemplateEngine.js"></script>
+    <!-- jquery -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-        <!-- examples -->
-        <script type="text/javascript" src="gadgets/Page.js"></script>
-        <script type="text/javascript" src="gadgets/Component.js"></script>
+    <!-- sample utilities -->
+    <script type="text/javascript" src="../js/example.js"></script>
 
-        <!-- work it -->
-        <script type="text/javascript">
+    <!-- third party -->
+    <script type="text/javascript" src="/js_src/thirdparty/base.js"></script>
+    <script type="text/javascript" src="/js_src/thirdparty/json2.js"></script>
+    <script type="text/javascript" src="/js_src/thirdparty/jquery.history.js"></script>
+    <script type="text/javascript" src="/js_src/thirdparty/form2object.js"></script>
 
-            $(document).ready(function() {
+    <!-- ratchet -->
+    <script type="text/javascript" src="/js_src/Ratchet.js"></script>
+    <script type="text/javascript" src="/js_src/Utils.js"></script>
+    <script type="text/javascript" src="/js_src/Observable.js"></script>
+    <script type="text/javascript" src="/js_src/Observables.js"></script>
+    <script type="text/javascript" src="/js_src/ScopedObservables.js"></script>
+    <script type="text/javascript" src="/js_src/RenderContext.js"></script>
+    <script type="text/javascript" src="/js_src/Gadget.js"></script>
+    <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
+    <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
 
-                $(document.body).ratchet().run("/");
+    <!-- jQuery Templating Plugin -->
+    <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="/js_src/plugins/jQueryTemplateEngine.js"></script>
 
+    <!-- examples -->
+    <script type="text/javascript" src="gadgets/Page.js"></script>
+    <script type="text/javascript" src="gadgets/Component.js"></script>
+
+    <!-- work it -->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $(document.body).ratchet().run("/");
+
+        });
+
+    </script>
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <a class="brand" href="../index.html">
+            <span class="logo"></span>
+            Ratchet Examples
+        </a>
+        <div class="nav-collapse">
+            <ul class="nav">
+                <li class="active">
+                    <a href="../index.html">Home</a>
+                </li>
+                <li>
+            </ul>
+        </div>
+    </div>
+</div>
+<h2>Gadget Example #10</h2>
+<div gadget="page"></div>
+<pre class="prettyprint linenums">
+    Component = Ratchet.Gadget.extend(
+    {
+        constructor: function(id, ratchet)
+        {
+            this.base(id, ratchet);
+            var val = $(this.ratchet().el).attr('subscription');
+            this.subscription = val ? val : id;
+        },
+
+        setup: function()
+        {
+            this.get(this.index);
+        },
+
+        refresh: function()
+        {
+            this.run("/");
+        },
+
+        index: function(el)
+        {
+
+            // detect changes to the pairs and redraw when they occur
+            this.subscribe(this.subscription, this.refresh);
+
+            var model = el.model;
+
+            model["component"] = this.observable(this.subscription).get();
+
+            el.transform("templates/component", function() {
+                el.swap();
+            });
+        }
+    });
+
+    Ratchet.GadgetRegistry.register("component", Component);
+</pre>
+<pre class="prettyprint linenums">
+    Page = Ratchet.Gadget.extend(
+    {
+        constructor: function(id, ratchet)
+        {
+            this.base(id, ratchet);
+        },
+
+        setup: function()
+        {
+            this.get(this.page);
+        },
+
+        page: function(el)
+        {
+            this.observable('component').set({
+                "value" : "Component Value"
             });
 
-        </script>
-    </head>
+            this.observable('component1').set({
+                "value" : "Component Value 1"
+            });
 
-    <body>
+            this.observable('component2').set({
+                "value" : "Component Value 2"
+            });
 
-        <div gadget="page"></div>
+            el.transform("templates/page", function(el) {
+                el.swap();
+            });
+        }
+    });
 
-    </body>
+    Ratchet.GadgetRegistry.register("page", Page);
+</pre>
+<pre class="prettyprint linenums">
+        $(document).ready(function() {
+
+            $(document.body).ratchet().run("/");
+
+        });
+</pre>
+</body>
 
 </html>
 

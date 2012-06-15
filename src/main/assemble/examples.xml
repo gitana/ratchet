@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>examples</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <baseDirectory>/</baseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}/target/${pom.artifactId}-${pom.version}/examples</directory>
+            <outputDirectory>/examples</outputDirectory>
+            <filtered>false</filtered>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/target/${pom.artifactId}-${pom.version}/js</directory>
+            <outputDirectory>/js</outputDirectory>
+            <filtered>false</filtered>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/target/${pom.artifactId}-${pom.version}/js_src</directory>
+            <outputDirectory>/js_src</outputDirectory>
+            <filtered>false</filtered>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <files>
+        <file>
+            <source>${basedir}/target/${pom.artifactId}-${pom.version}/favicon.ico</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+    </files>
+</assembly>

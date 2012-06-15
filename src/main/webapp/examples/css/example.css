@@ -3,8 +3,7 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     line-height: 18px;
-    padding-bottom: 40px;
-    padding-top: 60px;
+    padding: 40px 10px 0 10px;
 }
 
 html {
@@ -72,6 +71,15 @@ html {
     list-style: none outside none;
     margin-bottom: 18px;
     margin-left: 0;
+}
+
+.navbar .nav > li {
+    display: block;
+    float: left;
+}
+
+li {
+    line-height: 18px;
 }
 
 .navbar .nav .active > a, .navbar .nav .active > a:hover {
@@ -183,4 +191,15 @@ table td {
     padding: 8px;
     text-align: left;
     vertical-align: top;
+}
+
+.footer {
+    border-top: 1px solid #E5E5E5;
+    margin-top: 45px;
+    padding: 35px 0 36px;
+    display: block;
+}
+
+footer p {
+    text-align: center;
 }

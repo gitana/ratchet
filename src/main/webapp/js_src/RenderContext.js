@@ -2,7 +2,7 @@
 {
     Ratchet.RenderContext = Base.extend(
     {
-        constructor: function(ratchet, routeContext, domEl)
+        constructor: function(ratchet, routeContext, domEl, params)
         {
             this.base();
 
@@ -15,12 +15,6 @@
             // copy container properties into this
             jQuery.extend(this, container, { "route" : routeContext });
 
-            /*
-            this.callbacks = [];
-            this.previous_content = null;
-            this.content = null;
-            this.waiting = false;
-            */
 
             // privileged methods
 
@@ -31,13 +25,7 @@
 
             this.topRatchet = function()
             {
-                var ratchet = this.ratchet();
-                while (ratchet.parent)
-                {
-                    ratchet = ratchet.parent;
-                }
-
-                return ratchet;
+                return this.ratchet().topRatchet();
             };
 
             this._getContainer = function()
@@ -52,6 +40,7 @@
             };
 
             this.model = {};
+            this.params = (params ? params : {});
         },
 
         swap: function(callback)
@@ -77,6 +66,12 @@
             Ratchet.copyAttributes(this, this.ratchet().el);
             // fire post-swap custom event
             $('body').trigger('swap', [this.ratchet()]);
+
+            // increment dispatch completion count
+            this.ratchet().incrementDispatchCompletionCount();
+
+            // fire post-dispatch custom event
+            $('body').trigger('dispatch', [this.ratchet(), this.ratchet().isDispatchCompleted()]);
         },
 
         /**
@@ -328,147 +323,6 @@
         {
             this.ratchet().run.apply(this.ratchet(), arguments);
         }
-
-
-
-
-
-        /*
-
-        _then: function(callback)
-        {
-            var context = this;
-
-            if (this.waiting)
-            {
-                this.callbacks.push(callback);
-            }
-            else
-            {
-                this._wait();
-
-                window.setTimeout(function()
-                {
-                    var returned = callback.apply(context, [context.content, context.previous_content]);
-                    if (returned !== false)
-                    {
-                        context._next(returned);
-                    }
-                }, 0);
-            }
-
-            return this;
-        },
-
-        _wait: function()
-        {
-            this.waiting = true;
-            this.waiting = true;
-        },
-
-        _next: function(content)
-        {
-            this.waiting = false;
-            if (typeof content !== "undefined") {
-                this.previous_content = this.content;
-                this.content = content;
-            }
-
-            if (this.callbacks.length > 0) {
-                this._then(this.callbacks.shift());
-            }
-        },
-
-        fetch: function(url, options)
-        {
-            var context = this;
-
-            if (!options)
-            {
-                options = {};
-            }
-
-            return this._then(function() {
-
-                this._wait();
-
-                var isJson = (url.match(/\.json$/) || options.json);
-
-                $.ajax($.extend({
-                    "url": url,
-                    "data": {},
-                    "dataType": (isJson ? "json" : null),
-                    "type": "get",
-                    "success": function(data)
-                    {
-                        context._next(data);
-                    }
-                }, options));
-
-                return false;
-            });
-        },
-
-        transform: function(templateId, model)
-        {
-            var context = this;
-
-            if (!model)
-            {
-                model = {};
-            }
-
-            var templateURL = templateId + ".html";
-
-            return this._then(function() {
-
-                this._wait();
-
-                if (context.content)
-                {
-                    Ratchet.copyInto(model, context.content);
-                }
-
-                var renderTemplate = function(templateId, model)
-                {
-                    var markup = $.tmpl(templateId, model);
-
-                    context.html("");
-                    context.append(markup);
-
-                    context._next();
-                };
-
-                if ($.template[templateId])
-                {
-                    renderTemplate(templateId, model);
-                }
-                else
-                {
-                    $.ajax({
-                        "url": "" + templateURL,
-                        "dataType": "html",
-                        "success": function(html)
-                        {
-                            // convert to a dom briefly
-                            // this is because it starts with <script> and we only want what is inside
-                            var dom = $(html);
-                            html = dom.html();
-
-                            // compile template
-                            $.template(templateId, html);
-
-                            // render template
-                            renderTemplate(templateId, model);
-                        }
-                    });
-
-                    return false;
-                }
-            });
-
-        }
-        */
 
     });
 

@@ -77,6 +77,21 @@
             // claim the element by marking it with the ratchet id
             $(this.el).attr("ratchet", this.id);
 
+            if (!this.parent)
+            {
+                this.dispatchCount = 0;
+                this.dispatchCompletionCount = 0;
+            }
+
+            this.incrementDispatchCount = function() {
+                _this.topRatchet().dispatchCount++;
+            };
+            this.incrementDispatchCompletionCount = function() {
+                _this.topRatchet().dispatchCompletionCount++;
+            };
+            this.isDispatchCompleted = function() {
+                return (_this.topRatchet().dispatchCompletionCount == _this.topRatchet().dispatchCount);
+            };
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,7 +233,8 @@
                 {
                     // create an invocation context
                     // this is a copy of the original context which will be used by the handler
-                    var invocationContext = new Ratchet.RenderContext(this, context.route);
+                    //var invocationContext = new Ratchet.RenderContext(this, context.route, null, context.params);
+                    var invocationContext = new Ratchet.RenderContext(this, context.route, null, context.params);
                     Ratchet.copyInto(invocationContext.model, context.model);
                     invocationContext.tokens = tokens;
 
@@ -250,6 +266,19 @@
                 return handler;
             };
 
+            /**
+             * @return the top most ratchet instance in the parent chain
+             */
+            this.topRatchet = function()
+            {
+                var ratchet = this;
+                while (ratchet.parent)
+                {
+                    ratchet = ratchet.parent;
+                }
+
+                return ratchet;
+            };
 
             // init
             this.init();
@@ -365,10 +394,13 @@
         {
             var _this = this;
 
+            var params = {};
+
             // deal with an tagged sub-gadgets
             $(context.closestDescendants("[gadget]")).each(function()
             {
                 var subGadgetType = $(this).attr("gadget");
+
                 //$(this).removeAttr("gadget");
 
                 // check if we already have a child ratchet for this gadget
@@ -397,13 +429,30 @@
                     });
 
                     _this.childRatchets[childRatchet.id] = childRatchet;
+                    subRatchetId = childRatchet.id;
                 }
+
+                // prepare any params
+                params[subRatchetId] = {};
+                $.each($(this)[0].attributes, function(i, attrib)
+                {
+                    var name = attrib.name;
+                    var value = attrib.value;
+
+                    if (value)
+                    {
+                        params[subRatchetId][name] = value;
+                    }
+                });
             });
 
             // dispatch the child ratchets
             $.each(_this.childRatchets, function(subGadgetId, childRatchet) {
                 //Ratchet.debug("Dispatching child ratchet: " + subGadgetId + " (" + context.route.method + " " + context.route.uri + ")");
-                childRatchet.dispatch(context.route);
+
+                var subParams = params[subGadgetId];
+
+                childRatchet.dispatch(context.route, subParams);
             });
         },
 
@@ -575,7 +624,7 @@
          *
          * @param config
          */
-        dispatch: function(config)
+        dispatch: function(config, params)
         {
             var _this = this;
 
@@ -591,7 +640,10 @@
                 config.uri = config.uri.substring(1);
             }
 
-            var context = new Ratchet.RenderContext(this, config);
+            var context = new Ratchet.RenderContext(this, config, null, params);
+
+            // increment dispatch count
+            this.incrementDispatchCount();
 
             // ensure authentication filter passes
             this.ensureAuthentication.call(this, context, function() {

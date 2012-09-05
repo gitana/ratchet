@@ -10,6 +10,11 @@ html {
     font-size: 100%;
 }
 
+h1 {
+    line-height: 1.278em;
+    margin-bottom: 0.583em;
+}
+
 .navbar-fixed-top {
     top: 0;
 }

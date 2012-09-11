@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Ratchet - Basic Example #4</title>
+    <title>Ratchet - Basic Example #9</title>
 
     <!-- code prettifier -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
@@ -37,34 +37,34 @@
     <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
     <script type="text/javascript" src="/js_src/DefaultRegionResolver.js"></script>
 
+    <!-- jQuery Templating Plugin -->
+    <script type="text/javascript" src="/js_src/thirdparty/ejs/ejs_production.js"></script>
+    <script type="text/javascript" src="/js_src/plugins/EJSTemplateEngine.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function() {
 
-            $('#sample').ratchet(
-                    function() {
+            $('#sample').ratchet(function() {
 
-                        this.get("/", function(el) {
+                this.get("/", function(el) {
 
-                            el.html("Click a page")
-                                    .append("<br/>")
-                                    .append("<a href='#/page1'>Page1</a>")
-                                    .append("<br/>")
-                                    .append("<a href='#/page2'>Page2</a>");
+                    el.fetch("data.json", function(el, json) {
 
-                            // swap our content in
+                        el.transform("template", json, function(el) {
+
                             el.swap();
+
                         });
 
-                        this.get("/page1", function(el) {
-                            el.html("You clicked page 1").swap();
-                        });
+                    });
 
-                        this.get("/page2", function(el) {
-                            el.html("You clicked page 2").swap();
-                        });
+                });
 
-                    }).run("/");
+            }).run("/");
+
+            // use EJS as the default rendition engine
+            Ratchet.renditionEngine = new Ratchet.EJSTemplateEngine("default");
 
         });
 
@@ -92,31 +92,18 @@
         </div>
     </div>
 </div>
-<h2>Basic Example #4</h2>
+<h2>Basic Example #9</h2>
 <div id="sample"></div>
 <pre class="prettyprint linenums">
 $(document).ready(function() {
-    $('#sample').ratchet(
-        function() {
-            this.get("/", function(el) {
-                el.html("Click a page")
-                .append("&lt;br/&gt;")
-                .append("&lt;a href='#/page1'&gt;Page1&lt;/a&gt;")
-                .append("&lt;br/&gt;")
-                .append("&lt;a href='#/page2'&gt;Page2&lt;/a&gt;");
-
-                // swap our content in
-                el.swap();
+    $('#sample').ratchet(function() {
+        this.get("/", function(el) {
+            el.fetch("data.json", function(el, json) {
+                el.transform("template", json, function(el) {
+                    el.swap();
+                });
             });
-
-            this.get("/page1", function(el) {
-                el.html("You clicked page 1").swap();
-            });
-
-            this.get("/page2", function(el) {
-                el.html("You clicked page 2").swap();
-            }
-        );
+        });
     }).run("/");
 });
 </pre>

@@ -41,6 +41,7 @@
                                 <param>../js_src/RenderContext.js</param>
                                 <param>../js_src/Gadget.js</param>
                                 <param>../js_src/GadgetRegistry.js</param>
+                                <param>../js_src/BaseTemplateEngine.js</param>
 
                                 <!-- jQuery Support -->
                                 <param>../js_src/jQueryAdapter.js</param>
@@ -138,14 +139,6 @@
 							</fileset>
 						</copy>
 
-                        <!-- Copy across any plugins
-                        <copy
-                            todir="${project.build.directory}/${project.build.finalName}/js/plugins">
-                            <fileset dir="src/main/webapp/js_src/plugins">
-                                <include name="*.js" />
-                            </fileset>
-                        </copy>
-                        -->
 					</target>
 				</configuration>
 			</plugin>

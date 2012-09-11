@@ -1,22 +1,10 @@
 (function($)
 {
-    Ratchet.jQueryTemplateEngine = Base.extend(
+    Ratchet.jQueryTemplateEngine = Ratchet.BaseTemplateEngine.extend(
     {
-        constructor: function(id)
+        doRender: function(el, templateId, model, successCallback, failureCallback)
         {
-            this.base();
-
-            this.id = id;
-        },
-
-        /**
-         * Renders a template.
-         *
-         * @param templateId
-         */
-        render: function(el, templateId, model, successCallback, failureCallback)
-        {
-            var _this = this;
+            var self = this;
 
             var renderTemplate = function()
             {
@@ -50,10 +38,7 @@
                     "dataType": "html",
                     "success": function(html)
                     {
-                        // convert to a dom briefly
-                        // this is because it starts with <script> and we only want what is inside
-                        var dom = $(html);
-                        html = dom.html();
+                        html = self.cleanMarkup(el, html);
 
                         // compile template
                         $.template(templateId, html);

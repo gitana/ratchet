@@ -1,22 +1,8 @@
 (function($)
 {
-    Ratchet.AlpacaEngine = Base.extend(
+    Ratchet.AlpacaEngine = Ratchet.BaseTemplateEngine.extend(
     {
-        constructor: function(id , connector)
-        {
-            this.base();
-
-            this.id = id;
-
-            this.connector = connector;
-        },
-
-        /**
-         * Performs renditions using Alpaca engine.
-         *
-         * @param templateId
-         */
-        render: function(el, renditionOptions, model, successCallback, failureCallback)
+        doRender: function(el, renditionOptions, model, successCallback, failureCallback)
         {
             var alpacaOptions = renditionOptions;
 

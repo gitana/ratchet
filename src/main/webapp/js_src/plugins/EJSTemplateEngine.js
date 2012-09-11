@@ -36,4 +36,7 @@
 
     });
 
+    // auto register
+    Ratchet.TemplateEngineRegistry.register("ejs", new Ratchet.EJSTemplateEngine("ejs"));
+
 })(jQuery);

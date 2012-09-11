@@ -41,6 +41,7 @@
                                 <param>../js_src/RenderContext.js</param>
                                 <param>../js_src/Gadget.js</param>
                                 <param>../js_src/GadgetRegistry.js</param>
+                                <param>../js_src/TemplateEngineRegistry.js</param>
                                 <param>../js_src/BaseTemplateEngine.js</param>
 
                                 <!-- jQuery Support -->

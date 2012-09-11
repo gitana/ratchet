@@ -1182,5 +1182,19 @@
 
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // ADDITIONAL NAMESPACES FOR CUSTOM EXTENSIONS
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    if (typeof Ratchet.Gadgets === "undefined") {
+        Ratchet.Gadgets = {};
+    }
+
+    if (typeof Ratchet.Utils === "undefined") {
+        Ratchet.Utils = {};
+    }
+
 
 })(jQuery);

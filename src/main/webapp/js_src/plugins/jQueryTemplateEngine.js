@@ -59,4 +59,7 @@
 
     });
 
+    // auto register
+    Ratchet.TemplateEngineRegistry.register("jquerytmpl", new Ratchet.jQueryTemplateEngine("jquerytmpl"));
+
 })(jQuery);

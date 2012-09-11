@@ -176,23 +176,34 @@
                 failureCallback = args.shift();
             }
 
-            // NOTE: this requires the jQuery template engine plugin
-            var engine = Ratchet.renditionEngine;
-            if (!engine)
+            // NOTE: this requires a template engine
+            var engine = null;
+            if (Ratchet.renditionEngineId)
             {
-                if (Ratchet.isUndefined(Ratchet.jQueryTemplateEngine))
+                engine = Ratchet.TemplateEngineRegistry.find(Ratchet.renditionEngineId);
+                if (!engine)
                 {
-                    Ratchet.error("No rendition engine is provided and cannot create a default jQueryTemplateEngine since the plugin is not included.");
+                    Ratchet.error("Unable to find desired rendition engine (Ratchet.renditionEngineId): " + Ratchet.renditionEngineId);
                     return;
                 }
-                else
+            }
+            else
+            {
+                // pick the first thing we find from the registered engines
+                var ids = Ratchet.TemplateEngineRegistry.getIds();
+                for (var i = 0; i < ids.length; i++)
                 {
-                    engine = new Ratchet.jQueryTemplateEngine("default");
-                    Ratchet.renditionEngine = engine;
+                    engine = Ratchet.TemplateEngineRegistry.find(ids[i]);
+                }
+
+                if (!engine)
+                {
+                    Ratchet.error("Unable to find a default rendition engine as none are configured");
+                    return;
                 }
             }
 
-            // do the render
+            // render
             engine.render(_this, templateId, model, function(el) {
 
                 if (successCallback)

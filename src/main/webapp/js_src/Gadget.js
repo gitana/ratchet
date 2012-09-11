@@ -2,14 +2,22 @@
 {
     Ratchet.Gadget = Base.extend(
     {
-        constructor: function(id, _ratchet)
+        // either (type, _ratchet)
+        // or (type, _ratchet, id)
+        constructor: function(type, _ratchet, id)
         {
             this.base();
 
             var _this = this;
 
+            this.type = type;
             this.id = id;
 
+            // if no id, then assume type as id
+            if (!this.id)
+            {
+                this.id = this.type;
+            }
 
             // privileged methods
 
@@ -47,6 +55,12 @@
             {
                 return this.id;
             };
+
+            this.getGadgetType = function()
+            {
+                return this.type;
+            };
+
         },
 
         app: function()
@@ -301,6 +315,19 @@
             array.push(this);
 
             this.ratchet().del.apply(this.ratchet(), array);
+        },
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // SELECTORS AND DOM MANIPULATION
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        select: function(selector)
+        {
+            return this.ratchet().select(selector);
         }
 
     });

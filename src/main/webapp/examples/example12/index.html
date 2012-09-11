@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Ratchet - Basic Example #1</title>
+    <title>Gitana Ratchet MVC - Example #1</title>
 
     <!-- code prettifier -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
@@ -36,58 +36,66 @@
     <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
     <script type="text/javascript" src="/js_src/DefaultRegionResolver.js"></script>
 
-    <script type="text/javascript" id="sample-code">
+    <!-- examples -->
+    <script type="text/javascript" src="Hello.js"></script>
+    <script type="text/javascript" src="Goodbye.js"></script>
+
+    <script type="text/javascript">
 
         $(document).ready(function() {
 
-            $('#sample').ratchet(
-                    function() {
-
-                        this.get("/", function(el) {
-
-                            el.html("Here is some <span>text</span>").swap();
-
-                        });
-
-                    }).run("/");
+            $('#sample').ratchet().run("/");
 
         });
+
+        Ratchet.regionMappings = {
+            "first": "hello",
+            "second": "goodbye"
+        };
 
     </script>
 </head>
 
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <a class="brand" href="../../index.html">
-            <span class="logo"></span>
-            Ratchet
-        </a>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <a class="brand" href="../../index.html">
+                <span class="logo"></span>
+                Ratchet
+            </a>
 
-        <div class="nav-collapse">
-            <ul class="nav">
-                <li>
-                    <a href="../../index.html">Home</a>
-                </li>
-                <li class="active">
-                    <a href="../index.html">Examples</a>
-                </li>
-                <li>
-            </ul>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="../../index.html">Home</a>
+                    </li>
+                    <li class="active">
+                        <a href="../index.html">Examples</a>
+                    </li>
+                    <li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
-<h2>Basic Example #1</h2>
-<div id="sample"></div>
-<pre class="prettyprint linenums">
-$(document).ready(function() {
-    $('#sample').ratchet(function() {
-        this.get("/", function(el) {
-            el.html("Here is some <span>text</span>").swap();
-        });
-    }).run("/");
-});
-</pre>
+
+    <h2>Gadget Example #12</h2>
+    <p>
+        This example demonstrates using the <b>region</b> tag to resolve gadgets to be bound into the page.
+    </p>
+
+    <div id="sample">
+        <table border="1">
+            <tr>
+                <td>
+                    <region id="first"></region>
+                </td>
+                <td>
+                    <region id="second"></region>
+                </td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 
 </html>

@@ -34,6 +34,7 @@
     <script type="text/javascript" src="/js_src/Gadget.js"></script>
     <script type="text/javascript" src="/js_src/GadgetRegistry.js"></script>
     <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
+    <script type="text/javascript" src="/js_src/DefaultRegionResolver.js"></script>
 
     <script type="text/javascript">
 
@@ -97,14 +98,14 @@ $(document).ready(function() {
     $('#sample').ratchet(function() {
         this.get("/", function(el) {
             el.html("Click a page")
-            .append("<br/>")
-            .append("<a href='#/page1'>/page1</a>")
-            .append("<br/>")
-            .append("<a href='#/page2'>/page2</a>")
-            .append("<br/>")
-            .append("<a href='#/a/longer/url'>/a/longer/url</a>")
-            .append("<br/>")
-            .append("<a href='#/something/else/that/we/want/to/invoke'>/something/else/that/we/want/to/invoke</a>");
+            .append("&lt;br/&gt;")
+            .append("&lt;a href='#/page1'&gt;Page1&lt;/a&gt;")
+            .append("&lt;br/&gt;")
+            .append("&lt;a href='#/page2'&gt;Page2&lt;/a&gt;");
+            .append("&lt;br/&gt;")
+            .append("&lt;a href='#/a/longer/url'&gt;a/longer/url&lt;/a&gt;")
+            .append("&lt;br/&gt;")
+            .append("&lt;a href='#/something/else/that/we/want/to/invoke'&gt;/something/else/that/we/want/to/invoke&lt;/a&gt;");
             // swap our content in
             el.swap();
         });

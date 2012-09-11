@@ -330,17 +330,33 @@
                 this.setupFunction.call(this);
             }
 
+
+            // if the current element being set up is a "<region>" tag, then we instantly convert it to a proper DOM tag
+            if ($(this.el)[0].nodeName.toLowerCase() == "region")
+            {
+                this.el = Ratchet.convertRegionTag(this.el);
+            }
+
+            // if the current element being set up is a "<gadget>" tag, then we instantly convert it to a proper DOM tag
+            if ($(this.el)[0].nodeName.toLowerCase() == "gadget")
+            {
+                this.el = Ratchet.convertGadgetTag(this.el);
+            }
+
             // if we don't have a gadget type, we should check the DOM to see if one is configured on the DOM element
             // to which we are bound
             if (!this.gadgetType)
             {
                 this.gadgetType = $(this.el).attr("gadget");
+                this.gadgetId = $(this.el).attr("id");
             }
+
+
 
             // if there is a gadget configured for this dom element, boot it up
             if (this.gadgetType)
             {
-                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this);
+                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this.gadgetId, this);
                 $.each(this.gadgetInstances, function(x, y) {
                     y.setup.call(y);
                 });
@@ -388,18 +404,111 @@
         },
 
         /**
+         * Processes any downstream regions.
+         */
+        processRegions: function(context, callback)
+        {
+            var resolver = Ratchet.regionResolver;
+            if (!resolver)
+            {
+                if (Ratchet.isUndefined(Ratchet.DefaultRegionResolver))
+                {
+                    Ratchet.error("No default region resolver available");
+                    return;
+                }
+                else
+                {
+                    resolver = new Ratchet.DefaultRegionResolver("default");
+                    Ratchet.regionResolver = resolver;
+                }
+
+            }
+
+            //
+            // find any sub-gadgets defined by tag
+            //
+            // these are:
+            //
+            //  <region id="<regionId>"></region>
+            //
+            $(context.closestDescendants('region')).each(function() {
+                Ratchet.convertRegionTag(this);
+            });
+
+
+
+
+            //
+            // deal with an tagged sub-regions
+            //
+            // these are:
+            //
+            //  <div region="<regionId>"></div>
+            //
+            var regions = {};
+            $(context.closestDescendants("[region]")).each(function()
+            {
+                var regionId = $(this).attr("region");
+                regions[regionId] = this;
+            });
+
+            // resolve all of these regions
+            resolver.resolve.call(resolver, this, regions, function(resolutions) {
+
+                for (var regionId in resolutions)
+                {
+                    var gadgetType = resolutions[regionId]["gadgetType"];
+                    var attrs = resolutions[regionId]["attrs"];
+
+                    var tag = $("<div gadget='" + gadgetType + "'></div>");
+                    $.each(attrs, function(k, v) {
+                        tag.attr(k, v);
+                    });
+
+                    $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
+                }
+
+                // fire the callback
+                if (callback)
+                {
+                    callback.call(this);
+                }
+            })
+
+        },
+
+        /**
          * Processes any downstream gadgets.
          */
-        processGadgets: function(context)
+        processGadgets: function(context, callback)
         {
             var _this = this;
 
-            var params = {};
+            //
+            // find any sub-gadgets defined by tag
+            //
+            // these are:
+            //
+            //  <gadget type="<gadgetType>"></gadget>
+            //
+            $(context.closestDescendants('gadget')).each(function() {
+                Ratchet.convertGadgetTag(this);
+            });
 
+
+
+            //
             // deal with an tagged sub-gadgets
+            //
+            // these are:
+            //
+            //  <div gadget="<gadgetType>"></div>
+            //
+            var params = {};
             $(context.closestDescendants("[gadget]")).each(function()
             {
                 var subGadgetType = $(this).attr("gadget");
+                var subGadgetId = $(this).attr("id");
 
                 //$(this).removeAttr("gadget");
 
@@ -426,6 +535,7 @@
                     // instantiate a child ratchet on top of this element
                     childRatchet = new Ratchet($(this), _this, function() {
                         this.gadgetType = subGadgetType;
+                        this.gadgetId = subGadgetId;
                     });
 
                     _this.childRatchets[childRatchet.id] = childRatchet;
@@ -447,13 +557,19 @@
             });
 
             // dispatch the child ratchets
-            $.each(_this.childRatchets, function(subGadgetId, childRatchet) {
+            $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
                 //Ratchet.debug("Dispatching child ratchet: " + subGadgetId + " (" + context.route.method + " " + context.route.uri + ")");
 
-                var subParams = params[subGadgetId];
+                var subParams = params[childRatchetId];
 
                 childRatchet.dispatch(context.route, subParams);
             });
+
+            // fire the callback
+            if (callback)
+            {
+                callback.call(this);
+            }
         },
 
 
@@ -932,8 +1048,139 @@
         {
             // default logic, just fire back
             successCallback();
+        },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // SELECTORS AND DOM MANIPULATION
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Selects a subratchet.
+         *
+         * @param selector
+         * @return {*}
+         */
+        select: function(selector)
+        {
+            var ratchet = null;
+
+            var parent = this.topRatchet();
+
+            for (var childRatchetId in parent.childRatchets)
+            {
+                var childRatchet = parent.childRatchets[childRatchetId];
+                if (childRatchet.gadgetType == selector)
+                {
+                    ratchet = childRatchet;
+                    break;
+                }
+            }
+
+            return ratchet;
+        },
+
+        hide: function()
+        {
+            $(this.el).css("display", "none");
+        },
+
+        show: function()
+        {
+            $(this.el).css("display", "block");
         }
 
+
     });
+
+    /**
+     * Converts the current "gadget" tag to a tag-represented version (i.e. <div gadget="<gadget>"/>
+     */
+    Ratchet.convertGadgetTag = function(domEl)
+    {
+        var tag = $(domEl).attr("tag");
+        if (!tag)
+        {
+            tag = "div";
+        }
+
+        var type = $(domEl).attr("type");
+
+        // build the replacement tag
+        var tag = $("<" + tag +" gadget='" + type + "' tempkey='xyz'></" + tag + ">");
+
+        // copy attributes
+        $.each($(domEl)[0].attributes, function(index, attr) {
+            var name = attr.nodeName;
+            var value = attr.nodeValue;
+
+            if (name == "tag" || name == "type")
+            {
+                // these don't get copied
+            }
+            else
+            {
+                $(tag).attr(name, value);
+            }
+        });
+
+        // copy inner html
+        $(tag).html($(domEl).html());
+
+        var parent = $(domEl).parent();
+
+        $(domEl).replaceWith(tag);
+
+        tag = $(parent).children('[tempkey=xyz]')[0];
+        $(tag).removeAttr("tempkey");
+
+        return tag;
+    };
+
+    /**
+     * Converts the current "region" tag to a tag-represented version (i.e. <div region="<region>"/>
+     */
+    Ratchet.convertRegionTag = function(domEl)
+    {
+        var tag = $(domEl).attr("tag");
+        if (!tag)
+        {
+            tag = "div";
+        }
+
+        // convert some region tags to gadgets
+        var regionId = $(domEl).attr("id");
+
+        // build the replacement tag
+        var tag = $("<" + tag +" region='" + regionId + "' tempkey='xyz'></" + tag + ">");
+
+        $.each($(domEl)[0].attributes, function(index, attr) {
+            var name = attr.nodeName;
+            var value = attr.nodeValue;
+
+            if (name == "tag" || name == "region")
+            {
+                // these don't get copied
+            }
+            else
+            {
+                $(tag).attr(name, value);
+            }
+        });
+
+        var parent = $(domEl).parent();
+
+        $(domEl).replaceWith(tag);
+
+        tag = $(parent).children('[tempkey=xyz]')[0];
+        $(tag).removeAttr("tempkey");
+
+        return tag;
+    };
+
+
+
 
 })(jQuery);

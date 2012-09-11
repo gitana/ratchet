@@ -45,6 +45,9 @@
                                 <!-- jQuery Support -->
                                 <param>../js_src/jQueryAdapter.js</param>
 
+                                <!-- Default Region Resolver -->
+                                <param>../js_src/DefaultRegionResolver.js</param>
+
 							</jsSourceFiles>
 							<jsFinalFile>ratchet-${project.version}.js</jsFinalFile>
 							<linebreak>-1</linebreak>

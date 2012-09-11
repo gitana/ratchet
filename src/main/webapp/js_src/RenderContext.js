@@ -45,33 +45,41 @@
 
         swap: function(callback)
         {
+            var self = this;
+
             // custom callback
             if (callback)
             {
-                callback.call(callback, this);
+                callback.call(callback, self);
             }
 
-            // process any gadgets
+            // process any regions
+            self.ratchet().processRegions.call(self.ratchet(), self, function() {
 
-            // dispatcher post-render
-            this.ratchet().processGadgets.call(this.ratchet(), this);
+                // process any gadgets
 
-            // swap the contents of this element into the dispatcher's element
-            $(this.ratchet().el).html("");
-            var holder = $("<div></div>");
-            $(this.ratchet().el).append(holder);
-            $(holder).replaceWith(this[0].childNodes);
+                // dispatcher post-render
+                self.ratchet().processGadgets.call(self.ratchet(), self, function () {
 
-            // copy attributes
-            Ratchet.copyAttributes(this, this.ratchet().el);
-            // fire post-swap custom event
-            $('body').trigger('swap', [this.ratchet()]);
+                    // swap the contents of this element into the dispatcher's element
+                    $(self.ratchet().el).html("");
+                    var holder = $("<div></div>");
+                    $(self.ratchet().el).append(holder);
+                    $(holder).replaceWith(self[0].childNodes);
 
-            // increment dispatch completion count
-            this.ratchet().incrementDispatchCompletionCount();
+                    // copy attributes
+                    Ratchet.copyAttributes(self, self.ratchet().el);
+                    // fire post-swap custom event
+                    $('body').trigger('swap', [self.ratchet()]);
 
-            // fire post-dispatch custom event
-            $('body').trigger('dispatch', [this.ratchet(), this.ratchet().isDispatchCompleted()]);
+                    // increment dispatch completion count
+                    self.ratchet().incrementDispatchCompletionCount();
+
+                    // fire post-dispatch custom event
+                    $('body').trigger('dispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
+
+                });
+            });
         },
 
         /**
@@ -169,20 +177,6 @@
             }
 
             // NOTE: this requires the jQuery template engine plugin
-            /*
-            if (Ratchet.isUndefined(Ratchet.jQueryTemplateEngine))
-            {
-                Ratchet.error("Cannot render template, the jQueryTemplateEngine plugin must be included");
-                return;
-            }
-
-            var engine = Ratchet.jQueryTemplateEngine.instance;
-            if (!engine)
-            {
-                engine = new Ratchet.jQueryTemplateEngine("default");
-                Ratchet.jQueryTemplateEngine.instance = engine;
-            }
-            */
             var engine = Ratchet.renditionEngine;
             if (!engine)
             {

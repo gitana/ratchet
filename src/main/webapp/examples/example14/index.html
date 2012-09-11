@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Ratchet - Basic Example #1</title>
+    <title>Gitana Ratchet MVC - Example #1</title>
 
     <!-- code prettifier -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
@@ -36,20 +36,21 @@
     <script type="text/javascript" src="/js_src/jQueryAdapter.js"></script>
     <script type="text/javascript" src="/js_src/DefaultRegionResolver.js"></script>
 
-    <script type="text/javascript" id="sample-code">
+    <!-- jQuery Templating Plugin -->
+    <script type="text/javascript" src="/js_src/thirdparty/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="/js_src/plugins/jQueryTemplateEngine.js"></script>
+
+    <!-- examples -->
+    <script type="text/javascript" src="Dashboard.js"></script>
+    <script type="text/javascript" src="Dashlet1.js"></script>
+    <script type="text/javascript" src="Dashlet2.js"></script>
+    <script type="text/javascript" src="Dashlet3.js"></script>
+
+    <script type="text/javascript">
 
         $(document).ready(function() {
 
-            $('#sample').ratchet(
-                    function() {
-
-                        this.get("/", function(el) {
-
-                            el.html("Here is some <span>text</span>").swap();
-
-                        });
-
-                    }).run("/");
+            $('#container').ratchet().run("/");
 
         });
 
@@ -77,17 +78,37 @@
         </div>
     </div>
 </div>
-<h2>Basic Example #1</h2>
-<div id="sample"></div>
+
+<h2>Gadget Example #14 - Dashboard</h2>
+<p>
+    This example demonstrates a dashboard implementation with separation of config and templates.
+    Each gadget loads its config and renders using a template.
+</p>
+
+<gadget type="dashboard"></gadget>
+
+<!--
 <pre class="prettyprint linenums">
-$(document).ready(function() {
-    $('#sample').ratchet(function() {
-        this.get("/", function(el) {
-            el.html("Here is some <span>text</span>").swap();
-        });
-    }).run("/");
-});
+    Example11 = Ratchet.Gadget.extend({
+        constructor: function(id, ratchet){
+            this.base(id, ratchet);
+        },
+
+        setup: function(){
+            // define a route
+            this.get("/", function(el) {
+                el.html("Welcome to the title page").swap();
+            });
+        }
+    });
+
+    Ratchet.GadgetRegistry.register("application", Example1);
+
+    $(document).ready(function() {
+        $('#sample').ratchet().run("/");
+    });
 </pre>
+-->
 </body>
 
 </html>

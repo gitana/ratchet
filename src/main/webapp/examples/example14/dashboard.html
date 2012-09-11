@@ -1,0 +1,30 @@
+<script id="dashboardTemplate" type="text/x-jquery-tmpl">
+
+    <table>
+
+    {{each(i, row) config.rows}}
+
+        <tr>
+
+        {{each(j, column) row.columns}}
+
+            <td>
+
+            {{each(k, dashlet) column.dashlets}}
+
+                <gadget type="${dashlet.gadgetType}" id="${dashlet.gadgetId}"></gadget>
+                <br/>
+
+            {{/each}}
+
+            </td>
+
+        {{/each}}
+
+        </tr>
+
+    </table>
+
+    {{/each}}
+
+</script>

@@ -1,0 +1,19 @@
+{
+    "rows": [{
+        "columns": [{
+            "dashlets": [{
+                "gadgetType": "dashlet1",
+                "gadgetId": "id1"
+            },{
+                "gadgetType": "dashlet2",
+                "gadgetId": "id2"
+            }]
+        }, {
+            "dashlets": [{
+                "gadgetType": "dashlet3",
+                "gadgetId": "id3"
+            }]
+
+        }]
+    }]
+}

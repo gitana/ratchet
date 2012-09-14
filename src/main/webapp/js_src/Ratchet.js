@@ -458,12 +458,17 @@
                 for (var regionId in resolutions)
                 {
                     var gadgetType = resolutions[regionId]["gadgetType"];
+                    var gadgetId = resolutions[regionId]["gadgetId"];
                     var attrs = resolutions[regionId]["attrs"];
 
                     var tag = $("<div gadget='" + gadgetType + "'></div>");
                     $.each(attrs, function(k, v) {
                         tag.attr(k, v);
                     });
+                    if (gadgetId)
+                    {
+                        tag.attr("id", gadgetId);
+                    }
 
                     $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
                 }

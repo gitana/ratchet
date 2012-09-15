@@ -28,20 +28,22 @@
 
             var resolutions = {};
 
-            for (var regionId in regions)
+            for (var regionName in regions)
             {
-                //var el = regions[regionId];
+                var gadgetType = mappings[regionName];
+                if (gadgetType)
+                {
+                    var array = [];
 
-                var gadgetType = mappings[regionId];
+                    var resolution = {
+                        "type": gadgetType,
+                        "attrs": {}
+                    };
 
-                var attrs = {};
+                    array.push(resolution);
 
-                var resolution = {
-                    "gadgetType": gadgetType,
-                    "attrs": attrs
-                };
-
-                resolutions[regionId] = resolution;
+                    resolutions[regionName] = array;
+                }
             }
 
             callback.call(self, resolutions);

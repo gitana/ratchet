@@ -457,20 +457,26 @@
 
                 for (var regionId in resolutions)
                 {
-                    var gadgetType = resolutions[regionId]["gadgetType"];
-                    var gadgetId = resolutions[regionId]["gadgetId"];
-                    var attrs = resolutions[regionId]["attrs"];
-
-                    var tag = $("<div gadget='" + gadgetType + "'></div>");
-                    $.each(attrs, function(k, v) {
-                        tag.attr(k, v);
-                    });
-                    if (gadgetId)
+                    var resolutionArray = resolutions[regionId];
+                    for (var z = 0; z < resolutionArray.length; z++)
                     {
-                        tag.attr("id", gadgetId);
-                    }
+                        var resolution = resolutionArray[z];
 
-                    $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
+                        var gadgetType = resolution["type"];
+                        var gadgetId = resolution["id"];
+                        var attrs = resolution["attrs"];
+
+                        var tag = $("<div gadget='" + gadgetType + "'></div>");
+                        $.each(attrs, function(k, v) {
+                            tag.attr(k, v);
+                        });
+                        if (gadgetId)
+                        {
+                            tag.attr("id", gadgetId);
+                        }
+
+                        $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
+                    }
                 }
 
                 // fire the callback
@@ -1195,6 +1201,10 @@
 
     if (typeof Ratchet.Gadgets === "undefined") {
         Ratchet.Gadgets = {};
+    }
+
+    if (typeof Ratchet.Pages === "undefined") {
+        Ratchet.Pages = {};
     }
 
     if (typeof Ratchet.Utils === "undefined") {

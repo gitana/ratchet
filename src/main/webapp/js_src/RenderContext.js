@@ -61,14 +61,106 @@
                 // dispatcher post-render
                 self.ratchet().processGadgets.call(self.ratchet(), self, function () {
 
-                    // swap the contents of this element into the dispatcher's element
+
+                    // determine the appropriate merge point
+                    // this is either all of the child nodes that we rendered out or if we rendered a single
+                    // node with lots of children under it, then we'll use that single node
+                    var mergePoint = null;
+                    if (self.children().size() == 0)
+                    {
+                        // there are no dom node children
+                        // we assume that there is valid text somewhere in there
+                        // use ourselves as a mergepoint so that children get collected in
+                        mergePoint = self; //
+                    }
+                    else
+                    {
+                        // there is at least one dom element in here...
+
+                        // if multiple, then use self as merge point
+                        if (self.children().size() > 1)
+                        {
+                            mergePoint = self;
+                        }
+                        else
+                        {
+                            // otherwise, there is either
+                            //   a) stray whitespace text + a dom element
+                            //   b) text we want to keep + dom element
+
+                            // get rid of any white space nodes
+                            var index = 0;
+                            while (index < self[0].childNodes.length)
+                            {
+                                var current = self[0].childNodes[index];
+                                if (current.nodeName == "#text")
+                                {
+                                    if (current.textContent.trim() == 0)
+                                    {
+                                        self[0].removeChild(current);
+                                    }
+                                    else
+                                    {
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    index++;
+                                }
+                            }
+
+
+                            // if the DOM element is now FIRST, then use it as merge point
+                            if (self[0].childNodes[0].nodeName.toLowerCase() == self.children()[0].nodeName)
+                            {
+                                // just one child node (which is a dom node), so use it as a merge point
+                                mergePoint = self.children()[0];
+                            }
+                            else
+                            {
+                                // what remains is text + dom mixture, so add all children
+                                mergePoint = self;
+                            }
+
+                        }
+                    }
+
+                    // if the merge point dom type is different from self.ratchet().el...
+                    // then we have to recreate the el
+                    if ($(mergePoint)[0].nodeName != $(self.ratchet().el)[0].nodeName)
+                    {
+                        var name = $(mergePoint)[0].nodeName;
+                        var newEl = $("<" + name + "></" + name + ">");
+
+                        // copy original attributes to target (such as class and id)
+                        var attributes = $(self.ratchet().el).prop("attributes");
+                        $.each(attributes, function() {
+                            $(newEl).attr(this.name, this.value);
+                        });
+                        // set a temp key so we can look up after replace
+                        var tk = "key-" + new Date().getTime();
+                        $(newEl).attr("tk", tk);
+
+                        // replace in DOM
+                        $(self.ratchet().el).replaceWith(newEl);
+
+                        // now find what we replaced and clean up
+                        newEl = $("[tk=" + tk + "]");
+                        $(newEl).removeAttr("tk");
+
+                        // now update the ratchet "el" reference
+                        self.ratchet().el = $(newEl)[0];
+                    }
+
+                    // clear the live element
+                    // append the children from the in-memory swap copy
                     $(self.ratchet().el).html("");
-                    var holder = $("<div></div>");
-                    $(self.ratchet().el).append(holder);
-                    $(holder).replaceWith(self[0].childNodes);
+                    $(self.ratchet().el).append($(mergePoint)[0].childNodes);
 
                     // copy attributes
-                    Ratchet.copyAttributes(self, self.ratchet().el);
+                    Ratchet.copyAttributes($(mergePoint), self.ratchet().el);
+
                     // fire post-swap custom event
                     $('body').trigger('swap', [self.ratchet()]);
 

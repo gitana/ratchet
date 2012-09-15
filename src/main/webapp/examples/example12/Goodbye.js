@@ -2,11 +2,6 @@
 {
     Goodbye = Ratchet.Gadget.extend(
     {
-        constructor: function(id, ratchet)
-        {
-            this.base(id, ratchet);
-        },
-
         setup: function()
         {
             // define a route

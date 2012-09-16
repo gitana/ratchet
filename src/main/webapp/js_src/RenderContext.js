@@ -130,7 +130,14 @@
                     // then we have to recreate the el
                     if ($(mergePoint)[0].nodeName != $(self.ratchet().el)[0].nodeName)
                     {
+                        // assume mergepoint is correct
+                        // but if original is BODY, then we preserve
                         var name = $(mergePoint)[0].nodeName;
+                        if ($(self.ratchet().el)[0].nodeName.toLowerCase() == "body")
+                        {
+                            name = "body";
+                        }
+
                         var newEl = $("<" + name + "></" + name + ">");
 
                         // copy original attributes to target (such as class and id)

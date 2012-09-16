@@ -1013,6 +1013,8 @@
                 if (tripped)
                 {
                     // we require authentication
+
+                    // if an authenticator instance has been provided, then call it's authenticate() method
                     if (this.authenticator && this.authenticator.authenticate)
                     {
                         this.authenticator.authenticate(context, function() {
@@ -1027,6 +1029,7 @@
                     }
                     else
                     {
+                        // if an authenticate() method has been provided directly, we can use that
                         this.authenticate.call(_this, context, function() {
 
                             successCallback();
@@ -1209,6 +1212,10 @@
 
     if (typeof Ratchet.Utils === "undefined") {
         Ratchet.Utils = {};
+    }
+
+    if (typeof Ratchet.Authenticators === "undefined") {
+        Ratchet.Authenticators = {};
     }
 
 

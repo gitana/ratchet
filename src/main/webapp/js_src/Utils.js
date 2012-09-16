@@ -159,4 +159,46 @@
         }
     };
 
+    Ratchet.params = function()
+    {
+        var urlParams = {};
+
+        if (window.location.href.indexOf('?') == -1) {
+            return urlParams;
+        }
+
+        var params = window.location.href.split('?')[1].split("&"), length = params.length, current;
+
+        if (params[ 0 ]) {
+            for (var i = 0; i < length; i++) {
+                current = params[ i ].split("=");
+                current[ 0 ] = decodeURIComponent(current[ 0 ]);
+                // allow just a key to turn on a flag, e.g., test.html?noglobals
+                current[ 1 ] = current[ 1 ] ? decodeURIComponent(current[ 1 ]) : true;
+                urlParams[ current[ 0 ] ] = current[ 1 ];
+            }
+        }
+
+        return urlParams;
+    };
+
+    Ratchet.hashParam = function(paramName)
+    {
+        var searchString = window.location.href.substring(window.location.href.indexOf("#") + 1);
+        var params = searchString.split("&");
+
+        for (i = 0; i < params.length; i++)
+        {
+            val = params[i].split("=");
+
+            if (val[0] == paramName)
+            {
+                return unescape(val[1]);
+            }
+        }
+
+        return null;
+    };
+
+
 })(window);

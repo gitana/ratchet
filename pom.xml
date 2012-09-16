@@ -43,6 +43,7 @@
                                 <param>../js_src/GadgetRegistry.js</param>
                                 <param>../js_src/TemplateEngineRegistry.js</param>
                                 <param>../js_src/BaseTemplateEngine.js</param>
+                                <param>../js_src/AbstractAuthenticator.js</param>
 
                                 <!-- jQuery Support -->
                                 <param>../js_src/jQueryAdapter.js</param>

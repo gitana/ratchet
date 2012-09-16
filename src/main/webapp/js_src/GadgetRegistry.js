@@ -40,7 +40,9 @@
             });
         }
 
-        return instances;
+        // we reverse the list so that defaults appear at the end
+        // that way, we can override by URI
+        return instances.reverse();
     };
 
 })(jQuery);

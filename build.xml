@@ -1,0 +1,254 @@
+<?xml version='1.0'?>
+<project name="Ratchet" basedir="." default="update">
+    <!-- load custom properties file -->
+    <property file="custom-local.properties"/>
+
+    <!-- load properties from file -->
+    <property file="local.properties"/>
+
+    <property name="project.dir" value="."/>
+
+    <property name="js.dir" value="${project.dir}/js"/>
+    <property name="lib.dir" value="${project.dir}/lib"/>
+    <property name="css.dir" value="${project.dir}/css"/>
+    <property name="examples.dir" value="${project.dir}/examples"/>
+    <property name="tests.dir" value="${project.dir}/tests"/>
+
+    <property name="build.dir" value="${project.dir}/build"/>
+
+    <property name="prep.dir" value="${build.dir}/prep"/>
+    <property name="package.dir" value="${build.dir}/package"/>
+
+    <property name="yui-compressor" value="${project.dir}/tool/yuicompressor-2.4.7.jar"/>
+
+    <target name="setup" description="Creates all required directories" depends="clean">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="prep" description="Creates all required directories" depends="setup">
+        <mkdir dir="${prep.dir}"/>
+        <mkdir dir="${prep.dir}/js"/>
+        <mkdir dir="${prep.dir}/lib"/>
+        <mkdir dir="${prep.dir}/css"/>
+        <mkdir dir="${prep.dir}/tests"/>
+        <mkdir dir="${prep.dir}/examples"/>
+        <mkdir dir="${package.dir}"/>
+        <mkdir dir="${package.dir}/js"/>
+        <mkdir dir="${package.dir}/lib"/>
+        <mkdir dir="${package.dir}/examples"/>
+
+        <copy todir="${prep.dir}/js">
+            <fileset dir="${js.dir}"/>
+        </copy>
+        <copy todir="${prep.dir}/lib">
+            <fileset dir="${lib.dir}"/>
+        </copy>
+        <copy todir="${prep.dir}/css">
+            <fileset dir="${css.dir}"/>
+        </copy>
+        <copy todir="${prep.dir}/examples">
+            <fileset dir="${examples.dir}"/>
+        </copy>
+        <copy todir="${prep.dir}/tests">
+            <fileset dir="${tests.dir}"/>
+        </copy>
+        <copy todir="${prep.dir}/">
+            <fileset dir="${project.dir}">
+                <include name="favicon.ico"/>
+                <include name="index.html"/>
+                <include name="resources.html"/>
+                <include name="license.txt"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="concat-js" description="Concat all javascript files" depends="prep">
+        <concat destfile="${package.dir}/js/${appkey}-${version}-full.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+
+                <!-- Required Base Classes -->
+                <file name="thirdparty/base.js"/>
+                <file name="thirdparty/json2.js"/>
+                <file name="thirdparty/jquery.history.js"/>
+                <file name="thirdparty/form2object.js"/>
+
+                <!-- Ratchet Core -->
+                <file name="Ratchet.js"/>
+                <file name="Utils.js"/>
+                <file name="Observable.js"/>
+                <file name="Observables.js"/>
+                <file name="ScopedObservables.js"/>
+                <file name="Gadget.js"/>
+                <file name="GadgetRegistry.js"/>
+                <file name="TemplateEngineRegistry.js"/>
+                <file name="BaseTemplateEngine.js"/>
+                <file name="AbstractAuthenticator.js"/>
+
+                <!-- jQuery Support -->
+                <file name="jQueryAdapter.js"/>
+
+                <!-- Default Region Resolver -->
+                <file name="DefaultRegionResolver.js"/>
+            </filelist>
+        </concat>
+        <concat destfile="${package.dir}/js/${appkey}-${version}-tests.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/tests/js">
+                <!-- TODO -->
+                <!--
+                <file name="fields/TextField.js"/>
+                -->
+            </filelist>
+        </concat>
+        <copy file="${package.dir}/js/${appkey}-${version}-full.js" tofile="${package.dir}/js/${appkey}-${version}.js"/>
+        <replaceregexp match=",//__BUILDER_HELPERS(.*?)//__END_OF_BUILDER_HELPERS"
+                       replace="" flags="gs">
+            <fileset dir="${package.dir}/js" includes="${appkey}-${version}.js"/>
+        </replaceregexp>
+        <copy todir="${package.dir}/lib">
+            <fileset dir="${prep.dir}/lib">
+                <include name="jquery-latest.min.js"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="concat-css" description="Concat all css files" depends="prep">
+        <concat destfile="${package.dir}/css/${appkey}-${version}-core.css">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/css">
+                <!--
+                <file name="ratchet.css"/>
+                -->
+            </filelist>
+        </concat>
+        <concat destfile="${package.dir}/css/${appkey}-${version}.css">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/css">
+                <!--
+                <file name="ratchet.css"/>
+                -->
+            </filelist>
+        </concat>
+    </target>
+
+    <target name="compress" description="Compress the javascript and css" depends="concat-js,concat-css">
+        <echo>Compressing Javascript...</echo>
+        <apply executable="java" parallel="false" dest="${build.dir}/package">
+            <fileset dir="${build.dir}/package">
+                <include name="**/*.js"/>
+                <exclude name="**/*-min.js"/>
+                <exclude name="**/*.min.js"/>
+            </fileset>
+            <arg line="-jar"/>
+            <arg path="${yui-compressor}"/>
+            <arg line="-o"/>
+            <targetfile/>
+            <srcfile/>
+            <mapper type="glob" from="*.js" to="*.min.js"/>
+        </apply>
+        <echo>Compressing CSS...</echo>
+        <apply executable="java" parallel="false" dest="${build.dir}/package">
+            <fileset dir="${build.dir}/package">
+                <include name="**/*.css"/>
+                <exclude name="**/*-min.css"/>
+                <exclude name="**/*.min.css"/>
+            </fileset>
+            <arg line="-jar"/>
+            <arg path="${yui-compressor}"/>
+            <arg line="-o"/>
+            <targetfile/>
+            <srcfile/>
+            <mapper type="glob" from="*.css" to="*.min.css"/>
+        </apply>
+    </target>
+
+    <target name="prep-html" description="Prepare all htmls" depends="compress">
+        <copy todir="${package.dir}/examples">
+            <fileset dir="${prep.dir}/examples" includes="**/*"/>
+        </copy>
+        <copy todir="${package.dir}/tests">
+            <fileset dir="${prep.dir}/tests">
+                <exclude name="js/**/*"/>
+            </fileset>
+        </copy>
+        <copy todir="${package.dir}">
+            <fileset dir="${prep.dir}">
+                <include name="favicon.ico"/>
+                <include name="index.html"/>
+                <include name="resources.html"/>
+            </fileset>
+        </copy>
+        <copy todir="${package.dir}/css/images">
+            <fileset dir="${prep.dir}/css/images" includes="**/*"/>
+        </copy>
+    </target>
+
+    <target name="package" depends="prep-html">
+        <zip destfile="${prep.dir}/${appkey}-${version}-all.zip">
+            <fileset dir="${package.dir}">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+            </fileset>
+        </zip>
+        <zip destfile="${prep.dir}/${appkey}-${version}.zip">
+            <fileset dir="${package.dir}">
+                <include name="css/**/*"/>
+                <include name="js/**/*"/>
+                <include name="lib/**/*"/>
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+            </fileset>
+        </zip>
+        <copy todir="${package.dir}/downloads">
+            <fileset dir="${prep.dir}" includes="*.zip"/>
+        </copy>
+        <copy todir="${package.dir}/js">
+            <fileset dir="${package.dir}/js"/>
+            <globmapper from="${appkey}-${version}*.js" to="${appkey}-latest*.js"/>
+        </copy>
+        <copy todir="${package.dir}/css">
+            <fileset dir="${package.dir}/css"/>
+            <globmapper from="${appkey}-${version}*.css" to="${appkey}-latest*.css"/>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="webserver-clean">
+        <delete>
+            <fileset dir="${local.docroot.basepath}/${appkey}" includes="**/*"/>
+        </delete>
+    </target>
+
+    <fileset id="ratchet-files" dir="${project.dir}">
+        <include name="css/**/*"/>
+        <include name="js/**/*"/>
+        <include name="lib/**/*"/>
+        <include name="examples/**/*"/>
+        <include name="*.html"/>
+        <include name="favicon.ico"/>
+    </fileset>
+
+    <target name="update">
+        <copy todir="${local.docroot.basepath}/${appkey}">
+            <fileset refid="ratchet-files"/>
+        </copy>
+    </target>
+
+    <target name="full" depends="webserver-clean">
+        <copy todir="${local.docroot.basepath}/${appkey}">
+            <fileset refid="ratchet-files"/>
+        </copy>
+    </target>
+</project>

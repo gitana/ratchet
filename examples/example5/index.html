@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Gitana Ratchet MVC - Example #5</title>
+
+    <!-- code prettifier -->
+    <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="../css/example.css" rel="stylesheet">
+
+    <!-- prettifier -->
+    <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
+
+    <!-- jquery -->
+    <script type="text/javascript" src="../../lib/jquery-latest.min.js"></script>
+
+    <!-- samples -->
+    <script type="text/javascript" src="../js/example.js"></script>
+
+    <!-- third party -->
+    <script type="text/javascript" src="../../js/thirdparty/base.js"></script>
+    <script type="text/javascript" src="../../js/thirdparty/json2.js"></script>
+    <script type="text/javascript" src="../../js/thirdparty/jquery.history.js"></script>
+    <script type="text/javascript" src="../../js/thirdparty/form2object.js"></script>
+
+    <!-- ratchet -->
+    <script type="text/javascript" src="../../js/Ratchet.js"></script>
+    <script type="text/javascript" src="../../js/Utils.js"></script>
+    <script type="text/javascript" src="../../js/Observable.js"></script>
+    <script type="text/javascript" src="../../js/Observables.js"></script>
+    <script type="text/javascript" src="../../js/ScopedObservables.js"></script>
+    <script type="text/javascript" src="../../js/RenderContext.js"></script>
+    <script type="text/javascript" src="../../js/Gadget.js"></script>
+    <script type="text/javascript" src="../../js/GadgetRegistry.js"></script>
+    <script type="text/javascript" src="../../js/TemplateEngineRegistry.js"></script>
+    <script type="text/javascript" src="../../js/BaseTemplateEngine.js"></script>
+    <script type="text/javascript" src="../../js/jQueryAdapter.js"></script>
+    <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa. Integer ut purus ac augue commodo commodo. Nunc nec mi eu justo tempor consectetuer. Etiam vitae nisl. In dignissim lacus ut ante. Cras elit lectus, bibendum a, adipiscing vitae, commodo et, dui. Ut tincidunt tortor. Donec nonummy, enim in lacinia pulvinar, velit tellus scelerisque augue, ac posuere libero urna eget neque. Cras ipsum. Vestibulum pretium, lectus nec venenatis volutpat, purus lectus ultrices risus, a condimentum risus mi et quam. Pellentesque auctor fringilla neque. Duis eu massa ut lorem iaculis vestibulum. Maecenas facilisis elit sed justo. Quisque volutpat malesuada velit.";
+
+            // section 1
+            $("#section1").ratchet(
+                    function() {
+                        this.get("/", function(el) {
+                            el.html("<div>" + lorem + "</div>").swap();
+                        });
+                    }).run("/");
+
+            // section 2
+            $("#section2").ratchet(
+                    function() {
+                        this.get("/", function(el) {
+                            el.html("<B>" + lorem + "</B>").swap();
+                        });
+                    }).run("/");
+
+            // section 3
+            $("#section3").ratchet(
+                    function() {
+                        this.get("/", function(el) {
+                            el.html("<I>" + lorem + "</I>").swap();
+                        });
+                    }).run("/");
+
+            // section 4
+            $("#section4").ratchet(
+                    function() {
+                        this.get("/", function(el) {
+                            el.html("<U>" + lorem + "</U>").swap();
+                        });
+                    }).run("/");
+
+        });
+
+    </script>
+
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <a class="brand" href="../../index.html">
+            <span class="logo"></span>
+            Ratchet
+        </a>
+
+        <div class="nav-collapse">
+            <ul class="nav">
+                <li>
+                    <a href="../../index.html">Home</a>
+                </li>
+                <li class="active">
+                    <a href="../index.html">Examples</a>
+                </li>
+                <li>
+            </ul>
+        </div>
+    </div>
+</div>
+<h2>Gadget Example #5</h2>
+<table width="100%">
+    <tr>
+        <td>
+            <div id="section1"></div>
+        </td>
+        <td>
+            <div id="section2"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="section3"></div>
+        </td>
+        <td>
+            <div id="section4"></div>
+        </td>
+    </tr>
+</table>
+<pre class="prettyprint linenums">
+$(document).ready(function() {
+
+    var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa. Integer ut purus ac augue commodo commodo. Nunc nec mi eu justo tempor consectetuer. Etiam vitae nisl. In dignissim lacus ut ante. Cras elit lectus, bibendum a, adipiscing vitae, commodo et, dui. Ut tincidunt tortor. Donec nonummy, enim in lacinia pulvinar, velit tellus scelerisque augue, ac posuere libero urna eget neque. Cras ipsum. Vestibulum pretium, lectus nec venenatis volutpat, purus lectus ultrices risus, a condimentum risus mi et quam. Pellentesque auctor fringilla neque. Duis eu massa ut lorem iaculis vestibulum. Maecenas facilisis elit sed justo. Quisque volutpat malesuada velit.";
+
+    // section 1
+    $("#section1").ratchet(function() {
+        this.get("/", function(el) {
+            el.html("&lt;div&gt;" + lorem + "&lt;/div&gt;").swap();
+        });
+    }).run("/");
+
+    // section 2
+    $("#section2").ratchet(function() {
+        this.get("/", function(el) {
+            el.html("&lt;B&gt;" + lorem + "&lt;/B&gt;").swap();
+        });
+    }).run("/");
+
+    // section 3
+    $("#section3").ratchet(function() {
+        this.get("/", function(el) {
+            el.html("&lt;I&gt;" + lorem + "&lt;/I&gt;").swap();
+        });
+    }).run("/");
+
+    // section 4
+    $("#section4").ratchet(function() {
+        this.get("/", function(el) {
+            el.html("&lt;U&gt;" + lorem + "&lt;/U&gt;").swap();
+        });
+    }).run("/");
+
+});
+</pre>
+</body>
+</html>
+

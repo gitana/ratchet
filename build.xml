@@ -78,6 +78,7 @@
                 <file name="Observable.js"/>
                 <file name="Observables.js"/>
                 <file name="ScopedObservables.js"/>
+                <file name="RenderContext.js"/>
                 <file name="Gadget.js"/>
                 <file name="GadgetRegistry.js"/>
                 <file name="TemplateEngineRegistry.js"/>

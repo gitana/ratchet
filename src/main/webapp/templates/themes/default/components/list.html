@@ -1,0 +1,28 @@
+<script id="listTemplate" type="text/x-jquery-tmpl">
+
+    <table width="100%" cellpadding="0" cellspacing="0" class="table">
+        <thead>
+        <tr>
+
+            <!-- checkbox -->
+            <th></th>
+
+            <!-- icon -->
+            <th></th>
+
+            <!-- columns -->
+            {{if list}}
+            {{each(i, column) list.columns}}
+            <th nowrap>${column.title}</th>
+            {{/each}}
+            {{/if}}
+        </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+
+    </table>
+
+</script>

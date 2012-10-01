@@ -30,6 +30,7 @@
         <mkdir dir="${prep.dir}/lib"/>
         <mkdir dir="${prep.dir}/tests"/>
         <mkdir dir="${prep.dir}/examples"/>
+        <mkdir dir="${prep.dir}/gadgets/core"/>
         <mkdir dir="${package.dir}"/>
         <mkdir dir="${package.dir}/js"/>
         <mkdir dir="${package.dir}/lib"/>
@@ -47,6 +48,9 @@
         <copy todir="${prep.dir}/tests">
             <fileset dir="${tests.dir}"/>
         </copy>
+        <copy todir="${prep.dir}/gadgets/core">
+            <fileset dir="gadgets/core"/>
+        </copy>
         <copy todir="${prep.dir}/">
             <fileset dir="${project.dir}">
                 <include name="favicon.ico"/>
@@ -60,7 +64,7 @@
     <target name="concat-js" description="Concat all javascript files" depends="prep">
 
         <!-- FULL -->
-        <concat destfile="${package.dir}/js/${appkey}-${version}-full.js">
+        <concat destfile="${package.dir}/js/${appkey}-${version}.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
@@ -129,6 +133,33 @@
             </filelist>
         </concat>
 
+        <!-- GADGET PACK: Core -->
+        <concat destfile="${package.dir}/gadgets/core/js/${appkey}-${version}-gadget-pack.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/gadgets/core/js">
+                <file name="AbstractGadget.js"/>
+                <file name="AbstractDynamicGadget.js"/>
+                <file name="AbstractDynamicPage.js"/>
+                <file name="Buttons.js"/>
+                <file name="Copyright.js"/>
+                <file name="Core.js"/>
+                <file name="Dashboard.js"/>
+                <file name="Display.js"/>
+                <file name="DocumentLibrary.js"/>
+                <file name="DynamicRegionResolver.js"/>
+                <file name="Form.js"/>
+                <file name="Hero.js"/>
+                <file name="Links.js"/>
+                <file name="List.js"/>
+                <file name="Navbar.js"/>
+                <file name="Sidebar.js"/>
+                <file name="Upload.js"/>
+                <file name="Wizard.js"/>
+            </filelist>
+        </concat>
+
         <concat destfile="${package.dir}/js/${appkey}-${version}-tests.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
@@ -140,7 +171,7 @@
                 -->
             </filelist>
         </concat>
-        <copy file="${package.dir}/js/${appkey}-${version}-full.js" tofile="${package.dir}/js/${appkey}-${version}.js"/>
+        <copy file="${package.dir}/js/${appkey}-${version}.js" tofile="${package.dir}/js/${appkey}-${version}.js"/>
         <copy todir="${package.dir}/lib">
             <fileset dir="${prep.dir}/lib">
                 <include name="jquery-latest.min.js"/>
@@ -148,7 +179,21 @@
         </copy>
     </target>
 
-    <target name="compress" description="Compress the javascript" depends="concat-js">
+    <target name="concat-css" description="Concat all css files" depends="prep">
+
+        <!-- GADGET PACK: Core -->
+        <concat destfile="${package.dir}/gadgets/core/css/${appkey}-${version}-gadget-pack.css">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/gadgets/core/css">
+                <file name="ratchet-core.css"/>
+            </filelist>
+        </concat>
+
+    </target>
+
+    <target name="compress" description="Compress the javascript" depends="concat-js, concat-css">
         <echo>Compressing Javascript...</echo>
         <apply executable="java" parallel="false" dest="${build.dir}/package">
             <fileset dir="${build.dir}/package">
@@ -184,27 +229,80 @@
     </target>
 
     <target name="package" depends="prep-html">
-        <zip destfile="${prep.dir}/${appkey}-${version}-all.zip">
-            <fileset dir="${package.dir}">
+
+        <!-- GADGET PACK: Core -->
+        <copy todir="${package.dir}/gadgets/core/">
+            <fileset dir="${prep.dir}/gadgets/core">
+                <include name="**/*"/>
+                <exclude name="js/**/*"/>
+                <exclude name="css/**/*"/>
                 <exclude name="**/.DS_Store/*"/>
                 <exclude name="**/.idea/*"/>
             </fileset>
-        </zip>
-        <zip destfile="${prep.dir}/${appkey}-${version}.zip">
-            <fileset dir="${package.dir}">
-                <include name="js/**/*"/>
-                <include name="lib/**/*"/>
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-            </fileset>
-        </zip>
-        <copy todir="${package.dir}/downloads">
-            <fileset dir="${prep.dir}" includes="*.zip"/>
         </copy>
+        <copy todir="${package.dir}/gadgets/core/js">
+            <fileset dir="${package.dir}/gadgets/core/js">
+                <include name="${appkey}-${version}*.js"/>
+            </fileset>
+            <globmapper from="${appkey}-${version}*.js" to="${appkey}-latest*.js"/>
+        </copy>
+        <copy todir="${package.dir}/gadgets/core/css">
+            <fileset dir="${package.dir}/gadgets/core/css">
+                <include name="${appkey}-${version}*.css"/>
+            </fileset>
+            <globmapper from="${appkey}-${version}*.css" to="${appkey}-latest*.css"/>
+        </copy>
+        <zip destfile="${package.dir}/downloads/${appkey}-${version}-gadget-pack.zip">
+            <fileset dir="${package.dir}/gadgets/core">
+                <include name="**/*"/>
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="**/${appkey}-latest*.*"/>
+            </fileset>
+        </zip>
+        <zip destfile="${package.dir}/downloads/${appkey}-latest-gadget-pack.zip">
+            <fileset dir="${package.dir}/gadgets/core">
+                <include name="**/*"/>
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="**/${appkey}-${version}*.*"/>
+            </fileset>
+        </zip>
+
+        <!-- js files -->
         <copy todir="${package.dir}/js">
             <fileset dir="${package.dir}/js"/>
             <globmapper from="${appkey}-${version}*.js" to="${appkey}-latest*.js"/>
         </copy>
+
+        <!-- ZIP -->
+        <zip destfile="${package.dir}/downloads/${appkey}-${version}.zip">
+            <fileset dir="${package.dir}">
+                <include name="examples/**/*"/>
+                <include name="index.html"/>
+                <include name="js/**/*"/>
+                <include name="lib/**/*"/>
+                <include name="tests/**/*"/>
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="**/${appkey}-latest*.*"/>
+            </fileset>
+        </zip>
+
+        <!-- ZIP -->
+        <zip destfile="${package.dir}/downloads/${appkey}-${version}.zip">
+            <fileset dir="${package.dir}">
+                <include name="examples/**/*"/>
+                <include name="index.html"/>
+                <include name="js/**/*"/>
+                <include name="lib/**/*"/>
+                <include name="tests/**/*"/>
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="**/${appkey}-${version}*.*"/>
+            </fileset>
+        </zip>
+
     </target>
 
     <target name="clean">

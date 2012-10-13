@@ -8,7 +8,7 @@
 
     <property name="project.dir" value="."/>
 
-    <property name="js.dir" value="${project.dir}/js"/>
+    <property name="js.dir" value="js"/>
     <property name="lib.dir" value="${project.dir}/lib"/>
     <property name="examples.dir" value="${project.dir}/examples"/>
     <property name="tests.dir" value="${project.dir}/tests"/>
@@ -30,14 +30,13 @@
         <mkdir dir="${prep.dir}/lib"/>
         <mkdir dir="${prep.dir}/tests"/>
         <mkdir dir="${prep.dir}/examples"/>
-        <mkdir dir="${prep.dir}/gadgets/core"/>
         <mkdir dir="${package.dir}"/>
         <mkdir dir="${package.dir}/js"/>
         <mkdir dir="${package.dir}/lib"/>
         <mkdir dir="${package.dir}/examples"/>
 
         <copy todir="${prep.dir}/js">
-            <fileset dir="${js.dir}"/>
+            <fileset dir="js"/>
         </copy>
         <copy todir="${prep.dir}/lib">
             <fileset dir="${lib.dir}"/>
@@ -47,9 +46,6 @@
         </copy>
         <copy todir="${prep.dir}/tests">
             <fileset dir="${tests.dir}"/>
-        </copy>
-        <copy todir="${prep.dir}/gadgets/core">
-            <fileset dir="gadgets/core"/>
         </copy>
         <copy todir="${prep.dir}/">
             <fileset dir="${project.dir}">
@@ -63,8 +59,8 @@
 
     <target name="concat-js" description="Concat all javascript files" depends="prep">
 
-        <!-- FULL -->
-        <concat destfile="${package.dir}/js/${appkey}-${version}.js">
+        <!-- Ratchet -->
+        <concat destfile="${prep.dir}/js/${appkey}-standalone.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
@@ -96,104 +92,78 @@
                 <file name="DefaultRegionResolver.js"/>
             </filelist>
         </concat>
+        <!-- wrap Gitana as an UMD module -->
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-standalone.js"/>
+            <param name="outputFile" value="${package.dir}/js/${appkey}.js"/>
+            <param name="name" value="ratchet" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['jquery']" />
+        </antcall>
+        <delete file="${prep.dir}/js/${appkey}-core-standalone.js"/>
 
-        <!-- PLUGIN: Alpaca Engine -->
-        <concat destfile="${package.dir}/js/${appkey}-${version}-alpaca-engine.js">
+        <!-- PLUGIN: Alpaca Template Engine -->
+        <concat destfile="${prep.dir}/js/${appkey}-alpaca-standalone.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/js/plugins">
+            <filelist dir="${prep.dir}/plugins/alpaca">
                 <file name="AlpacaEngine.js"/>
             </filelist>
         </concat>
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-alpaca-standalone.js"/>
+            <param name="outputFile" value="${package.dir}/js/${appkey}-alpaca.js"/>
+            <param name="name" value="ratchet-alpaca" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet']" />
+        </antcall>
+        <delete file="${prep.dir}/plugins/alpaca/${appkey}-alpaca-standalone.js"/>
 
-        <!-- PLUGIN: EJSTemplateEngine Engine -->
-        <concat destfile="${package.dir}/js/${appkey}-${version}-ejs-template-engine.js">
+        <!-- PLUGIN: EJS Templating -->
+        <concat destfile="${prep.dir}/js/${appkey}-ejs-standalone.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/js/thirdparty/ejs">
+            <filelist dir="${prep.dir}/plugins/ejs/lib">
                 <file name="ejs_production.js"/>
             </filelist>
-            <filelist dir="${prep.dir}/js/plugins">
+            <filelist dir="${prep.dir}/plugins/ejs">
                 <file name="EJSTemplateEngine.js"/>
             </filelist>
         </concat>
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-ejs-standalone.js"/>
+            <param name="outputFile" value="${package.dir}/js/${appkey}-ejs.js"/>
+            <param name="name" value="ratchet-ejs" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet']" />
+        </antcall>
+        <delete file="${prep.dir}/plugins/alpaca/${appkey}-ejs-standalone.js"/>
 
-        <!-- PLUGIN: Alpaca Engine -->
-        <concat destfile="${package.dir}/js/${appkey}-${version}-jquery-template-engine.js">
+        <!-- PLUGIN: jQuery Templating -->
+        <concat destfile="${prep.dir}/js/${appkey}-tmpl-standalone.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/js/thirdparty">
-                <file name="jquery.tmpl.min.js"/>
+            <filelist dir="${prep.dir}/plugins/tmpl/lib">
+                <file name="jquery.tmpl.js"/>
             </filelist>
-            <filelist dir="${prep.dir}/js/plugins">
+            <filelist dir="${prep.dir}/plugins/tmpl">
                 <file name="jQueryTemplateEngine.js"/>
             </filelist>
         </concat>
-
-        <!-- GADGET PACK: Core -->
-        <concat destfile="${package.dir}/gadgets/core/js/${appkey}-${version}-gadget-pack.js">
-            <filelist dir="${prep.dir}">
-                <file name="license.txt"/>
-            </filelist>
-            <filelist dir="${prep.dir}/gadgets/core/js">
-                <file name="AbstractGadget.js"/>
-                <file name="AbstractDynamicGadget.js"/>
-                <file name="AbstractDynamicPage.js"/>
-                <file name="Buttons.js"/>
-                <file name="Copyright.js"/>
-                <file name="Core.js"/>
-                <file name="Dashboard.js"/>
-                <file name="Display.js"/>
-                <file name="DocumentLibrary.js"/>
-                <file name="DynamicRegionResolver.js"/>
-                <file name="Form.js"/>
-                <file name="Hero.js"/>
-                <file name="Links.js"/>
-                <file name="List.js"/>
-                <file name="Navbar.js"/>
-                <file name="Sidebar.js"/>
-                <file name="Upload.js"/>
-                <file name="Wizard.js"/>
-            </filelist>
-        </concat>
-
-        <concat destfile="${package.dir}/js/${appkey}-${version}-tests.js">
-            <filelist dir="${prep.dir}">
-                <file name="license.txt"/>
-            </filelist>
-            <filelist dir="${prep.dir}/tests/js">
-                <!-- TODO -->
-                <!--
-                <file name="fields/TextField.js"/>
-                -->
-            </filelist>
-        </concat>
-        <copy file="${package.dir}/js/${appkey}-${version}.js" tofile="${package.dir}/js/${appkey}-${version}.js"/>
-        <copy todir="${package.dir}/lib">
-            <fileset dir="${prep.dir}/lib">
-                <include name="jquery-latest.min.js"/>
-            </fileset>
-        </copy>
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-tmpl-standalone.js"/>
+            <param name="outputFile" value="${package.dir}/js/${appkey}-tmpl.js"/>
+            <param name="name" value="ratchet-tmpl" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet']" />
+        </antcall>
+        <delete file="${prep.dir}/plugins/alpaca/${appkey}-tmpl-standalone.js"/>
     </target>
 
-    <target name="concat-css" description="Concat all css files" depends="prep">
-
-        <!-- GADGET PACK: Core -->
-        <concat destfile="${package.dir}/gadgets/core/css/${appkey}-${version}-gadget-pack.css">
-            <filelist dir="${prep.dir}">
-                <file name="license.txt"/>
-            </filelist>
-            <filelist dir="${prep.dir}/gadgets/core/css">
-                <file name="ratchet-core.css"/>
-            </filelist>
-        </concat>
-
-    </target>
-
-    <target name="compress" description="Compress the javascript" depends="concat-js, concat-css">
+    <target name="compress" description="Compress the javascript" depends="concat-js">
         <echo>Compressing Javascript...</echo>
         <apply executable="java" parallel="false" dest="${build.dir}/package">
             <fileset dir="${build.dir}/package">
@@ -229,45 +199,6 @@
     </target>
 
     <target name="package" depends="prep-html">
-
-        <!-- GADGET PACK: Core -->
-        <copy todir="${package.dir}/gadgets/core/">
-            <fileset dir="${prep.dir}/gadgets/core">
-                <include name="**/*"/>
-                <exclude name="js/**/*"/>
-                <exclude name="css/**/*"/>
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-            </fileset>
-        </copy>
-        <copy todir="${package.dir}/gadgets/core/js">
-            <fileset dir="${package.dir}/gadgets/core/js">
-                <include name="${appkey}-${version}*.js"/>
-            </fileset>
-            <globmapper from="${appkey}-${version}*.js" to="${appkey}-latest*.js"/>
-        </copy>
-        <copy todir="${package.dir}/gadgets/core/css">
-            <fileset dir="${package.dir}/gadgets/core/css">
-                <include name="${appkey}-${version}*.css"/>
-            </fileset>
-            <globmapper from="${appkey}-${version}*.css" to="${appkey}-latest*.css"/>
-        </copy>
-        <zip destfile="${package.dir}/downloads/${appkey}-${version}-gadget-pack.zip">
-            <fileset dir="${package.dir}/gadgets/core">
-                <include name="**/*"/>
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="**/${appkey}-latest*.*"/>
-            </fileset>
-        </zip>
-        <zip destfile="${package.dir}/downloads/${appkey}-latest-gadget-pack.zip">
-            <fileset dir="${package.dir}/gadgets/core">
-                <include name="**/*"/>
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="**/${appkey}-${version}*.*"/>
-            </fileset>
-        </zip>
 
         <!-- js files -->
         <copy todir="${package.dir}/js">
@@ -317,6 +248,7 @@
 
     <fileset id="ratchet-files" dir="${project.dir}">
         <include name="js/**/*"/>
+        <include name="plugins/**/*"/>
         <include name="lib/**/*"/>
         <include name="examples/**/*"/>
         <include name="*.html"/>
@@ -334,4 +266,34 @@
             <fileset refid="ratchet-files"/>
         </copy>
     </target>
+
+    <target name="umd">
+
+        <!-- load the script -->
+        <loadresource property="script">
+            <file file="${scriptFile}"/>
+        </loadresource>
+
+        <!-- create a temp file holding our UMD wrapped script -->
+        <copy file="${prep.dir}/lib/umd/wrapper.js" tofile="${scriptFile}.temp" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** BUILD_INSERT_SCRIPT **/" to="${script}"/>
+                    <replacestring from="/** BUILD_INSERT_NAME **/" to="${name}"/>
+                    <replacestring from="/** BUILD_INSERT_DEPENDENCIES **/" to="${dependencies}"/>
+                    <replacestring from="/** BUILD_INSERT_VARIABLE_NAME **/" to="${variableName}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+        <concat destfile="${outputFile}">
+            <filelist dir="${prep.dir}">
+                <file name="js/license.js"/>
+            </filelist>
+            <filelist>
+                <file name="${scriptFile}.temp"/>
+            </filelist>
+        </concat>
+        <delete file="${scriptFile}.temp"/>
+    </target>
+
 </project>

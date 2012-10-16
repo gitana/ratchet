@@ -55,6 +55,9 @@
                 <include name="license.txt"/>
             </fileset>
         </copy>
+        <copy todir="${prep.dir}/plugins">
+            <fileset dir="${project.dir}/plugins"/>
+        </copy>
     </target>
 
     <target name="concat-js" description="Concat all javascript files" depends="prep">
@@ -102,24 +105,6 @@
         </antcall>
         <delete file="${prep.dir}/js/${appkey}-core-standalone.js"/>
 
-        <!-- PLUGIN: Alpaca Template Engine -->
-        <concat destfile="${prep.dir}/js/${appkey}-alpaca-standalone.js">
-            <filelist dir="${prep.dir}">
-                <file name="license.txt"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/alpaca">
-                <file name="AlpacaEngine.js"/>
-            </filelist>
-        </concat>
-        <antcall target="umd">
-            <param name="scriptFile" value="${prep.dir}/js/${appkey}-alpaca-standalone.js"/>
-            <param name="outputFile" value="${package.dir}/js/${appkey}-alpaca.js"/>
-            <param name="name" value="ratchet-alpaca" />
-            <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet']" />
-        </antcall>
-        <delete file="${prep.dir}/plugins/alpaca/${appkey}-alpaca-standalone.js"/>
-
         <!-- PLUGIN: EJS Templating -->
         <concat destfile="${prep.dir}/js/${appkey}-ejs-standalone.js">
             <filelist dir="${prep.dir}">
@@ -139,7 +124,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet']" />
         </antcall>
-        <delete file="${prep.dir}/plugins/alpaca/${appkey}-ejs-standalone.js"/>
+        <delete file="${prep.dir}/plugins/ejs/${appkey}-ejs-standalone.js"/>
 
         <!-- PLUGIN: jQuery Templating -->
         <concat destfile="${prep.dir}/js/${appkey}-tmpl-standalone.js">
@@ -160,7 +145,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet']" />
         </antcall>
-        <delete file="${prep.dir}/plugins/alpaca/${appkey}-tmpl-standalone.js"/>
+        <delete file="${prep.dir}/plugins/tmpl/${appkey}-tmpl-standalone.js"/>
     </target>
 
     <target name="compress" description="Compress the javascript" depends="concat-js">
@@ -181,6 +166,25 @@
     </target>
 
     <target name="prep-html" description="Prepare all htmls" depends="compress">
+
+        <!-- replace source files with built ratchet -->
+        <replaceregexp match="&lt;!-- START_RATCHET_JAVASCRIPT --&gt;(.*?)&lt;!-- END_RATCHET_JAVASCRIPT --&gt;"
+                       replace='&lt;script type="text\/javascript" src="../js/ratchet.min.js"&gt;&lt;/script&gt;' flags="gs">
+            <fileset dir="${prep.dir}" includes="examples/**/*.html"/>
+        </replaceregexp>
+
+        <!-- replace source files with built ratchet -->
+        <replaceregexp match="&lt;!-- START_RATCHET_TMPL_JAVASCRIPT --&gt;(.*?)&lt;!-- END_RATCHET_TMPL_JAVASCRIPT --&gt;"
+                       replace='&lt;script type="text\/javascript" src="../js/ratchet-tmpl.min.js"&gt;&lt;/script&gt;' flags="gs">
+            <fileset dir="${prep.dir}" includes="examples/**/*.html"/>
+        </replaceregexp>
+
+        <!-- replace source files with built ratchet -->
+        <replaceregexp match="&lt;!-- START_RATCHET_EJS_JAVASCRIPT --&gt;(.*?)&lt;!-- END_RATCHET_EJS_JAVASCRIPT --&gt;"
+                       replace='&lt;script type="text\/javascript" src="../js/ratchet-ejs.min.js"&gt;&lt;/script&gt;' flags="gs">
+            <fileset dir="${prep.dir}" includes="examples/**/*.html"/>
+        </replaceregexp>
+
         <copy todir="${package.dir}/examples">
             <fileset dir="${prep.dir}/examples" includes="**/*"/>
         </copy>
@@ -196,18 +200,21 @@
                 <include name="resources.html"/>
             </fileset>
         </copy>
+
+        <!-- copy the JS files into examples -->
+        <copy todir="${package.dir}/examples/js">
+            <fileset dir="${package.dir}/js">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+            </fileset>
+        </copy>
+
     </target>
 
     <target name="package" depends="prep-html">
 
-        <!-- js files -->
-        <copy todir="${package.dir}/js">
-            <fileset dir="${package.dir}/js"/>
-            <globmapper from="${appkey}-${version}*.js" to="${appkey}-latest*.js"/>
-        </copy>
-
         <!-- ZIP -->
-        <zip destfile="${package.dir}/downloads/${appkey}-${version}.zip">
+        <zip destfile="${package.dir}/downloads/${appkey}.zip">
             <fileset dir="${package.dir}">
                 <include name="examples/**/*"/>
                 <include name="index.html"/>
@@ -216,21 +223,6 @@
                 <include name="tests/**/*"/>
                 <exclude name="**/.DS_Store/*"/>
                 <exclude name="**/.idea/*"/>
-                <exclude name="**/${appkey}-latest*.*"/>
-            </fileset>
-        </zip>
-
-        <!-- ZIP -->
-        <zip destfile="${package.dir}/downloads/${appkey}-${version}.zip">
-            <fileset dir="${package.dir}">
-                <include name="examples/**/*"/>
-                <include name="index.html"/>
-                <include name="js/**/*"/>
-                <include name="lib/**/*"/>
-                <include name="tests/**/*"/>
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="**/${appkey}-${version}*.*"/>
             </fileset>
         </zip>
 

@@ -5,8 +5,9 @@
     "keywords": ["ratchet", "javascript", "mvc"],
     "author": "Gitana Software <info@cloudcms.com>",
     "repository": {"type": "git", "url": "git://github.com/gitana/ratchet.git"},
-    "version": "1.0.2",
+    "version": "/** VERSION **/",
     "dependencies": {
-        "jquery": "1.8.2"
-    }
+        "jquery": "*"
+    },
+    "main": ["ratchet.js"]
 }

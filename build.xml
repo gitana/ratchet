@@ -92,7 +92,7 @@
                 <file name="DefaultRegionResolver.js"/>
             </filelist>
         </concat>
-        <!-- wrap Gitana as an UMD module -->
+        <!-- wrap Ratchet as an UMD module -->
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-standalone.js"/>
             <param name="outputFile" value="${package.dir}/js/${appkey}.js"/>
@@ -235,6 +235,30 @@
         </zip>
 
     </target>
+    
+    
+	<!-- START: Package Web Components -->
+    <target name="components" depends="package">
+		<mkdir dir="${package.dir}/components"/>
+
+        <!-- "ratchet" -->
+		<mkdir dir="${package.dir}/components/ratchet"/>		
+		<copy todir="${package.dir}/components/ratchet">
+			<fileset dir="${package.dir}/js">
+				<include name="ratchet.js" />
+			</fileset>
+		</copy>
+        <copy file="${project.dir}/components/ratchet/component.json.txt" tofile="${package.dir}/components/ratchet/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+
+    </target>    
+    <!-- END: Package Web Components -->
+    
 
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -294,6 +318,24 @@
             </filelist>
         </concat>
         <delete file="${scriptFile}.temp"/>
+    </target>
+    
+    <target name="package-gadget">
+		<mkdir dir="${package.dir}/components/${gadgetName}"/>		
+		<copy todir="${package.dir}/components/${gadgetName}">
+			<fileset dir="${project.dir}/components/${gadgetName}">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+			</fileset>
+		</copy>
+        <copy file="${project.dir}/components/${gadgetName}/component.json.txt" tofile="${package.dir}/components/${gadgetName}/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>    
     </target>
 
 </project>

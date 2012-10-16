@@ -5,8 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <title>Ratchet MVC</title>
-    <meta name="description"
-          content="Ratchet is a light-weight JavaScript MVC framework that helps you build HTML5/JavaScript based applications.">
     <!-- code prettifier -->
     <link href="examples/lib/google-code-prettify/prettify.css" rel="stylesheet">
 
@@ -14,17 +12,7 @@
 
     <script type="text/javascript" src="examples/lib/google-code-prettify/prettify.min.js"></script>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-31688505-1']);
-        _gaq.push(['_trackPageview']);
-
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script></head>
+</head>
 
 <body>
 <div class="navbar navbar-fixed-top">
@@ -47,96 +35,91 @@
         </div>
     </div>
 </div>
-<h1>Ratchet - Lightweight JavaScript MVC Framework</h1>
-
 <h2>What is Ratchet?</h2>
 
 <p>
-    Ratchet is a light-weight JavaScript MVC framework that gives you a singular foundation for building great HTML5
-    and JavaScript-based applications.
+    Ratchet is a lightweight framework for building JavaScript applications on jQuery that run on the web and on
+    mobile devices.
+    <br/>
+    <br/>
+    It provides client-side routing, model generation, view dispatching, observables, and a pattern for building
+    JavaScript component (or gadget) based applications.  Ratchet makes it easy to snap together applications using
+    pre-existing investments in UI components.  It works nicely with server-side controllers to enable dynamic,
+    configuration-driven interfaces.
+    <br/>
+    <br/>
+    Ratchet provides an model-view-controller (MVC) platform for your jQuery applications.
 </p>
-<p>
-    Designed as framework for real-time, cloud-connected applications, Ratchet comes
-    with features such as observables, components, templates, routes and an asynchronous rendering
-    pipeline that manages state for the backend, stream content forward and aggregate it into HTML5.
-</p>
-
 
 <h2>Start by checking out hosted demos</h2>
 
 <p>
-    To get a feel for what Ratchet is capable of, check out <a
-        href="http://code.cloudcms.com/ratchet/1.0.1-SNAPSHOT/examples/index.html">its
+    To get a feel for the basics of Ratchet, check out <a
+        href="http://code.cloudcms.com/ratchet/1.0.2/examples/index.html">its
     hosted examples</a>.
 </p>
 
 <h2>Download Ratchet</h2>
 
 <p>
-    Ratchet core library download contains both Ratchet JavaScript library, templating plugins and its
-    supporting libraries.
-    It is available in both minified format (for production) and uncompressed format (for development).
-    <br/><br/>
-    Download for Ratchet examples is a self-contained zip file which includes
-    everything you need to run Ratchet examples locally.
+    Ratchet consists of a core JavaScript file (9.8k gzip) that you can plug into your applications to get started.
+    It is available in both a minified format (for production) and uncompressed format (for development).
+    <br/>
+    <br/>
+    In addition, Ratchet provides templating libraries for EJS and jQuery Templates.
+    More templating libraries will be coming soon!
+    <br/>
+    <br/>
+    Finally, we provide a ZIP file with all of the distribution assets including examples and unit tests that you
+    can run locally.
 </p>
 
-<h3>Current Version (1.0.1-SNAPSHOT)</h3>
+<h3>Current Release (1.0.2)</h3>
 
 <p>
 <ul>
     <li>
-        <span class="list-item-header">Core</span>&nbsp;&nbsp;<a
-            href="ratchet-1.0.1-SNAPSHOT-minified.zip" rel='web'
-            target="_blank">Minified</a>&nbsp;|&nbsp;<a
-            href="ratchet-1.0.1-SNAPSHOT-uncompressed.zip" rel='web'
-            target="_blank">Uncompressed</a>
+        <span class="list-item-header">Ratchet</span>&nbsp;&nbsp;
+        <a href="js/ratchet.js" rel='web' target="_blank">uncompressed</a>
+        &nbsp;|&nbsp;
+        <a href="js/ratchet.min.js" rel='web' target="_blank">minified</a>
     </li>
     <li>
-        <span class="list-item-header">Examples</span>&nbsp;&nbsp;<a
-            href="ratchet-1.0.1-SNAPSHOT-examples.zip" rel='web'
-            target="_blank">Zip</a>&nbsp;|&nbsp;<a
-            href="ratchet-1.0.1-SNAPSHOT.war" rel='web'
-            target="_blank">war</a>
+        <span class="list-item-header">Ratchet (jQuery-tmpl Templating Engine)</span>&nbsp;&nbsp;
+        <a href="js/ratchet-tmpl.js" rel='web' target="_blank">uncompressed</a>
+        &nbsp;|&nbsp;
+        <a href="js/ratchet-tmpl.min.js" rel='web' target="_blank">minified</a>
     </li>
-</ul>
-</p>
-
-<h3>Previous Releases</h3>
-
-<p>
-<ul>
     <li>
-        <p4>1.0.0</p4>
-        <ul>
-            <li>
-                <span class="list-item-header">Core</span>&nbsp;&nbsp;<a
-                    href="../1.0.0/ratchet-1.0.0-minified.zip" rel='web'
-                    target="_blank">Minified</a>&nbsp;|&nbsp;<a
-                    href="../1.0.0/ratchet-1.0.0-uncompressed.zip" rel='web'
-                    target="_blank">Uncompressed</a>
-            </li>
-            <li>
-                <span class="list-item-header">Examples</span>&nbsp;&nbsp;<a
-                    href="../1.0.0/ratchet-1.0.0-examples.zip" rel='web'
-                    target="_blank">Zip</a>&nbsp;|&nbsp;<a
-                    href="../1.0.0/ratchet-1.0.0.war" rel='web'
-                    target="_blank">war</a>
-            </li>
-        </ul>
+        <span class="list-item-header">Ratchet (EJS Templating Engine)</span>&nbsp;&nbsp;
+        <a href="js/ratchet-ejs.js" rel='web' target="_blank">uncompressed</a>
+        &nbsp;|&nbsp;
+        <a href="js/ratchet-ejs.min.js" rel='web' target="_blank">minified</a>
     </li>
+    <li>
+        <span class="list-item-header">Ratchet (Full download with Examples)</span>&nbsp;&nbsp;
+        <a href="downloads/ratchet.zip" rel='web' target="_blank">ZIP</a>
+    </li>
+    <li>
+        <span class="list-item-header">Ratchet (Component)</span>&nbsp;&nbsp;
+        <a href="http://www.github.com/cloudcms-components/ratchet" rel='web' target="_blank">github</a>
+    </li>
+
 </ul>
 </p>
 
 <h2>Intro to using Ratchet</h2>
 
 <p>
-    Once you've downloaded Ratchet core library, you'll get a zip containing the following
+    Let's assume that you've downloaded the Ratchet ZIP file with all of the assets.  These will include:
 <ul>
-    <li>ratchet-1.0.1-SNAPSHOT.js</li>
-    <li>ratchet-1.0.1-SNAPSHOT.min.js</li>
-    <li>/plugins/</li>
-    <li>/thirdparty/</li>
+    <li>js/ratchet.js</li>
+    <li>js/ratchet.min.js</li>
+    <li>js/ratchet-tmpl.js</li>
+    <li>js/ratchet-tmpl.min.js</li>
+    <li>js/ratchet-ejs.js</li>
+    <li>js/ratchet-ejs.min.js</li>
+    <li>examples/</li>
 </ul>
 </p>
 <p>
@@ -153,23 +136,20 @@
     library in its head section
 </p>
 <pre class="prettyprint linenums">
-&lt;script type="text/javascript" src="ratchet-1.0.1-SNAPSHOT.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="thirdparty/jquery.tmpl.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="plugins/jQueryTemplateEngine.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="ratchet.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="ratchet-tmpl.min.js"&gt;&lt;/script&gt;
 </pre>
 <p>Or you can include uncompressed version</p>
 <pre class="prettyprint linenums">
-&lt;script type="text/javascript" src="ratchet-1.0.1-SNAPSHOT.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="thirdparty/jquery.tmpl.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="plugins/jQueryTemplateEngine.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="ratchet.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="ratchet-tmpl.js"&gt;&lt;/script&gt;
 </pre>
 <p>
-    If you prefer to use hosted Ratchet library, all you need is to include
+    If you prefer to use latest, hosted version of the Ratchet library, all you need is to include:
 </p>
 <pre class="prettyprint linenums">
-&lt;script type="text/javascript" src="http://code.cloudcms.com/ratchet/1.0.1-SNAPSHOT/js/ratchet-1.0.1-SNAPSHOT.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="http://code.cloudcms.com/ratchet/1.0.1-SNAPSHOT/js/thirdparty/jquery.tmpl.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="http://code.cloudcms.com/ratchet/1.0.1-SNAPSHOT/js/plugins/jQueryTemplateEngine.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://www.ratchetjs.org/downloads/ratchet.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://www.ratchetjs.org/downloads/ratchet-tmpl.min.js"&gt;&lt;/script&gt;
 </pre>
 
 <p>
@@ -196,25 +176,30 @@ $(document).ready(function() {
     machine. Since Ratchet samples contain many examples that use Ajax calls, it is highly recommended to run the
     examples in a web server (such as Apache Web Server ) or an web application server (such as Tomcat or
     Jetty).
+    <br/>
+    <br/>
+    Note: If you're on a Mac, you can download the ZIP file and run the examples by extracting, going to the extracted
+    folder and running the following from a Terminal:
+</p>
+<pre class="prettyprint linenums">
+    python -m SimpleHTTPServer
+</pre>
+<p>
+    Your web server will be started on port 8000 and you can browse to
+    <a href="http://localhost:8000">http://localhost:8000</a> to see the examples.
 </p>
 
-<p>For web application servers, you can simply download and deploy <a
-        href="ratchet-1.0.1-SNAPSHOT.war" rel='web'
-        target="_blank">Ratchet war</a> and then open your browser and point to
-    index.html page of the deployed web application..
-</p>
 
-<p>For web servers, you need to download and unzip <a
-        href="ratchet-samples.zip" rel='web'
-        target="_blank">Ratchet samples zip</a> and then open your browser and point to
-    the index.html page which is under the root directory of the unzipped file.
-</p>
-
-<h2>Build Ratchet from source</h2>
+<h2>Join our GitHub Project</h2>
 
 <p>
-    All Ratchet source code is kept under Git revision control, which you can <a
-        href="https://github.com/gitana/ratchet">browse online</a>.
+    Ratchet is an open-source project licenses under Apache 2 so that it is available to everyone for contribution,
+    use and benefit.  The <a href="https://github.com/gitana/ratchet">Ratchet Project is hosted on GitHub</a>
+    and is open to everybody.
+    <br/>
+    <br/>
+    Please visit the project, fork the code, submit issues and check in code!
+    We're looking forward to working together!
 </p>
 
 <p>
@@ -224,18 +209,16 @@ $(document).ready(function() {
 
 <p>
     Once you clone the Ratchet repository to your local machine and have Maven 3.0 or later installed, You can
-    build Ratchet and run Ratchet examples using following Maven command
-<pre class="prettyprint linenums">mvn clean install jetty:run</pre>
+    build Ratchet and run Ratchet examples using following Ant command
+<pre class="prettyprint linenums">ant clean package</pre>
 </p>
-<p>
-    Wait till Maven finishes the build process and brings up embedded Jetty server, you should now be able to
-    check out all Ratchet examples from <a href="http://localhost:8280/examples/index.html">this URL</a>
-<pre class="prettyprint linenums">http://localhost:8280/examples/index.html</pre>
-</p>
+
 <h2>Where can I get help?</h2>
 
 <p>
-    Ratchet MVC framework is developed and maintained by <a href="http://www.gitanasoft.com">Gitana Software</a>.
+    Please come visit the <a href="https://github.com/gitana/ratchet">Ratchet project on GitHub</a>.
+    Ratchet MVC framework is developed and maintained by <a href="http://www.cloudcms.com">Gitana Software</a>.
+
 </p>
 
 <footer>

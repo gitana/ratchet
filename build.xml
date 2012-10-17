@@ -174,8 +174,7 @@
             <param name="outputFile" value="${package.dir}/js/${appkey}-web.js"/>
             <param name="name" value="ratchet-web" />
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet']" />
-            <!-- 'gadget-buttons', 'gadget-copyright', 'gadget-dashboard', 'gadget-display', 'gadget-doclib', 'gadget-form', 'gadget-hero', 'gadget-links', 'gadget-list', 'gadget-navbar', 'gadget-sidebar', 'gadget-upload', 'gadget-wizard' -->
+            <param name="dependencies" value="['ratchet', 'underscore']" />
         </antcall>
         <delete file="${prep.dir}/js/${appkey}-web-standalone.js"/>
 

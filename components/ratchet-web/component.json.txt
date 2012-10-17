@@ -7,7 +7,8 @@
     "repository": {"type": "git", "url": "git://github.com/gitana/ratchet.git"},
     "version": "/** VERSION **/",
     "dependencies": {
-        "ratchet": "*"
+        "ratchet": "*",
+        "underscore": "*"
     },
 	"main": [
 	    "ratchet-web.js",

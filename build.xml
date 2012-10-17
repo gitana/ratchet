@@ -163,6 +163,9 @@
             </filelist>
             <filelist dir="${prep.dir}/js">
 
+                <!-- Required Base Classes -->
+                <file name="thirdparty/base.js"/>
+
                 <file name="web/AbstractDynamicGadget.js" />
                 <file name="web/AbstractDynamicPage.js" />
                 <file name="web/DynamicPage.js" />

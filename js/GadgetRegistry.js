@@ -17,6 +17,8 @@
         }
 
         Ratchet.GadgetRegistry.registry[type].push(classObject);
+
+        return classObject;
     };
 
     /**

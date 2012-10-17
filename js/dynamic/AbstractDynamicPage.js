@@ -1,15 +1,11 @@
 (function($) {
-    Ratchet.AbstractDynamicPage = Ratchet.AbstractGadget.extend(
+    Ratchet.AbstractDynamicPage = Ratchet.Gadget.extend(
     {
         index: function(el)
         {
             var self = this;
 
-            //this.subscribe(this.subscription, this.refresh);
-
-            //this.model(el);
-
-            // call over to node js
+            // call over to server to load page information
             var uri = el.route.uri;
             $.ajax({
                 url: "/_pages" + uri,
@@ -45,7 +41,8 @@
                     $("title").html(title);
 
                     // template
-                    var template = "custom/templates/" + config.template.path;
+                    //var template = "custom/templates/" + config.template.path;
+                    var template = "templates/" + config.template.path;
 
                     // render
                     self.renderTemplate(el, template, function(el) {
@@ -53,6 +50,25 @@
                     });
                 }
             });
+        },
+
+        renderTemplate: function(el, templatePath, data, callback) {
+
+            //if (templatePath.indexOf('/') != 0) {
+                //var prefix = "app";
+                //templatePath = prefix + "/" + templatePath;
+            //}
+
+            if (data && callback) {
+                el.transform(templatePath, data, function(el) {
+                    callback(el);
+                });
+            } else {
+                callback = data;
+                el.transform(templatePath, function(el) {
+                    callback(el);
+                });
+            }
         }
 
     });

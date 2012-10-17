@@ -1,27 +1,65 @@
 (function($) {
-    Ratchet.AbstractDynamicGadget = Ratchet.AbstractGadget.extend(
+    Ratchet.AbstractDynamicGadget = Ratchet.Gadget.extend(
     {
-        /**
-         * Sequence is:
-         *
-         *   1) all of the javascript JS files are loaded and created, instantiated
-         *   2) dispatch() is called on top-most
-         *   3) looks for "gadget" on current dom element, gets type...
-         *   4) finds any matching gadgets in registry and calls setup() on all of them
-         */
-        // this gets called during gadget creation (
+        constructor: function(type, ratchet, id) {
+            this.base(type, ratchet, id);
+
+            this.subscription = "gadget_" + type + "_" + id;
+        },
+
         setup: function()
         {
             this.get(this.index);
         },
 
+        _observable : function (key, args, defaultVal) {
+            var _args = Ratchet.makeArray(args);
+            if (_args.length > 0) {
+                if (typeof _args[0] == "string") {
+                    key = _args.shift();
+                    if (_args.length > 0) {
+                        this.observable(key).set(_args.shift());
+                    }
+                }
+                else {
+                    this.observable(key).set(_args.shift());
+                }
+            }
+            var val = this.observable(key).get();
+            if (val == null && defaultVal != null) {
+                val = defaultVal;
+                this.observable(key).set(defaultVal);
+            }
+            return val;
+        },
+
+        _clearObservable: function(key, defaultKey) {
+            var _key = key ? key : defaultKey;
+            this.observable(_key).clear();
+        },
+
+        renderTemplate: function(el, templatePath, data, callback) {
+
+            //if (templatePath.indexOf('/') != 0) {
+                //var prefix = "gadgets";
+                //templatePath = prefix + "/" + templatePath;
+            //}
+
+            if (data && callback) {
+                el.transform(templatePath, data, function(el) {
+                    callback(el);
+                });
+            } else {
+                callback = data;
+                el.transform(templatePath, function(el) {
+                    callback(el);
+                });
+            }
+        },
+
         index: function(el)
         {
             var self = this;
-
-            //this.subscribe(this.subscription, this.refresh);
-
-            //this.model(el);
 
             var handleRender = function(el, runtime)
             {
@@ -116,29 +154,6 @@
         {
 
         },
-
-        /*
-        // finds the matching binding (if available as observable)
-        getBinding: function()
-        {
-            var self = this;
-
-            var found = null;
-
-            var bindings = this.observable("bindings").get();
-            for (var bindingId in bindings)
-            {
-                var binding = bindings[bindingId];
-                if (binding.targetGadgetId == self.getGadgetId())
-                {
-                    found = binding;
-                    break;
-                }
-            }
-
-            return found;
-        },
-        */
 
         getRuntime: function()
         {

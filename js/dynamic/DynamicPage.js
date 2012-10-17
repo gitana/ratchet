@@ -6,6 +6,6 @@
         }
     });
 
-    Ratchet.GadgetRegistry.register("body", Ratchet.Gadgets.DynamicPage);
+    Ratchet.GadgetRegistry.register("dynamic-page", Ratchet.Gadgets.DynamicPage);
 
 })(jQuery);

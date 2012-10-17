@@ -93,6 +93,13 @@
 
                 <!-- Default Region Resolver -->
                 <file name="DefaultRegionResolver.js"/>
+
+                <!-- Dynamic Page and Gadget Support -->
+                <file name="dynamic/AbstractDynamicGadget.js" />
+                <file name="dynamic/AbstractDynamicPage.js" />
+                <file name="dynamic/DynamicPage.js" />
+                <file name="dynamic/DynamicRegionResolver.js" />
+
             </filelist>
         </concat>
         <!-- wrap Ratchet as an UMD module -->
@@ -248,6 +255,36 @@
             </filterchain>
         </copy>
 
+        <!-- "ratchet-tmpl" -->
+        <mkdir dir="${package.dir}/components/ratchet-tmpl"/>
+        <copy todir="${package.dir}/components/ratchet-tmpl">
+            <fileset dir="${package.dir}/js">
+                <include name="ratchet-tmpl.js" />
+            </fileset>
+        </copy>
+        <copy file="${project.dir}/components/ratchet-tmpl/component.json.txt" tofile="${package.dir}/components/ratchet-tmpl/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+
+        <!-- "ratchet-ejs" -->
+        <mkdir dir="${package.dir}/components-ejs/ratchet"/>
+        <copy todir="${package.dir}/components-ejs/ratchet">
+            <fileset dir="${package.dir}/js">
+                <include name="ratchet-ejs.js" />
+            </fileset>
+        </copy>
+        <copy file="${project.dir}/components/ratchet-ejs/component.json.txt" tofile="${package.dir}/components/ratchet-ejs/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+
     </target>    
     <!-- END: Package Web Components -->
     
@@ -328,6 +365,36 @@
                 </tokenfilter>
             </filterchain>
         </copy>    
+    </target>
+
+	<target name="update-components" depends="components">
+
+		<!-- "ratchet" -->
+        <copy todir="/projects/components/ratchet">
+            <fileset dir="${package.dir}/components/ratchet"/>
+        </copy>
+        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet">
+            <fileset dir="${package.dir}/components/ratchet"/>
+        </copy>
+
+        <!-- "ratchet-tmpl" -->
+        <copy todir="/projects/components/ratchet-tmpl">
+            <fileset dir="${package.dir}/components/ratchet-tmpl"/>
+        </copy>
+        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet-tmpl">
+            <fileset dir="${package.dir}/components/ratchet-tmpl"/>
+        </copy>
+
+        <!-- "ratchet-ejs" -->
+        <copy todir="/projects/components/ratchet-ejs">
+            <fileset dir="${package.dir}/components/ratchet-ejs"/>
+        </copy>
+        <!--
+        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet-ejs">
+            <fileset dir="${package.dir}/components/ratchet-ejs"/>
+        </copy>
+        -->
+
     </target>
 
 </project>

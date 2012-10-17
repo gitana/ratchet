@@ -30,7 +30,7 @@
         {
             // load modal template
             $.ajax({
-                url: "/ratchet/core/templates/modal-block.html",
+                url: "components/ratchet-web/modal-block.html",
                 success: function(modalHtml)
                 {
                     // build modal dom
@@ -61,7 +61,7 @@
 
         // load modal template
         $.ajax({
-            url: "/ratchet/core/templates/modal-gadget.html",
+            url: "components/ratchet-web/modal-gadget.html",
             success: function(modalHtml)
             {
                 // build modal dom
@@ -133,7 +133,7 @@
 
         // load modal template
         $.ajax({
-            url: "/ratchet/core/templates/modal-confirm.html",
+            url: "components/ratchet-web/modal-confirm.html",
             success: function(modalHtml)
             {
                 // build modal dom

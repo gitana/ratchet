@@ -52,20 +52,15 @@
             });
         },
 
-        renderTemplate: function(el, templatePath, data, callback) {
-
-            //if (templatePath.indexOf('/') != 0) {
-                //var prefix = "app";
-                //templatePath = prefix + "/" + templatePath;
-            //}
+        renderTemplate: function(el, templateIdentifier, data, callback) {
 
             if (data && callback) {
-                el.transform(templatePath, data, function(el) {
+                el.transform(templateIdentifier, data, function(el) {
                     callback(el);
                 });
             } else {
                 callback = data;
-                el.transform(templatePath, function(el) {
+                el.transform(templateIdentifier, function(el) {
                     callback(el);
                 });
             }

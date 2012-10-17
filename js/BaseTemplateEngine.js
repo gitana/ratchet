@@ -1,5 +1,10 @@
 (function($)
 {
+    // template cache
+    if (typeof(Ratchet.TemplateCache) == "undefined") {
+        Ratchet.TemplateCache = {};
+    }
+
     Ratchet.BaseTemplateEngine = Base.extend(
     {
         constructor: function(id)
@@ -26,26 +31,101 @@
             }
         },
 
+        renderUri: function(el, uri, model, successCallback, failureCallback)
+        {
+            return this.render(el, "uri", uri, uri, model, successCallback, failureCallback);
+        },
+
         /**
          * Renders a template.
          *
-         * @param templateId
+         * @param el
+         * @param type either "url", "selector", "html"
+         * @param value either the URL, selector string or HTML body
+         * @param cacheKey
+         * @param model
+         * @param successCallback
+         * @param failureCallback
          */
-        render: function(el, templateId, model, successCallback, failureCallback)
+        render: function(el, type, value, cacheKey, model, successCallback, failureCallback)
         {
-            this.doRender(el, templateId, model, successCallback, failureCallback);
+            var self = this;
+
+            var renderCallback = function(err, html)
+            {
+                if (err) {
+                    failureCallback.call(failureCallback, err);
+                    return;
+                }
+
+                $(el).html("");
+                $(el).append(html);
+
+                if (successCallback)
+                {
+                    successCallback.call(successCallback, el)
+                }
+            };
+
+            // if they're using a selector, we can pick out the html right here and pass forward
+            if (type == "selector" || type == "html")
+            {
+                var html = value;
+                if (type == "selector") {
+                    html = $(el).select(value).html();
+                }
+
+                this.doRender(el, cacheKey, html, model, renderCallback);
+            }
+            else if (type == "url" || type == "uri")
+            {
+                var fileExtension = self.fileExtension();
+
+                var url = value;
+                if (url.indexOf("." + fileExtension) == -1) {
+                    url += "." + fileExtension;
+                }
+
+                $.ajax({
+                    "url": url,
+                    "dataType": "html",
+                    "success": function(html)
+                    {
+                        // cleanup html
+                        html = self.cleanMarkup(el, html);
+
+                        self.doRender(el, cacheKey, html, model, renderCallback);
+                    },
+                    "failure": function(http)
+                    {
+                        if (failureCallback)
+                        {
+                            failureCallback.call(failureCallback, el, http);
+                        }
+                    }
+                });
+            }
+            else
+            {
+                failureCallback.call(failureCallback, new Error("Unknown render type: " + type));
+            }
+
+        },
+
+        fileExtension: function() {
+            return "html";
         },
 
         /**
          * EXTENSION POINT
          *
          * @param el
-         * @param templateId
+         * @param name (used for caching)
+         * @param html
          * @param model
-         * @param successCallback
-         * @param failureCallback
+         * @param callback
          */
-        doRender: function(el, templateId, model, successCallback, failureCallback)
+        doRender: function(el, name, html, model, callback)
         {
 
         }

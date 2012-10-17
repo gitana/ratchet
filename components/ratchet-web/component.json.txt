@@ -9,5 +9,11 @@
     "dependencies": {
         "ratchet": "*"
     },
-	"main": ["ratchet-web.js"]
+	"main": [
+	    "ratchet-web.js",
+	    "modal-block.html",
+	    "modal-confirm.html",
+	    "modal-gadget.html",
+	    "please-wait.gif"
+	]
 }

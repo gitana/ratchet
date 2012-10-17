@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Ratchet - Basic Example #9</title>
+    <title>Ratchet - Basic Example #10</title>
 
     <!-- code prettifier -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
@@ -39,11 +39,11 @@
     <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
     <!-- END_RATCHET_JAVASCRIPT -->
 
-    <!-- START_RATCHET_EJS_JAVASCRIPT -->
-    <!-- EJS Templating Plugin -->
-    <script type="text/javascript" src="../../plugins/ejs/lib/ejs.js"></script>
-    <script type="text/javascript" src="../../plugins/ejs/EJSTemplateEngine.js"></script>
-    <!-- END_RATCHET_EJS_JAVASCRIPT -->
+    <!-- START_RATCHET_TMPL_JAVASCRIPT -->
+    <!-- jQuery Templating Plugin -->
+    <script type="text/javascript" src="../../plugins/tmpl/lib/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="../../plugins/tmpl/jQueryTemplateEngine.js"></script>
+    <!-- END_RATCHET_TMPL_JAVASCRIPT -->
 
     <script type="text/javascript">
 
@@ -55,7 +55,7 @@
 
                     el.fetch("data.json", function(el, json) {
 
-                        el.transform("template", json, function(el) {
+                        el.transform("The book ${title} was written by ${author}.", json, function(el) {
 
                             el.swap();
 
@@ -100,7 +100,7 @@ $(document).ready(function() {
     $('#sample').ratchet(function() {
         this.get("/", function(el) {
             el.fetch("data.json", function(el, json) {
-                el.transform("template", json, function(el) {
+                el.transform("The book ${title} was written by ${author}.", json, function(el) {
                     el.swap();
                 });
             });

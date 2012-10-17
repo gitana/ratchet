@@ -1,6 +1,9 @@
 (function($) {
     Ratchet.AbstractDynamicGadget = Ratchet.Gadget.extend(
     {
+        RUNTIME_CONTROLLER: "_gadgets/_runtime",
+        HTML: "",
+
         constructor: function(type, ratchet, id) {
             this.base(type, ratchet, id);
 
@@ -38,20 +41,15 @@
             this.observable(_key).clear();
         },
 
-        renderTemplate: function(el, templatePath, data, callback) {
-
-            //if (templatePath.indexOf('/') != 0) {
-                //var prefix = "gadgets";
-                //templatePath = prefix + "/" + templatePath;
-            //}
+        renderTemplate: function(el, templateIdentifier, data, callback) {
 
             if (data && callback) {
-                el.transform(templatePath, data, function(el) {
+                el.transform(templateIdentifier, data, function(el) {
                     callback(el);
                 });
             } else {
                 callback = data;
-                el.transform(templatePath, function(el) {
+                el.transform(templateIdentifier, function(el) {
                     callback(el);
                 });
             }

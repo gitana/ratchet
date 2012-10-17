@@ -2,64 +2,30 @@
 {
     Ratchet.jQueryTemplateEngine = Ratchet.BaseTemplateEngine.extend(
     {
-        doRender: function(el, templateId, model, successCallback, failureCallback)
+        doRender: function(el, name, html, model, callback)
         {
-            var self = this;
-
-            var renderTemplate = function()
+            if (name)
             {
-                var markup = $.tmpl(templateId, model);
-
-                $(el).html("");
-                $(el).append(markup);
-
-                //el.html(markup.html())
-
-                if (successCallback)
-                {
-                    successCallback.call(successCallback, el)
+                if (!$.template[name]) {
+                    $.template(name, html);
                 }
-            };
 
-            if ($.template[templateId])
-            {
-                // already loaded - so just render
-
-                renderTemplate();
+                html = $.tmpl(name, model);
             }
             else
             {
-                // need to load the template first and then render
+                html = $.tmpl(html, model);
+            }
 
-                var templateURL = templateId + ".html";
-
-                $.ajax({
-                    "url": "" + templateURL,
-                    "dataType": "html",
-                    "success": function(html)
-                    {
-                        html = self.cleanMarkup(el, html);
-
-                        // compile template
-                        $.template(templateId, html);
-
-                        // render template
-                        renderTemplate();
-                    },
-                    "failure": function(http)
-                    {
-                        if (failureCallback)
-                        {
-                            failureCallback.call(failureCallback, el, http);
-                        }
-                    }
-                });
+            // fire callback
+            if (callback) {
+                callback(null, html);
             }
         }
 
     });
 
     // auto register
-    Ratchet.TemplateEngineRegistry.register("jquerytmpl", new Ratchet.jQueryTemplateEngine("jquerytmpl"));
+    Ratchet.TemplateEngineRegistry.register("tmpl", new Ratchet.jQueryTemplateEngine("tmpl"));
 
 })(jQuery);

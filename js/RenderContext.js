@@ -243,20 +243,20 @@
         },
 
         /**
-         * Transforms using a template and data (model).
+         * Transforms a template at a given URI with the provided model.
          *
-         * @param {String} templateId template id
+         * @param {String} templateIdentifier template (either HTML fragment, URI or a #dom id selector)
          * @param [Object] model data model
          * @param {Function} successCallback
          * @param [Function] failureCallback
          */
-        transform: function(templateId, data, successCallback, failureCallback)
+        transform: function(templateIdentifier, data, successCallback, failureCallback)
         {
             var _this = this;
 
             var args = Ratchet.makeArray(arguments);
 
-            var templateId = args.shift();
+            var templateIdentifier = args.shift();
             var model = this.model;
             var successCallback = null;
             var failureCallback = null;
@@ -302,8 +302,19 @@
                 }
             }
 
+            // determine whether this is HTML, a template URI or a dom element selector (#)
+            var renderType = "url"; // assume url
+            var renderValue = templateIdentifier;
+            var renderCacheKey = null;
+            if (templateIdentifier.indexOf("#") == 0) {
+                renderType = "selector";
+            }
+            else if (templateIdentifier.indexOf("<") > -1 || templateIdentifier.indexOf(" ") > -1) {
+                renderType = "html";
+            }
+
             // render
-            engine.render(_this, templateId, model, function(el) {
+            engine.render(_this, renderType, renderValue, renderCacheKey, model, function(el) {
 
                 if (successCallback)
                 {

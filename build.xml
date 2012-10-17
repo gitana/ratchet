@@ -94,12 +94,6 @@
                 <!-- Default Region Resolver -->
                 <file name="DefaultRegionResolver.js"/>
 
-                <!-- Dynamic Page and Gadget Support -->
-                <file name="dynamic/AbstractDynamicGadget.js" />
-                <file name="dynamic/AbstractDynamicPage.js" />
-                <file name="dynamic/DynamicPage.js" />
-                <file name="dynamic/DynamicRegionResolver.js" />
-
             </filelist>
         </concat>
         <antcall target="umd">
@@ -166,6 +160,8 @@
                 <!-- Required Base Classes -->
                 <file name="thirdparty/base.js"/>
 
+                <!-- dynamics -->
+                <file name="web/Dynamic.js" />
                 <file name="web/AbstractDynamicGadget.js" />
                 <file name="web/AbstractDynamicPage.js" />
                 <file name="web/DynamicPage.js" />
@@ -309,6 +305,13 @@
                 </tokenfilter>
             </filterchain>
         </copy>
+        <copy todir="${package.dir}/components/ratchet">
+            <fileset dir="${project.dir}/components/ratchet">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
 
         <!-- "ratchet-tmpl" -->
         <mkdir dir="${package.dir}/components/ratchet-tmpl"/>
@@ -324,6 +327,14 @@
                 </tokenfilter>
             </filterchain>
         </copy>
+        <copy todir="${package.dir}/components/ratchet-tmpl">
+            <fileset dir="${project.dir}/components/ratchet-tmpl">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+
 
         <!-- "ratchet-ejs" -->
         <mkdir dir="${package.dir}/components/ratchet-ejs"/>
@@ -339,6 +350,14 @@
                 </tokenfilter>
             </filterchain>
         </copy>
+        <copy todir="${package.dir}/components/ratchet-ejs">
+            <fileset dir="${project.dir}/components/ratchet-ejs">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+
 
         <!-- "ratchet-web" -->
         <mkdir dir="${package.dir}/components/ratchet-web"/>
@@ -354,6 +373,14 @@
                 </tokenfilter>
             </filterchain>
         </copy>
+        <copy todir="${package.dir}/components/ratchet-web">
+            <fileset dir="${project.dir}/components/ratchet-web">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+
 
         <!-- "ratchet-gitana" -->
         <mkdir dir="${package.dir}/components/ratchet-gitana"/>
@@ -369,6 +396,14 @@
                 </tokenfilter>
             </filterchain>
         </copy>
+        <copy todir="${package.dir}/components/ratchet-gitana">
+            <fileset dir="${project.dir}/components/ratchet-gitana">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+
 
     </target>    
     <!-- END: Package Web Components -->

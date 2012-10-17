@@ -2,35 +2,32 @@
 {
     Ratchet.EJSTemplateEngine = Ratchet.BaseTemplateEngine.extend(
     {
-        doRender: function(el, templateId, model, successCallback, failureCallback)
+        fileExtension: function() {
+            return "ejs";
+        },
+
+        doRender: function(el, name, html, model, callback)
         {
-            var self = this;
-
-            var templateURL = templateId;
-
-            // load template
+            // build ejs
             var ejs = null;
             try
             {
-                ejs = new EJS({url: templateURL});
+                ejs = new EJS({
+                    name: name,
+                    text: html
+                });
             }
             catch (e)
             {
-                if (failureCallback)
-                {
-                    failureCallback.call(failureCallback, el, e);
-                }
+                callback(e);
             }
 
-            var markup = ejs.render(model);
-            markup = self.cleanMarkup(el, markup);
+            // render template
+            html = ejs.render(model);
 
-            $(el).html("");
-            $(el).append(markup);
-
-            if (successCallback)
-            {
-                successCallback.call(successCallback, el)
+            // fire callback
+            if (callback) {
+                callback(null, html);
             }
         }
 

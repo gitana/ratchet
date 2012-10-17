@@ -103,7 +103,7 @@
 
             // load the template
             $.ajax({
-                url: "/components/ratchet-gitana/gitana-login.html",
+                url: "/components/ratchet-gitana/login.html",
                 success: function(loginHtml)
                 {
                     var div = $(loginHtml);

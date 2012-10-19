@@ -74,30 +74,33 @@
                 }
 
                 // launch modal
-                $(div).modal();
+                $(div).modal('show');
+                $(div).on('shown', function (e) {
 
-                // attributes
-                $(div).attr("gadget", options.type);
-                if (options.id)
-                {
-                    $(div).attr("id", options.id);
-                }
-
-                // ratchet it up
-                var r = $(div).ratchet(options.parent);
-                r.run(options.uri);
-
-                if (overrides)
-                {
-                    // get back the gadget bound into the ratchet
-                    for (var i = 0; i < r.gadgetInstances.length; i++)
+                    // attributes
+                    $(div).attr("gadget", options.type);
+                    if (options.id)
                     {
-                        for (var k in overrides)
+                        $(div).attr("id", options.id);
+                    }
+
+                    // ratchet it up
+                    var r = $(div).ratchet(options.parent);
+                    r.run(options.uri);
+
+                    if (overrides)
+                    {
+                        // get back the gadget bound into the ratchet
+                        for (var i = 0; i < r.gadgetInstances.length; i++)
                         {
-                            r.gadgetInstances[i][k] = overrides[k];
+                            for (var k in overrides)
+                            {
+                                r.gadgetInstances[i][k] = overrides[k];
+                            }
                         }
                     }
-                }
+
+                });
 
             }
         });

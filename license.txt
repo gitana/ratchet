@@ -1,5 +1,5 @@
 /*!
-Alpaca Version 1.0.2-SNAPSHOT
+Ratchet Version 1.0.2
 
 Copyright 2012 Gitana Software, Inc.
 

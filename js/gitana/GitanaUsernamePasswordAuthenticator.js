@@ -67,9 +67,11 @@
         {
             var self = this;
 
+            //  VIEW_WEB_EDIT_fieldSet
+
             var data = {
-                "username" : self.username ? self.username : "",
-                "password" : self.password ? self.password : ""
+                "username" : username ? username : "",
+                "password" : password ? password : ""
             };
 
             var schema = {
@@ -108,29 +110,13 @@
                 {
                     var div = $(loginHtml);
 
-                    $(div).find(".modal-body").alpaca({
-                        "data": {
-                            "username": "",
-                            "password": ""
-                        },
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "username": {
-                                    "type": "string",
-                                    "title": "User name"
-                                },
-                                "password": {
-                                    "type": "string",
-                                    "title": "Password"
-                                }
-                            }
-                        },
+                    $('.modal-body', div).alpaca({
+                        "data": data,
+                        "schema": schema,
+                        "options": options,
                         "postRender": function(control)
                         {
-                            $(div).on('shown', function() {
-                                control.getControlByPath("username").focus();
-                            });
+                            control.getControlByPath("username").focus();
 
                             $(div).find(".login_button_login").click(function(e) {
 
@@ -149,13 +135,12 @@
                                 failureCallback();
                             });
 
-                            $(div).modal();
+                            $(div).modal('show');
                         }
                     });
                 }
             });
-
         }
-
     });
+
 })(jQuery);

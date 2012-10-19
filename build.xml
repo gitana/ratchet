@@ -393,7 +393,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet-tmpl/${appkey}-tmpl.js"/>
             <param name="name" value="ratchet-tmpl" />
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'jquery-tmpl']" />
+            <param name="dependencies" value="['ratchet', 'jquery.tmpl']" />
         </antcall>
 
 

@@ -20,7 +20,7 @@
         {
             // append wizard attributes
             $(Ratchet.blockingModal).find('.modal-title').html(title);
-            $(Ratchet.blockingModal).find('.modal-body').html("<p align='center'><img src='./ratchet/core/images/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
+            $(Ratchet.blockingModal).find('.modal-body').html("<p align='center'><img src='/components/ratchet-web/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
 
             // launch modal
             $(Ratchet.blockingModal).modal();
@@ -55,7 +55,7 @@
         }
     };
 
-    Ratchet.startModalGadget = function(options, overrides, postSetup)
+    Ratchet.startModalGadget = function(options, overrides, beforeRatchetCallback, afterRatchetCallback)
     {
         var self = this;
 
@@ -67,46 +67,53 @@
                 // build modal dom
                 var div = $(modalHtml);
 
-                // any post setup
-                if (postSetup)
-                {
-                    postSetup.call(self, div);
-                }
-
                 // launch modal
                 $(div).modal('show');
-                $(div).on('shown', function (e) {
 
-                    // attributes
-                    $(div).attr("gadget", options.type);
-                    if (options.id)
+                // attributes
+                $(div).attr("gadget", options.type);
+                if (options.id)
+                {
+                    $(div).attr("id", options.id);
+                }
+
+                // ratchet it up
+                var ratchet = $(div).ratchet(options.parent);
+
+                // set up ratchet callback
+                if (beforeRatchetCallback)
+                {
+                    beforeRatchetCallback.call(self, div, ratchet);
+                }
+
+                // run the ratchet
+                ratchet.run(options.uri);
+
+                if (overrides)
+                {
+                    // get back the gadget bound into the ratchet
+                    for (var i = 0; i < ratchet.gadgetInstances.length; i++)
                     {
-                        $(div).attr("id", options.id);
-                    }
-
-                    // ratchet it up
-                    var r = $(div).ratchet(options.parent);
-                    r.run(options.uri);
-
-                    if (overrides)
-                    {
-                        // get back the gadget bound into the ratchet
-                        for (var i = 0; i < r.gadgetInstances.length; i++)
+                        for (var k in overrides)
                         {
-                            for (var k in overrides)
-                            {
-                                r.gadgetInstances[i][k] = overrides[k];
-                            }
+                            ratchet.gadgetInstances[i][k] = overrides[k];
                         }
                     }
+                }
 
-                });
-
+                // call any custom gadget callbacks (after ratchet callback)
+                if (afterRatchetCallback)
+                {
+                    for (var i = 0; i < ratchet.gadgetInstances.length; i++)
+                    {
+                        afterRatchetCallback(div, ratchet, ratchet.gadgetInstances[i]);
+                    }
+                }
             }
         });
     };
 
-    Ratchet.startModalWizard = function(parent, wizardId, uri)
+    Ratchet.startModalWizard = function(parent, wizardId, uri, beforeRatchetCallback, afterRatchetCallback)
     {
         Ratchet.startModalGadget({
             "parent": parent,
@@ -118,13 +125,22 @@
             {
                 $(this.ratchet().el).modal("hide");
             }
-        }, function(div) {
+        }, function(div, ratchet) {
 
             // append wizard attributes
             $(div).find('.modal-title').addClass("wizard-title");
             $(div).find('.modal-body').addClass("wizard-body");
             $(div).find('.modal-footer').addClass("wizard-buttons");
 
+            if (beforeRatchetCallback) {
+                beforeRatchetCallback.call(this, div, ratchet);
+            }
+
+        }, function(div, ratchet, gadget) {
+
+            if (afterRatchetCallback) {
+                afterRatchetCallback.call(this, div, ratchet, gadget);
+            }
         });
     };
 

@@ -116,8 +116,6 @@
                         "options": options,
                         "postRender": function(control)
                         {
-                            control.getControlByPath("username").focus();
-
                             $(div).find(".login_button_login").click(function(e) {
 
                                 var username = control.getValue()["username"];
@@ -136,6 +134,11 @@
                             });
 
                             $(div).modal('show');
+                            $(div).on('shown', function() {
+
+                                control.getControlByPath("username").focus();
+
+                            });
                         }
                     });
                 }

@@ -55,7 +55,7 @@
                 // dispatcher post-render
                 self.ratchet().processGadgets.call(self.ratchet(), self, function () {
 
-
+                    /*
                     // determine the appropriate merge point
                     // this is either all of the child nodes that we rendered out or if we rendered a single
                     // node with lots of children under it, then we'll use that single node
@@ -119,64 +119,144 @@
 
                         }
                     }
+                    */
 
-                    // if the merge point dom type is different from self.ratchet().el...
-                    // then we have to recreate the el
-                    if ($(mergePoint)[0].nodeName != $(self.ratchet().el)[0].nodeName)
+                    var postSwap = function()
                     {
-                        // assume mergepoint is correct
-                        // but if original is BODY, then we preserve
-                        var name = $(mergePoint)[0].nodeName;
-                        if ($(self.ratchet().el)[0].nodeName.toLowerCase() == "body")
+                        // fire post-swap custom event
+                        $('body').trigger('swap', [self.ratchet()]);
+
+                        // increment dispatch completion count
+                        self.ratchet().incrementDispatchCompletionCount();
+
+                        // fire post-dispatch custom event
+                        $('body').trigger('dispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
+
+                        // custom callback
+                        if (callback)
                         {
-                            name = "body";
+                            callback.call(self);
+                        }
+                    };
+
+
+                    //
+                    // we support three strategies:
+                    //
+                    //   "insert" - the rendered nodes become children of the ratchet el
+                    //   "replace" - the ratchet el is removed and replaced entirely by rendered nodes
+                    //               if there is only one top-child, then it is merged with attributes of the ratchet el
+                    //
+
+                    // assume we are going to insert
+                    var strategy = this.gadgetStrategy;
+                    if (!strategy) {
+                        strategy = "insert";
+                    }
+
+                    if (strategy == "replace")
+                    {
+                        // look through the rendered children to see if we can find a merge point
+                        // a merge point means that there is just one top-most rendered child
+                        // if we find one, then we'll merge attributes from ratchet el to merge point
+
+                        var mergePoint = null;
+
+                        // we must have some DOM children in order for there to be a merge point
+                        if (self.children().size() > 0)
+                        {
+                            // get rid of any white space nodes
+                            var index = 0;
+                            while (index < self[0].childNodes.length)
+                            {
+                                var current = self[0].childNodes[index];
+                                if (current.nodeName == "#text")
+                                {
+                                    if (current.textContent.trim() == 0)
+                                    {
+                                        self[0].removeChild(current);
+                                    }
+                                    else
+                                    {
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    index++;
+                                }
+                            }
+
+                            // if the DOM element is now FIRST, then use it as merge point
+                            if (self[0].childNodes[0].nodeName.toLowerCase() == self.children()[0].nodeName.toLowerCase())
+                            {
+                                // just one child node (which is a dom node), so use it as a merge point
+                                mergePoint = self.children()[0];
+                            }
                         }
 
-                        var newEl = $("<" + name + "></" + name + ">");
+                        // if we have a merge point, then we'll remove the ratchet el and fully recreate
+                        if (mergePoint)
+                        {
+                            // use dom type of the mergepoint
+                            // but if original is BODY, then we preserve
+                            var name = $(mergePoint)[0].nodeName;
+                            if ($(self.ratchet().el)[0].nodeName.toLowerCase() == "body")
+                            {
+                                name = "body";
+                            }
 
-                        // copy original attributes to target (such as class and id)
-                        var attributes = $(self.ratchet().el).prop("attributes");
-                        $.each(attributes, function() {
-                            $(newEl).attr(this.name, this.value);
-                        });
-                        // set a temp key so we can look up after replace
-                        var tk = "key-" + new Date().getTime();
-                        $(newEl).attr("tk", tk);
+                            var newEl = $("<" + name + "></" + name + ">");
+                            $(newEl).html($(mergePoint).html());
+
+                            // copy original attributes to target (such as class and id)
+                            var attributes = $(self.ratchet().el).prop("attributes");
+                            $.each(attributes, function() {
+                                $(newEl).attr(this.name, this.value);
+                            });
+                            // set a temp key so we can look up after replace
+                            var tk = "key-" + new Date().getTime();
+                            $(newEl).attr("tk", tk);
+
+                            // replace in DOM
+                            $(self.ratchet().el).replaceWith(newEl);
+
+                            // now find what we replaced and clean up
+                            newEl = $("[tk=" + tk + "]");
+                            $(newEl).removeAttr("tk");
+
+                            // now update the ratchet "el" reference
+                            self.ratchet().el = $(newEl)[0];
+
+                            // all done
+                            postSwap();
+                            return;
+                        }
+
+                        // otherwise, we simply replace the ratchet el with all children
+                        // i.e. no merge
 
                         // replace in DOM
-                        $(self.ratchet().el).replaceWith(newEl);
-
-                        // now find what we replaced and clean up
-                        newEl = $("[tk=" + tk + "]");
-                        $(newEl).removeAttr("tk");
+                        $(self.ratchet().el).replaceWith($(self)[0].childNodes);
 
                         // now update the ratchet "el" reference
-                        self.ratchet().el = $(newEl)[0];
+                        self.ratchet().el = null;
+
+                        postSwap();
+                        return;
                     }
+
+
+                    // default behavior (insert)
 
                     // clear the live element
-                    // append the children from the in-memory swap copy
                     $(self.ratchet().el).html("");
-                    $(self.ratchet().el).append($(mergePoint)[0].childNodes);
 
-                    // copy attributes
-                    Ratchet.copyAttributes($(mergePoint), self.ratchet().el);
+                    // append the children from the in-memory swap copy
+                    $(self.ratchet().el).append($(self)[0].childNodes);
 
-                    // fire post-swap custom event
-                    $('body').trigger('swap', [self.ratchet()]);
-
-                    // increment dispatch completion count
-                    self.ratchet().incrementDispatchCompletionCount();
-
-                    // fire post-dispatch custom event
-                    $('body').trigger('dispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
-
-                    // custom callback
-                    if (callback)
-                    {
-                        callback.call(self);
-                    }
-
+                    // all done
+                    postSwap();
                 });
             });
         },

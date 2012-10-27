@@ -12,7 +12,7 @@
 
             {{each(k, dashlet) column.dashlets}}
 
-                <gadget type="${dashlet.gadgetType}" id="${dashlet.gadgetId}"></gadget>
+                <gadget class="dashlet" type="${dashlet.gadgetType}" id="${dashlet.gadgetId}" strategy="replace"></gadget>
                 <br/>
 
             {{/each}}

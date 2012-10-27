@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Gitana Ratchet MVC - Example #14</title>
+    <title>Gitana Ratchet MVC - Example #15</title>
 
     <!-- code prettifier -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
@@ -46,82 +46,54 @@
     <!-- END_RATCHET_TMPL_JAVASCRIPT -->
 
     <!-- examples -->
-    <script type="text/javascript" src="Dashboard.js"></script>
-    <script type="text/javascript" src="Dashlet1.js"></script>
-    <script type="text/javascript" src="Dashlet2.js"></script>
-    <script type="text/javascript" src="Dashlet3.js"></script>
+    <script type="text/javascript" src="List.js"></script>
 
+    <!-- work it -->
     <script type="text/javascript">
 
         $(document).ready(function() {
-
-            $('#container').ratchet().run("/");
-
+            $("body").ratchet().run("/");
         });
 
     </script>
 
     <style>
-        table.dashlet
+        ul
         {
-            border: 5px black solid;
+            border: 5px red solid;
+            margin: 30px;
         }
     </style>
 </head>
 
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <a class="brand" href="../../index.html">
-            <span class="logo"></span>
-            Ratchet
-        </a>
 
-        <div class="nav-collapse">
-            <ul class="nav">
-                <li>
-                    <a href="../../index.html">Home</a>
-                </li>
-                <li class="active">
-                    <a href="../index.html">Examples</a>
-                </li>
-                <li>
-            </ul>
-        </div>
-    </div>
-</div>
+    <!-- List will be contained (default behavior) -->
+    List #1
+    <ul id="id1" gadget="xyz"></ul>
+    <hr/>
+    <br/>
 
-<h2>Gadget Example #14 - Dashboard</h2>
-<p>
-    This example demonstrates a dashboard implementation with separation of config and templates.
-    Each gadget loads its config and renders using a template.
-</p>
+    <!-- List will be contained (default behavior) -->
+    List #2
+    <gadget id="id2" type="xyz" tag="ul"></gadget>
+    <hr/>
+    <br/>
 
-<gadget type="dashboard"></gadget>
+    <!-- List will replace -->
+    List #3
+    <ul id="id3">
+        <div gadget="xyz" gadget-strategy="replace"></div>
+    </ul>
+    <hr/>
+    <br/>
 
-<!--
-<pre class="prettyprint linenums">
-    Example11 = Ratchet.Gadget.extend({
-        constructor: function(id, ratchet){
-            this.base(id, ratchet);
-        },
+    <!-- List will replace -->
+    List #4
+    <ul id="id4">
+        <gadget type="xyz" strategy="replace"></gadget>
+    </ul>
 
-        setup: function(){
-            // define a route
-            this.get("/", function(el) {
-                el.html("Welcome to the title page").swap();
-            });
-        }
-    });
-
-    Ratchet.GadgetRegistry.register("application", Example1);
-
-    $(document).ready(function() {
-        $('#sample').ratchet().run("/");
-    });
-</pre>
--->
 </body>
-
 </html>
 

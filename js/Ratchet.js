@@ -472,6 +472,7 @@
                         {
                             tag.attr("id", gadgetId);
                         }
+                        tag.attr("gadget-strategy", "replace");
 
                         $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
                     }
@@ -498,7 +499,7 @@
             //
             // these are:
             //
-            //  <gadget type="<gadgetType>"></gadget>
+            //  <gadget type="<gadgetType>" [strategy="<strategy>"]></gadget>
             //
             $(context.closestDescendants('gadget')).each(function() {
                 Ratchet.convertGadgetTag(this);
@@ -518,8 +519,7 @@
             {
                 var subGadgetType = $(this).attr("gadget");
                 var subGadgetId = $(this).attr("id");
-
-                //$(this).removeAttr("gadget");
+                var subGadgetStrategy = $(this).attr("gadget-strategy");
 
                 // check if we already have a child ratchet for this gadget
                 var ratcheted = false;
@@ -545,6 +545,7 @@
                     childRatchet = new Ratchet($(this), _this, function() {
                         this.gadgetType = subGadgetType;
                         this.gadgetId = subGadgetId;
+                        this.gadgetStrategy = subGadgetStrategy;
                     });
 
                     _this.childRatchets[childRatchet.id] = childRatchet;
@@ -1139,12 +1140,16 @@
         var type = $(domEl).attr("type");
 
         // build the replacement tag
-        var tag = $("<" + tag +" gadget='" + type + "' tempkey='xyz'></" + tag + ">");
+        var tag = $("<" + tag +" gadget='" + type + "'></" + tag + ">");
 
         // copy attributes
         $.each($(domEl)[0].attributes, function(index, attr) {
             var name = attr.nodeName;
             var value = attr.nodeValue;
+
+            if (name == "strategy") {
+                name = "gadget-strategy";
+            }
 
             if (name == "tag" || name == "type")
             {
@@ -1156,6 +1161,10 @@
             }
         });
 
+        // assign temp key
+        var tempKey = "temp-" + new Date().getTime();
+        $(tag).attr("tempkey", tempKey);
+
         // copy inner html
         $(tag).html($(domEl).html());
 
@@ -1163,7 +1172,7 @@
 
         $(domEl).replaceWith(tag);
 
-        tag = $(parent).children('[tempkey=xyz]')[0];
+        tag = $(parent).children("[tempkey=" + tempKey + "]")[0];
         $(tag).removeAttr("tempkey");
 
         return tag;
@@ -1184,7 +1193,11 @@
         var regionId = $(domEl).attr("id");
 
         // build the replacement tag
-        var tag = $("<" + tag +" region='" + regionId + "' tempkey='xyz'></" + tag + ">");
+        var tag = $("<" + tag +" region='" + regionId + "'></" + tag + ">");
+
+        // assign temp key
+        var tempKey = "temp-" + new Date().getTime();
+        $(tag).attr("tempkey", tempKey);
 
         $.each($(domEl)[0].attributes, function(index, attr) {
             var name = attr.nodeName;
@@ -1204,7 +1217,7 @@
 
         $(domEl).replaceWith(tag);
 
-        tag = $(parent).children('[tempkey=xyz]')[0];
+        tag = $(parent).children("[tempkey=" + tempKey +"]")[0];
         $(tag).removeAttr("tempkey");
 
         return tag;

@@ -212,18 +212,32 @@
                             // copy original attributes to target (such as class and id)
                             var attributes = $(self.ratchet().el).prop("attributes");
                             $.each(attributes, function() {
+                                if (this.name == "gadget" || this.name == "gadget-strategy")
+                                {
+                                    // skip these
+                                }
+                                else
+                                {
+                                    $(newEl).attr(this.name, this.value);
+                                }
+                            });
+
+                            // copy mergepoint attributes to target
+                            var attributes = $(mergePoint).prop("attributes");
+                            $.each(attributes, function() {
                                 $(newEl).attr(this.name, this.value);
                             });
+
                             // set a temp key so we can look up after replace
-                            var tk = "key-" + new Date().getTime();
-                            $(newEl).attr("tk", tk);
+                            var tempKey = "tempkey-" + new Date().getTime();
+                            $(newEl).attr("tempkey", tempKey);
 
                             // replace in DOM
+                            var parent = $(self.ratchet().el).parent();
                             $(self.ratchet().el).replaceWith(newEl);
-
                             // now find what we replaced and clean up
-                            newEl = $("[tk=" + tk + "]");
-                            $(newEl).removeAttr("tk");
+                            newEl = $(parent).find("[tempkey=" + tempKey + "]");
+                            $(newEl).removeAttr("tempkey");
 
                             // now update the ratchet "el" reference
                             self.ratchet().el = $(newEl)[0];

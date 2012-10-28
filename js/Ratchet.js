@@ -67,9 +67,10 @@
             // ratchet id
             this.id = Ratchet.generateId();
 
-            // gadget instance and type
+            // gadget bindings: instance, type and strategy
             this.gadgetInstances = [];
             this.gadgetType = null;
+            this.gadgetStrategy = null;
 
             // subscriptions
             this.subscriptions = {};
@@ -349,6 +350,7 @@
             {
                 this.gadgetType = $(this.el).attr("gadget");
                 this.gadgetId = $(this.el).attr("id");
+                this.gadgetStrategy = null;
             }
 
             // if there is a gadget configured for this dom element, boot it up

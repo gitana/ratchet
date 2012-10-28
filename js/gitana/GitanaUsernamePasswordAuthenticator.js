@@ -54,7 +54,6 @@
             else
             {
                 // authenticate using the cookie
-                //self.authenticateWithCookie(context, successCallback, failureCallback);
                 self.authenticateWithCookie(context, successCallback, function() {
 
                     // didn't work, pop up dialog

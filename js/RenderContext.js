@@ -206,8 +206,8 @@
                                 name = "body";
                             }
 
+                            // target element
                             var newEl = $("<" + name + "></" + name + ">");
-                            $(newEl).html($(mergePoint).html());
 
                             // copy original attributes to target (such as class and id)
                             var attributes = $(self.ratchet().el).prop("attributes");
@@ -227,6 +227,12 @@
                             $.each(attributes, function() {
                                 $(newEl).attr(this.name, this.value);
                             });
+
+                            // copy mergepoint html to target
+                            //$(newEl).html($(mergePoint).html());
+
+                            // copy mergepoint children to target
+                            $(newEl).append($(mergePoint)[0].childNodes);
 
                             // set a temp key so we can look up after replace
                             var tempKey = "tempkey-" + new Date().getTime();

@@ -123,11 +123,17 @@
             {
                 var tokens = {};
 
+                var printDebug = function()
+                {
+                    //console.log("Matched - pattern: " + matcher + ", text: " + text + ", tokens: " + JSON.stringify(tokens));
+                };
+
                 // short cut - **
                 if (matcher == "**")
                 {
                     // it's a match, pull out wildcard token
                     tokens["**"] = text;
+                    printDebug();
                     return tokens;
                 }
 
@@ -138,6 +144,7 @@
                     if (matcher == text)
                     {
                         // it's a match, no tokens
+                        printDebug();
                         return tokens;
                     }
                 }
@@ -148,6 +155,7 @@
                 // short cut - zero length matches
                 if ((array1.length == 0) && (array2.length == 0))
                 {
+                    printDebug();
                     return tokens;
                 }
 
@@ -156,8 +164,11 @@
                     var pattern = array1.shift();
                     var value = array2.shift();
 
+                    var patternEmpty = (Ratchet.isEmpty(pattern) || pattern === "");
+                    var valueEmpty = (Ratchet.isEmpty(value) || value === "");
+
                     // if there are remaining pattern and value elements
-                    if (!Ratchet.isEmpty(pattern) && !Ratchet.isEmpty(value))
+                    if (!patternEmpty && !valueEmpty)
                     {
                         if (pattern == "*")
                         {
@@ -167,7 +178,6 @@
                         {
                             // wildcard - match everything else, so break out
                             tokens["**"] = "/" + [].concat(value, array2).join("/");
-                            //tokens["**"] = "/" + Array.concat(value, array2).join("/");
                             break;
                         }
                         else if (Ratchet.startsWith(pattern, "{"))
@@ -192,7 +202,9 @@
                     }
                     else
                     {
-                        if ((pattern && Ratchet.isEmpty(value)) || (Ratchet.isEmpty(pattern) && value))
+                        // if we expected a pattern but empty value or we have a value but no pattern
+                        // then it is a mismatch
+                        if ((pattern && valueEmpty) || (patternEmpty && value))
                         {
                             return null;
                         }
@@ -200,6 +212,7 @@
                 }
                 while (!Ratchet.isEmpty(pattern) && !Ratchet.isEmpty(value));
 
+                printDebug();
                 return tokens;
             };
 

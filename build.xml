@@ -560,15 +560,9 @@
         <copy todir="/projects/components/ratchet">
             <fileset dir="${package.dir}/components/ratchet"/>
         </copy>
-        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet">
-            <fileset dir="${package.dir}/components/ratchet"/>
-        </copy>
 
         <!-- "ratchet-tmpl" -->
         <copy todir="/projects/components/ratchet-tmpl">
-            <fileset dir="${package.dir}/components/ratchet-tmpl"/>
-        </copy>
-        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet-tmpl">
             <fileset dir="${package.dir}/components/ratchet-tmpl"/>
         </copy>
 
@@ -576,25 +570,14 @@
         <copy todir="/projects/components/ratchet-ejs">
             <fileset dir="${package.dir}/components/ratchet-ejs"/>
         </copy>
-        <!--
-        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet-ejs">
-            <fileset dir="${package.dir}/components/ratchet-ejs"/>
-        </copy>
-        -->
 
         <!-- "ratchet-web" -->
         <copy todir="/projects/components/ratchet-web">
             <fileset dir="${package.dir}/components/ratchet-web"/>
         </copy>
-        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet-web">
-            <fileset dir="${package.dir}/components/ratchet-web"/>
-        </copy>
 
         <!-- "ratchet-gitana" -->
         <copy todir="/projects/components/ratchet-gitana">
-            <fileset dir="${package.dir}/components/ratchet-gitana"/>
-        </copy>
-        <copy todir="/projects/cloudcms-application-appstudio/public/components/ratchet-gitana">
             <fileset dir="${package.dir}/components/ratchet-gitana"/>
         </copy>
 

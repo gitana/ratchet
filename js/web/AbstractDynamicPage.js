@@ -8,7 +8,7 @@
             // call over to server to load page information
             var uri = el.route.uri;
             $.ajax({
-                url: "/_pages" + uri,
+                url: "/_page" + uri,
                 "dataType": "json",
                 success: function(config)
                 {
@@ -16,10 +16,7 @@
 
                     self.observable("application").set(config.application);
                     self.observable("page").set(config.page);
-                    self.observable("bindings").set(config.bindings);
                     self.observable("gadgets").set(config.gadgets);
-                    self.observable("template").set(config.template);
-                    self.observable("view").set(config.view);
 
                     // for each gadget runtime config, binding into observable
                     for (var gadgetSubscriberKey in config.gadgets)
@@ -42,7 +39,8 @@
 
                     // template
                     //var template = "custom/templates/" + config.template.path;
-                    var template = "templates/" + config.template.path;
+                    //var template = "templates/" + config.template.path;
+                    var template = "templates/" + config.template;
 
                     // render
                     self.renderTemplate(el, template, function(el) {

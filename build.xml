@@ -443,7 +443,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet-web/${appkey}-web.js"/>
             <param name="name" value="ratchet-web" />
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'underscore']" />
+            <param name="dependencies" value="['ratchet']" />
         </antcall>
 
 

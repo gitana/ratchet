@@ -1,7 +1,7 @@
 (function($) {
     Ratchet.AbstractDynamicGadget = Ratchet.Gadget.extend(
     {
-        RUNTIME_CONTROLLER: "_gadgets/_runtime",
+        RUNTIME_CONTROLLER: "_gadget",
         HTML: "",
 
         constructor: function(type, ratchet, id) {
@@ -172,7 +172,7 @@
 
             // call over to node js
             $.ajax({
-                url: self.RUNTIME_CONTROLLER + "/" + self.getGadgetType() + "/" + self.getGadgetId(), // + "?page=" + self.TYPE + "&pageKey=" + self.observable("page").get()["key"],
+                url: self.RUNTIME_CONTROLLER + "?key=" + self.getGadgetId(),
                 "dataType": "json",
                 success: function(config)
                 {

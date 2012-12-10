@@ -20,13 +20,13 @@
         {
             var self = this;
 
-            var view = context.observable("view").get();
+            var page = context.observable("page").get();
 
             var resolutions = {};
 
             for (var regionName in regions)
             {
-                var x = view.regions[regionName];
+                var x = page.bindings[regionName];
                 if (x)
                 {
                     var array = [];
@@ -38,7 +38,7 @@
                         {
                             var resolution = {
                                 "type": x[i].type,
-                                "id": x[i].id,
+                                "id": x[i].key,
                                 "attrs": {}
                             };
 
@@ -49,7 +49,7 @@
                     {
                         var resolution = {
                             "type": x.type,
-                            "id": x.id,
+                            "id": x.key,
                             "attrs": {}
                         };
 

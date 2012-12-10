@@ -3,6 +3,11 @@
     Ratchet = Base.extend(
     {
         /**
+         * The default URI that gets dispatched on an initial empty run() call.
+         */
+        DEFAULT_URI: "/",
+
+        /**
          * Instantiates a ratchet.
          *
          * The ratchet will render into the given dom element.  If no dom element is provided, the document body
@@ -828,7 +833,7 @@
                 }
                 else
                 {
-                    uri = "/";
+                    uri = Ratchet.DEFAULT_URI;
                 }
                 config.uri = uri;
             }

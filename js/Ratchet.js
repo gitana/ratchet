@@ -484,16 +484,42 @@
                         var gadgetId = resolution["id"];
                         var attrs = resolution["attrs"];
 
+                        // store a copy of the original dom attributes
+                        var originalAttributes = {};
+                        $(context.closestDescendants("[region=" + regionId + "]")[0]).each(function() {
+                            $.each($(this)[0].attributes, function(index, attr) {
+                                var name = attr.nodeName;
+                                var value = attr.nodeValue;
+
+                                originalAttributes[name] = value;
+                            });
+                        });
+
+                        // build new tag
                         var tag = $("<div gadget='" + gadgetType + "'></div>");
+
+                        // copy original dom attributes in, skipping any that we wouldn't want to keep
+                        $.each(originalAttributes, function(k, v) {
+
+                            // TODO: is there anything here we want to skip?
+                            tag.attr(k, v);
+                        });
+
+                        // copy attributes dictated by the resolver
                         $.each(attrs, function(k, v) {
                             tag.attr(k, v);
                         });
+
+                        // set gadget id
                         if (gadgetId)
                         {
                             tag.attr("id", gadgetId);
                         }
+
+                        // set strategy
                         tag.attr("gadget-strategy", "replace");
 
+                        // substitute in
                         $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
                     }
                 }
@@ -818,6 +844,8 @@
          */
         run: function()
         {
+            var self = this;
+
             var config = {
                 "method": "GET",
                 "data": {}
@@ -833,7 +861,7 @@
                 }
                 else
                 {
-                    uri = Ratchet.DEFAULT_URI;
+                    uri = self.DEFAULT_URI;
                 }
                 config.uri = uri;
             }

@@ -1,0 +1,64 @@
+<!-- Navigation Bar -->
+
+<div class="navbar {{if inverse}}navbar-inverse{{/if}} {{if top}}navbar-fixed-top{{/if}} {{if cssClasses}}${cssClasses}{{/if}}">
+    <div class="navbar-inner">
+        <div class="container">
+
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            {{if brand}}
+            <!-- Be sure to leave the brand out there if you want it shown -->
+            <a class="brand" href="#/"><span class="logo"></span>&nbsp;${brandTitle}</a>
+            {{/if}}
+
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse">
+
+                <ul class="nav">
+
+                    {{each(i, item) items}}
+                        {{if item.dropdown}}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    ${item.title}
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {{each(j, sub) item.items}}
+                                    <li>
+                                        <a href="#${sub.uri}">${sub.title}</a>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </li>
+                        {{else}}
+                            <li class="${item.classes}">
+                                <a href="#${item.uri}">
+                                    <span class="li-title">${item.title}</span>
+                                    {{if item.subtitle}}
+                                    <span class="li-subtitle">${item.subtitle}</span>
+                                    {{/if}}
+                                </a>
+                            </li>
+                        {{/if}}
+                    {{/each}}
+
+                </ul>
+
+                {{if search}}
+                <!-- .nav, .navbar-search, .navbar-form, etc -->
+                <form class="navbar-search pull-right">
+                    <input type="text" class="search-query" placeholder="${search.placeholder}">
+                </form>
+                {{/if}}
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+<!-- Dashboard -->
+
+{{if buttons}}
+<div class="row-fluid">
+
+    <!-- left -->
+    <div class="btn-group pull-left" data-toggle="buttons-checkbox">
+    {{each(i, button) buttons}}
+        {{if !button.align || button.align == 'left'}}
+        <button type="button" class="btn btn-large ${button.class}">${button.label}</button>
+        {{/if}}
+    {{/each}}
+    </div>
+
+    <!-- right -->
+    <div class="btn-group pull-right" data-toggle="buttons-checkbox">
+    {{each(i, button) buttons}}
+        {{if button.align == 'right'}}
+        <button type="button" class="btn btn-large ${button.class}">${button.label}</button>
+        {{/if}}
+    {{/each}}
+    </div>
+
+</div>
+
+<br/>
+
+{{/if}}
+
+
+
+
+{{each(i, row) rows}}
+
+<div class="row-fluid">
+
+    {{each(j, column) row.columns}}
+
+        <div class="{{if column.css}}${column.css}{{/if}}">
+
+            {{each(k, dashlet) column.dashlets}}
+
+                {{if (dashlet.type != null)}}
+					{{if (dashlet.chrome != null)}}
+                    <div class="dashlet dashlet-header">
+                        <div class="dashlet-title">${dashlet.title}</div>
+						{{if (dashlet.buttons != null)}}
+                        <div class="btn-group pull-right" data-toggle="buttons-checkbox">
+                            <button type="button" class="btn">+</button>
+                        </div>
+						{{/if}}
+                    </div>
+					{{/if}}
+					{{if dashlet.chrome != null}}
+                    <div class="dashlet dashlet-body">
+					{{/if}}
+                        <gadget type="${dashlet.type}" {{if (dashlet.id != null)}}id="${dashlet.id}"{{/if}}></gadget>
+					{{if dashlet.chrome != null}}
+                    </div>
+					{{/if}}
+                {{/if}}
+
+                <br/>
+
+            {{/each}}
+
+        </div>
+
+    {{/each}}
+
+</div>
+
+{{/each}}

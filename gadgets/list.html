@@ -1,0 +1,78 @@
+<div class="gadget list" xmlns="http://www.w3.org/1999/html">
+
+	{{if buttons}}
+	<div class="buttonbar">
+	    <div class="btn-group pull-left">
+            {{each(key, button) buttons}}
+                {{if button.align == "left"}}
+                    <button class="btn btn-large list-button-${key}">
+                        <i class="{{if button.iconClass}}${button.iconClass}{{/if}} icon-black"></i>${button.title}</i>
+                    </button>
+                {{/if}}
+            {{/each}}
+	    </div>
+
+	    <div class="btn-group pull-right">
+            {{each(i, button) buttons}}
+                {{if button.align == "right" || !button.align}}
+                    <button class="btn btn-large dropdown-toggle" data-toggle="dropdown">
+                        <i class="{{if button.iconClass}}${button.iconClass}{{/if}} icon-black"></i>${button.title}</i>
+                        {{if button.buttons}}
+                            <span class="caret"></span>
+                        {{/if}}
+                    </button>
+                    {{if button.buttons}}
+                    <ul class="dropdown-menu">
+                        {{each(j, childButton) button.buttons}}
+                            {{if childButton.divider}}
+                                <li class="divider"></li>
+                            {{else}}
+                                <li>
+                                    <a href="#" class="list-button-${childButton.key}">
+                                        <i {{if childButton.iconClass}}class="${childButton.iconClass}"{{/if}}></i>
+                                        ${childButton.title}
+                                    </a>
+                                </li>
+                        {{/if}}
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+                {{/if}}
+            {{/each}}
+	    </div>
+	</div>
+	<br style="clear:both"/>
+	<br style="clear:both"/>
+	{{/if}}
+
+    <table width="100%" style="width: 100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+
+            <!-- checkbox -->
+            {{if checkbox}}
+            <th></th>
+            {{/if}}
+
+            <!-- icon -->
+            {{if icon}}
+            <th></th>
+            {{/if}}
+
+            <!-- columns -->
+            {{each(i, column) columns}}
+            <th nowrap>${column.title}</th>
+            {{/each}}
+
+        </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+
+    </table>
+	</div>
+
+</div>
+

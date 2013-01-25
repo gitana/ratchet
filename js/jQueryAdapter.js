@@ -16,41 +16,6 @@
     };
 
     /**
-     * Finds the closest child that matches the given selector using a breadth first lookup.
-     *
-     * @param selector
-     */
-    /*
-    $.fn.closestChild = function(selector) {
-
-		// breadth first search for the first matched node
-		if (selector && selector != '')
-        {
-			var queue = [];
-			queue.push(this);
-			while(queue.length > 0)
-            {
-				var node = queue.shift();
-				var children = node.children();
-				for(var i = 0; i < children.length; ++i)
-                {
-					var child = $(children[i]);
-					if (child.is(selector))
-                    {
-						return child;
-					}
-
-                    queue.push(child);
-				}
-			}
-		}
-
-        // nothing was found
-		return $();
-	};
-	*/
-
-    /**
      * Uses a recursive, breadth first approach to walk the descendants of the current DOM element and
      * find any nodes that are first matches to the given selector.  This produces an array of objects which
      * constitute the first matches on their branches of the dom tree.

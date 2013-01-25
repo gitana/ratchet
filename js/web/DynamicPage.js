@@ -1,3 +1,4 @@
+/*
 (function($) {
     Ratchet.Gadgets.DynamicPage = Ratchet.AbstractDynamicPage.extend(
     {
@@ -9,3 +10,4 @@
     Ratchet.GadgetRegistry.register("dynamic-page", Ratchet.Gadgets.DynamicPage);
 
 })(jQuery);
+*/

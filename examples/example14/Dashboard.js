@@ -11,13 +11,13 @@
 
                 // load config
                 $.ajax({
-                    url: "/examples/example14/dashboard-config.json",
+                    url: "dashboard-config.json",
                     "dataType": "json",
                     success: function(config)
                     {
                         el.model["config"] = config;
 
-                        el.transform("/examples/example14/dashboard", el.model, function(el) {
+                        el.transform("dashboard", el.model, function(el) {
                             el.swap();
                         });
                     }

@@ -472,6 +472,22 @@
         </antcall>
 
 
+        <!-- "ratchet-gadgets" -->
+        <mkdir dir="${package.dir}/components/ratchet-gadgets"/>
+        <copy file="${project.dir}/components/ratchet-gadgets/component.json.txt" tofile="${package.dir}/components/ratchet-gadgets/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+        <copy todir="${package.dir}/components/ratchet-gadgets">
+            <fileset dir="${project.dir}/gadgets">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+            </fileset>
+        </copy>
+
     </target>    
     <!-- END: Package Web Components -->
     
@@ -579,6 +595,11 @@
         <!-- "ratchet-gitana" -->
         <copy todir="/projects/components/ratchet-gitana">
             <fileset dir="${package.dir}/components/ratchet-gitana"/>
+        </copy>
+
+        <!-- "ratchet-gadgets" -->
+        <copy todir="/projects/components/ratchet-gadgets">
+            <fileset dir="${package.dir}/components/ratchet-gadgets"/>
         </copy>
 
     </target>

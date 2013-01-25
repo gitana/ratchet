@@ -1,6 +1,7 @@
 (function($) {
     Ratchet.AbstractDynamicPage = Ratchet.Gadget.extend(
     {
+        /*
         index: function(el)
         {
             var self = this;
@@ -23,7 +24,8 @@
                     {
                         var gadget = config.gadgets[gadgetSubscriberKey];
 
-                        self.observable("gadget_" + gadgetSubscriberKey).set(gadget);
+                        var gadgetObservableId = "gadget_" + gadget.type + "_" + gadgetSubscriberKey;
+                        self.observable(gadgetObservableId).set(gadget);
                     }
 
                     // plug in a region resolver
@@ -49,6 +51,7 @@
                 }
             });
         },
+        */
 
         renderTemplate: function(el, templateIdentifier, data, callback) {
 

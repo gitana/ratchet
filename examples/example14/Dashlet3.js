@@ -11,13 +11,13 @@
 
                 // load config
                 $.ajax({
-                    url: "/examples/example14/dashlet3-config.json",
+                    url: "dashlet3-config.json",
                     "dataType": "json",
                     success: function(config)
                     {
                         el.model["config"] = config;
 
-                        el.transform("/examples/example14/dashlet3", el.model, function(el) {
+                        el.transform("dashlet3", el.model, function(el) {
                             el.swap();
                         });
                     }

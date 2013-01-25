@@ -1,0 +1,42 @@
+{
+    "name": "ratchet-gadgets",
+    "description": "Core Gadget Pack for Ratchet",
+    "homepage": "http://www.ratchetjs.org",
+    "keywords": ["ratchet", "javascript", "mvc"],
+    "author": "Gitana Software <info@cloudcms.com>",
+    "repository": {"type": "git", "url": "git://github.com/gitana/ratchet.git"},
+    "version": "/** VERSION **/",
+    "dependencies": {
+        "ratchet-web": "*",
+        "ratchet-tmpl": "*",
+        "bootstrap": "*"
+    },
+    "main": [
+        "buttons.js",
+        "buttons.html",
+        "copyright.js",
+        "copyright.html",
+        "dashboard.js",
+        "dashboard.html",
+        "display.js",
+        "display.html",
+        "doclib.js",
+        "doclib.html",
+        "form.js",
+        "form.html",
+        "hero.js",
+        "hero.html",
+        "links.js",
+        "links.html",
+        "list.js",
+        "list.html",
+        "navbar.js",
+        "navbar.html",
+        "sidebar.js",
+        "sidebar.html",
+        "upload.js",
+        "upload.html",
+        "wizard.js",
+        "wizard.html"
+    ]
+}

@@ -55,73 +55,7 @@
                 // dispatcher post-render
                 self.ratchet().processGadgets.call(self.ratchet(), self, function () {
 
-                    /*
-                    // determine the appropriate merge point
-                    // this is either all of the child nodes that we rendered out or if we rendered a single
-                    // node with lots of children under it, then we'll use that single node
-                    var mergePoint = null;
-                    if (self.children().size() == 0)
-                    {
-                        // there are no dom node children
-                        // we assume that there is valid text somewhere in there
-                        // use ourselves as a mergepoint so that children get collected in
-                        mergePoint = self; //
-                    }
-                    else
-                    {
-                        // there is at least one dom element in here...
-
-                        // if multiple, then use self as merge point
-                        if (self.children().size() > 1)
-                        {
-                            mergePoint = self;
-                        }
-                        else
-                        {
-                            // otherwise, there is either
-                            //   a) stray whitespace text + a dom element
-                            //   b) text we want to keep + dom element
-
-                            // get rid of any white space nodes
-                            var index = 0;
-                            while (index < self[0].childNodes.length)
-                            {
-                                var current = self[0].childNodes[index];
-                                if (current.nodeName == "#text")
-                                {
-                                    if (current.textContent.trim() == 0)
-                                    {
-                                        self[0].removeChild(current);
-                                    }
-                                    else
-                                    {
-                                        index++;
-                                    }
-                                }
-                                else
-                                {
-                                    index++;
-                                }
-                            }
-
-
-                            // if the DOM element is now FIRST, then use it as merge point
-                            if (self[0].childNodes[0].nodeName.toLowerCase() == self.children()[0].nodeName)
-                            {
-                                // just one child node (which is a dom node), so use it as a merge point
-                                mergePoint = self.children()[0];
-                            }
-                            else
-                            {
-                                // what remains is text + dom mixture, so add all children
-                                mergePoint = self;
-                            }
-
-                        }
-                    }
-                    */
-
-                    var postSwap = function()
+                    var postSwap = function(onComplete)
                     {
                         // fire post-swap custom event
                         $('body').trigger('swap', [self.ratchet()]);
@@ -132,10 +66,8 @@
                         // fire post-dispatch custom event
                         $('body').trigger('dispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
 
-                        // custom callback
-                        if (callback)
-                        {
-                            callback.call(self);
+                        if (onComplete) {
+                            onComplete.call(self);
                         }
                     };
 
@@ -188,10 +120,14 @@
                             }
 
                             // if the DOM element is now FIRST, then use it as merge point
+                            // AND if there is only one child
                             if (self[0].childNodes[0].nodeName.toLowerCase() == self.children()[0].nodeName.toLowerCase())
                             {
-                                // just one child node (which is a dom node), so use it as a merge point
-                                mergePoint = self.children()[0];
+                                if (self.children().size() == 1)
+                                {
+                                    // just one child node (which is a dom node), so use it as a merge point
+                                    mergePoint = self.children()[0];
+                                }
                             }
                         }
 
@@ -210,7 +146,7 @@
                             var newEl = $("<" + name + "></" + name + ">");
 
                             // copy original attributes to target (such as class and id)
-                            var attributes = $(self.ratchet().el).prop("attributes");
+                            var attributes = $(self.ratchet().el)[0].attributes;
                             $.each(attributes, function() {
                                 if (this.name == "gadget" || this.name == "gadget-strategy")
                                 {
@@ -227,9 +163,6 @@
                             $.each(attributes, function() {
                                 $(newEl).attr(this.name, this.value);
                             });
-
-                            // copy mergepoint html to target
-                            //$(newEl).html($(mergePoint).html());
 
                             // copy mergepoint children to target
                             $(newEl).append($(mergePoint)[0].childNodes);
@@ -249,20 +182,76 @@
                             self.ratchet().el = $(newEl)[0];
 
                             // all done
-                            postSwap();
+                            postSwap(function() {
+                                if (callback)
+                                {
+                                    callback.call(self);
+                                }
+                            });
                             return;
                         }
 
                         // otherwise, we simply replace the ratchet el with all children
                         // i.e. no merge
 
-                        // replace in DOM
-                        $(self.ratchet().el).replaceWith($(self)[0].childNodes);
+                        // remember the original attributes
+                        var originalAttributes = {};
+                        $.each($(self.ratchet().el)[0].attributes, function() {
+                            if (this.name == "gadget-strategy")
+                            {
+                                // skip these
+                            }
+                            else
+                            {
+                                originalAttributes[this.name] = this.value;
+                            }
+                        });
+
+                        // we'll use these to replace the current el
+                        var replacements = $($(self)[0].childNodes);
+
+                        // swap in replacements
+                        $(self.ratchet().el).replaceWith(replacements);
 
                         // now update the ratchet "el" reference
                         self.ratchet().el = null;
 
-                        postSwap();
+                        postSwap(function() {
+
+                            // if swapping in multiple DOM elements, apply ratchet and gadget tags up to the parent
+                            if ($(replacements).children().length > 1) {
+                                $(replacements).parent().attr("gadget", originalAttributes["gadget"]);
+                                $(replacements).parent().attr("ratchet", originalAttributes["ratchet"]);
+                            }
+
+                            // if we really only have one dom element that serves as a replacement
+                            // i.e. getting rid of all text (comments)
+                            if ($(replacements).filter("*").length == 1)
+                            {
+                                // then copy original dom attributes (from gadget tag) back to replacement node
+                                var replacement = $($(replacements).filter("*")[0]);
+                                $.each(originalAttributes, function(name, value) {
+
+                                    if (name == "id")
+                                    {
+                                        // skip these
+                                    }
+                                    else
+                                    {
+                                        if (!$(replacement).attr(name)) {
+                                            $(replacement).attr(name, value);
+                                        }
+                                    }
+                                });
+                            }
+
+
+                            if (callback)
+                            {
+                                callback.call(self);
+                            }
+                        });
+
                         return;
                     }
 
@@ -276,7 +265,12 @@
                     $(self.ratchet().el).append($(self)[0].childNodes);
 
                     // all done
-                    postSwap();
+                    postSwap(function() {
+                        if (callback)
+                        {
+                            callback.call(self);
+                        }
+                    });
                 });
             });
         },

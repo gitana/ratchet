@@ -79,7 +79,7 @@
             }
             else
             {
-                this.loadRuntime(function(runtime) {
+                this.loadRuntime(el, function(runtime) {
 
                     handleRender(el, runtime);
 
@@ -134,10 +134,14 @@
 
         prepareModel: function(el, model, callback)
         {
-            if (callback)
-            {
-                callback();
+            if (!model.cssClasses) {
+                model.cssClasses = "";
             }
+
+            // add in a custom class for our gadget
+            model.cssClasses += " " + this.getGadgetType();
+
+            callback();
         },
 
         beforeSwap: function(el, model, callback)
@@ -166,13 +170,15 @@
             return runtime;
         },
 
-        loadRuntime: function(successCallback, failureCallback)
+        loadRuntime: function(el, successCallback, failureCallback)
         {
             var self = this;
 
+            var url = self.RUNTIME_CONTROLLER + "?uri=" + el.route.uri + "&key=" + self.subscription;
+
             // call over to node js
             $.ajax({
-                url: self.RUNTIME_CONTROLLER + "?key=" + self.getGadgetId(),
+                "url": url,
                 "dataType": "json",
                 success: function(config)
                 {

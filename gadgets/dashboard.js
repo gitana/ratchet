@@ -13,38 +13,41 @@ define(function(require, exports, module) {
 
 		TEMPLATE: html,
 
-        index: function(el)
+        prepareModel: function(el, model, callback)
         {
-            // get our configuration
-            var config = this.observable(this.subscription).get();
+            var self = this;
 
-            // walk all dashlets and bind into observables
-            for (var i = 0; i < config.rows.length; i++)
-            {
-                var row = config.rows[i];
+            this.base(el, model, function() {
 
-                for (var j = 0; j < row.columns.length; j++)
+                // walk all dashlets and bind into observables
+                for (var i = 0; i < model.rows.length; i++)
                 {
-                    var column = row.columns[j];
+                    var row = model.rows[i];
 
-                    for (var k = 0; k < column.dashlets.length; k++)
+                    for (var j = 0; j < row.columns.length; j++)
                     {
-                        var dashlet = column.dashlets[k];
+                        var column = row.columns[j];
 
-                        var dashletConfig = dashlet.config;
-                        if (!dashletConfig) {
-                            dashletConfig = {};
+                        for (var k = 0; k < column.dashlets.length; k++)
+                        {
+                            var dashlet = column.dashlets[k];
+
+                            var dashletConfig = dashlet.config;
+                            if (!dashletConfig) {
+                                dashletConfig = {};
+                            }
+
+                            var subscriptionKey = "gadget_" + dashlet.type + "_" + dashlet.id;
+                            self.observable(subscriptionKey).set(dashletConfig);
                         }
-
-                        var subscriptionKey = "gadget_" + dashlet.type + "_" + dashlet.id;
-                        this.observable(subscriptionKey).set(dashletConfig);
                     }
                 }
-            }
 
-            this.base(el);
+                callback();
+
+            });
         }
-		
+
 	}));
 
 });

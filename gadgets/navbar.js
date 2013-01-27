@@ -54,6 +54,31 @@ define(function(require, exports, module) {
                     model.brandTitle = this.observable("application").get()["title"];
                 }
             }
+
+            // perform token substitutions
+            for (var i = 0; i < model.items.length; i++)
+            {
+                var item = model.items[i];
+
+                // substitute any tokens
+                var x = -1;
+                do
+                {
+                    x = item.uri.indexOf("{");
+                    if (x > -1)
+                    {
+                        var y = item.uri.indexOf("}", x);
+                        if (y > -1)
+                        {
+                            var token = item.uri.substring(x+1, y);
+                            var replacementToken = el.tokens[token];
+                            item.uri = item.uri.substring(0,x) + replacementToken + item.uri.substring(y+1);
+                        }
+                    }
+                }
+                while(x > -1);
+
+            }
         }
 		
 	}));

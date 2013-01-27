@@ -230,7 +230,7 @@ define(function(require, exports, module) {
 	        callback();
 	    },
 
-	    afterSwap: function(el, model)
+	    afterSwap: function(el, model, context, callback)
 	    {
 	        var self = this;
 
@@ -355,7 +355,7 @@ define(function(require, exports, module) {
 					throw new Error("Cannot find loader: " + loaderId);
 				}
 				
-				loader.call(self, model, keyValues, sSource, aoData, function(aaData, attrs) {
+				loader.call(self, context, model, keyValues, sSource, aoData, function(aaData, attrs) {
 					
 	                for (var i = 0; i < aaData.length; i++)
 	                {
@@ -449,6 +449,9 @@ define(function(require, exports, module) {
 	        $('.dropdown-toggle', el).dropdown();
 	
 	        //el.swap();
+
+            // all done - fire callback
+            callback();
 	    },
 
 	    /**
@@ -805,7 +808,7 @@ define(function(require, exports, module) {
 	     *  [["v1", "v2", "v3"], ["v1", "v2", "v3"]]
 	     */
 		loaders: {
-			"default": function(model, keyValues, sSource, aoData, callback) {
+			"default": function(context, model, keyValues, sSource, aoData, callback) {
 				
 		        var self = this;
 
@@ -840,7 +843,7 @@ define(function(require, exports, module) {
 
 		        callback.call(self, aaData, attrs);
 			},
-			"gitana": function(model, keyValues, sSource, aoData, callback) {
+			"gitana": function(context, model, keyValues, sSource, aoData, callback) {
 				
 	            var self = this;
 
@@ -903,7 +906,7 @@ define(function(require, exports, module) {
 	            //
 	            //////////////////////////////////////////////////////////////////////////////
 
-	            self.doGitanaQuery.call(self, model, query, pagination, function(resultMap) {
+	            self.doGitanaQuery.call(self, context, model, query, pagination, function(resultMap) {
 
                     // TOTAL ROWS
                     var totalRows = -1;
@@ -913,8 +916,8 @@ define(function(require, exports, module) {
                         } else {
                             totalRows = resultMap.totalRows;
                         }
-                        delete resultMap.___totalRows;
                     }
+                    delete resultMap.totalRows;
                     if (!totalRows) {
                         totalRows = 0;
                     }
@@ -927,8 +930,8 @@ define(function(require, exports, module) {
                         } else {
                             totalRows = resultMap.size;
                         }
-                        delete resultMap.size;
                     }
+                    delete resultMap.size;
                     if (!size) {
                         size = 0;
                     }
@@ -941,8 +944,8 @@ define(function(require, exports, module) {
                         } else {
                             totalRows = resultMap.offset;
                         }
-                        delete resultMap.offset;
                     }
+                    delete resultMap.offset;
                     if (!offset) {
                         offset = 0;
                     }
@@ -970,7 +973,7 @@ define(function(require, exports, module) {
         /**
          * TO BE PROVIDED BY IMPLEMENTATION CLASS IF THE GITANA LOADER IS USED
          */
-        doGitanaQuery: function(model, query, pagination, callback)
+        doGitanaQuery: function(context, model, query, pagination, callback)
         {
 
         }		

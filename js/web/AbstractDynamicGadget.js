@@ -8,13 +8,11 @@
             this.base(type, ratchet, id);
 
             this.subscription = "gadget_" + type + "_" + id;
+            this.defaultConfig = {};
+            this.runtimeConfig = null;
         },
 
-        setup: function()
-        {
-            this.get(this.index);
-        },
-
+        /*
         _observable : function (key, args, defaultVal) {
             var _args = Ratchet.makeArray(args);
             if (_args.length > 0) {
@@ -40,6 +38,7 @@
             var _key = key ? key : defaultKey;
             this.observable(_key).clear();
         },
+        */
 
         renderTemplate: function(el, templateIdentifier, data, callback) {
 
@@ -59,49 +58,21 @@
         {
             var self = this;
 
-            var handleRender = function(el, runtime)
+            var handleRender = function(el, model)
             {
-                // construct model
-                var model = {};
-                for (var key in runtime)
-                {
-                    model[key] = runtime[key];
-                }
-
                 self.doRender(el, model);
             };
 
-            // are bindings already defined?
-            var runtime = this.getRuntime();
-            if (runtime)
-            {
-                handleRender(el, runtime);
-            }
-            else
-            {
-                this.loadRuntime(el, function(runtime) {
+            // ensure config is loaded
+            // if already loaded, this just passes through
+            this.loadConfig(el, function(config) {
 
-                    handleRender(el, runtime);
+                // make a copy of the config
+                var model = JSON.parse(JSON.stringify(config));
 
-                }, function(http) {
+                handleRender(el, model);
 
-                    self.prepareDefaultRuntime(function(runtime) {
-
-                        if (!runtime)
-                        {
-                            runtime = {};
-                        }
-
-                        handleRender(el, runtime);
-                    });
-
-                });
-            }
-        },
-
-        prepareDefaultRuntime: function(callback)
-        {
-            callback();
+            });
         },
 
         doRender: function(context, model)
@@ -157,38 +128,108 @@
 
         },
 
-        getRuntime: function()
-        {
-            var runtime = null;
-
-            var observable = this.observable(this.subscription);
-            if (observable)
-            {
-                runtime = observable.get();
-            }
-
-            return runtime;
-        },
-
-        loadRuntime: function(el, successCallback, failureCallback)
+        loadConfig: function(el, callback)
         {
             var self = this;
 
+            // see if we can get the live configuration from the observable
+            // if so, then it was already calculated and set
+            // if not, we have to load it
+            var config = self.observable(self.subscription).get();
+            if (config)
+            {
+                callback(config);
+                return;
+            }
+
+            // fetch either from observable-init (if it was set ahead by the dynamic instantiation (dynamic.js)
+            // or load from _gadget controller manually
+            self.fetchInitialConfig(el, function(err, runtimeConfig) {
+
+                if (runtimeConfig) {
+                    self.runtimeConfig = runtimeConfig;
+                } else {
+                    self.runtimeConfig = {};
+                }
+
+                var config = {};
+
+                // copy in default config
+                if (self.defaultConfig)
+                {
+                    for (var k in self.defaultConfig)
+                    {
+                        config[k] = self.defaultConfig[k];
+                    }
+                }
+
+                // allow runtime config to override the default config
+                if (self.runtimeConfig)
+                {
+                    for (var k in self.runtimeConfig)
+                    {
+                        config[k] = self.runtimeConfig[k];
+                    }
+                }
+
+                // store onto observable
+                self.observable(self.subscription).set(config);
+
+                config = self.observable(self.subscription).get();
+
+                callback(config);
+            });
+        },
+
+        fetchInitialConfig: function(el, callback)
+        {
+            var self = this;
+
+            // load from initial observable and then clear it
+            var observableConfig = self.observable(self.subscription + "-init").get();
+            this.observable(self.subscription + "-init").clear();
+            if (observableConfig)
+            {
+                callback(null, observableConfig);
+                return;
+            }
+
+            // otherwise, retrieve from gadget controller
             var url = self.RUNTIME_CONTROLLER + "?uri=" + el.route.uri + "&key=" + self.subscription;
 
             // call over to node js
             $.ajax({
                 "url": url,
                 "dataType": "json",
-                success: function(config)
+                success: function(runtime)
                 {
-                    successCallback(config)
+                    self.observable(self.subscription + "-init").set(runtime.config);
+                    callback(null, runtime.config);
                 },
                 error: function(http)
                 {
-                    failureCallback(http);
+                    callback(http, null);
                 }
             });
+        },
+
+        /**
+         * Retrieves the live configuration for this gadget.
+         *
+         * @return {*}
+         */
+        config: function()
+        {
+            return this.observable(this.subscription).get();
+        }
+
+    });
+
+    Ratchet.AbstractDashlet = Ratchet.AbstractDynamicGadget.extend({
+
+        setup: function()
+        {
+            this.get(this.index);
         }
 
     });

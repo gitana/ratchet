@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     require("ratchet-tmpl");
     require("bootstrap");
 
+    require("ratchet-gadgets/wizard-sidebar");
+
     return Ratchet.GadgetRegistry.register("wizard", Ratchet.AbstractDynamicGadget.extend({
 
 		TEMPLATE: html,

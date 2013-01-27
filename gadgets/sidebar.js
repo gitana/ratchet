@@ -11,13 +11,13 @@ define(function(require, exports, module) {
 
 		TEMPLATE: html,
 		
-	    prepareModel: function(el, config, callback)
+	    prepareModel: function(el, model, callback)
 	    {
-            this.base(el, config, function() {
+            this.base(el, model, function() {
 
-                if (!config.items)
+                if (!model.items)
                 {
-                    config.items = [];
+                    model.items = [];
                 }
 
                 callback();
@@ -25,24 +25,24 @@ define(function(require, exports, module) {
             });
 	    },
 
-	    afterSwap: function(el, config, originalContext)
+	    afterSwap: function(el, model, originalContext)
 	    {
 	        var self = this;
 
 	        // walk all of the items
-	        for (var i = 0; i < config.items.length; i++)
+	        for (var i = 0; i < model.items.length; i++)
 	        {
-	            var item = config.items[i];
+	            var item = model.items[i];
 	            if (!item.header)
 	            {
 	                var classname = "sidebar-item-" + i;
 
 	                // look up the dom element
-	                (function(config, item, originalContext) {
+	                (function(model, item, originalContext) {
 	                    $("." + classname, el).click(function() {
-	                        self.handleClick.call(self, this, config, item, originalContext);
+	                        self.handleClick.call(self, this, model, item, originalContext);
 	                    });
-	                })(config, item, originalContext);
+	                })(model, item, originalContext);
 	            }
 	        }
 	    },

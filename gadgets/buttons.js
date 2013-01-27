@@ -11,13 +11,13 @@ define(function(require, exports, module) {
 
 		TEMPLATE: html,
 
-	    prepareModel: function(el, config, callback)
+	    prepareModel: function(el, model, callback)
 	    {
-            this.base(el, config, function() {
+            this.base(el, model, function() {
 
-                if (!config.buttons)
+                if (!model.buttons)
                 {
-                    config.buttons = [];
+                    model.buttons = [];
                 }
 
                 callback();
@@ -25,29 +25,29 @@ define(function(require, exports, module) {
             });
 	    },
 
-	    afterSwap: function(el, config, originalContext)
+	    afterSwap: function(el, model, originalContext)
 	    {
 	        var self = this;
 
 	        // walk all of the buttons
-	        for (var i = 0; i < config.buttons.length; i++)
+	        for (var i = 0; i < model.buttons.length; i++)
 	        {
-	            var item = config.buttons[i];
+	            var item = model.buttons[i];
 	            if (!item.header)
 	            {
 	                // title
-	                (function(config, classname, item, originalContext) {
+	                (function(model, classname, item, originalContext) {
 	                    $(el).find("." + classname).click(function() {
-	                        self.handleClick.call(self, this, config, item, originalContext);
+	                        self.handleClick.call(self, this, model, item, originalContext);
 	                    });
-	                })(config, "btn-item-title-" + i, item, originalContext);
+	                })(model, "btn-item-title-" + i, item, originalContext);
 
 	                // dropper
-	                (function(config, classname, item, originalContext) {
+	                (function(model, classname, item, originalContext) {
 	                    $(el).find("." + classname).click(function() {
-	                        self.handleClick.call(self, this, config, item, originalContext);
+	                        self.handleClick.call(self, this, model, item, originalContext);
 	                    });
-	                })(config, "btn-item-dropper-" + i, item, originalContext);
+	                })(model, "btn-item-dropper-" + i, item, originalContext);
 	            }
 	        }
 

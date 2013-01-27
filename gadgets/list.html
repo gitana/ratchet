@@ -1,4 +1,13 @@
-<div class="gadget list" xmlns="http://www.w3.org/1999/html">
+{{if chrome}}
+<div>
+    <div class="dashlet dashlet-header">
+        <div class="dashlet-title">${chrome.title}</div>
+    </div>
+    <div class="dashlet dashlet-body">
+{{/if}}
+
+
+<div class="gadget list {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html">
 
 	{{if buttons}}
 	<div class="buttonbar">
@@ -76,3 +85,8 @@
 
 </div>
 
+
+{{if chrome}}
+    </div>
+</div>
+{{/if}}

@@ -1,6 +1,16 @@
+{{if chrome}}
+<div>
+    <div class="chrome chrome-header">
+        <div class="chrome-title">${chrome.title}</div>
+    </div>
+    <div class="chrome chrome-body">
+{{/if}}
+
 <div class="{{if cssClasses}}${cssClasses}{{/if}}">
     <div id="${formId}"></div>
 </div>
 
-
-
+{{if chrome}}
+    </div>
+</div>
+{{/if}}

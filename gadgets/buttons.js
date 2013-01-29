@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
 
+    require("css!ratchet-gadgets/common.css");
+
     var html = require("text!ratchet-gadgets/buttons.html");
     var Ratchet = require("ratchet");
 

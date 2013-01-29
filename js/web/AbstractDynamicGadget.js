@@ -10,6 +10,8 @@
             this.subscription = "gadget_" + type + "_" + id;
             this.defaultConfig = {};
             this.runtimeConfig = null;
+
+            this.enableRuntimeController = false;
         },
 
         /*
@@ -112,6 +114,11 @@
             // add in a custom class for our gadget
             model.cssClasses += " " + this.getGadgetType();
 
+            // allows for custom observable names
+            if (!model.observables) {
+                model.observables = {};
+            }
+
             callback();
         },
 
@@ -194,23 +201,30 @@
                 return;
             }
 
-            // otherwise, retrieve from gadget controller
-            var url = self.RUNTIME_CONTROLLER + "?uri=" + el.route.uri + "&key=" + self.subscription;
+            // otherwise, retrieve from gadget controller?
+            if (self.enableRuntimeController)
+            {
+                var url = self.RUNTIME_CONTROLLER + "?uri=" + el.route.uri + "&key=" + self.subscription;
 
-            // call over to node js
-            $.ajax({
-                "url": url,
-                "dataType": "json",
-                success: function(runtime)
-                {
-                    self.observable(self.subscription + "-init").set(runtime.config);
-                    callback(null, runtime.config);
-                },
-                error: function(http)
-                {
-                    callback(http, null);
-                }
-            });
+                // call over to node js
+                $.ajax({
+                    "url": url,
+                    "dataType": "json",
+                    success: function(runtime)
+                    {
+                        self.observable(self.subscription + "-init").set(runtime.config);
+                        callback(null, runtime.config);
+                    },
+                    error: function(http)
+                    {
+                        callback(http, null);
+                    }
+                });
+            }
+            else
+            {
+                callback(null, {});
+            }
         },
 
         /**

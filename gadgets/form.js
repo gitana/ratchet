@@ -1,11 +1,31 @@
-define(function(require, exports, module) {
+(function (root, factory)
+{
+    if (typeof define === 'function' && define.amd)
+    {
+        // AMD
+        define(function(require, exports, module) {
 
-    var html = require("text!ratchet-gadgets/form.html");
-    var Ratchet = require("ratchet");
+            require("css!ratchet-gadgets/common.css");
+            require("css!ratchet-gadgets/form.css");
 
-    require("ratchet-web");
-    require("ratchet-tmpl");
-    require("bootstrap");
+            var html = require("text!ratchet-gadgets/form.html");
+            var Ratchet = require("ratchet");
+
+            require("ratchet-web");
+            require("ratchet-tmpl");
+            require("bootstrap");
+
+            factory(Ratchet, html);
+
+            return Ratchet;
+        });
+    }
+    else
+    {
+        return factory(root.Ratchet, "./form.html");
+    }
+
+}(this, function(Ratchet, html) {
 
     return Ratchet.GadgetRegistry.register("form", Ratchet.AbstractDynamicGadget.extend({
 
@@ -57,7 +77,7 @@ define(function(require, exports, module) {
 	            self.postRender(control, model, callback);
 	        };
 
-	        /*
+            /*
 	        alpacaConfig.onFieldChange = function(name, newValue)
 	        {
 	            self.onFieldChange(name, newValue);
@@ -93,7 +113,7 @@ define(function(require, exports, module) {
 	        callback();
 	    },
 
-	    /*
+        /*
 	    onFieldChange: function(name, value)
 	    {
 
@@ -113,4 +133,4 @@ define(function(require, exports, module) {
 	    }		
 		
 	}));
-});
+}));

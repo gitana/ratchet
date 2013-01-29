@@ -1,92 +1,121 @@
 {{if chrome}}
 <div>
-    <div class="dashlet dashlet-header">
-        <div class="dashlet-title">${chrome.title}</div>
+    <div class="chrome chrome-header">
+        <div class="chrome-title">${chrome.title}</div>
     </div>
-    <div class="dashlet dashlet-body">
-{{/if}}
+    <div class="chrome chrome-body">
+        {{/if}}
 
 
-<div class="gadget list {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html">
+        <div class="gadget list {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html">
 
-	{{if buttons}}
-	<div class="buttonbar">
-	    <div class="btn-group pull-left">
-            {{each(key, button) buttons}}
-                {{if button.align == "left"}}
-                    <button class="btn btn-large list-button-${key}">
-                        <i class="{{if button.iconClass}}${button.iconClass}{{/if}} icon-black"></i>${button.title}</i>
+            {{if buttons}}
+            <div class="buttonbar">
+                <div class="btn-group pull-left">
+
+                    {{each(key, button) buttons}}
+                    {{if button.align == "left"}}
+
+                    <button class="btn btn-large list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                    {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
+                    ${button.title}
+                    {{if button.buttons}}
+                    <span class="caret"></span>
+                    {{/if}}
                     </button>
-                {{/if}}
-            {{/each}}
-	    </div>
 
-	    <div class="btn-group pull-right">
-            {{each(i, button) buttons}}
-                {{if button.align == "right" || !button.align}}
-                    <button class="btn btn-large dropdown-toggle" data-toggle="dropdown">
-                        <i class="{{if button.iconClass}}${button.iconClass}{{/if}} icon-black"></i>${button.title}</i>
-                        {{if button.buttons}}
-                            <span class="caret"></span>
-                        {{/if}}
-                    </button>
                     {{if button.buttons}}
                     <ul class="dropdown-menu">
                         {{each(j, childButton) button.buttons}}
-                            {{if childButton.divider}}
-                                <li class="divider"></li>
-                            {{else}}
-                                <li>
-                                    <a href="#" class="list-button-${childButton.key}">
-                                        <i {{if childButton.iconClass}}class="${childButton.iconClass}"{{/if}}></i>
-                                        ${childButton.title}
-                                    </a>
-                                </li>
+                        {{if childButton.divider}}
+                        <li class="divider"></li>
+                        {{else}}
+                        <li>
+                            <a href="#" class="list-button-${childButton.key}">
+                                {{if childButton.iconClass}}<i class="${childButton.iconClass}"></i>{{/if}}
+                                ${childButton.title}
+                            </a>
+                        </li>
                         {{/if}}
                         {{/each}}
                     </ul>
                     {{/if}}
-                {{/if}}
-            {{/each}}
-	    </div>
-	</div>
-	<br style="clear:both"/>
-	<br style="clear:both"/>
-	{{/if}}
 
-    <table width="100%" style="width: 100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
+                    {{/if}}
+                    {{/each}}
 
-            <!-- checkbox -->
-            {{if checkbox}}
-            <th></th>
+                </div>
+
+                <div class="btn-group pull-right">
+                    {{each(i, button) buttons}}
+                    {{if button.align == "right" || !button.align}}
+
+                    <button class="btn btn-large list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                    {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
+                    ${button.title}
+                    {{if button.buttons}}
+                    <span class="caret"></span>
+                    {{/if}}
+                    </button>
+
+                    {{if button.buttons}}
+                    <ul class="dropdown-menu">
+                        {{each(j, childButton) button.buttons}}
+                        {{if childButton.divider}}
+                        <li class="divider"></li>
+                        {{else}}
+                        <li>
+                            <a href="#" class="list-button-${childButton.key}">
+                                {{if childButton.iconClass}}<i class="${childButton.iconClass}"></i>{{/if}}
+                                ${childButton.title}
+                            </a>
+                        </li>
+                        {{/if}}
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+
+                    {{/if}}
+                    {{/each}}
+                </div>
+            </div>
+            <br style="clear:both"/>
+            <br style="clear:both"/>
             {{/if}}
 
-            <!-- icon -->
-            {{if icon}}
-            <th></th>
-            {{/if}}
+            <table width="100%" style="width: 100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
 
-            <!-- columns -->
-            {{each(i, column) columns}}
-            <th nowrap>${column.title}</th>
-            {{/each}}
+                    <!-- checkbox -->
+                    {{if checkbox}}
+                    <th></th>
+                    {{/if}}
 
-        </tr>
-        </thead>
+                    <!-- icon -->
+                    {{if icon}}
+                    <th></th>
+                    {{/if}}
 
-        <tbody>
+                    <!-- columns -->
+                    {{each(i, column) columns}}
+                    <th nowrap>${column.title}</th>
+                    {{/each}}
 
-        </tbody>
+                </tr>
+                </thead>
 
-    </table>
-	</div>
+                <tbody>
 
-</div>
+                </tbody>
 
+            </table>
+        </div>
 
-{{if chrome}}
     </div>
+
+
+    {{if chrome}}
+</div>
 </div>
 {{/if}}

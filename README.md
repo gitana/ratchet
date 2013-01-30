@@ -2,6 +2,7 @@
 The handy framework for building JavaScript MVC applications
 
 Git: http://github.com/gitana/ratchet
+
 Home: http://www.ratchetjs.org
 
 ### Questions and Bug Reports

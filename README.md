@@ -13,5 +13,5 @@ Home: http://www.ratchetjs.org
 https://gitana.atlassian.net/browse/RATCHET
 
 ### Maintainers
-* Yong Qu     drq@cloudcms.com
 * Michael Uzquiano     uzi@cloudcms.com
+* Yong Qu     drq@cloudcms.com

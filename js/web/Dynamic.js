@@ -1,44 +1,52 @@
 (function() {
 
+    var MODAL_TEMPLATE = ' \
+			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
+		    	<div class="modal-header"> \
+		        	<h3 class="modal-title"></h3> \
+		    	</div> \
+		    	<div class="modal-body"></div> \
+		    <div class="modal-footer"></div> \
+		</div> \
+    ';
+
     Ratchet.blockingModal = null;
     Ratchet.block = function(title, message)
     {
-        var setupModal = function(title, message)
+        if (Ratchet.blockingModal)
         {
-            // append wizard attributes
-            $(Ratchet.blockingModal).find('.modal-title').html(title);
-            $(Ratchet.blockingModal).find('.modal-body').html("<p align='center'><img src='/components/ratchet-web/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
-
-            // launch modal
-            $(Ratchet.blockingModal).modal();
-        };
-
-        if (!Ratchet.blockingModal)
-        {
-            // load modal template
-            $.ajax({
-                url: "components/ratchet-web/modal-block.html",
-                success: function(modalHtml)
-                {
-                    // build modal dom
-                    Ratchet.blockingModal = $(modalHtml);
-
-                    setupModal(title, message);
-                }
+            Ratchet.unblock(function() {
+                Ratchet.block(title, message);
             });
+
+            return;
         }
-        else
-        {
-            Ratchet.unblock();
-            setupModal(title, message);
-        }
+
+        Ratchet.blockingModal = Ratchet.showModal({
+            "title": title,
+            "cancel": true,
+            "footer": false
+        }, function(div) {
+
+            $(div).find('.modal-body').html("<p align='center'><img src='/components/ratchet-web/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
+        });
+
+        return Ratchet.blockingModal;
     };
 
-    Ratchet.unblock = function()
+    Ratchet.unblock = function(callback)
     {
         if (Ratchet.blockingModal)
         {
             $(Ratchet.blockingModal).modal('hide');
+            $(Ratchet.blockingModal).on('shown', function() {
+                Ratchet.blockingModal = null;
+
+                if (callback)
+                {
+                    callback();
+                }
+            });
         }
     };
 
@@ -135,34 +143,20 @@
 
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {
-        Ratchet.unblock();
+        Ratchet.showModal({
+            "title": title,
+            "cancel": true
+        }, function(div) {
 
-        var div = null;
+            $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
+            $(div).find('.modal-footer').append("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button><button class='btn btn-danger pull-right confirm-delete'>Delete</button>");
 
-        // load modal template
-        $.ajax({
-            url: "components/ratchet-web/modal-confirm.html",
-            success: function(modalHtml)
-            {
-                // build modal dom
-                div = $(modalHtml);
+            $(div).find('.confirm-delete').click(function() {
 
-                // launch modal
-                $(div).modal();
+                $(div).modal('hide');
 
-                // append wizard attributes
-                $(div).find('.modal-title').html(title);
-                $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
-                $(div).find('.modal-footer').html("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button><button class='btn btn-danger pull-right confirm-delete'>Delete</button>");
-
-                $(div).find('.confirm-delete').click(function() {
-
-                    $(div).modal('hide');
-
-                    onConfirm();
-                });
-
-            }
+                onConfirm();
+            });
         });
     };
 
@@ -183,18 +177,8 @@
             };
         }
 
-        var template = ' \
-			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
-		    	<div class="modal-header"> \
-		        	<h3 class="modal-title"></h3> \
-		    	</div> \
-		    	<div class="modal-body"></div> \
-		    <div class="modal-footer"></div> \
-		</div> \
-		';
-
         // build modal dom
-        var div = $(template);
+        var div = $(MODAL_TEMPLATE);
 
         var title = "";
         if (config.title)
@@ -214,6 +198,15 @@
             $(div).find('.modal-footer').append("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
         }
 
+        if (typeof(config.footer) === "undefined") {
+            config.footer = true;
+        }
+
+        if (!config.footer)
+        {
+            $(div).find(".modal-footer").remove();
+        }
+
         // set up modal
         setupFunction.call(self, div, function() {
 
@@ -221,6 +214,8 @@
             $(div).modal();
 
         });
+
+        return $(div);
     };
 
 })();

@@ -16,7 +16,7 @@
                     {{each(key, button) buttons}}
                     {{if button.align == "left"}}
 
-                    <button class="btn btn-large list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                    <button class="btn btn-large list-button-${key} {{if !button.buttons}}list-button-action-${key}{{/if}}{{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                     {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                     ${button.title}
                     {{if button.buttons}}
@@ -31,7 +31,7 @@
                         <li class="divider"></li>
                         {{else}}
                         <li>
-                            <a href="#" class="list-button-${childButton.key}">
+                            <a href="#" class="list-button-${childButton.key} list-button-action-${key}">
                                 {{if childButton.iconClass}}<i class="${childButton.iconClass}"></i>{{/if}}
                                 ${childButton.title}
                             </a>
@@ -50,7 +50,7 @@
                     {{each(i, button) buttons}}
                     {{if button.align == "right" || !button.align}}
 
-                    <button class="btn btn-large list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                    <button class="btn btn-large list-button-${key} {{if !button.buttons}}list-button-action-${key}{{/if}}{{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                     {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                     ${button.title}
                     {{if button.buttons}}
@@ -65,7 +65,7 @@
                         <li class="divider"></li>
                         {{else}}
                         <li>
-                            <a href="#" class="list-button-${childButton.key}">
+                            <a href="#" class="list-button-${childButton.key} list-button-action-${key}">
                                 {{if childButton.iconClass}}<i class="${childButton.iconClass}"></i>{{/if}}
                                 ${childButton.title}
                             </a>

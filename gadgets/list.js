@@ -34,8 +34,18 @@
 
         TEMPLATE: html,
 
-        selectedItems: function() {
-            return this._observable("selectedItems", arguments,{});
+        selectedItems: function(array) {
+
+            if (array) {
+                this.observable("selectedItems").set(array);
+            }
+
+            var selectedItems = this.observable("selectedItems").get();
+            if (!selectedItems) {
+                selectedItems = [];
+            }
+
+            return selectedItems;
         },
 
         clearSelectedItems: function() {
@@ -71,149 +81,37 @@
             }
         },
 
-        onSelectedItems: function() {
-            var self = this;
-            var toolbarName = self.subscription == 'list' ? 'toolbar' : self.subscription + "-toolbar";
-            var toolbar = self._observable(toolbarName,[]);
-            /*
-             if (toolbar && toolbar.items) {
-             var displayedItemCounter = 0;
-             $.each(toolbar.items, function(key, item) {
-
-             item["visibility"] = item.requiredAuthorities ? false : true;
-
-             if (item.requiredAuthorities) {
-             var selectedItemsRequiredAuthorities = [];
-             $.each(self.selectedItems(),function(i,v) {
-             if ($.isArray(item.requiredAuthorities)) {
-             $.each(item.requiredAuthorities,function() {
-             var permissioned = this['permissioned'] ? this['permissioned'] : v;
-             if ($.isFunction(permissioned)) {
-             permissioned = permissioned(v);
-             }
-             selectedItemsRequiredAuthorities.push({
-             "permissioned" : permissioned,
-             "permissions" : this['permissions']
-             });
-             })
-             } else {
-             var permissioned = item.requiredAuthorities['permissioned'] ? item.requiredAuthorities['permissioned'] : v;
-             if ($.isFunction(permissioned)) {
-             permissioned = permissioned(v);
-             }
-             selectedItemsRequiredAuthorities.push({
-             "permissioned" : item.requiredAuthorities['permissioned'] ? item.requiredAuthorities['permissioned'] : v,
-             "permissions" : item.requiredAuthorities['permissions']
-             });
-             }
-             });
-             self.checkAuthorities(function(isEntitled) {
-             if (isEntitled) {
-             if (item.selection && item.selection == 'single') {
-             if (self.itemsCount(self.selectedItems()) == 1) {
-             $('#toolbar-item-' + key).show();
-             displayedItemCounter ++;
-             }
-             }
-             if (item.selection && item.selection == 'multiple') {
-             if (self.itemsCount(self.selectedItems()) >= 1) {
-             $('#toolbar-item-' + key).show();
-             displayedItemCounter ++;
-             }
-             }
-             }
-             item["visibility"] = isEntitled;
-             }, selectedItemsRequiredAuthorities);
-             }
-
-             if (item.selection && item.selection == 'single') {
-             if (self.itemsCount(self.selectedItems()) == 1 && item["visibility"]) {
-             $('#toolbar-item-'+key).show();
-             displayedItemCounter ++;
-             } else {
-             $('#toolbar-item-'+key).hide();
-             }
-             }
-             if (item.selection && item.selection == 'multiple') {
-             if (self.itemsCount(self.selectedItems()) >= 1 && item["visibility"]) {
-             $('#toolbar-item-'+key).show();
-             displayedItemCounter ++;
-             } else {
-             $('#toolbar-item-'+key).hide();
-             }
-             }
-             });
-
-             var options = $.browser.msie ? {
-             "left" : "-270px",
-             "width" : "225px",
-             "z-index" : "999",
-             "border" : "1px solid #25333c",
-             "display" : "block",
-             "position" : "absolute"
-             } : {
-             "left" : "-280px",
-             "width" : "225px",
-             "z-index" : "999",
-             "border": "1px solid #25333c",
-             "border-radius": "5px 5px 5px 5px",
-             "box-shadow": "0 0 5px rgba(0, 0, 0, 0.5)"
-             };
-
-             $('.list-toolbar').css(options).stickySidebar();
-
-             if (displayedItemCounter == 0) {
-             $('.list-toolbar').css({
-             "border": "0px none"
-             });
-             }
-             }
-             */
-        },
-
         processActions: function(model) {
 
-            /*
-             var self = this;
-             if (list.actions) {
-             var toolbarName = self.subscription == 'list' ? 'toolbar' : self.subscription + "-toolbar";
-             var toolbar = this._observable(toolbarName,[]);
-             for (var action in list.actions) {
-             var actionObject = list.actions[action];
-             var actionTitle = actionObject.title;
-             var actionClick = actionObject.click;
-             var actionIcon = actionObject.icon ? actionObject.icon : "";
-             var actionSelection = actionObject.selection ? actionObject.selection : 'single';
-             // CREATE
-             var button = {
-             "id": action,
-             "title": actionTitle,
-             "icon": actionIcon,
-             "selection" : actionSelection,
-             "click": function(actionClick) {
-             return function(event) {
-             if (this.selection == 'single') {
-             if (self.itemsCount(self.selectedItems()) == 1) {
-             actionClick.call(self, self.firstItem(self.selectedItems()), self.oTable);
-             }
-             } else if (this.selection == 'multiple') {
-             if (self.itemsCount(self.selectedItems()) >= 1) {
-             actionClick.call(self, self.selectedItems(), self.oTable);
-             }
-             } else if (this.selection == 'none') {
-             actionClick.call(self, self.oTable);
-             }
-             };
-             }(actionClick)
-             };
-             if (actionObject.requiredAuthorities) {
-             button.requiredAuthorities = actionObject.requiredAuthorities;
-             }
-             toolbar.items[button.id] = button;
-             }
-             this.observable(toolbarName).set( toolbar);
-             }
-             */
+            var self = this;
+
+            // for each button, bind to button handler
+            for (var i = 0; i < model.buttons.length; i++)
+            {
+                var button = model.buttons[i];
+
+                $(".list-button-action-" + button.key).off();
+
+                $(".list-button-action-" + button.key).click(function(b) {
+                    return function(event) {
+                        self.handleButtonClick.call(self, b);
+                    };
+                }(button));
+
+                for (var j = 0; j < button.buttons.length; j++)
+                {
+                    var button2 = button.buttons[j];
+
+                    $(".list-button-action-" + button2.key).off();
+
+                    $(".list-button-action-" + button2.key).click(function(b) {
+                        return function(event) {
+                            self.handleButtonClick.call(self, b);
+                        };
+                    }(button2));
+
+                }
+            }
         },
 
         prepareModel: function(el, model, callback)
@@ -273,6 +171,7 @@
                     "sSearch": "Filter:"
                 }
             };
+
             // bootstrap
             //tableConfig["sDom"] = "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>";
             /*
@@ -305,7 +204,7 @@
                     "bSearchable": false,
                     "bSortable": false,
                     "sWidth": "10px",
-                    "sTitle": "<input type='checkbox' class='table-overall-checkbox'/>"
+                    "sTitle": "<input type='checkbox' class='list-check-box-all'/>"
                 });
             }
             if (model.icon)
@@ -496,32 +395,46 @@
             }
 
             // select/unselect-all checkbox
-            $('.table-overall-checkbox',$(el)).click(function() {
+            $(el).find(".list-check-box-all").click(function() {
+
                 if ($(this).attr("checked")) {
-                    $(".gitanaselectbox").each(function() {
+                    $(el).find(".list-check-box").each(function() {
                         if (! $(this).attr("checked")) {
-                            $(this).attr("checked",true);
+                            $(this).attr("checked", true);
                         }
                     });
                     self.clearSelectedItems();
-                    var allItems = {};
-                    /*
-                     $.each(map.map,function(key,val) {
-                     if( $("input:checkbox[gitanatargetobjectid='" + key +"']").length > 0) {
-                     allItems[key] = Chain(val);
-                     }
-                     });
-                     */
-                    self.selectedItems(allItems);
-                    self.onSelectedItems();
+
+                    var items = [];
+                    $(el).find("input:checkbox[list-target-object-id]").each(function() {
+
+                        var itemId = $(this).attr("list-target-object-id");
+
+                        // find the item row
+                        var item = null;
+                        for (var i = 0; i < model.rows.length; i++)
+                        {
+                            if (model.rows[i].id == itemId)
+                            {
+                                item = model.rows[i];
+                                break;
+                            }
+                        }
+                        items.push(item);
+                    });
+                    self.selectedItems(items);
+
+                    self.handleChangeSelectedItems();
                 } else {
-                    $(".gitanaselectbox").each(function() {
+
+                    $(el).find(".list-check-box").each(function() {
                         if ($(this).attr("checked")) {
-                            $(this).attr("checked",false);
+                            $(this).attr("checked", false);
                         }
                     });
                     self.clearSelectedItems();
-                    self.onSelectedItems();
+
+                    self.handleChangeSelectedItems();
                 }
             });
 
@@ -606,7 +519,7 @@
                 if (readOnly) {
                     data["" + counter] = "";
                 } else {
-                    data["" + counter] = "<input type='checkbox' class='gitanaselectbox' gitanatargetobjectid='" + id + "'>";
+                    data["" + counter] = "<input type='checkbox' class='list-check-box' list-target-object-id='" + id + "'>";
                 }
                 counter++;
             }
@@ -688,7 +601,6 @@
 
         handleInitComplete: function(el, model, table, oSettings, json)
         {
-            // TODO: anything?
             table.fnAdjustColumnSizing();
             table.fnDraw();
 
@@ -701,44 +613,55 @@
         {
             var self = this;
 
-            // mouse over
+            // remove any previously registered click handlers
+            $(nRow).find(".list-check-box").off();
 
-            /*
-             $(nRow).mouseover(function() {
+            // center the checkbox
+            $(nRow).find(".list-check-box").parent().css("vertical-align", "middle");
 
-             // clear other selected rows
-             $(".row_selected").removeClass("row_selected");
+            // individual checkbox selections
+            $(nRow).find(".list-check-box").click(function(el, model, table, nRow, aData, iDisplayIndex) {
 
-             // mark ourselves selected
-             $(this).addClass("row_selected");
+                return function(event)
+                {
+                    var targetObjectId = $(this).attr("list-target-object-id");
 
-             });
-             */
+                    // find the row item
+                    var item = null;
+                    for (var i = 0; i < model.rows.length; i++)
+                    {
+                        if (model.rows[i].id == targetObjectId)
+                        {
+                            item = model.rows[i];
+                            break;
+                        }
+                    }
 
-            /*
-             // bind the checkbox selections for this row
-             $(nRow).find(".gitanaselectbox").click(function(event) {
+                    // add or remove ourselves
+                    var currentSelectedItems = self.selectedItems();
+                    if ($(this).attr("checked"))
+                    {
+                        currentSelectedItems.push(item);
+                    }
+                    else
+                    {
+                        for (var i = 0; i < currentSelectedItems.length; i++)
+                        {
+                            if (currentSelectedItems[i].id == targetObjectId)
+                            {
+                                currentSelectedItems.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
 
-             var targetObjectId = $(this).attr("gitanatargetobjectid");
-             var item = map.get(targetObjectId);
-             var chainedItem = Chain(item);
+                    // set the selected items
+                    self.selectedItems(currentSelectedItems);
 
-             var currentSelectedItems = self.selectedItems();
-
-             if ($(this).attr("checked")) {
-             currentSelectedItems[targetObjectId] = chainedItem;
-             self.selectedItems(currentSelectedItems);
-             } else {
-             if (currentSelectedItems[targetObjectId]) {
-             delete currentSelectedItems[targetObjectId];
-             };
-             self.selectedItems(currentSelectedItems);
-             }
-
-             // Enable or disable buttons
-             self.onSelectedItems();
-             });
-             */
+                    // update button state
+                    self.handleChangeSelectedItems();
+                };
+            }(el, model, table, nRow, aData, iDisplayIndex));
 
             // callout to extension point
             this.rowCallback(el, model, table, nRow, aData, iDisplayIndex)
@@ -794,6 +717,15 @@
             return value;
         },
 
+        handleButtonClick: function(button)
+        {
+            this.clickButton(button.key, button);
+        },
+
+        handleChangeSelectedItems: function()
+        {
+            this.changeSelectedItems();
+        },
 
 
 
@@ -863,12 +795,28 @@
 
         /**
          * EXTENSION POINT
+         */
+        clickButton: function(key, button)
+        {
+
+        },
+
+        /**
+         * EXTENSION POINT
          *
          * Determines the value to map into a column for a given row/item.
          **/
         columnValue: function(row, item)
         {
             return null;
+        },
+
+        /**
+         * EXTENSION POINT
+         */
+        changeSelectedItems: function()
+        {
+
         },
 
 
@@ -1014,11 +962,13 @@
                     }
 
                     var aaData = [];
+                    var rows = [];
 
                     for (var k in resultMap) {
                         if (_.has(resultMap, k) && !_.isFunction(resultMap[k])) {
                             var obj = resultMap[k];
                             obj["id"] = obj["_doc"];
+                            rows.push(obj);
                             aaData.push(self.toDataTableRow(model, obj));
                         }
                     }
@@ -1027,6 +977,9 @@
                         "iTotalRecords": totalRows,
                         "iTotalDisplayRecords": size
                     };
+
+                    // set onto model
+                    model.rows = rows;
 
                     callback.call(self, aaData, attrs);
                 });
@@ -1058,6 +1011,9 @@
                         "iTotalRecords": results.totalRows,
                         "iTotalDisplayRecords": results.size
                     };
+
+                    // set onto model
+                    model.rows = results.rows;
 
                     callback.call(self, aaData, attrs);
                 });

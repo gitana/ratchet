@@ -200,5 +200,34 @@
         return null;
     };
 
+    Ratchet.removeFromArray = function(array, value, all)
+    {
+        for (var i = 0; i < array.length; i++)
+        {
+            if (array[i] == value) {
+                array.splice(i, 1);
+                i--;
+
+                if (!all) {
+                    break;
+                }
+            }
+        }
+
+        return array;
+    };
+
+    Ratchet.Utils.substituteTokens = function(link, tokens)
+    {
+        var text = link;
+
+        for (var tokenId in tokens)
+        {
+            var tokenValue = tokens[tokenId];
+            text = text.replace("{" + tokenId + "}", tokenValue);
+        }
+
+        return text;
+    };
 
 })(window);

@@ -1,18 +1,5 @@
 (function() {
 
-    Ratchet.Utils.substituteTokens = function(link, tokens)
-    {
-        var text = link;
-
-        for (var tokenId in tokens)
-        {
-            var tokenValue = tokens[tokenId];
-            text = text.replace("{" + tokenId + "}", tokenValue);
-        }
-
-        return text;
-    };
-
     Ratchet.blockingModal = null;
     Ratchet.block = function(title, message)
     {
@@ -55,6 +42,7 @@
         }
     };
 
+    /*
     Ratchet.startModalGadget = function(options, overrides, beforeRatchetCallback, afterRatchetCallback)
     {
         var self = this;
@@ -143,6 +131,7 @@
             }
         });
     };
+    */
 
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {
@@ -174,6 +163,63 @@
                 });
 
             }
+        });
+    };
+
+    Ratchet.showModal = function(config, setupFunction)
+    {
+        var self = this;
+
+        if (!config) {
+            config = {};
+        }
+
+        //Ratchet.unblock();
+
+        if (!setupFunction)
+        {
+            setupFunction = function(div, callback) {
+                callback(null);
+            };
+        }
+
+        var template = ' \
+			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
+		    	<div class="modal-header"> \
+		        	<h3 class="modal-title"></h3> \
+		    	</div> \
+		    	<div class="modal-body"></div> \
+		    <div class="modal-footer"></div> \
+		</div> \
+		';
+
+        // build modal dom
+        var div = $(template);
+
+        var title = "";
+        if (config.title)
+        {
+            title = config.title;
+        }
+
+        // set up title
+        $(div).find('.modal-title').html(config.title);
+
+        // set up footer
+        $(div).find('.modal-footer').html("");
+
+        // auto-add cancel button
+        if (config.cancel)
+        {
+            $(div).find('.modal-footer').append("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
+        }
+
+        // set up modal
+        setupFunction.call(self, div, function() {
+
+            // launch modal
+            $(div).modal();
+
         });
     };
 

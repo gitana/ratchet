@@ -349,11 +349,11 @@
         // we're in a browser, so we support specifying "data-config" attributes on the script tag
         eachReverse(scripts(), function (script) {
 
-            console.log("Found data-config attribute on script tag, loading config");
-
             // look for a data-config attribute
             var dataConfig = script.getAttribute("data-config");
-            if (dataConfig) {
+            if (dataConfig)
+            {
+                console.log("Found data-config attribute on script tag, loading config");
 
                 // found it, load config
                 $.ajax({

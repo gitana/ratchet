@@ -162,9 +162,9 @@
                 <file name="license.txt"/>
             </filelist>
             <filelist dir="${prep.dir}/js">
+                <file name="actions/Actions.js"/>
                 <file name="actions/AbstractAction.js"/>
-                <file name="actions/AbstractActionEvaluator.js"/>
-                <file name="actions/ActionRegistry.js"/>
+                <file name="actions/ConsoleLogAction.js"/>
             </filelist>
         </concat>
 
@@ -175,6 +175,8 @@
             </filelist>
             <filelist dir="${prep.dir}/js">
                 <file name="config/Configuration.js"/>
+                <file name="config/AbstractConfigurationEvaluator.js"/>
+                <file name="config/TypeConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 
@@ -286,9 +288,13 @@
                 <file name="license.txt"/>
             </filelist>
             <filelist dir="${prep.dir}/js">
+
+                <!-- Required Base Classes -->
+                <file name="thirdparty/base.js"/>
+
+                <file name="actions/Actions.js"/>
                 <file name="actions/AbstractAction.js"/>
-                <file name="actions/AbstractActionEvaluator.js"/>
-                <file name="actions/ActionRegistry.js"/>
+                <file name="actions/ConsoleLogAction.js"/>
             </filelist>
         </concat>
 
@@ -298,7 +304,13 @@
                 <file name="license.txt"/>
             </filelist>
             <filelist dir="${prep.dir}/js">
-                <file name="config/ConfigRegistry.js"/>
+
+                <!-- Required Base Classes -->
+                <file name="thirdparty/base.js"/>
+
+                <file name="config/Configuration.js"/>
+                <file name="config/AbstractConfigurationEvaluator.js"/>
+                <file name="config/TypeConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 

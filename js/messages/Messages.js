@@ -22,7 +22,7 @@
             {
                 // see if we have an exact locale match
                 var exactMatches = Ratchet.Configuration.evaluate({"locale": locale});
-                if (exactMatches && !Ratchet.isEmptyObject(exactMatches))
+                if (exactMatches && exactMatches.messages)
                 {
                     Ratchet.merge(exactMatches, config);
                     return config.messages;
@@ -34,7 +34,7 @@
                 {
                     var language = locale.substring(0,x);
                     var languageMatches = Ratchet.Configuration.evaluate({"locale": language});
-                    if (languageMatches && !Ratchet.isEmptyObject(languageMatches))
+                    if (languageMatches && languageMatches.messages)
                     {
                         Ratchet.merge(languageMatches, config);
                         return config.messages;
@@ -46,7 +46,7 @@
             // either way, hand back the default locale matches
 
             var defaultMatches = Ratchet.Configuration.evaluate({"locale": this.DEFAULT_LOCALE});
-            if (defaultMatches && !Ratchet.isEmptyObject(defaultMatches))
+            if (defaultMatches && defaultMatches.messages)
             {
                 Ratchet.merge(defaultMatches, config);
             }

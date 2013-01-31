@@ -46,7 +46,7 @@
                 "checkbox": true,
                 "icon": true,
                 "buttons": [{
-                    "key": "select",
+                    "key": "multi-documents-select",
                     "title": "Selected..."
                 }],
                 "columns": [{
@@ -92,12 +92,12 @@
         {
             this.base(el, model, function() {
 
-                // if the "select" button is part of the button set
+                // if the "multi-documents-select" button is part of the button set
                 var selectButton = null;
                 if (model.buttons) {
                     for (var i = 0; i < model.buttons.length; i++) {
                         var button = model.buttons[i];
-                        if (button.key === "select") {
+                        if (button.key === "multi-documents-select") {
                             selectButton = button;
                         }
                     }
@@ -152,7 +152,7 @@
         {
             this.base(el, model, context, function() {
 
-                $(".list-button-select").addClass("disabled");
+                $(".list-button-multi-documents-select").addClass("disabled");
 
             });
         },
@@ -164,11 +164,11 @@
             var selectedItems = this.selectedItems();
 
             // either enable or disable the selected... buttons
-            $(".list-button-select").addClass("disabled");
+            $(".list-button-multi-documents-select").addClass("disabled");
 
             // if we have selected items, then enable selected... buttons
             if (selectedItems.length > 0) {
-                $(".list-button-select").removeClass("disabled");
+                $(".list-button-multi-documents-select").removeClass("disabled");
             }
         },
 

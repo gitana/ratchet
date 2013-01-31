@@ -98,18 +98,21 @@
                     };
                 }(button));
 
-                for (var j = 0; j < button.buttons.length; j++)
+                if (button.buttons)
                 {
-                    var button2 = button.buttons[j];
+                    for (var j = 0; j < button.buttons.length; j++)
+                    {
+                        var button2 = button.buttons[j];
 
-                    $(".list-button-action-" + button2.key).off();
+                        $(".list-button-action-" + button2.key).off();
 
-                    $(".list-button-action-" + button2.key).click(function(b) {
-                        return function(event) {
-                            self.handleButtonClick.call(self, b);
-                        };
-                    }(button2));
+                        $(".list-button-action-" + button2.key).click(function(b) {
+                            return function(event) {
+                                self.handleButtonClick.call(self, b);
+                            };
+                        }(button2));
 
+                    }
                 }
             }
         },

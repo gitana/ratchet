@@ -1,7 +1,7 @@
 (function() {
 
     var MODAL_TEMPLATE = ' \
-			<div class="modal fade in out" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
+			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
 		    	<div class="modal-header"> \
 		        	<h3 class="modal-title"></h3> \
 		    	</div> \
@@ -171,7 +171,7 @@
         });
     };
 
-    Ratchet.showModal = function(config, setupFunction, callback)
+    Ratchet.showModal = function(config, setupFunction)
     {
         var self = this;
 
@@ -219,16 +219,18 @@
         }
 
         // set up modal
-        setupFunction.call(self, div, function(err, data) {
+        setupFunction.call(self, div, function(afterShownCallback) {
 
-            // launch modal
-            $(div).modal();
-
-            if (callback) {
+            if (afterShownCallback) {
                 $(div).on("shown", function() {
-                    callback(err, data);
+                    afterShownCallback();
                 });
             }
+
+            // launch modal
+            $(div).modal({
+                "keyboard": true
+            });
 
         });
 

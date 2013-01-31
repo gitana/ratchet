@@ -260,20 +260,17 @@
         {
             if (isArray(source))
             {
-                if (!isArray(target))
+                if (isArray(target))
                 {
-                    if (isArray(target))
-                    {
-                        // merge array elements
-                        $.each(source, function(index) {
-                            target.push(copyOf(source[index]));
-                        });
-                    }
-                    else
-                    {
-                        // something is already in the target that isn't an ARRAY
-                        // skip
-                    }
+                    // merge array elements
+                    $.each(source, function(index) {
+                        target.push(copyOf(source[index]));
+                    });
+                }
+                else
+                {
+                    // something is already in the target that isn't an ARRAY
+                    // skip
                 }
             }
             else if (isObject(source))

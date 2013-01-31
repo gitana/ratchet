@@ -1,7 +1,7 @@
 (function() {
 
     var MODAL_TEMPLATE = ' \
-			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
+			<div class="modal fade in out" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
 		    	<div class="modal-header"> \
 		        	<h3 class="modal-title"></h3> \
 		    	</div> \
@@ -160,7 +160,18 @@
         });
     };
 
-    Ratchet.showModal = function(config, setupFunction)
+    Ratchet.showModalMessage = function(title, message)
+    {
+        Ratchet.showModal({
+            "title": title,
+            "cancel": true
+        }, function(div) {
+            $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
+            $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+        });
+    };
+
+    Ratchet.showModal = function(config, setupFunction, callback)
     {
         var self = this;
 
@@ -208,10 +219,16 @@
         }
 
         // set up modal
-        setupFunction.call(self, div, function() {
+        setupFunction.call(self, div, function(err, data) {
 
             // launch modal
             $(div).modal();
+
+            if (callback) {
+                $(div).on("shown", function() {
+                    callback(err, data);
+                });
+            }
 
         });
 

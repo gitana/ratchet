@@ -9,10 +9,12 @@
 
         var actions = Ratchet.Actions;
 
-        actions.execute("test", {
+        actions.execute("test", null, {
             "booya": "shakka"
-        }, function() {
+        }, function(err, data) {
             equal(Ratchet.___test.booya, "shakka", "Test action fired properly");
+            ok(Ratchet.isUndefined(err));
+            equal(data.success, true, "Success was true");
         });
 
         // all done

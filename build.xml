@@ -177,6 +177,7 @@
                 <file name="config/Configuration.js"/>
                 <file name="config/AbstractConfigurationEvaluator.js"/>
                 <file name="config/TypeConfigurationEvaluator.js"/>
+                <file name="config/ActionGroupConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 
@@ -311,6 +312,7 @@
                 <file name="config/Configuration.js"/>
                 <file name="config/AbstractConfigurationEvaluator.js"/>
                 <file name="config/TypeConfigurationEvaluator.js"/>
+                <file name="config/ActionGroupConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 

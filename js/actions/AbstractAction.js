@@ -17,7 +17,7 @@
             this.toArray = function(data)
             {
                 var array = [];
-                if (typeof(data) == "array") {
+                if (Ratchet.isArray(data)) {
                     array = data;
                 } else {
                     array.push(data);
@@ -30,11 +30,12 @@
         /**
          * EXTENSION POINT
          *
+         * @param config
          * @param data
-         * @param callback
+         * @param callback signature is (err, data)
          * @return {Boolean}
          */
-        execute: function(data, callback)
+        execute: function(config, data, callback)
         {
             callback();
         }

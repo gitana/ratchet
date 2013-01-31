@@ -13,9 +13,10 @@
             var gadget = require("ratchet-gadgets/list");
             var jQuery = require("jquery");
 
-            var ActionRegistry = require("ratchet-gadgets/action/registry");
+            var Configuration = require("ratchet-config/ratchet-config");
+            var Actions = require("ratchet-actions/ratchet-actions");
 
-            factory(Ratchet, gadget, jQuery, ActionRegistry);
+            factory(Ratchet, gadget, jQuery, Configuration, Actions);
 
             return Ratchet;
         });
@@ -23,12 +24,14 @@
     else
     {
         var gadget = Ratchet.GadgetRegistry.registry["list"][0];
-        var ActionRegistry = Ratchet.ActionRegistry;
 
-        return factory(root.Ratchet, gadget, root.$, ActionRegistry);
+        var Configuration = Ratchet.Configuration;
+        var Actions = Ratchet.Actions;
+
+        return factory(root.Ratchet, gadget, root.$, Configuration, Actions);
     }
 
-}(this, function(Ratchet, gadget, $, ActionRegistry) {
+}(this, function(Ratchet, gadget, $, Configuration, Actions) {
 
     Ratchet.GadgetRegistry.register("doclist", gadget.extend({
 
@@ -37,7 +40,8 @@
 
             var self = this;
 
-            this.enableRuntimeController = false;
+            //this.enableRuntimeController = false;
+
             this.defaultConfig = {
                 "checkbox": true,
                 "icon": true,
@@ -65,46 +69,65 @@
                 }
             };
 
-            this._clickAction = function(registryId, actionId, data, callback)
+            this._clickAction = function(actionGroupId, actionId, data, callback)
             {
-                // find the action and optional evaluator
-                var action = ActionRegistry.findAction(registryId, actionId);
-                if (!action)
+                // look up the action configuration
+                var actionConfig = null;
+                var json = Configuration.evaluate({"action-group": actionGroupId});
+                if (json.actions)
                 {
-                    throw new Error("Missing action for registry id: " + registryId + " and action id: " + actionId);
-                    return;
+                    actionConfig = json.actions[actionId];
                 }
 
-                var execute = function(action, data)
-                {
-                    action.execute(data, function() {
-                        console.log("Completed Execution!");
-                    });
-                };
-
-                var evaluator = ActionRegistry.findEvaluator(registryId, actionId);
-                if (!evaluator) {
-                    evaluator.evaluate(registryId, data, function(valid) {
-
-                        if (!valid) {
-                            throw new Error("The action for registryId: " + registryId + " and action id: " + actionId + " evaluated to false, cannot proceed");
-                            return;
-                        }
-
-                        execute(action, data);
-                    })
-                }
-                else
-                {
-                    // no evaluator, assume okay to execute
-                    execute(action, data);
-                }
+                // execute the action
+                Actions.execute(actionId, actionConfig, data, function(err, result) {
+                    if (callback) {
+                        callback(err, result);
+                    }
+                });
             }
         },
 
         prepareModel: function(el, model, callback)
         {
             this.base(el, model, function() {
+
+                // if the "select" button is part of the button set
+                var selectButton = null;
+                if (model.buttons) {
+                    for (var i = 0; i < model.buttons.length; i++) {
+                        var button = model.buttons[i];
+                        if (button.key === "select") {
+                            selectButton = button;
+                        }
+                    }
+                }
+
+                if (selectButton) {
+
+                    // load actions from the "multi-documents" configuration
+                    var json = Configuration.evaluate({"action-group": "multi-documents"});
+                    if (json.actions) {
+                        $.each(json.actions, function(actionId, actionConfiguration) {
+
+                            // add a button to the "selected..." drop down
+                            if (!selectButton.buttons) {
+                                selectButton.buttons = [];
+                            }
+                            var title = actionConfiguration.title;
+                            if (!title) {
+                                title = "Unknown Action Title";
+                            }
+                            selectButton.buttons.push({
+                                "key": "multi-action-" + actionId,
+                                "title": title,
+                                "action": actionId,
+                                "actionGroup": "multi-documents",
+                                "iconClass": "icon-pencil"
+                            });
+                        });
+                    }
+                }
 
                 callback();
 
@@ -149,27 +172,34 @@
             }
         },
 
-        /**
-         * Handles the event for when the user clicks on an action to occur against multiple documents.
-         *
-         * @param key
-         * @param button
-         */
-        clickMultipleDocumentsAction: function(key, button)
+        clickButton: function(key, button)
         {
-            // selected items
-            var selectedItems = this.selectedItems();
+            var self = this;
 
-            this._clickAction("docListMultipleDocuments", key, selectedItems, function() {
-                console.log("clickMultipleDocumentsAction completed");
-            });
-        },
+            // handle clicks onto buttons that are automatically wired for actions
+            if (button.action && button.actionGroup)
+            {
+                var data = null;
 
-        clickSingleDocumentAction: function(key, item, button)
-        {
-            this._clickAction("docListSingleDocument", key, item, function() {
-                console.log("clickSingleDocumentAction completed");
-            });
+                if (button.actionGroup === "multi-documents")
+                {
+                    data = this.selectedItems();
+                }
+                else if (button.actionGroup === "single-document")
+                {
+                    // TODO: button item?
+                    data = null;
+                }
+
+                this._clickAction(button.actionGroup, button.action, data, function(err, data) {
+                    var message = "The action completed successfully";
+                    if (err) {
+                        message = JSON.stringify(err);
+                    }
+                    Ratchet.showModalMessage("Action Status", message);
+                });
+
+            }
         }
 
     }));

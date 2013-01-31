@@ -5,15 +5,21 @@
         /**
          * Logs data to console.
          *
+         * @param config
          * @param data
          * @param callback
          * @return {Boolean}
          */
-        execute: function(data, callback)
+        execute: function(config, data, callback)
         {
             Ratchet.___test = data;
 
-            callback();
+            var exists = false;
+            if (data) {
+                exists = true;
+            }
+
+            callback(null, {"success": exists});
         }
 
     }));

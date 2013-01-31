@@ -97,19 +97,36 @@
         }
     };
 
-    Ratchet.isArray = function(obj)
+    Ratchet.isArray = function(thing)
     {
-        return obj.push && obj.slice;
+        return thing.push && thing.slice;
     };
 
-    Ratchet.isUndefined = function(obj)
+    Ratchet.isUndefined = function(thing)
     {
-        return (typeof obj == "undefined");
+        return (typeof thing == "undefined");
     };
 
-    Ratchet.isEmpty = function(obj)
+    Ratchet.isEmpty = function(thing)
     {
-        return this.isUndefined(obj) || obj == null;
+        return this.isUndefined(thing) || thing == null;
+    };
+
+    Ratchet.isObject = function(thing)
+    {
+        return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
+    };
+
+    Ratchet.copyOf = function(thing)
+    {
+        var copy = thing;
+
+        if (Ratchet.isArray(thing) || Ratchet.isObject(thing))
+        {
+            copy = JSON.parse(JSON.stringify(thing));
+        }
+
+        return copy;
     };
 
     Ratchet.generateId = function()
@@ -200,6 +217,7 @@
         return null;
     };
 
+    /*
     Ratchet.removeFromArray = function(array, value, all)
     {
         for (var i = 0; i < array.length; i++)
@@ -216,6 +234,7 @@
 
         return array;
     };
+    */
 
     Ratchet.Utils.substituteTokens = function(link, tokens)
     {
@@ -228,6 +247,67 @@
         }
 
         return text;
+    };
+
+    Ratchet.Utils.merge = function(source, target)
+    {
+        var isArray = Ratchet.isArray;
+        var isObject = Ratchet.isObject;
+        var isUndefined = Ratchet.isUndefined;
+        var copyOf = Ratchet.copyOf;
+
+        var merge = function(source, target)
+        {
+            if (isArray(source))
+            {
+                if (!isArray(target))
+                {
+                    if (isArray(target))
+                    {
+                        // merge array elements
+                        $.each(source, function(index) {
+                            target.push(copyOf(source[index]));
+                        });
+                    }
+                    else
+                    {
+                        // something is already in the target that isn't an ARRAY
+                        // skip
+                    }
+                }
+            }
+            else if (isObject(source))
+            {
+                if (isObject(target))
+                {
+                    // merge object properties
+                    $.each(source, function(key) {
+
+                        if (isUndefined(target[key])) {
+                            target[key] = copyOf(source[key]);
+                        } else {
+                            target[key] = merge(source[key], target[key]);
+                        }
+
+                    });
+                }
+                else
+                {
+                    // something is already in the target that isn't an OBJECT
+                    // skip
+                }
+
+            }
+            else
+            {
+                // otherwise, it's a scalar, always overwrite
+                target = copyOf(source);
+            }
+
+            return target;
+        };
+
+        merge(source, target)
     };
 
 })(window);

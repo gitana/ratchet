@@ -5,11 +5,12 @@
         /**
          * Logs data to console.
          *
+         * @param config
          * @param data
          * @param callback
          * @return {Boolean}
          */
-        execute: function(data, callback)
+        execute: function(config, data, callback)
         {
             console.log(JSON.stringify(data));
 

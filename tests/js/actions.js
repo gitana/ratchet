@@ -13,7 +13,7 @@
             "booya": "shakka"
         }, function(err, data) {
             equal(Ratchet.___test.booya, "shakka", "Test action fired properly");
-            ok(Ratchet.isUndefined(err));
+            ok(Ratchet.isEmpty(err));
             equal(data.success, true, "Success was true");
         });
 

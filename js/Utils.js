@@ -112,6 +112,19 @@
         return this.isUndefined(thing) || thing == null;
     };
 
+    Ratchet.isEmptyObject = function(thing)
+    {
+        var empty = true;
+
+        for (var k in thing)
+        {
+            empty = false;
+            break;
+        }
+
+        return empty;
+    };
+
     Ratchet.isObject = function(thing)
     {
         return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
@@ -236,9 +249,9 @@
     };
     */
 
-    Ratchet.Utils.substituteTokens = function(link, tokens)
+    Ratchet.substituteTokens = function(original, tokens)
     {
-        var text = link;
+        var text = original;
 
         for (var tokenId in tokens)
         {
@@ -249,7 +262,7 @@
         return text;
     };
 
-    Ratchet.Utils.merge = function(source, target)
+    Ratchet.merge = function(source, target)
     {
         var isArray = Ratchet.isArray;
         var isObject = Ratchet.isObject;

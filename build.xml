@@ -178,9 +178,23 @@
                 <file name="config/AbstractConfigurationEvaluator.js"/>
                 <file name="config/TypeConfigurationEvaluator.js"/>
                 <file name="config/ActionGroupConfigurationEvaluator.js"/>
+                <file name="config/LocaleConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 
+        <!-- Standalone: "ratchet-messages" -->
+        <concat destfile="${package.dir}/js/${appkey}-messages.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+
+                <!-- Required Classes -->
+                <file name="thirdparty/date.js"/>
+
+                <file name="messages/Messages.js"/>
+            </filelist>
+        </concat>
 
 
 
@@ -313,6 +327,21 @@
                 <file name="config/AbstractConfigurationEvaluator.js"/>
                 <file name="config/TypeConfigurationEvaluator.js"/>
                 <file name="config/ActionGroupConfigurationEvaluator.js"/>
+                <file name="config/LocaleConfigurationEvaluator.js"/>
+            </filelist>
+        </concat>
+
+        <!-- "ratchet-messages" -->
+        <concat destfile="${prep.dir}/js/${appkey}-messages-component.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+
+                <!-- Required Base Classes -->
+                <file name="thirdparty/base.js"/>
+
+                <file name="messages/Messages.js"/>
             </filelist>
         </concat>
 
@@ -594,6 +623,30 @@
             <param name="dependencies" value="['ratchet']" />
         </antcall>
 
+
+        <!-- "ratchet-messages" -->
+        <mkdir dir="${package.dir}/components/ratchet-messages"/>
+        <copy file="${project.dir}/components/ratchet-messages/component.json.txt" tofile="${package.dir}/components/ratchet-messages/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+        <copy todir="${package.dir}/components/ratchet-messages">
+            <fileset dir="${project.dir}/components/ratchet-messages">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-messages-component.js"/>
+            <param name="outputFile" value="${package.dir}/components/ratchet-messages/${appkey}-messages.js"/>
+            <param name="name" value="ratchet-messages" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet']" />
+        </antcall>
 
 
     </target>    

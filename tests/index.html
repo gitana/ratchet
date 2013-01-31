@@ -7,12 +7,48 @@
     <meta name="description" content="Ratchet QUnit Test Suite."/>
     <meta name="author" content="Gitana Software Inc."/>
     <link rel="icon" type="image/x-icon" href="../favicon.ico"/>
-    <script type="text/javascript" src="qunit/qunit.js">
-    </script>
-    <script type="text/javascript" src="../lib/jquery-latest.min.js">
-    </script>
+    <script type="text/javascript" src="qunit/qunit.js"></script>
+    <link type="text/css" href="qunit/qunit.css" rel="stylesheet"/>
+    <script type="text/javascript" src="../lib/jquery-latest.min.js"></script>
 
-    <!-- TODO -->
+    <!-- START_RATCHET_JAVASCRIPT -->
+    <!-- third party -->
+    <script type="text/javascript" src="../js/thirdparty/base.js"></script>
+    <script type="text/javascript" src="../js/thirdparty/json2.js"></script>
+    <script type="text/javascript" src="../js/thirdparty/jquery.history.js"></script>
+    <script type="text/javascript" src="../js/thirdparty/form2object.js"></script>
+    <!-- ratchet -->
+    <script type="text/javascript" src="../js/Ratchet.js"></script>
+    <script type="text/javascript" src="../js/Utils.js"></script>
+    <script type="text/javascript" src="../js/Observable.js"></script>
+    <script type="text/javascript" src="../js/Observables.js"></script>
+    <script type="text/javascript" src="../js/ScopedObservables.js"></script>
+    <script type="text/javascript" src="../js/RenderContext.js"></script>
+    <script type="text/javascript" src="../js/Gadget.js"></script>
+    <script type="text/javascript" src="../js/GadgetRegistry.js"></script>
+    <script type="text/javascript" src="../js/TemplateEngineRegistry.js"></script>
+    <script type="text/javascript" src="../js/BaseTemplateEngine.js"></script>
+    <script type="text/javascript" src="../js/jQueryAdapter.js"></script>
+    <script type="text/javascript" src="../js/DefaultRegionResolver.js"></script>
+    <!-- END_RATCHET_JAVASCRIPT -->
+
+    <!-- START_RATCHET_CONFIGURATION -->
+    <script type="text/javascript" src="../js/config/Configuration.js"></script>
+    <script type="text/javascript" src="../js/config/AbstractConfigurationEvaluator.js"></script>
+    <script type="text/javascript" src="../js/config/TypeConfigurationEvaluator.js"></script>
+    <!-- END_RATCHET_CONFIGURATION_JAVASCRIPT -->
+
+    <!-- START_RATCHET_ACTIONS -->
+    <script type="text/javascript" src="../js/actions/Actions.js"></script>
+    <script type="text/javascript" src="../js/actions/AbstractAction.js"></script>
+    <script type="text/javascript" src="../js/actions/ConsoleLogAction.js"></script>
+    <script type="text/javascript" src="../js/actions/TestAction.js"></script>
+    <!-- END_RATCHET_ACTIONS_JAVASCRIPT -->
+
+
+    <!-- tests -->
+    <script type="text/javascript" src="./js/config.js"></script>
+    <script type="text/javascript" src="./js/actions.js"></script>
 
 </head>
 <body>

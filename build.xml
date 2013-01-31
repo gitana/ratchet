@@ -123,7 +123,7 @@
             </filelist>
         </concat>
 
-        <!-- "ratchet-web" -->
+        <!-- Standalone: "ratchet-web" -->
         <concat destfile="${package.dir}/js/${appkey}-web.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
@@ -143,8 +143,7 @@
             </filelist>
         </concat>
 
-        <!-- TODO: should this include gitana.js? -->
-        <!-- "ratchet-gitana" -->
+        <!-- Standalone: "ratchet-gitana" -->
         <concat destfile="${package.dir}/js/${appkey}-gitana.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
@@ -157,6 +156,27 @@
             </filelist>
         </concat>
 
+        <!-- Standalone: "ratchet-actions" -->
+        <concat destfile="${package.dir}/js/${appkey}-actions.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+                <file name="actions/AbstractAction.js"/>
+                <file name="actions/AbstractActionEvaluator.js"/>
+                <file name="actions/ActionRegistry.js"/>
+            </filelist>
+        </concat>
+
+        <!-- Standalone: "ratchet-config" -->
+        <concat destfile="${package.dir}/js/${appkey}-config.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+                <file name="config/Configuration.js"/>
+            </filelist>
+        </concat>
 
 
 
@@ -257,6 +277,28 @@
                 <file name="gitana/AbstractGitanaAuthenticator.js"/>
                 <file name="gitana/GitanaImplicitFlowAuthenticator.js"/>
                 <file name="gitana/GitanaUsernamePasswordAuthenticator.js"/>
+            </filelist>
+        </concat>
+
+        <!-- "ratchet-actions" -->
+        <concat destfile="${prep.dir}/js/${appkey}-actions-component.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+                <file name="actions/AbstractAction.js"/>
+                <file name="actions/AbstractActionEvaluator.js"/>
+                <file name="actions/ActionRegistry.js"/>
+            </filelist>
+        </concat>
+
+        <!-- "ratchet-config" -->
+        <concat destfile="${prep.dir}/js/${appkey}-config-component.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/js">
+                <file name="config/ConfigRegistry.js"/>
             </filelist>
         </concat>
 
@@ -488,6 +530,58 @@
             </fileset>
         </copy>
 
+
+        <!-- "ratchet-actions" -->
+        <mkdir dir="${package.dir}/components/ratchet-actions"/>
+        <copy file="${project.dir}/components/ratchet-actions/component.json.txt" tofile="${package.dir}/components/ratchet-actions/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+        <copy todir="${package.dir}/components/ratchet-actions">
+            <fileset dir="${project.dir}/components/ratchet-actions">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-actions-component.js"/>
+            <param name="outputFile" value="${package.dir}/components/ratchet-actions/${appkey}-actions.js"/>
+            <param name="name" value="ratchet-actions" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet']" />
+        </antcall>
+
+
+        <!-- "ratchet-config" -->
+        <mkdir dir="${package.dir}/components/ratchet-config"/>
+        <copy file="${project.dir}/components/ratchet-config/component.json.txt" tofile="${package.dir}/components/ratchet-config/component.json" overwrite="true" filtering="true">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="/** VERSION **/" to="${version}"/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+        <copy todir="${package.dir}/components/ratchet-config">
+            <fileset dir="${project.dir}/components/ratchet-config">
+                <exclude name="**/.DS_Store/*"/>
+                <exclude name="**/.idea/*"/>
+                <exclude name="component.json.txt"/>
+            </fileset>
+        </copy>
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-config-component.js"/>
+            <param name="outputFile" value="${package.dir}/components/ratchet-config/${appkey}-config.js"/>
+            <param name="name" value="ratchet-config" />
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet']" />
+        </antcall>
+
+
+
     </target>    
     <!-- END: Package Web Components -->
     
@@ -507,6 +601,7 @@
         <include name="plugins/**/*"/>
         <include name="lib/**/*"/>
         <include name="examples/**/*"/>
+        <include name="tests/**/*"/>
         <include name="*.html"/>
         <include name="favicon.ico"/>
     </fileset>
@@ -515,11 +610,21 @@
         <copy todir="${local.docroot.basepath}/${appkey}">
             <fileset refid="ratchet-files"/>
         </copy>
+        <copy todir="${local.docroot.basepath}/${appkey}">
+            <fileset dir="${project.dir}/build/package">
+                <include name="components/**/*"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="full" depends="webserver-clean">
         <copy todir="${local.docroot.basepath}/${appkey}">
             <fileset refid="ratchet-files"/>
+        </copy>
+        <copy todir="${local.docroot.basepath}/${appkey}">
+            <fileset dir="${project.dir}/build/package">
+                <include name="components/**/*"/>
+            </fileset>
         </copy>
     </target>
 

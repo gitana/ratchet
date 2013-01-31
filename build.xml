@@ -645,7 +645,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet-messages/${appkey}-messages.js"/>
             <param name="name" value="ratchet-messages" />
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet']" />
+            <param name="dependencies" value="['ratchet', 'ratchet-config']" />
         </antcall>
 
 

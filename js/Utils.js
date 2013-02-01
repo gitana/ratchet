@@ -320,4 +320,56 @@
         merge(source, target)
     };
 
+    /**
+     * Parses an ISO8601 encoded date string to a JS date object.
+     *
+     * @param text
+     * @returns javascript date (or null if cannot parse)
+     */
+    Ratchet.parseISO8601 = function(text)
+    {
+        var regex = /^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(.\d+)?)?((?:[+-](\d{2}):(\d{2}))|Z)?)?$/;
+
+        var match = regex.exec(text);
+        var result = null;
+
+        if (match)
+        {
+            match.shift();
+            if (match[1])
+            {
+                // decrement since JS date months are 0-based
+                match[1]--;
+            }
+            if (match[6])
+            {
+                // JS date expects fractional seconds as milliseconds
+                match[6] *= 1000;
+            }
+
+            result = new Date(match[0]||1970, match[1]||0, match[2]||1, match[3]||0, match[4]||0, match[5]||0, match[6]||0);
+
+            var offset = 0;
+            var zoneSign = match[7] && match[7].charAt(0);
+            if (zoneSign != 'Z')
+            {
+                offset = ((match[8] || 0) * 60) + (Number(match[9]) || 0);
+                if (zoneSign != '-')
+                {
+                    offset *= -1;
+                }
+            }
+            if (zoneSign)
+            {
+                offset -= result.getTimezoneOffset();
+            }
+            if (offset)
+            {
+                result.setTime(result.getTime() + offset * 60000);
+            }
+        }
+
+        return result;
+    };
+
 })(window);

@@ -53,12 +53,6 @@
                     "key": "titleDescription",
                     "title": "Document"
                 }, {
-                    "key": "modifiedBy",
-                    "title": "Modified By"
-                }, {
-                    "key": "modifiedOn",
-                    "title": "Modified On"
-                }, {
                     "key": "actions",
                     "title": "Actions"
                 }],

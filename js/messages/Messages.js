@@ -183,8 +183,10 @@
                     var self = this;
 
                     if (Ratchet.isObject(format)) {
-
                         options = format;
+                    }
+
+                    if (!format) {
                         format = self.message("date-format.default");
                     }
 
@@ -229,7 +231,7 @@
                         var lastSunday = new Date(now.getTime());
                         lastSunday.previous().sunday();
                         var lastLastSunday = new Date(lastSunday.getTime());
-                        lastSunday.add(-7).days();
+                        lastLastSunday.add(-7).days();
                         var nextSunday = new Date(now.getTime());
                         nextSunday.next().sunday();
                         var nextNextSunday = new Date(nextSunday.getTime());
@@ -415,15 +417,12 @@
                         "isoUtcDateTime": self.message("date-format.isoUtcDateTime")
                     };
 
+                    var dayNames = [].concat(self.message("date-format.dayShortNames"), self.message("date-format.dayNames"));
+                    var monthNames = [].concat(self.message("date-format.monthShortNames"), self.message("date-format.monthNames"));
+
                     dateFormat.i18n = {
-                        dayNames: [
-                            self.message("date-format.dayShortNames"),
-                            self.message("date-format.dayNames")
-                        ],
-                        monthNames: [
-                            self.message("date-format.monthShortNames"),
-                            self.message("date-format.monthNames")
-                        ]
+                        dayNames: dayNames,
+                        monthNames: monthNames
                     };
 
                     return dateFormat(date, mask, utc);

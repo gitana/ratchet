@@ -340,6 +340,7 @@
 
                 <!-- Required Base Classes -->
                 <file name="thirdparty/base.js"/>
+                <file name="thirdparty/date.js"/>
 
                 <file name="messages/Messages.js"/>
             </filelist>

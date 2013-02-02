@@ -7,3 +7,20 @@
 {
 
 }
+
+.gadget.list .buttonbar .button-container
+{
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.gadget.list .buttonbar DIV.pull-right DIV.dropdown:last-child UL.dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+
+.gadget.list TD.actions
+{
+    vertical-align: middle;
+}

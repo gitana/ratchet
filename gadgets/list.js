@@ -216,7 +216,8 @@
                     "bVisible": true,
                     "bSearchable": false,
                     "bSortable": false,
-                    "sTitle": ""
+                    "sTitle": "",
+                    "sWidth": "70px"
                 });
             }
 
@@ -224,9 +225,12 @@
             if (model.columns)
             {
                 for (var i = 0; i < model.columns.length; i++) {
-                    var item = model.columns[i];
+                    var column = model.columns[i];
 
-                    var columnSortable = item.sortingExpression ? true : false;
+                    var columnSortable = true;
+                    if (!Ratchet.isEmpty(column.sort)) {
+                        columnSortable = column.sort;
+                    }
 
                     var config = {
                         "bVisible": true,
@@ -234,9 +238,12 @@
                         "bSortable": columnSortable
                     };
 
-                    if (model.columns[i].hidden) {
+                    if (column.hidden) {
                         config["bVisible"] = false;
                     }
+
+                    // custom column configuration hook
+                    self.handleConfigureColumn(column, config);
 
                     tableConfig["aoColumns"].push(config);
                 }
@@ -730,6 +737,13 @@
             this.changeSelectedItems();
         },
 
+        handleConfigureColumn: function(column, config)
+        {
+            this.configureColumn(column, config);
+        },
+
+
+
 
 
 
@@ -818,6 +832,16 @@
          * EXTENSION POINT
          */
         changeSelectedItems: function()
+        {
+
+        },
+
+        /**
+         * EXTENSION POINT
+         *
+         * @see http://www.datatables.net/usage/columns
+         */
+        configureColumn: function(column, config)
         {
 
         },

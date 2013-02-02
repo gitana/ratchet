@@ -103,6 +103,18 @@
             this.evaluatorInstances = {};
             this.evaluatorTypes = {};
 
+            this.subscriptions = {};
+
+            this.generateListenerId = function()
+            {
+                var uniqueId = 0;
+
+                return function()
+                {
+                    return "l-" + uniqueId++;
+                }
+            }();
+
             /**
              * Internal method for merging JSON.  Elements from the source are merged into the target.
              * The target is modified as the method runs.
@@ -247,6 +259,16 @@
             // TODO: if we find some kind of issue, we should report it right away and exclude it from our array
 
             this.blocks.push(block);
+
+            // fire any listeners
+            var listenerConfig = {};
+            if (block.evaluator) {
+                listenerConfig.evaluator = block.evaluator;
+            }
+            if (block.condition) {
+                listenerConfig.condition = block.condition;
+            }
+            this.triggerListeners(listenerConfig);
         },
 
         /**
@@ -311,7 +333,132 @@
             }
 
             return result;
+        },
+
+        /**
+         * Adds a listener to listen to changes in the configuration.
+         *
+         * @param config
+         * @param listenerFunction
+         */
+        addListener: function(config, listenerFunction)
+        {
+            var evaluator = config.evaluator;
+            var condition = config.condition;
+
+            var bindingKey = evaluator + "_" + condition;
+
+            var subs = this.subscriptions[bindingKey];
+            if (!subs)
+            {
+                subs = {};
+                this.subscriptions[bindingKey] = subs;
+            }
+
+            var listenerId = listenerFunction._lfid;
+            if (listenerId && subs[listenerId])
+            {
+                // the listener is already bound for the subscription
+            }
+            else
+            {
+                if (!listenerId)
+                {
+                    listenerId = this.generateListenerId();
+                    listenerFunction._lfid = listenerId;
+                }
+
+                subs[listenerId] = listenerFunction;
+            }
+        },
+
+        /**
+         * Removes a listener.
+         *
+         * @param config
+         * @param listenerFunction
+         */
+        removeListener: function(config, listenerFunction)
+        {
+            var evaluator = config.evaluator;
+            var condition = config.condition;
+
+
+            var bindingKey = evaluator + "_" + condition;
+
+            var listenerId = listenerFunction._lfid;
+            if (!listenerId)
+            {
+                // nothing to do, this listener is not bound
+            }
+            else
+            {
+                var subs = this.subscriptions[bindingKey];
+                if (subs && subs[listenerId])
+                {
+                    delete subs[listenerId];
+                }
+
+                if (Ratchet.isEmptyObject(subs))
+                {
+                    delete this.subscriptions[bindingKey];
+                }
+            }
+        },
+
+        /**
+         * Removes all listeners.
+         *
+         * @param config
+         */
+        removeAllListeners: function(config)
+        {
+            var evaluator = config.evaluator;
+            var condition = config.condition;
+
+            var bindingKey = evaluator + "_" + condition;
+
+            var subs = this.subscriptions[bindingKey];
+            if (subs)
+            {
+                for (var listenerId in subs)
+                {
+                    delete subs[listenerId];
+                }
+            }
+
+            if (Ratchet.isEmptyObject(subs))
+            {
+                delete this.subscriptions[bindingKey];
+            }
+        },
+
+        /**
+         * Triggers listeners.
+         *
+         * @param config
+         */
+        triggerListeners: function(config)
+        {
+            var evaluator = config.evaluator;
+            var condition = config.condition;
+
+            var bindingKey = evaluator + "_" + condition;
+
+            var subs = this.subscriptions[bindingKey];
+            if (subs)
+            {
+                for (var listenerId in subs)
+                {
+                    var listenerFunction = subs[listenerId];
+
+                    // invoke listener
+                    listenerFunction();
+                }
+            }
         }
+
+
 
     });
 

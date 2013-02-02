@@ -372,4 +372,105 @@
         return result;
     };
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // OBSERVABLES HELPER FUNCTIONS
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Declares and gets an observable in a given scope.
+     * Optionally registers a callback function.
+     *
+     * @param [String] scope optional scope
+     * @param {String} id the variable id
+     * @param [String] callbackKey callback key
+     * @param [Function] callbackFunction a callback function to fire when the value of this observable changes
+     */
+    Ratchet.observable = function()
+    {
+        var scope;
+        var id;
+        var callbackKey;
+        var callbackFunction;
+
+        var args = Ratchet.makeArray(arguments);
+        if (args.length == 1)
+        {
+            scope = "global";
+            id = args.shift();
+        }
+        else if (args.length == 2)
+        {
+            scope = args.shift();
+            id = args.shift();
+        }
+        else if (args.length == 3)
+        {
+            scope = "global";
+            id = args.shift();
+            callbackKey = args.shift();
+            callbackFunction = args.shift();
+        }
+        else if (args.length == 4)
+        {
+            scope = args.shift();
+            id = args.shift();
+            callbackKey = args.shift();
+            callbackFunction = args.shift();
+        }
+
+        var observables = Ratchet.ScopedObservables.get(scope);
+        var observable = observables.observable(id);
+
+        // binding a function handler
+        if (callbackKey && callbackFunction)
+        {
+            // subscribe
+            observable.subscribe(callbackKey, callbackFunction);
+
+            // remember we subscribed
+            this.subscriptions[callbackKey] = observable;
+        }
+
+        return observable;
+    };
+
+    /**
+     * Declares and gets a dependent observable in a given scope
+     *
+     * @param scope
+     * @param id
+     * @param func
+     */
+    Ratchet.dependentObservable = function()
+    {
+        var scope = null;
+        var id = null;
+        var func = null;
+
+        var args = Ratchet.makeArray(arguments);
+        if (args.length == 2)
+        {
+            scope = "global";
+            id = args.shift();
+            func = args.shift();
+        }
+        else if (args.length == 3)
+        {
+            scope = args.shift();
+            id = args.shift();
+            func = args.shift();
+        }
+        else
+        {
+            Ratchet.error("Wrong number of arguments");
+            return;
+        }
+
+        var observables = Ratchet.ScopedObservables.get(scope);
+
+        return observables.dependentObservable(id, func);
+    };
+
 })(window);

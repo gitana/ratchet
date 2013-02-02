@@ -79,11 +79,13 @@
                         callback(err, result);
                     }
                 });
-            }
+            };
         },
 
         prepareModel: function(el, model, callback)
         {
+            var self = this;
+
             this.base(el, model, function() {
 
                 // if the "multi-documents-select" button is part of the button set
@@ -112,13 +114,16 @@
                             if (!title) {
                                 title = "Unknown Action Title";
                             }
-                            selectButton.buttons.push({
+                            var button = {
                                 "key": "multi-action-" + actionId,
                                 "title": title,
                                 "action": actionId,
-                                "actionGroup": "multi-documents",
-                                "iconClass": "icon-pencil"
-                            });
+                                "actionGroup": "multi-documents"
+                            };
+                            if (actionConfiguration.iconClass) {
+                                button.iconClass = actionConfiguration.iconClass;
+                            }
+                            selectButton.buttons.push(button);
                         });
                     }
                 }
@@ -175,11 +180,14 @@
             {
                 var data = null;
 
-                if (button.actionGroup === "multi-documents")
+                var multiDocumentsActionGroupKey = self._multiDocumentsActionGroupKey();
+                var singleDocumentActionGroupKey = self._singleDocumentActionGroupKey();
+
+                if (button.actionGroup === multiDocumentsActionGroupKey)
                 {
                     data = this.selectedItems();
                 }
-                else if (button.actionGroup === "single-document")
+                else if (button.actionGroup === singleDocumentActionGroupKey)
                 {
                     // TODO: button item?
                     data = null;
@@ -194,7 +202,71 @@
                 });
 
             }
+        },
+
+        columnValue: function(row, item)
+        {
+            var value = this.base();
+
+            if (item.key == "actions") {
+
+                var id = "list-button-single-document-select-" + row.id;
+
+                // action drop down
+                var MODAL_TEMPLATE = ' \
+                    <div class="dropdown single-document-action-dropdown">\
+                        <button id="' + id + '" class="btn btn-large list-button-single-document-select dropdown-toggle" data-toggle="dropdown"> \
+                            <i class="icon-pencil icon-black"></i> \
+                            Actions... \
+                            <span class="caret"></span> \
+                        </button> \
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="' + id + '"> \
+                        </ul> \
+                    </div> \
+                ';
+
+                var select = $(MODAL_TEMPLATE);
+
+                // load actions from the "single-document" configuration
+                var json = Configuration.evaluate({"action-group": "single-document"});
+                if (json.actions) {
+                    $.each(json.actions, function(actionId, actionConfiguration) {
+
+                        var title = actionConfiguration.title;
+
+                        var html = "<li><a href='#' class='list-button-single-document-action-" + actionId + "'>";
+                        if (actionConfiguration.iconClass) {
+                            html += "<i class='" + actionConfiguration.iconClass + "'></i>";
+                        }
+                        html += "&nbsp;";
+                        html += title;
+                        html += "</a></li>";
+
+                        $(select).find(".dropdown-menu").append(html);
+
+                    });
+                }
+
+                return $(select).outerHTML();
+
+            }
+
+            return value;
+        },
+
+        configureColumn: function(column, config)
+        {
+            this.base(column, config);
+
+            // if this is the actions column, set button to render in middle and align right
+            if (column.key == "actions")
+            {
+                config["sClass"] = "actions";
+                config["sWidth"] = "150px";
+            }
         }
+
+
 
     }));
 

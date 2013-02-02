@@ -922,51 +922,7 @@
          */
         observable: function()
         {
-            var scope;
-            var id;
-            var callbackKey;
-            var callbackFunction;
-
-            var args = Ratchet.makeArray(arguments);
-            if (args.length == 1)
-            {
-                scope = "global";
-                id = args.shift();
-            }
-            else if (args.length == 2)
-            {
-                scope = args.shift();
-                id = args.shift();
-            }
-            else if (args.length == 3)
-            {
-                scope = "global";
-                id = args.shift();
-                callbackKey = args.shift();
-                callbackFunction = args.shift();
-            }
-            else if (args.length == 4)
-            {
-                scope = args.shift();
-                id = args.shift();
-                callbackKey = args.shift();
-                callbackFunction = args.shift();
-            }
-
-            var observables = Ratchet.ScopedObservables.get(scope);
-            var observable = observables.observable(id);
-
-            // binding a function handler
-            if (callbackKey && callbackFunction)
-            {
-                // subscribe
-                observable.subscribe(callbackKey, callbackFunction);
-
-                // remember we subscribed
-                this.subscriptions[callbackKey] = observable;
-            }
-
-            return observable;
+            return Ratchet.observable.apply(this, arguments);
         },
 
         /**
@@ -978,32 +934,7 @@
          */
         dependentObservable: function()
         {
-            var scope = null;
-            var id = null;
-            var func = null;
-
-            var args = Ratchet.makeArray(arguments);
-            if (args.length == 2)
-            {
-                scope = "global";
-                id = args.shift();
-                func = args.shift();
-            }
-            else if (args.length == 3)
-            {
-                scope = args.shift();
-                id = args.shift();
-                func = args.shift();
-            }
-            else
-            {
-                Ratchet.error("Wrong number of arguments");
-                return;
-            }
-
-            var observables = Ratchet.ScopedObservables.get(scope);
-
-            return observables.dependentObservable(id, func);
+            return Ratchet.observable.apply(this, arguments);
         },
 
 

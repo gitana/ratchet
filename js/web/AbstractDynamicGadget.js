@@ -9,11 +9,13 @@
 
             this.base(type, ratchet, id);
 
-            // override to support other config keys
+            // this method provides a way to register dynamic configuration upon instantiation
+            var blockKeys = [];
             this.config = function(config)
             {
                 if (config)
                 {
+                    // add config
                     var block = {
                         "evaluator": "gadget",
                         "condition": {
@@ -23,7 +25,9 @@
                         "config": {}
                     };
                     Ratchet.merge(config, block.config);
-                    Ratchet.Configuration.add(block);
+                    var blockKey = Ratchet.Configuration.add(block);
+
+                    blockKeys.push(blockKey);
                 }
 
                 return Ratchet.Configuration.evaluate({
@@ -32,6 +36,13 @@
                 });
             };
 
+            this.releaseAllConfigs = function()
+            {
+                for (var i = 0; i < blockKeys.length; i++)
+                {
+                    Ratchet.Configuration.release(blockKeys[i]);
+                }
+            };
         },
 
         teardown: function()
@@ -48,6 +59,9 @@
                     "gadgetType": self.getGadgetType()
                 }
             });
+
+            // remove our config from the configuration service
+            this.releaseAllConfigs();
         },
 
         renderTemplate: function(el, templateIdentifier, data, callback) {

@@ -1,7 +1,5 @@
 (function()
 {
-    Ratchet.uniqueIdCounter = 0;
-
     /**
      * Builds an array from javascript method arguments.
      *
@@ -144,17 +142,21 @@
 
     Ratchet.generateId = function()
     {
-        Ratchet.uniqueIdCounter++;
-        return "ratchet-" + Ratchet.uniqueIdCounter;
+        return "ratchet-" + Ratchet.uniqueId();
     };
 
     Ratchet.generateListenerId = function()
     {
-        var uniqueId = 0;
+        return "l-" + Ratchet.uniqueId();
+    };
+
+    Ratchet.uniqueId = function()
+    {
+        var x = 0;
 
         return function()
         {
-            return "l-" + uniqueId++;
+            return "" + x++;
         }
     }();
 
@@ -395,7 +397,7 @@
      * @param {String} id the variable id
      * @param {Function} callbackFunction the callback function
      *
-     * @return listener id
+     * @return descriptor
      */
     Ratchet.subscribe = function()
     {
@@ -439,7 +441,11 @@
         // tell the observable to subscribe
         observable.subscribe(listenerId, func);
 
-        return listenerId;
+        return {
+            "scope": scope,
+            "id": id,
+            "listenerId": listenerId
+        };
     };
 
     /**
@@ -448,7 +454,7 @@
      * @param [String] scope optional scope
      * @param {String} id the variable id
      * @param {String|Function} listener either the function or listener id
-     * @return {*}
+     * @return descriptor
      */
     Ratchet.unsubscribe = function()
     {
@@ -483,7 +489,11 @@
         // tell the observable to unsubscribe
         observable.unsubscribe(listenerId);
 
-        return listenerId;
+        return {
+            "scope": scope,
+            "id": id,
+            "listenerId": listenerId
+        };
     };
 
     /**
@@ -496,7 +506,6 @@
     {
         var scope;
         var id;
-        var value;
 
         var args = Ratchet.makeArray(arguments);
         if (args.length == 1)
@@ -579,6 +588,28 @@
     Ratchet.clearArray = function(array)
     {
         return array.splice(0, array.length);
+    };
+
+    Ratchet.clearObject = function(object)
+    {
+        var keys = [];
+        for (var key in object) {
+            keys.push(key);
+        }
+        for (var i = 0; i < keys.length; i++)
+        {
+            delete object[keys[i]];
+        }
+    };
+
+    Ratchet.clear = function(thing)
+    {
+        if (Ratchet.isObject(thing)) {
+            Ratchet.clearObject(thing);
+
+        } else if (Ratchet.isArray(thing)) {
+            Ratchet.clearArray(thing);
+        }
     };
 
     /**
@@ -667,6 +698,25 @@
         }
 
         return result;
+    };
+
+    Ratchet.firstObjectKey = function(map)
+    {
+        var key = null;
+
+        if (map)
+        {
+            for (var k in map)
+            {
+                if (map.propertyIsEnumerable(k))
+                {
+                    key = k;
+                    break;
+                }
+            }
+        }
+
+        return key;
     };
 
 })(window);

@@ -151,12 +151,13 @@
                         if (!title) {
                             title = "Unknown Field";
                         }
+                        var field = selectorGroupItem.field;
 
                         // replace sort button
                         var button = {
                             "key": "sort-field-" + key,
                             "title": title,
-                            "field": key,
+                            "field": field,
                             "selectorGroup": "sort-selector-group"
                         };
                         if (selectorGroupItem.iconClass) {
@@ -273,7 +274,7 @@
             }
             else if (button.selectorGroup === "sort-selector-group")
             {
-                self.sort(button.key);
+                self.sort(button.field);
             }
             else if (button.key === "sort-direction-selector")
             {
@@ -358,9 +359,13 @@
 
         handleRowCallback: function(el, model, table, nRow, aData, iDisplayIndex)
         {
+            this.base(el, model, table, nRow, aData, iDisplayIndex);
+
             var self = this;
 
             $(el).find('.list-button-action').click(function(event) {
+
+                debugger;
 
                 var actionId = $(this).attr("list-action-id");
                 var rowId = $(this).attr("list-row-id");
@@ -374,6 +379,8 @@
                     }
                     Ratchet.showModalMessage("Action Status", message);
                 });
+
+                return false;
 
             });
         },
@@ -399,11 +406,11 @@
             var sortDirection = self.sortDirection();
             if (sortDirection == -1)
             {
-                $(".list-button-sort-direction-selector").html("Descending");
+                $(".list-button-sort-direction-selector").html("<div class='sort-descending'></div>");
             }
             else if (sortDirection == 1)
             {
-                $(".list-button-sort-direction-selector").html("Ascending");
+                $(".list-button-sort-direction-selector").html("<div class='sort-ascending'></div>");
             }
         }
 

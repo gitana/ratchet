@@ -24,3 +24,14 @@
 {
     vertical-align: middle;
 }
+
+.list-icon-column
+{
+    vertical-align: middle !important;
+}
+
+.list-row-info
+{
+    padding: 0px;
+    margin: 0px;
+}

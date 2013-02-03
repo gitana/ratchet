@@ -45,7 +45,8 @@
                     "query": "query",
                     "sort": "sort",
                     "sortDirection": "sortDirection",
-                    "searchTerm": "searchTerm"
+                    "searchTerm": "searchTerm",
+                    "selectedItems": "selectedItems"
                 }
             });
 
@@ -82,13 +83,21 @@
             };
         },
 
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // OBSERVABLE ACCESSORS
+        //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         selectedItems: function(array) {
 
+            var observable = this.observable(this.config().observables.selectedItems);
             if (array) {
-                this.observable("selectedItems").set(array);
+                observable.set(array);
             }
 
-            var selectedItems = this.observable("selectedItems").get();
+            var selectedItems = observable.get();
             if (!selectedItems) {
                 selectedItems = [];
             }
@@ -97,36 +106,10 @@
         },
 
         clearSelectedItems: function() {
-            this.observable("selectedItems").clear();
-        },
 
-        itemsCount : function(obj) {
+            var observable = this.observable(this.config().observables.selectedItems);
+            observable.clear();
 
-            if (!obj) {
-                return 0;
-            }
-
-            var count = 0, key;
-
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    count++;
-                }
-            }
-            return count;
-        },
-
-        firstItem : function(obj) {
-
-            if (!obj) {
-                return null;
-            }
-
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    return obj[key];
-                }
-            }
         },
 
         /**
@@ -174,45 +157,12 @@
             return sort;
         },
 
-        handleBindEvents: function(el, model) {
 
-            var self = this;
-
-            // for each button, bind to button handler
-            for (var i = 0; i < model.buttons.length; i++)
-            {
-                var button = model.buttons[i];
-
-                if (button.buttons)
-                {
-                    // drop down button
-                    for (var j = 0; j < button.buttons.length; j++)
-                    {
-                        var button2 = button.buttons[j];
-
-                        $(".list-button-" + button2.key).off();
-
-                        $(".list-button-" + button2.key).click(function(b) {
-                            return function(event) {
-                                self.handleButtonBarButtonClick.call(self, event, model, b);
-                            };
-                        }(button2));
-
-                    }
-                }
-                else
-                {
-                    // single click button
-                    $(".list-button-" + button.key).off();
-
-                    $(".list-button-" + button.key).click(function(b) {
-                        return function(event) {
-                            self.handleButtonBarButtonClick.call(self, event, model, b);
-                        };
-                    }(button));
-                }
-            }
-        },
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        // RENDERING LOGIC
+        //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         prepareModel: function(el, model, callback)
         {
@@ -232,20 +182,23 @@
         {
             var self = this;
 
-            console.log("START1");
-
-            self.clearSelectedItems();
+            // set up observables
+            var refreshHandler = self.refreshHandler(el);
 
             // when the "query" observable changes, update the list
-            self.subscribe(model.observables.query, self.refreshHandler(el));
-
+            self.subscribe(model.observables.query, refreshHandler);
             // when the "sort" observable changes, update the list
-            self.subscribe(model.observables.sort, self.refreshHandler(el));
-
+            self.subscribe(model.observables.sort, refreshHandler);
             // when the "sort direction" observable changes, update the list
-            self.subscribe(model.observables.sortDirection, self.refreshHandler(el));
+            self.subscribe(model.observables.sortDirection, refreshHandler);
 
-            console.log("END1");
+            // clear selected items
+            self.clearSelectedItems();
+
+            // when the selected items change
+            self.subscribe(model.observables.selectedItems, function() {
+                self.handleChangeSelectedItems();
+            });
 
             callback();
         },
@@ -318,7 +271,8 @@
                     "bSearchable": false,
                     "bSortable": false,
                     "sTitle": "",
-                    "sWidth": "70px"
+                    "sWidth": "70px",
+                    "sClass": "list-icon-column"
                 });
             }
 
@@ -426,11 +380,12 @@
                     }
                 }
 
-                var sortFieldKey = self.observable(model.observables.sort).get();
-                if (sortFieldKey)
+                // apply sort from observable?
+                var sortField = self.sort();
+                if (sortField)
                 {
                     pagination["sort"] = {};
-                    pagination["sort"][sortFieldKey] = self.sortDirection();
+                    pagination["sort"][sortField] = self.sortDirection();
                 }
 
 
@@ -536,8 +491,6 @@
                         items.push(item);
                     });
                     self.selectedItems(items);
-
-                    self.handleChangeSelectedItems();
                 } else {
 
                     $(el).find(".list-check-box").each(function() {
@@ -546,12 +499,10 @@
                         }
                     });
                     self.clearSelectedItems();
-
-                    self.handleChangeSelectedItems();
                 }
             });
 
-            // handle any other dom element bindings for th elist
+            // handle any other dom element bindings for the list
             self.handleBindEvents(el, model);
 
             // init any buttons
@@ -645,7 +596,8 @@
                 if (self.iconUri) {
                     var iconUri = self.iconUri.call(self, row);
                     if (iconUri) {
-                        markup = "<img align='center' src='" + iconUri + "' style='height: 128px'>";
+                        //markup = "<img align='center' src='" + iconUri + "' style='height: 128px'>";
+                        markup = "<img align='center' src='" + iconUri + "'>";
                     }
                 }
 
@@ -707,6 +659,46 @@
         // CALLBACKS
         //
         ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        handleBindEvents: function(el, model) {
+
+            var self = this;
+
+            // for each button, bind to button handler
+            for (var i = 0; i < model.buttons.length; i++)
+            {
+                var button = model.buttons[i];
+
+                if (button.buttons)
+                {
+                    // drop down button
+                    for (var j = 0; j < button.buttons.length; j++)
+                    {
+                        var button2 = button.buttons[j];
+
+                        $(".list-button-" + button2.key).off();
+
+                        $(".list-button-" + button2.key).click(function(b) {
+                            return function(event) {
+                                self.handleButtonBarButtonClick.call(self, event, model, b);
+                            };
+                        }(button2));
+
+                    }
+                }
+                else
+                {
+                    // single click button
+                    $(".list-button-" + button.key).off();
+
+                    $(".list-button-" + button.key).click(function(b) {
+                        return function(event) {
+                            self.handleButtonBarButtonClick.call(self, event, model, b);
+                        };
+                    }(button));
+                }
+            }
+        },
 
         handleCreatedRow: function(el, model, table, nRow, aData, iDataIndex) {
             this.createdRow(el, model, table, nRow, aData, iDataIndex);
@@ -770,9 +762,6 @@
 
                     // set the selected items
                     self.selectedItems(currentSelectedItems);
-
-                    // update button state
-                    self.handleChangeSelectedItems();
                 };
             }(el, model, table, nRow, aData, iDisplayIndex));
 

@@ -99,7 +99,8 @@
 
             this.base();
 
-            this.blocks = [];
+            // keys are generated at runtime
+            this.blocks = {};
             this.evaluatorInstances = {};
             this.evaluatorTypes = {};
 
@@ -247,13 +248,16 @@
          * Applies the specific block of configuration into the configuration service.
          *
          * @param block
+         * @return blockKey
          */
         add: function(block)
         {
             // TODO: validate that the block is correctly formatted and structured
             // TODO: if we find some kind of issue, we should report it right away and exclude it from our array
 
-            this.blocks.push(block);
+            // generate a key for this block and register
+            var blockKey = "b-" + Ratchet.uniqueId();
+            this.blocks[blockKey] = block;
 
             // fire any listeners
             var listenerConfig = {};
@@ -264,6 +268,32 @@
                 listenerConfig.condition = block.condition;
             }
             this.triggerListeners(listenerConfig);
+
+            return blockKey;
+        },
+
+        /**
+         * Removes a block of configuration by its block key.
+         *
+         * @param blockKey
+         */
+        release: function(blockKey)
+        {
+            var block = this.blocks[blockKey];
+            if (block)
+            {
+                delete this.blocks[blockKey];
+
+                // fire any listeners
+                var listenerConfig = {};
+                if (block.evaluator) {
+                    listenerConfig.evaluator = block.evaluator;
+                }
+                if (block.condition) {
+                    listenerConfig.condition = block.condition;
+                }
+                this.triggerListeners(listenerConfig);
+            }
         },
 
         /**
@@ -278,9 +308,9 @@
 
             var result = {};
 
-            for (var i = 0; i < this.blocks.length; i++)
+            for (var blockKey in this.blocks)
             {
-                var block = this.blocks[i];
+                var block = this.blocks[blockKey];
 
                 // condition is optional
                 var condition = block.condition;

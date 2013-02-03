@@ -21,17 +21,17 @@
 
             // privileged functions
 
-            this.notifySubscribers = function()
+            this.notifySubscribers = function(prior)
             {
                 var _this = this;
 
                 $.each(this.subscribers, function(id, handler) {
                     //Ratchet.debug("Notifying subscriber: " + id + " of update to: " + _this.id);
-                    handler(_this.value);
+                    handler(_this.value, prior);
                 })
             };
 
-            this.notifyDependents = function()
+            this.notifyDependents = function(prior)
             {
                 $.each(this.dependentOnUs, function(key, observer) {
                     //Ratchet.debug("Notifying dependent:  " + key + " of update to: " + _this.id);
@@ -100,13 +100,14 @@
 
         set: function(value)
         {
+            var prior = this.value;
             this.value = value;
 
             // notify all dependents (observers that depend on our value)
-            this.notifyDependents();
+            this.notifyDependents(prior);
 
             // notify all subscribers of the updated value
-            this.notifySubscribers();
+            this.notifySubscribers(prior);
         },
 
         get: function(_default)
@@ -121,13 +122,14 @@
 
         clear: function()
         {
+            var prior = this.value;
             delete this.value;
 
             // notify all dependents (observers that depend on our value)
-            this.notifyDependents();
+            this.notifyDependents(prior);
 
             // notify all subscribers of the updated value
-            this.notifySubscribers();
+            this.notifySubscribers(prior);
         }
 
     });

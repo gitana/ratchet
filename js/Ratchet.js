@@ -907,34 +907,33 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         //
-        // OBSERVABLES HELPER FUNCTIONS
+        // OBSERVABLES
         //
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /**
-         * Declares and gets an observable in a given scope.
-         * Optionally registers a callback function.
-         *
-         * @param [String] scope optional scope
-         * @param {String} id the variable id
-         * @param [String] callbackKey callback key
-         * @param [Function] callbackFunction a callback function to fire when the value of this observable changes
-         */
-        observable: function()
+        subscribe: function()
         {
-            return Ratchet.observable.apply(this, arguments);
+            return Ratchet.subscribe.apply(this, arguments);
         },
 
-        /**
-         * Declares and gets a dependent observable in a given scope
-         *
-         * @param scope
-         * @param id
-         * @param func
-         */
+        unsubscribe: function()
+        {
+            return Ratchet.unsubscribe.apply(this, arguments);
+        },
+
+        observable: function()
+        {
+            return Ratchet.observable.apply(this, arguments)
+        },
+
+        clearObservable: function()
+        {
+            return Ratchet.clearObservable.apply(this, arguments);
+        },
+
         dependentObservable: function()
         {
-            return Ratchet.observable.apply(this, arguments);
+            return Ratchet.dependentObservable.apply(this, arguments);
         },
 
 
@@ -1226,5 +1225,53 @@
         Ratchet.Authenticators = {};
     }
 
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // LOGGER
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    // by default, logging only shows errors
+    // to debug, set Ratchet.logLevel = Ratchet.DEBUG
+    Ratchet.logLevel = 3;
+
+    Ratchet.DEBUG = 0;
+    Ratchet.INFO = 1;
+    Ratchet.WARN = 2;
+    Ratchet.ERROR = 3;
+
+    Ratchet.logDebug = function(obj) {
+        Ratchet.log(Ratchet.DEBUG, obj);
+    };
+    Ratchet.logInfo = function(obj) {
+        Ratchet.log(Ratchet.INFO, obj);
+    };
+    Ratchet.logWarn = function(obj) {
+        Ratchet.log(Ratchet.WARN, obj);
+    };
+    Ratchet.logError = function(obj) {
+        Ratchet.log(Ratchet.ERROR, obj);
+    };
+
+    Ratchet.log = function(level, obj) {
+
+        var methodMap = {
+            0: 'debug',
+            1: 'info',
+            2: 'warn',
+            3: 'error'
+        };
+
+        if (Ratchet.logLevel <= level)
+        {
+            var method = methodMap[level];
+            if (typeof console !== 'undefined' && console[method])
+            {
+                console[method].call(console, obj);
+            }
+        }
+    };
 
 })(jQuery);

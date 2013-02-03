@@ -89,101 +89,29 @@
         //
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        /**
-         * Subscribes to an observable, attaching a handler.
-         *
-         * @param [String] scope
-         * @param {String} id
-         * @param {Function} handler
-         */
         subscribe: function()
         {
-            var args = Ratchet.makeArray(arguments);
-
-            var scope = null;
-            var id = null;
-            var handler = null;
-
-            if (args.length == 2)
-            {
-                scope = "global";
-                id = args.shift();
-                handler = args.shift();
-            }
-            else
-            {
-                scope = args.shift();
-                id = args.shift();
-                handler = args.shift();
-            }
-
-            // wrap function in a closure
-            var func = function(that) {
-                return function() {
-                    handler.call(that);
-                };
-            }(this);
-
-            // register
-            this.observable(scope, id, func);
+            return Ratchet.subscribe.apply(this, arguments);
         },
 
-        /**
-         * Interceptor method that auto-determines the callback key to use in registering the observable
-         * based on the gadget id.
-         *
-         * @param [String] scope optional scope
-         * @param {String} id the variable id
-         * @param [Function] callbackFunction a callback function to fire when the value of this observable changes
-         */
+        unsubscribe: function()
+        {
+            return Ratchet.unsubscribe.apply(this, arguments);
+        },
+
         observable: function()
         {
-            var scope;
-            var id;
-            var callbackFunction;
-
-            var args = Ratchet.makeArray(arguments);
-            if (args.length == 1)
-            {
-                scope = "global";
-                id = args.shift();
-            }
-            else if (args.length == 2)
-            {
-                var a1 = args.shift();
-                var a2 = args.shift();
-
-                if (Ratchet.isFunction(a2))
-                {
-                    scope = "global";
-                    id = a1;
-                    callbackFunction = a2;
-                }
-                else
-                {
-                    scope = a1;
-                    id = a2;
-                }
-            }
-            else if (args.length == 3)
-            {
-                scope = args.shift();
-                id = args.shift();
-                callbackFunction = args.shift();
-            }
-
-            var callbackKey = this.ratchet().id + "-" + this.getGadgetId();
-
-            return this.ratchet().observable(scope, id, callbackKey, callbackFunction);
+            return Ratchet.observable.apply(this, arguments)
         },
 
-        /**
-         * Interceptor method that just does a pass thru
-         */
+        clearObservable: function()
+        {
+            return Ratchet.clearObservable.apply(this, arguments);
+        },
+
         dependentObservable: function()
         {
-            return this.ratchet().dependentObservable.apply(this.ratchet(), arguments);
+            return Ratchet.dependentObservable.apply(this, arguments);
         },
 
 

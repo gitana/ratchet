@@ -3,7 +3,7 @@
     return Ratchet.Configuration.register("gadget", Ratchet.AbstractConfigurationEvaluator.extend({
 
         /**
-         * Checks whether the "gadget" property of the context matches the condition.
+         * Checks whether the "gadget" id and type of the context matches the condition.
          *
          * @param context
          * @param condition
@@ -16,14 +16,13 @@
                 return false;
             }
 
-            var type = context.gadget;
-
-            // if type is a function, then evaluate it
-            if (typeof(context.gadget) === "function") {
-                type = context.gadget();
+            var gadgetType = context.gadgetType;
+            var gadgetId = context.gadgetId;
+            if (!gadgetId) {
+                gadgetId = context.gadget;
             }
 
-            return (type === condition);
+            return (context.gadgetType == condition.gadgetType && context.gadgetId == condition.gadgetId);
         }
 
     }));

@@ -30,9 +30,57 @@
 
 }(this, function(Ratchet, html, _) {
 
-    return Ratchet.GadgetRegistry.register("list", Ratchet.AbstractDynamicGadget.extend({
+    return Ratchet.Gadgets.List = Ratchet.GadgetRegistry.register("list", Ratchet.AbstractDynamicGadget.extend({
 
         TEMPLATE: html,
+
+        constructor: function(type, ratchet, id) {
+            this.base(type, ratchet, id);
+
+            var self = this;
+
+            // add in our configuration
+            this.config({
+                "observables": {
+                    "query": "query",
+                    "sort": "sort",
+                    "sortDirection": "sortDirection",
+                    "searchTerm": "searchTerm"
+                }
+            });
+
+            this._findButton = function(model, buttonKey)
+            {
+                var button = null;
+                if (model.buttons)
+                {
+                    for (var i = 0; i < model.buttons.length; i++) {
+                        var x = model.buttons[i];
+                        if (x.key === buttonKey) {
+                            button = x;
+                        }
+                    }
+                }
+
+                return button;
+            };
+
+            this._findRow = function(model, rowId)
+            {
+                var row = null;
+
+                for (var i = 0; i < model.rows.length; i++)
+                {
+                    if (model.rows[i].id == rowId)
+                    {
+                        row = model.rows[i];
+                        break;
+                    }
+                }
+
+                return row;
+            };
+        },
 
         selectedItems: function(array) {
 
@@ -81,7 +129,52 @@
             }
         },
 
-        processActions: function(model) {
+        /**
+         * Either -1 (descending) or 1 (ascending)
+         *
+         * @param sortDirection
+         */
+        sortDirection: function(sortDirection)
+        {
+            var observable = this.observable(this.config().observables.sortDirection);
+            if (!Ratchet.isUndefined(sortDirection))
+            {
+                observable.set(sortDirection);
+            }
+
+            // assume sort descending
+            sortDirection = -1;
+            if (observable && observable.get()) {
+                sortDirection = observable.get();
+            }
+
+            return sortDirection;
+        },
+
+        /**
+         * Sort field (get or set)
+         *
+         * @param sortField
+         * @return {*}
+         */
+        sort: function(sortField)
+        {
+            var observable = this.observable(this.config().observables.sort);
+            if (!Ratchet.isUndefined(sortField))
+            {
+                observable.set(sortField);
+            }
+
+            var sort = null;
+            if (observable && observable.get())
+            {
+                sort = observable.get();
+            }
+
+            return sort;
+        },
+
+        handleBindEvents: function(el, model) {
 
             var self = this;
 
@@ -90,29 +183,33 @@
             {
                 var button = model.buttons[i];
 
-                $(".list-button-action-" + button.key).off();
-
-                $(".list-button-action-" + button.key).click(function(b) {
-                    return function(event) {
-                        self.handleButtonClick.call(self, b);
-                    };
-                }(button));
-
                 if (button.buttons)
                 {
+                    // drop down button
                     for (var j = 0; j < button.buttons.length; j++)
                     {
                         var button2 = button.buttons[j];
 
-                        $(".list-button-action-" + button2.key).off();
+                        $(".list-button-" + button2.key).off();
 
-                        $(".list-button-action-" + button2.key).click(function(b) {
+                        $(".list-button-" + button2.key).click(function(b) {
                             return function(event) {
-                                self.handleButtonClick.call(self, b);
+                                self.handleButtonBarButtonClick.call(self, event, model, b);
                             };
                         }(button2));
 
                     }
+                }
+                else
+                {
+                    // single click button
+                    $(".list-button-" + button.key).off();
+
+                    $(".list-button-" + button.key).click(function(b) {
+                        return function(event) {
+                            self.handleButtonBarButtonClick.call(self, event, model, b);
+                        };
+                    }(button));
                 }
             }
         },
@@ -135,16 +232,20 @@
         {
             var self = this;
 
-            // detect changes to the list and redraw when they occur
-            // this.subscribe(this.subscription, this.refresh);
-
-            /*
-             if (this.filterSubscription) {
-             this.subscribe(this.filterSubscription, this.refresh);
-             }
-             */
+            console.log("START1");
 
             self.clearSelectedItems();
+
+            // when the "query" observable changes, update the list
+            self.subscribe(model.observables.query, self.refreshHandler(el));
+
+            // when the "sort" observable changes, update the list
+            self.subscribe(model.observables.sort, self.refreshHandler(el));
+
+            // when the "sort direction" observable changes, update the list
+            self.subscribe(model.observables.sortDirection, self.refreshHandler(el));
+
+            console.log("END1");
 
             callback();
         },
@@ -227,7 +328,7 @@
                 for (var i = 0; i < model.columns.length; i++) {
                     var column = model.columns[i];
 
-                    var columnSortable = true;
+                    var columnSortable = false;
                     if (!Ratchet.isEmpty(column.sort)) {
                         columnSortable = column.sort;
                     }
@@ -286,11 +387,7 @@
                 if (!searchTerm) {
 
                     // if not specified, allow lookup from an observable
-                    var searchTermObservableName = model.observables.searchTerm;
-                    if (!searchTermObservableName) {
-                        searchTermObservableName = "searchTerm";
-                    }
-                    searchTerm = self.observable(searchTermObservableName).get();
+                    searchTerm = self.observable(model.observables.searchTerm).get();
                 }
 
 
@@ -299,11 +396,7 @@
                 //////////////////////////////////////////////////////////////////////////////
 
                 // allow query to be set from an external observable
-                var queryObservableName = model.observables.query;
-                if (!queryObservableName) {
-                    queryObservableName = "query";
-                }
-                var query = self.observable(queryObservableName).get();
+                var query = self.observable(model.observables.query).get();
 
 
 
@@ -320,14 +413,24 @@
                 var sortColIndex = keyValues["iSortCol_0"];
                 if (sortColIndex > 1) {
                     var sortColProperty = model.columns[sortColIndex - 2].property;
-                    pagination["sort"] = { };
-                    var direction = keyValues["sSortDir_0"] == 'asc' ? 1 : -1;
-                    if (Ratchet.isString((sortColProperty))) {
-                        pagination["sort"][sortColProperty] = direction;
+                    if (sortColProperty)
+                    {
+                        pagination["sort"] = {};
+                        var direction = keyValues["sSortDir_0"] == 'asc' ? 1 : -1;
+                        if (Ratchet.isString((sortColProperty))) {
+                            pagination["sort"][sortColProperty] = direction;
+                        }
+                        if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
+                            pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
+                        }
                     }
-                    if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
-                        pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
-                    }
+                }
+
+                var sortFieldKey = self.observable(model.observables.sort).get();
+                if (sortFieldKey)
+                {
+                    pagination["sort"] = {};
+                    pagination["sort"][sortFieldKey] = self.sortDirection();
                 }
 
 
@@ -448,8 +551,8 @@
                 }
             });
 
-            // special actions
-            self.processActions(model);
+            // handle any other dom element bindings for th elist
+            self.handleBindEvents(el, model);
 
             // init any buttons
             $('.dropdown-toggle', el).dropdown();
@@ -727,9 +830,9 @@
             return value;
         },
 
-        handleButtonClick: function(button)
+        handleButtonBarButtonClick: function(event, model, button)
         {
-            this.clickButton(button.key, button);
+            this.clickButtonBarButton(event, model, button);
         },
 
         handleChangeSelectedItems: function()
@@ -813,7 +916,7 @@
         /**
          * EXTENSION POINT
          */
-        clickButton: function(key, button)
+        clickButtonBarButton: function(event, model, button)
         {
 
         },

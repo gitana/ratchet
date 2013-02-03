@@ -27,7 +27,7 @@
 
 }(this, function(Ratchet, html) {
 
-    return Ratchet.GadgetRegistry.register("form", Ratchet.AbstractDynamicGadget.extend({
+    return Ratchet.Gadgets.Form = Ratchet.GadgetRegistry.register("form", Ratchet.AbstractDynamicGadget.extend({
 
         TEMPLATE: html,
 		

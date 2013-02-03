@@ -9,57 +9,46 @@
 
             this.base(type, ratchet, id);
 
-            this.subscription = "gadget_" + type + "_" + id;
-            this.defaultConfig = {};
-            this.runtimeConfig = null;
-
             // override to support other config keys
-            this.configKey = id;
-            this.config = function()
+            this.config = function(config)
             {
-                var config = null;
-
-                return function(reload) {
-
-                    if (reload)
-                    if (!config)
-                    {
-                        config = Ratchet.Configuration.evaluate({"gadget": self.configKey});
-                    }
-
-                    return config;
-                };
-            }();
-
-        },
-
-        /*
-        _observable : function (key, args, defaultVal) {
-            var _args = Ratchet.makeArray(args);
-            if (_args.length > 0) {
-                if (typeof _args[0] == "string") {
-                    key = _args.shift();
-                    if (_args.length > 0) {
-                        this.observable(key).set(_args.shift());
-                    }
+                if (config)
+                {
+                    var block = {
+                        "evaluator": "gadget",
+                        "condition": {
+                            "gadgetId": self.getGadgetId(),
+                            "gadgetType": self.getGadgetType()
+                        },
+                        "config": {}
+                    };
+                    Ratchet.merge(config, block.config);
+                    Ratchet.Configuration.add(block);
                 }
-                else {
-                    this.observable(key).set(_args.shift());
-                }
-            }
-            var val = this.observable(key).get();
-            if (val == null && defaultVal != null) {
-                val = defaultVal;
-                this.observable(key).set(defaultVal);
-            }
-            return val;
+
+                return Ratchet.Configuration.evaluate({
+                    "gadgetId": self.getGadgetId(),
+                    "gadgetType": self.getGadgetType()
+                });
+            };
+
         },
 
-        _clearObservable: function(key, defaultKey) {
-            var _key = key ? key : defaultKey;
-            this.observable(_key).clear();
+        teardown: function()
+        {
+            var self = this;
+
+            this.base();
+
+            // remove all config listeners for this gadget
+            Ratchet.Configuration.removeAllListeners({
+                "evaluator": "gadget",
+                "condition": {
+                    "gadgetId": self.getGadgetId(),
+                    "gadgetType": self.getGadgetType()
+                }
+            });
         },
-        */
 
         renderTemplate: function(el, templateIdentifier, data, callback) {
 

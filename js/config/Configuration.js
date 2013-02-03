@@ -105,15 +105,10 @@
 
             this.subscriptions = {};
 
-            this.generateListenerId = function()
+            this.generateBindingKey = function()
             {
-                var uniqueId = 0;
-
-                return function()
-                {
-                    return "l-" + uniqueId++;
-                }
-            }();
+                return Ratchet.toLinearForm.apply(this,arguments);
+            };
 
             /**
              * Internal method for merging JSON.  Elements from the source are merged into the target.
@@ -318,16 +313,17 @@
                     var evaluatorInstance = this.evaluatorInstances[block.evaluator];
                     if (!evaluatorInstance)
                     {
-                        throw new Error("Missing evaluator: " + block.evaluator);
-                        return;
+                        Ratchet.logWarn("Missing configuration evaluator: " + block.evaluator);
                     }
-
-                    // evaluate
-                    var valid = evaluatorInstance.evaluate(context, condition);
-                    if (valid)
+                    else
                     {
-                        // looks good, so merge
-                        apply(config, result, replace);
+                        // evaluate
+                        var valid = evaluatorInstance.evaluate(context, condition);
+                        if (valid)
+                        {
+                            // looks good, so merge
+                            apply(config, result, replace);
+                        }
                     }
                 }
             }
@@ -346,7 +342,7 @@
             var evaluator = config.evaluator;
             var condition = config.condition;
 
-            var bindingKey = evaluator + "_" + condition;
+            var bindingKey = this.generateBindingKey(evaluator, condition);
 
             var subs = this.subscriptions[bindingKey];
             if (!subs)
@@ -364,7 +360,7 @@
             {
                 if (!listenerId)
                 {
-                    listenerId = this.generateListenerId();
+                    listenerId = Ratchet.generateListenerId();
                     listenerFunction._lfid = listenerId;
                 }
 
@@ -376,17 +372,21 @@
          * Removes a listener.
          *
          * @param config
-         * @param listenerFunction
+         * @param listenerFunctionOrId
          */
-        removeListener: function(config, listenerFunction)
+        removeListener: function(config, listenerFunctionOrId)
         {
             var evaluator = config.evaluator;
             var condition = config.condition;
 
 
-            var bindingKey = evaluator + "_" + condition;
+            var bindingKey = this.generateBindingKey(evaluator, condition);
 
-            var listenerId = listenerFunction._lfid;
+            var listenerId = listenerFunctionOrId;
+            if (Ratchet.isFunction(listenerFunctionOrId))
+            {
+                listenerId = listenerFunctionOrId._lfid;
+            }
             if (!listenerId)
             {
                 // nothing to do, this listener is not bound
@@ -416,7 +416,7 @@
             var evaluator = config.evaluator;
             var condition = config.condition;
 
-            var bindingKey = evaluator + "_" + condition;
+            var bindingKey = this.generateBindingKey(evaluator, condition);
 
             var subs = this.subscriptions[bindingKey];
             if (subs)
@@ -443,7 +443,7 @@
             var evaluator = config.evaluator;
             var condition = config.condition;
 
-            var bindingKey = evaluator + "_" + condition;
+            var bindingKey = this.generateBindingKey(evaluator, condition);
 
             var subs = this.subscriptions[bindingKey];
             if (subs)

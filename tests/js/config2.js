@@ -9,6 +9,23 @@
 
         var config = Ratchet.Configuration;
 
+        // test generate binding key
+        var c = {
+            "name": "caribou",
+            "properties": {
+                "p1": "v1",
+                "p3": [1,2,3],
+                "p4": {
+                    "p5": "v5",
+                    "p6": "v6"
+                },
+                "p2": 3
+            }
+        };
+        var k1 = Ratchet.Configuration.generateBindingKey("a", "b", c);
+        equal(k1, "a&b&name=caribou&properties.p1=v1&properties.p2=3&properties.p3.0=1&properties.p3.1=2&properties.p3.2=3&properties.p4.p5=v5&properties.p4.p6=v6", "Binding key generation passed");
+
+
         // register actions globally
         Ratchet.Configuration.add({
             "config": {
@@ -29,7 +46,10 @@
         // now register configuration for this module
         Ratchet.Configuration.add({
             "evaluator": "gadget",
-            "condition": "gadget1",
+            "condition": {
+                "gadget": "gadget1",
+                "gadgetType": "gadgetType1"
+            },
             "config": {
                 "buttonGroups": {
                     "bg1": {
@@ -52,7 +72,10 @@
         // now register configuration for this module
         Ratchet.Configuration.add({
             "evaluator": "gadget",
-            "condition": "gadget2",
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            },
             "config": {
                 "buttonGroups": {
                     "bg1": {
@@ -66,7 +89,10 @@
 
 
         // some verification (gadget1)
-        var json1 = Ratchet.Configuration.evaluate({"gadget": "gadget1"});
+        var json1 = Ratchet.Configuration.evaluate({
+            "gadget": "gadget1",
+            "gadgetType": "gadgetType1"
+        });
         ok(json1.actions.action1.title, "Verify global action1");
         ok(json1.actions.action2.title, "Verify global action2");
         ok(json1.actions.action3.title, "Verify global action3");
@@ -76,7 +102,10 @@
         ok(json1.buttonGroups.bg2.actions, "BG2 evaluates ok");
 
         // some verification (gadget2)
-        var json2 = Ratchet.Configuration.evaluate({"gadget": "gadget2"});
+        var json2 = Ratchet.Configuration.evaluate({
+            "gadget": "gadget2",
+            "gadgetType": "gadgetType2"
+        });
         ok(json2.actions.action1.title, "Verify global action1");
         ok(json2.actions.action2.title, "Verify global action2");
         ok(json2.actions.action3.title, "Verify global action3");
@@ -93,13 +122,19 @@
         };
         Ratchet.Configuration.addListener({
             "evaluator": "gadget",
-            "condition": "gadget2"
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            }
         }, f);
 
         // add more configuration
         Ratchet.Configuration.add({
             "evaluator": "gadget",
-            "condition": "gadget2",
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            },
             "config": {
                 "buttonGroups": {
                     "bg1": {
@@ -116,7 +151,10 @@
         // add more configuration
         Ratchet.Configuration.add({
             "evaluator": "gadget",
-            "condition": "gadget2",
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            },
             "config": {
                 "buttonGroups": {
                     "bg1": {
@@ -133,13 +171,19 @@
         // now unsubscribe
         Ratchet.Configuration.removeListener({
             "evaluator": "gadget",
-            "condition": "gadget2"
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            }
         }, f);
 
         // add more configuration
         Ratchet.Configuration.add({
             "evaluator": "gadget",
-            "condition": "gadget2",
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            },
             "config": {
                 "buttonGroups": {
                     "bg2": {
@@ -151,24 +195,33 @@
             }
         });
 
-        ok(v1 == 2, "Gadget2 subscriber triggered successfully, did not change (2)");
+        ok(v1 == 2, "Gadget2 subscriber triggered successfully, did not change (1)");
 
 
         // now add listener and remove all
         Ratchet.Configuration.addListener({
             "evaluator": "gadget",
-            "condition": "gadget2"
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            }
         }, f);
         Ratchet.Configuration.removeAllListeners({
             "evaluator": "gadget",
-            "condition": "gadget2"
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            }
         });
 
 
         // add more configuration
         Ratchet.Configuration.add({
             "evaluator": "gadget",
-            "condition": "gadget2",
+            "condition": {
+                "gadget": "gadget2",
+                "gadgetType": "gadgetType2"
+            },
             "config": {
                 "buttonGroups": {
                     "bg2": {

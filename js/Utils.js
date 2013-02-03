@@ -148,6 +148,16 @@
         return "ratchet-" + Ratchet.uniqueIdCounter;
     };
 
+    Ratchet.generateListenerId = function()
+    {
+        var uniqueId = 0;
+
+        return function()
+        {
+            return "l-" + uniqueId++;
+        }
+    }();
+
     Ratchet.isNode = function(o)
     {
         return (
@@ -379,20 +389,114 @@
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Declares and gets an observable in a given scope.
-     * Optionally registers a callback function.
+     * Subscribes a function handler to an observable.
      *
      * @param [String] scope optional scope
      * @param {String} id the variable id
-     * @param [String] callbackKey callback key
-     * @param [Function] callbackFunction a callback function to fire when the value of this observable changes
+     * @param {Function} callbackFunction the callback function
+     *
+     * @return listener id
+     */
+    Ratchet.subscribe = function()
+    {
+        var args = Ratchet.makeArray(arguments);
+
+        var scope = null;
+        var id = null;
+        var listener = null;
+
+        if (args.length == 2)
+        {
+            scope = "global";
+            id = args.shift();
+            listener = args.shift();
+        }
+        else
+        {
+            scope = args.shift();
+            id = args.shift();
+            listener = args.shift();
+        }
+
+        // function identifier
+        var listenerId = listener._lfid;
+        if (!listenerId) {
+            listenerId = Ratchet.generateListenerId();
+            listener._lfid = listenerId;
+        }
+
+        // wrap function into a closure
+        var func = function(that) {
+            return function() {
+                return listener.apply(that, arguments);
+            };
+        }(this);
+        func._lfid = listener._lfid;
+
+        var observables = Ratchet.ScopedObservables.get(scope);
+        var observable = observables.observable(id);
+
+        // tell the observable to subscribe
+        observable.subscribe(listenerId, func);
+
+        return listenerId;
+    };
+
+    /**
+     * Unsubscribes a function handler from an observable.
+     *
+     * @param [String] scope optional scope
+     * @param {String} id the variable id
+     * @param {String|Function} listener either the function or listener id
+     * @return {*}
+     */
+    Ratchet.unsubscribe = function()
+    {
+        var args = Ratchet.makeArray(arguments);
+
+        var scope = null;
+        var id = null;
+        var listenerOrId = null;
+
+        if (args.length == 2)
+        {
+            scope = "global";
+            id = args.shift();
+            listenerOrId = args.shift();
+        }
+        else if (args.length == 3)
+        {
+            scope = args.shift();
+            id = args.shift();
+            listenerOrId = args.shift();
+        }
+
+        var listenerId = listenerOrId;
+        if (Ratchet.isFunction(listenerId))
+        {
+            listenerId = listenerId._lfid;
+        }
+
+        var observables = Ratchet.ScopedObservables.get(scope);
+        var observable = observables.observable(id);
+
+        // tell the observable to unsubscribe
+        observable.unsubscribe(listenerId);
+
+        return listenerId;
+    };
+
+    /**
+     * Gets or sets an observable in the given scope.
+     *
+     * @param [String] scope optional scope
+     * @param {String} id the variable id
      */
     Ratchet.observable = function()
     {
         var scope;
         var id;
-        var callbackKey;
-        var callbackFunction;
+        var value;
 
         var args = Ratchet.makeArray(arguments);
         if (args.length == 1)
@@ -405,35 +509,34 @@
             scope = args.shift();
             id = args.shift();
         }
-        else if (args.length == 3)
+
+        var observables = Ratchet.ScopedObservables.get(scope);
+        var observable = observables.observable(id);
+
+        return observable;
+    };
+
+    Ratchet.clearObservable = function()
+    {
+        var scope;
+        var id;
+
+        var args = Ratchet.makeArray(arguments);
+        if (args.length == 1)
         {
             scope = "global";
             id = args.shift();
-            callbackKey = args.shift();
-            callbackFunction = args.shift();
         }
-        else if (args.length == 4)
+        else if (args.length == 2)
         {
             scope = args.shift();
             id = args.shift();
-            callbackKey = args.shift();
-            callbackFunction = args.shift();
         }
 
         var observables = Ratchet.ScopedObservables.get(scope);
         var observable = observables.observable(id);
 
-        // binding a function handler
-        if (callbackKey && callbackFunction)
-        {
-            // subscribe
-            observable.subscribe(callbackKey, callbackFunction);
-
-            // remember we subscribed
-            this.subscriptions[callbackKey] = observable;
-        }
-
-        return observable;
+        observable.clear();
     };
 
     /**
@@ -471,6 +574,99 @@
         var observables = Ratchet.ScopedObservables.get(scope);
 
         return observables.dependentObservable(id, func);
+    };
+
+    Ratchet.clearArray = function(array)
+    {
+        return array.splice(0, array.length);
+    };
+
+    /**
+     * Converts a one or more arguments into a linearized format.
+     *
+     * For example:
+     *
+     *   Ratchet.toLinearForm("a", {
+     *       "b": {
+     *            "c": "x1",
+     *            "d": [1,2]
+     *       }
+     *   };
+     *
+     * Returns:
+     *
+     *   a&b.c=x1&b.d.0=1&b.d.1=2
+     *
+     * @return {String}
+     */
+    Ratchet.toLinearForm = function()
+    {
+        var result = "";
+
+        var textualize = function(prefix, mapOrArray)
+        {
+            var str = null;
+
+            if (mapOrArray)
+            {
+                str = "";
+
+                // convert scalar map elements to a linear form
+                var array = [];
+                for (var k in mapOrArray)
+                {
+                    var value = mapOrArray[k];
+
+                    var key = k;
+                    if (prefix) {
+                        key = prefix + "." + key;
+                    }
+
+                    if (Ratchet.isObject(value) || Ratchet.isArray(value))
+                    {
+                        array.push(textualize(key, value));
+                    }
+                    else
+                    {
+                        array.push("" + key + "=" + value);
+                    }
+                }
+
+                // now sort the array
+                array.sort();
+
+                // combine into a string
+                for (var j = 0; j < array.length; j++)
+                {
+                    str += array[j];
+                    if (j + 1 < array.length) {
+                        str += "&";
+                    }
+                }
+            }
+
+            return str;
+        };
+
+        for (var i = 0; i < arguments.length; i++)
+        {
+            var value = arguments[i];
+            if (value)
+            {
+                if (Ratchet.isObject(value) || Ratchet.isArray(value))
+                {
+                    value = textualize(null, value);
+                }
+
+                result += value;
+
+                if (i + 1 < arguments.length) {
+                    result += "&";
+                }
+            }
+        }
+
+        return result;
     };
 
 })(window);

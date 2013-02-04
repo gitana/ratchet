@@ -8,7 +8,7 @@
             require("css!ratchet-gadgets/common.css");
             require("css!ratchet-gadgets/doclist.css");
 
-            var Ratchet = require("ratchet");
+            var Ratchet = require("ratchet-web");
 
             var gadget = require("ratchet-gadgets/list");
             var jQuery = require("jquery");

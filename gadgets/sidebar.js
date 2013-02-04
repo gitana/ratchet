@@ -3,7 +3,7 @@ define(function(require, exports, module) {
     require("css!ratchet-gadgets/common.css");
 
     var html = require("text!ratchet-gadgets/sidebar.html");
-    var Ratchet = require("ratchet");
+    var Ratchet = require("ratchet-web");
 
     require("ratchet-web");
     require("ratchet-tmpl");

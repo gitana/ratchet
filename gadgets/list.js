@@ -9,9 +9,8 @@
             require("css!ratchet-gadgets/list.css");
 
             var html = require("text!ratchet-gadgets/list.html");
-            var Ratchet = require("ratchet");
+            var Ratchet = require("ratchet-web");
 
-            require("ratchet-web");
             require("ratchet-tmpl");
             require("bootstrap");
             require("datatables");

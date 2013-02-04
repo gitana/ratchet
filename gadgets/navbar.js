@@ -4,9 +4,8 @@ define(function(require, exports, module) {
     require("css!ratchet-gadgets/navbar.css");
 
     var html = require("text!ratchet-gadgets/navbar.html");
-    var Ratchet = require("ratchet");
+    var Ratchet = require("ratchet-web");
 
-    require("ratchet-web");
     require("ratchet-tmpl");
     require("bootstrap");
 

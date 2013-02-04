@@ -48,12 +48,6 @@
                 "columns": [{
                     "key": "titleDescription",
                     "title": "Document"
-                }, {
-                    "key": "actions",
-                    "title": "Actions",
-                    "selector": {
-                        "title": "Actions..."
-                    }
                 }],
                 "loader": "remote",
                 "lengthMenu": {
@@ -121,6 +115,20 @@
                         "title": "Selected...",
                         "align": "right"//,
                         //"iconClass": "icon-pencil"
+                    }]
+                });
+            }
+
+            // add a column to the table for ACTIONS if configured
+            if (this.config()["selectorGroups"]["single-document-action-selector-group"]["actions"].length > 0)
+            {
+                this.config({
+                    "columns": [{
+                        "key": "actions",
+                        "title": "Actions",
+                        "selector": {
+                            "title": "Actions..."
+                        }
                     }]
                 });
             }
@@ -363,9 +371,11 @@
 
             var self = this;
 
-            $(el).find('.list-button-action').click(function(event) {
+            // make sure other click handlers are released
+            // this is important because datatables sometimes calls handleRowCallback multiple times...?
+            $(nRow).find('.list-button-action').off();
 
-                debugger;
+            $(nRow).find('.list-button-action').click(function(event) {
 
                 var actionId = $(this).attr("list-action-id");
                 var rowId = $(this).attr("list-row-id");
@@ -379,8 +389,6 @@
                     }
                     Ratchet.showModalMessage("Action Status", message);
                 });
-
-                return false;
 
             });
         },

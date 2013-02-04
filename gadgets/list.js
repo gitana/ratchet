@@ -596,8 +596,9 @@
                 if (self.iconUri) {
                     var iconUri = self.iconUri.call(self, row);
                     if (iconUri) {
-                        //markup = "<img align='center' src='" + iconUri + "' style='height: 128px'>";
-                        markup = "<img align='center' src='" + iconUri + "'>";
+                        markup = "<a href='" + linkUri + "'>";
+                        markup += "<img align='center' src='" + iconUri + "'>";
+                        markup += "</a>";
                     }
                 }
 

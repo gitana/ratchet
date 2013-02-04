@@ -32,6 +32,21 @@
 
 .list-row-info
 {
-    padding: 0px;
-    margin: 0px;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.list-row-info.title
+{
+    line-height: 32px;
+}
+
+.list-row-info A
+{
+    color: #4F94C9;
+}
+
+.list-row-info A:hover
+{
+    color: #4F94C9;
 }

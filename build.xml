@@ -192,6 +192,7 @@
                 <file name="config/TypeConfigurationEvaluator.js"/>
                 <file name="config/ActionGroupConfigurationEvaluator.js"/>
                 <file name="config/LocaleConfigurationEvaluator.js"/>
+                <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
             </filelist>
         </concat>
@@ -356,6 +357,7 @@
                 <file name="config/ActionGroupConfigurationEvaluator.js"/>
                 <file name="config/LocaleConfigurationEvaluator.js"/>
                 <file name="config/GadgetConfigurationEvaluator.js"/>
+                <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
             </filelist>
         </concat>

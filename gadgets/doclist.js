@@ -16,9 +16,7 @@
             var Configuration = require("ratchet/config");
             var Actions = require("ratchet/actions");
 
-            factory(Ratchet, gadget, jQuery, Configuration, Actions);
-
-            return Ratchet;
+            return factory(Ratchet, gadget, jQuery, Configuration, Actions);
         });
     }
     else
@@ -192,7 +190,12 @@
                         var order = selectorGroupItem.order;
 
                         // retrieve the action configuration
-                        var actionConfig = self.config()["actions"][actionId];
+                        var actionConfig = null;
+                        var globalConfig = Configuration.evaluate();
+                        if (globalConfig["actions"] && globalConfig["actions"][actionId])
+                        {
+                            actionConfig = globalConfig["actions"][actionId];
+                        }
                         if (!actionConfig)
                         {
                             // skip this one

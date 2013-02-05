@@ -451,6 +451,7 @@
             //
             $(context.closestDescendants('region')).each(function() {
                 Ratchet.convertRegionTag(this);
+                Ratchet.logDebug("Converted region tag: " + $(this).outerHTML());
             });
 
 
@@ -463,15 +464,21 @@
             //
             //  <div region="<regionId>"></div>
             //
+            var _rarray = [];
             var regions = {};
             $(context.closestDescendants("[region]")).each(function()
             {
                 var regionId = $(this).attr("region");
                 regions[regionId] = this;
+                _rarray.push(regionId);
+
+                Ratchet.logDebug("Found region: " + regionId);
             });
 
             // resolve all of these regions
             resolver.resolve.call(resolver, this, regions, function(resolutions) {
+
+                Ratchet.logDebug("Resolved regions: " + JSON.stringify(_rarray) + " to: " + JSON.stringify(resolutions));
 
                 for (var regionId in resolutions)
                 {
@@ -549,6 +556,7 @@
             //
             $(context.closestDescendants('gadget')).each(function() {
                 Ratchet.convertGadgetTag(this);
+                Ratchet.logDebug("Converted region tag: " + $(this).outerHTML());
             });
 
 
@@ -566,6 +574,8 @@
                 var subGadgetType = $(this).attr("gadget");
                 var subGadgetId = $(this).attr("id");
                 var subGadgetStrategy = $(this).attr("gadget-strategy");
+
+                Ratchet.logDebug("Processing sub-gadget [type=" + subGadgetType + ", id=" + subGadgetId + "]");
 
                 // check if we already have a child ratchet for this gadget
                 var ratcheted = false;
@@ -587,6 +597,8 @@
 
                 if (!ratcheted)
                 {
+                    Ratchet.logDebug("Ratcheting sub-gadget [type=" + subGadgetType + ", id=" + subGadgetId + "]");
+
                     // instantiate a child ratchet on top of this element
                     childRatchet = new Ratchet($(this), _this, function() {
                         this.gadgetType = subGadgetType;
@@ -614,7 +626,8 @@
 
             // dispatch the child ratchets
             $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
-                //Ratchet.debug("Dispatching child ratchet: " + subGadgetId + " (" + context.route.method + " " + context.route.uri + ")");
+
+                Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + ")");
 
                 var subParams = params[childRatchetId];
 

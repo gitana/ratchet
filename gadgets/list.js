@@ -15,19 +15,16 @@
             require("bootstrap");
             require("datatables");
             require("datatables-bootstrap");
-            var _ = require("underscore");
 
-            factory(Ratchet, html, _);
-
-            return Ratchet;
+            return factory(Ratchet, html);
         });
     }
     else
     {
-        return factory(root.Ratchet, "./list.html", root._);
+        return factory(root.Ratchet, "./list.html");
     }
 
-}(this, function(Ratchet, html, _) {
+}(this, function(Ratchet, html) {
 
     return Ratchet.Gadgets.List = Ratchet.GadgetRegistry.register("list", Ratchet.AbstractDynamicGadget.extend({
 
@@ -665,37 +662,40 @@
             var self = this;
 
             // for each button, bind to button handler
-            for (var i = 0; i < model.buttons.length; i++)
+            if (model.buttons)
             {
-                var button = model.buttons[i];
-
-                if (button.buttons)
+                for (var i = 0; i < model.buttons.length; i++)
                 {
-                    // drop down button
-                    for (var j = 0; j < button.buttons.length; j++)
+                    var button = model.buttons[i];
+
+                    if (button.buttons)
                     {
-                        var button2 = button.buttons[j];
+                        // drop down button
+                        for (var j = 0; j < button.buttons.length; j++)
+                        {
+                            var button2 = button.buttons[j];
 
-                        $(".list-button-" + button2.key).off();
+                            $(".list-button-" + button2.key).off();
 
-                        $(".list-button-" + button2.key).click(function(b) {
+                            $(".list-button-" + button2.key).click(function(b) {
+                                return function(event) {
+                                    self.handleButtonBarButtonClick.call(self, event, model, b);
+                                };
+                            }(button2));
+
+                        }
+                    }
+                    else
+                    {
+                        // single click button
+                        $(".list-button-" + button.key).off();
+
+                        $(".list-button-" + button.key).click(function(b) {
                             return function(event) {
                                 self.handleButtonBarButtonClick.call(self, event, model, b);
                             };
-                        }(button2));
-
+                        }(button));
                     }
-                }
-                else
-                {
-                    // single click button
-                    $(".list-button-" + button.key).off();
-
-                    $(".list-button-" + button.key).click(function(b) {
-                        return function(event) {
-                            self.handleButtonBarButtonClick.call(self, event, model, b);
-                        };
-                    }(button));
                 }
             }
         },
@@ -1041,7 +1041,7 @@
                     // TOTAL ROWS
                     var totalRows = -1;
                     if (resultMap.totalRows) {
-                        if (_.isFunction(resultMap.totalRows)) {
+                        if (Ratchet.isFunction(resultMap.totalRows)) {
                             totalRows = resultMap.totalRows();
                         } else {
                             totalRows = resultMap.totalRows;
@@ -1055,7 +1055,7 @@
                     // SIZE
                     var size = -1;
                     if (resultMap.size) {
-                        if (_.isFunction(resultMap.size)) {
+                        if (Ratchet.isFunction(resultMap.size)) {
                             totalRows = resultMap.size();
                         } else {
                             totalRows = resultMap.size;
@@ -1069,7 +1069,7 @@
                     // OFFSET?
                     var offset = -1;
                     if (resultMap.offset) {
-                        if (_.isFunction(resultMap.offset)) {
+                        if (Ratchet.isFunction(resultMap.offset)) {
                             totalRows = resultMap.offset();
                         } else {
                             totalRows = resultMap.offset;
@@ -1084,7 +1084,7 @@
                     var rows = [];
 
                     for (var k in resultMap) {
-                        if (_.has(resultMap, k) && !_.isFunction(resultMap[k])) {
+                        if (resultMap.hasOwnProperty(k) && !Ratchet.isFunction(resultMap[k])) {
                             var obj = resultMap[k];
                             obj["id"] = obj["_doc"];
                             rows.push(obj);

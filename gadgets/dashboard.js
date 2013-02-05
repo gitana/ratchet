@@ -37,8 +37,37 @@ define(function(require, exports, module) {
                                 dashletConfig = {};
                             }
 
-                            var subscriptionKey = "gadget_" + dashlet.type + "_" + dashlet.id;
-                            self.observable(subscriptionKey).set(dashletConfig);
+                            //var subscriptionKey = "gadget_" + dashlet.type + "_" + dashlet.id;
+                            //self.observable(subscriptionKey).set(dashletConfig);
+
+                            // the gadget configuration for the dashlets is not preloaded by the dynamic gadget code...
+                            var c = Ratchet.Configuration.evaluate({
+                                "gadgetType": dashlet.type,
+                                "gadget": dashlet.id
+                            });
+                            if (c.gadgets && c.gadgets[dashlet.type] && c.gadgets[dashlet.type][dashlet.id])
+                            {
+                                // already configured into the configuration service
+                            }
+                            else
+                            {
+                                var z = {
+                                    "evaluator": "gadget",
+                                    "condition": {
+                                        "gadgetType": dashlet.type,
+                                        "gadget": dashlet.id
+                                    },
+                                    "config": {
+                                        "gadgets": {
+                                        }
+                                    }
+                                };
+                                z.config.gadgets[dashlet.type] = {};
+                                z.config.gadgets[dashlet.type][dashlet.id] = dashletConfig;
+
+                                // add to configuration service
+                                Ratchet.Configuration.add(z);
+                            }
                         }
                     }
                 }

@@ -19,7 +19,7 @@
                     var block = {
                         "evaluator": "gadget",
                         "condition": {
-                            "gadgetId": self.getGadgetId(),
+                            "gadget": self.getGadgetId(),
                             "gadgetType": self.getGadgetType()
                         },
                         "config": {
@@ -27,8 +27,9 @@
                             }
                         }
                     };
-                    block.config.gadgets[type + "_" + id] = {};
-                    Ratchet.merge(config, block.config.gadgets[type + "_" + id]);
+                    block.config.gadgets[type] = {};
+                    block.config.gadgets[type][id] = {};
+                    Ratchet.merge(config, block.config.gadgets[type][id]);
                     var blockKey = Ratchet.Configuration.add(block);
 
                     blockKeys.push(blockKey);
@@ -36,16 +37,16 @@
 
                 var c = {};
                 var gadgetConfig = Ratchet.Configuration.evaluate({
-                    "gadgetId": self.getGadgetId(),
+                    "gadget": self.getGadgetId(),
                     "gadgetType": self.getGadgetType()
                 });
-                if (gadgetConfig.gadgets && gadgetConfig.gadgets[type + "_" + id])
+                if (gadgetConfig.gadgets && gadgetConfig.gadgets[type] && gadgetConfig.gadgets[type][id])
                 {
-                    Ratchet.merge(gadgetConfig.gadgets[type + "_" + id], c);
+                    Ratchet.merge(gadgetConfig.gadgets[type][id], c);
                 }
                 else
                 {
-                    console.log("Gadget config does not have gadgets[" + type + "_" + id + "] element");
+                    console.log("Gadget config does not have gadgets[" + type + "][" + id + "] element");
                 }
                 return c;
             };

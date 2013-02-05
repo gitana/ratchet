@@ -14,9 +14,7 @@
             require("ratchet/tmpl");
             require("bootstrap");
 
-            factory(Ratchet, html);
-
-            return Ratchet;
+            return factory(Ratchet, html);
         });
     }
     else

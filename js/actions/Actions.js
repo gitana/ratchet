@@ -69,6 +69,7 @@
             var action = instances[actionId];
             if (!action)
             {
+                Ratchet.logError("Cannot find action for action id: " + actionId);
                 throw new Error("Cannot find action for action id: " + actionId);
             }
 

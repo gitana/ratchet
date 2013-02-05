@@ -181,7 +181,7 @@
                             // something is already in the target that isn't an ARRAY
                             // should we overwrite?
                             // TODO
-                            console.log("Source is array but target is: " + typeof(target) + ", cannot merge");
+                            Ratchet.logWarn("Source is array but target is: " + typeof(target) + ", cannot merge");
                         }
 
                     }
@@ -213,7 +213,7 @@
                             // something is already in the target that isn't an OBJECT
                             // should we overwrite?
                             // TODO
-                            console.log("Source is object but target is: " + typeof(target) + ", cannot merge");
+                            Ratchet.logWarn("Source is object but target is: " + typeof(target) + ", cannot merge");
                         }
 
                     }
@@ -304,6 +304,8 @@
          */
         evaluate: function(context)
         {
+            Ratchet.logDebug("Configuration Eval begins for context: " + (context ? JSON.stringify(context) : "null"));
+
             var self = this;
 
             var result = {};
@@ -334,6 +336,8 @@
 
                 if (!block.evaluator)
                 {
+                    Ratchet.logDebug(" -> apply global block: " + blockKey + " with: " + JSON.stringify(config));
+
                     // no evaluator, so assume okay and merge
                     apply(config, result, replace);
                 }
@@ -348,9 +352,13 @@
                     else
                     {
                         // evaluate
+                        Ratchet.logDebug(" -> evaluate context: " + (context ? JSON.stringify(context) : "null"));
+
                         var valid = evaluatorInstance.evaluate(context, condition);
                         if (valid)
                         {
+                            Ratchet.logDebug(" -> apply block: " + blockKey + " with: " + JSON.stringify(config));
+
                             // looks good, so merge
                             apply(config, result, replace);
                         }

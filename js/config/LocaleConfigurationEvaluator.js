@@ -23,7 +23,7 @@
                 locale = context.locale();
             }
 
-            return (locale === condition);
+            return this.hasMatch(condition, locale);
         }
 
     }));

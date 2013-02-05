@@ -192,6 +192,7 @@
                 <file name="config/TypeConfigurationEvaluator.js"/>
                 <file name="config/ActionGroupConfigurationEvaluator.js"/>
                 <file name="config/LocaleConfigurationEvaluator.js"/>
+                <file name="config/PageConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 
@@ -355,6 +356,7 @@
                 <file name="config/ActionGroupConfigurationEvaluator.js"/>
                 <file name="config/LocaleConfigurationEvaluator.js"/>
                 <file name="config/GadgetConfigurationEvaluator.js"/>
+                <file name="config/PageConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 
@@ -536,7 +538,7 @@
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-actions-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/actions.js"/>
-            <param name="variableName" value="Ratchet" />
+            <param name="variableName" value="Ratchet.Actions" />
             <param name="dependencies" value="['ratchet/ratchet']" />
         </antcall>
 
@@ -544,7 +546,7 @@
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-config-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/config.js"/>
-            <param name="variableName" value="Ratchet" />
+            <param name="variableName" value="Ratchet.Configuration" />
             <param name="dependencies" value="['jquery', 'ratchet/ratchet']" />
         </antcall>
 
@@ -552,7 +554,7 @@
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-messages-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/messages.js"/>
-            <param name="variableName" value="Ratchet" />
+            <param name="variableName" value="Ratchet.Messages" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
         </antcall>
 

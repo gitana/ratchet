@@ -23,8 +23,9 @@
                 actionGroup = actionGroup();
             }
 
-            return (actionGroup === condition);
+            return this.hasMatch(condition, actionGroup);
         }
+
 
     }));
 

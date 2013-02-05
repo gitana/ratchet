@@ -719,4 +719,54 @@
         return key;
     };
 
+    /**
+     * Converts a wildcard pattern to a regular expression pattern.
+     * Incorporated from jPad (http://jpaq.org/) MIT license.
+     *
+     * @param pat
+     * @param opts
+     * @return {RegExp}
+     */
+    Ratchet.wildcardToRegExp = function(pat, opts) {
+        if (!opts) {
+            opts = "lg";
+        }
+
+        var oOpt = opts && opts.indexOf("o") > -1;
+        var i, m, p = "", sAdd = (opts && opts.indexOf("l") > -1 ? "" : "?");
+        var re = new RegExp("~.|\\[!|" + (oOpt ? "{\\d+,?\\d*\\}|[" : "[")
+            + (opts && opts.indexOf("p") > -1 ? "" : "\\(\\)")
+            + "\\{\\}\\\\\\.\\*\\+\\?\\:\\|\\^\\$%_#<>]");
+        while((i = pat.search(re)) > -1 && i < pat.length) {
+            p += pat.substring(0, i);
+            if((m = pat.match(re)[0]) == "[!")
+                p += "[^";
+            else if(m.charAt(0) == "~")
+                p += "\\" + m.charAt(1);
+            else if(m == "*" || m == "%")
+                p += ".*" + sAdd;
+            else if(m == "?" || m == "_")
+                p += ".";
+            else if(m == "#")
+                p += "\\d";
+            else if(oOpt && m.charAt(0) == "{")
+                p += m + sAdd;
+            else if(m == "<")
+                p += "\\b(?=\\w)";
+            else if(m == ">")
+                p += "(?:\\b$|(?=\\W)\\b)";
+            else
+                p += "\\" + m;
+            pat = pat.substring(i + m.length);
+        }
+        p += pat;
+        if(opts) {
+            if(/[ab]/.test(opts))
+                p = "^" + p;
+            if(/[ae]/.test(opts))
+                p += "$";
+        }
+        return new RegExp(p, opts ? opts.replace(/[^gim]/g, "") : "");
+    };
+
 })(window);

@@ -23,7 +23,7 @@
                 type = context.type();
             }
 
-            return (type === condition);
+            return this.hasMatch(condition, type);
         }
 
     }));

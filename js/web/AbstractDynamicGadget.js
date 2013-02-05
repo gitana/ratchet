@@ -22,18 +22,32 @@
                             "gadgetId": self.getGadgetId(),
                             "gadgetType": self.getGadgetType()
                         },
-                        "config": {}
+                        "config": {
+                            "gadgets": {
+                            }
+                        }
                     };
-                    Ratchet.merge(config, block.config);
+                    block.config.gadgets[type + "_" + id] = {};
+                    Ratchet.merge(config, block.config.gadgets[type + "_" + id]);
                     var blockKey = Ratchet.Configuration.add(block);
 
                     blockKeys.push(blockKey);
                 }
 
-                return Ratchet.Configuration.evaluate({
+                var c = {};
+                var gadgetConfig = Ratchet.Configuration.evaluate({
                     "gadgetId": self.getGadgetId(),
                     "gadgetType": self.getGadgetType()
                 });
+                if (gadgetConfig.gadgets && gadgetConfig.gadgets[type + "_" + id])
+                {
+                    Ratchet.merge(gadgetConfig.gadgets[type + "_" + id], c);
+                }
+                else
+                {
+                    console.log("Gadget config does not have gadgets[" + type + "_" + id + "] element");
+                }
+                return c;
             };
 
             this.releaseAllConfigs = function()

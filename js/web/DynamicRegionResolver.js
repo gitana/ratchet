@@ -20,43 +20,44 @@
         {
             var self = this;
 
-            var page = context.observable("page").get();
-
             var resolutions = {};
 
-            for (var regionName in regions)
+            if (this.config.regions)
             {
-                var x = page.bindings[regionName];
-                if (x)
+                for (var regionName in this.config.regions)
                 {
-                    var array = [];
-
-                    // we either have a single match or an array
-                    if (x.push)
+                    var x = this.config.regions[regionName];
+                    if (x)
                     {
-                        for (var i = 0; i < x.length; i++)
+                        var array = [];
+
+                        // we either have a single match or an array
+                        if (x.push)
+                        {
+                            for (var i = 0; i < x.length; i++)
+                            {
+                                var resolution = {
+                                    "type": x[i].gadgetType,
+                                    "id": x[i].gadget,
+                                    "attrs": {}
+                                };
+
+                                array.push(resolution);
+                            }
+                        }
+                        else
                         {
                             var resolution = {
-                                "type": x[i].type,
-                                "id": x[i].key,
+                                "type": x.gadgetType,
+                                "id": x.gadget,
                                 "attrs": {}
                             };
 
                             array.push(resolution);
                         }
-                    }
-                    else
-                    {
-                        var resolution = {
-                            "type": x.type,
-                            "id": x.key,
-                            "attrs": {}
-                        };
 
-                        array.push(resolution);
+                        resolutions[regionName] = array;
                     }
-
-                    resolutions[regionName] = array;
                 }
             }
 

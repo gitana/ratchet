@@ -110,6 +110,19 @@
             </filelist>
         </concat>
 
+        <!-- Standalone: "ratchet-handlebars" -->
+        <concat destfile="${package.dir}/js/${appkey}-handlebars.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/plugins/handlebars/lib">
+                <file name="handlebars.js"/>
+            </filelist>
+            <filelist dir="${prep.dir}/plugins/handlebars">
+                <file name="HandlebarsTemplateEngine.js"/>
+            </filelist>
+        </concat>
+
         <!-- Standalone: "ratchet-tmpl" -->
         <concat destfile="${package.dir}/js/${appkey}-tmpl.js">
             <filelist dir="${prep.dir}">
@@ -261,6 +274,19 @@
             </filelist>
             <filelist dir="${prep.dir}/plugins/tmpl">
                 <file name="jQueryTemplateEngine.js"/>
+            </filelist>
+        </concat>
+
+        <!-- "ratchet-ejs" -->
+        <concat destfile="${prep.dir}/js/${appkey}-handlebars-component.js">
+            <filelist dir="${prep.dir}">
+                <file name="license.txt"/>
+            </filelist>
+            <filelist dir="${prep.dir}/plugins/handlebars/lib">
+                <file name="handlebars.js"/>
+            </filelist>
+            <filelist dir="${prep.dir}/plugins/handlebars">
+                <file name="HandlebarsTemplateEngine.js"/>
             </filelist>
         </concat>
 
@@ -472,6 +498,14 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/ejs.js"/>
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'ejs']" />
+        </antcall>
+
+        <!-- "ratchet-ejs" -->
+        <antcall target="umd">
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-ejs-component.js"/>
+            <param name="outputFile" value="${package.dir}/components/ratchet/handlebars.js"/>
+            <param name="variableName" value="Ratchet" />
+            <param name="dependencies" value="['ratchet/ratchet']" />
         </antcall>
 
         <!-- "ratchet-web" -->

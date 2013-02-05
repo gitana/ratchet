@@ -5,16 +5,16 @@
         // AMD
         define(function(require, exports, module) {
 
-            require("css!ratchet-gadgets/common.css");
-            require("css!ratchet-gadgets/doclist.css");
+            require("css!ratchet/gadgets/common.css");
+            require("css!ratchet/gadgets/doclist.css");
 
-            var Ratchet = require("ratchet-web");
+            var Ratchet = require("ratchet/web");
 
-            var gadget = require("ratchet-gadgets/list");
+            var gadget = require("ratchet/gadgets/list");
             var jQuery = require("jquery");
 
-            var Configuration = require("ratchet-config/ratchet-config");
-            var Actions = require("ratchet-actions/ratchet-actions");
+            var Configuration = require("ratchet/config");
+            var Actions = require("ratchet/actions");
 
             factory(Ratchet, gadget, jQuery, Configuration, Actions);
 

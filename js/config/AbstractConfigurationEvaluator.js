@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     Ratchet.AbstractConfigurationEvaluator = Base.extend({
 
@@ -25,4 +25,4 @@
     });
 
 
-})(jQuery);
+})();

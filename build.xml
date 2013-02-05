@@ -453,201 +453,73 @@
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/${appkey}.js"/>
-            <param name="name" value="ratchet" />
+            <!--<param name="name" value="ratchet" />-->
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['jquery']" />
         </antcall>
 
-
         <!-- "ratchet-tmpl" -->
-        <mkdir dir="${package.dir}/components/ratchet-tmpl"/>
-        <copy file="${project.dir}/components/ratchet-tmpl/component.json.txt" tofile="${package.dir}/components/ratchet-tmpl/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-tmpl">
-            <fileset dir="${project.dir}/components/ratchet-tmpl">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-tmpl-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-tmpl/${appkey}-tmpl.js"/>
-            <param name="name" value="ratchet-tmpl" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/tmpl.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'jquery.tmpl']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'jquery.tmpl']" />
         </antcall>
-
 
         <!-- "ratchet-ejs" -->
-        <mkdir dir="${package.dir}/components/ratchet-ejs"/>
-        <copy file="${project.dir}/components/ratchet-ejs/component.json.txt" tofile="${package.dir}/components/ratchet-ejs/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-ejs">
-            <fileset dir="${project.dir}/components/ratchet-ejs">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-ejs-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-ejs/${appkey}-ejs.js"/>
-            <param name="name" value="ratchet-ejs" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/ejs.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'ejs']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'ejs']" />
         </antcall>
-
 
         <!-- "ratchet-web" -->
-        <mkdir dir="${package.dir}/components/ratchet-web"/>
-        <copy file="${project.dir}/components/ratchet-web/component.json.txt" tofile="${package.dir}/components/ratchet-web/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-web">
-            <fileset dir="${project.dir}/components/ratchet-web">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-web-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-web/${appkey}-web.js"/>
-            <param name="name" value="ratchet-web" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/web.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'ratchet-config']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config', 'ratchet/messages', 'ratchet/actions']" />
         </antcall>
-
 
         <!-- "ratchet-gitana" -->
-        <mkdir dir="${package.dir}/components/ratchet-gitana"/>
-        <copy file="${project.dir}/components/ratchet-gitana/component.json.txt" tofile="${package.dir}/components/ratchet-gitana/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-gitana">
-            <fileset dir="${project.dir}/components/ratchet-gitana">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-gitana-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-gitana/${appkey}-gitana.js"/>
-            <param name="name" value="ratchet-gitana" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/gitana.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'gitana', 'alpaca']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'gitana', 'alpaca']" />
         </antcall>
 
-
         <!-- "ratchet-gadgets" -->
-        <mkdir dir="${package.dir}/components/ratchet-gadgets"/>
-        <copy file="${project.dir}/components/ratchet-gadgets/component.json.txt" tofile="${package.dir}/components/ratchet-gadgets/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-gadgets">
+        <copy todir="${package.dir}/components/ratchet/gadgets">
             <fileset dir="${project.dir}/gadgets">
                 <exclude name="**/.DS_Store/*"/>
                 <exclude name="**/.idea/*"/>
             </fileset>
         </copy>
 
-
         <!-- "ratchet-actions" -->
-        <mkdir dir="${package.dir}/components/ratchet-actions"/>
-        <copy file="${project.dir}/components/ratchet-actions/component.json.txt" tofile="${package.dir}/components/ratchet-actions/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-actions">
-            <fileset dir="${project.dir}/components/ratchet-actions">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-actions-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-actions/${appkey}-actions.js"/>
-            <param name="name" value="ratchet-actions" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/actions.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet']" />
+            <param name="dependencies" value="['ratchet/ratchet']" />
         </antcall>
-
 
         <!-- "ratchet-config" -->
-        <mkdir dir="${package.dir}/components/ratchet-config"/>
-        <copy file="${project.dir}/components/ratchet-config/component.json.txt" tofile="${package.dir}/components/ratchet-config/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-config">
-            <fileset dir="${project.dir}/components/ratchet-config">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-config-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-config/${appkey}-config.js"/>
-            <param name="name" value="ratchet-config" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/config.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet']" />
+            <param name="dependencies" value="['jquery', 'ratchet/ratchet']" />
         </antcall>
 
-
         <!-- "ratchet-messages" -->
-        <mkdir dir="${package.dir}/components/ratchet-messages"/>
-        <copy file="${project.dir}/components/ratchet-messages/component.json.txt" tofile="${package.dir}/components/ratchet-messages/component.json" overwrite="true" filtering="true">
-            <filterchain>
-                <tokenfilter>
-                    <replacestring from="/** VERSION **/" to="${version}"/>
-                </tokenfilter>
-            </filterchain>
-        </copy>
-        <copy todir="${package.dir}/components/ratchet-messages">
-            <fileset dir="${project.dir}/components/ratchet-messages">
-                <exclude name="**/.DS_Store/*"/>
-                <exclude name="**/.idea/*"/>
-                <exclude name="component.json.txt"/>
-            </fileset>
-        </copy>
         <antcall target="umd">
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-messages-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet-messages/${appkey}-messages.js"/>
-            <param name="name" value="ratchet-messages" />
+            <param name="outputFile" value="${package.dir}/components/ratchet/messages.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet', 'ratchet-config']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
         </antcall>
 
 
@@ -704,12 +576,18 @@
             <file file="${scriptFile}"/>
         </loadresource>
 
+        <!-- insertName can only be set once, so if name property exists, get set otherwise default to "" -->
+        <condition property="insertName" value="'${name}',">
+            <isset property="name"/>
+        </condition>
+        <property name="insertName" value=""/>
+
         <!-- create a temp file holding our UMD wrapped script -->
         <copy file="${prep.dir}/lib/umd/wrapper.js" tofile="${scriptFile}.temp" overwrite="true" filtering="true">
             <filterchain>
                 <tokenfilter>
                     <replacestring from="/** BUILD_INSERT_SCRIPT **/" to="${script}"/>
-                    <replacestring from="/** BUILD_INSERT_NAME **/" to="${name}"/>
+                    <replacestring from="/** BUILD_INSERT_NAME **/" to="${insertName}"/>
                     <replacestring from="/** BUILD_INSERT_DEPENDENCIES **/" to="${dependencies}"/>
                     <replacestring from="/** BUILD_INSERT_VARIABLE_NAME **/" to="${variableName}"/>
                 </tokenfilter>
@@ -749,31 +627,6 @@
 		<!-- "ratchet" -->
         <copy todir="/projects/components/ratchet">
             <fileset dir="${package.dir}/components/ratchet"/>
-        </copy>
-
-        <!-- "ratchet-tmpl" -->
-        <copy todir="/projects/components/ratchet-tmpl">
-            <fileset dir="${package.dir}/components/ratchet-tmpl"/>
-        </copy>
-
-        <!-- "ratchet-ejs" -->
-        <copy todir="/projects/components/ratchet-ejs">
-            <fileset dir="${package.dir}/components/ratchet-ejs"/>
-        </copy>
-
-        <!-- "ratchet-web" -->
-        <copy todir="/projects/components/ratchet-web">
-            <fileset dir="${package.dir}/components/ratchet-web"/>
-        </copy>
-
-        <!-- "ratchet-gitana" -->
-        <copy todir="/projects/components/ratchet-gitana">
-            <fileset dir="${package.dir}/components/ratchet-gitana"/>
-        </copy>
-
-        <!-- "ratchet-gadgets" -->
-        <copy todir="/projects/components/ratchet-gadgets">
-            <fileset dir="${package.dir}/components/ratchet-gadgets"/>
         </copy>
 
     </target>

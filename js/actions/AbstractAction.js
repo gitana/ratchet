@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     Ratchet.AbstractAction = Base.extend({
 
@@ -42,4 +42,4 @@
 
     });
 
-})(jQuery);
+})();

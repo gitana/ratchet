@@ -5,13 +5,13 @@
         // AMD
         define(function(require, exports, module) {
 
-            require("css!ratchet-gadgets/common.css");
-            require("css!ratchet-gadgets/form.css");
+            require("css!ratchet/gadgets/common.css");
+            require("css!ratchet/gadgets/form.css");
 
-            var html = require("text!ratchet-gadgets/form.html");
-            var Ratchet = require("ratchet-web");
+            var html = require("text!ratchet/gadgets/form.html");
+            var Ratchet = require("ratchet/web");
 
-            require("ratchet-tmpl");
+            require("ratchet/tmpl");
             require("bootstrap");
 
             factory(Ratchet, html);

@@ -28,7 +28,7 @@
             "footer": false
         }, function(div) {
 
-            $(div).find('.modal-body').html("<p align='center'><img src='/components/ratchet-web/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
+            $(div).find('.modal-body').html("<p align='center'><img src='/components/ratchet/web/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
         });
 
         return Ratchet.blockingModal;

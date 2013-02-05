@@ -35,7 +35,7 @@
      *  (i.e. Ratchet.Configuration) or using the AMD/CommonJS approach.  The following works:
      *
      *      var config = Ratchet.Configuration;
-     *      var config = require("ratchet-config");
+     *      var config = require("ratchet/config");
      *
      *  Each module can then add its own configuration like this:
      *
@@ -45,7 +45,7 @@
      *
      *  When used in the browser, the SCRIPT tag may contain a reference to a config file to load, i.e:
      *
-     *      <script type="text/javascript" src="ratchet-config.js" data-config="config.json"></script>
+     *      <script type="text/javascript" src="ratchet/config.js" data-config="config.json"></script>
      *
      *  When this tag evaluates, the file config.json will be loaded and the config will be applied to the singleton
      *  configuration registry.

@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     Ratchet.Actions.register("log", Ratchet.AbstractAction.extend({
 
@@ -19,4 +19,4 @@
 
     }));
 
-})(jQuery);
+})();

@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     Ratchet.Actions.register("test", Ratchet.AbstractAction.extend({
 
@@ -24,4 +24,4 @@
 
     }));
 
-})(jQuery);
+})();

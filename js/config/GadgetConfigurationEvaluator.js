@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     return Ratchet.Configuration.register("gadget", Ratchet.AbstractConfigurationEvaluator.extend({
 
@@ -27,4 +27,4 @@
 
     }));
 
-})(jQuery);
+})();

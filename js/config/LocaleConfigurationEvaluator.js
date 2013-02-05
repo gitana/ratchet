@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     return Ratchet.Configuration.register("locale", Ratchet.AbstractConfigurationEvaluator.extend({
 
@@ -28,4 +28,4 @@
 
     }));
 
-})(jQuery);
+})();

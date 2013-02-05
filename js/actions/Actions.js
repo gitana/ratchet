@@ -1,4 +1,4 @@
-(function($) {
+(function() {
 
     var instances = {};
     var types = {};
@@ -81,4 +81,4 @@
 
     return Ratchet.Actions;
 
-})(jQuery);
+})();

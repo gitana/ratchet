@@ -7,7 +7,12 @@
     "repository": {"type": "git", "url": "git://github.com/gitana/ratchet.git"},
     "version": "/** VERSION **/",
     "dependencies": {
-        "jquery": "*"
+        "jquery": "*",
+        "ejs": "*",
+        "gitana": "*",
+		"alpaca": "*",
+        "jquery.tmpl": "*",
+        "bootstrap": "*"
     },
     "main": ["ratchet.js"]
 }

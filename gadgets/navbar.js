@@ -1,12 +1,12 @@
 define(function(require, exports, module) {
 
-    require("css!ratchet-gadgets/common.css");
-    require("css!ratchet-gadgets/navbar.css");
+    require("css!ratchet/gadgets/common.css");
+    require("css!ratchet/gadgets/navbar.css");
 
-    var html = require("text!ratchet-gadgets/navbar.html");
-    var Ratchet = require("ratchet-web");
+    var html = require("text!ratchet/gadgets/navbar.html");
+    var Ratchet = require("ratchet/web");
 
-    require("ratchet-tmpl");
+    require("ratchet/tmpl");
     require("bootstrap");
 
     return Ratchet.GadgetRegistry.register("navbar", Ratchet.AbstractDynamicGadget.extend({

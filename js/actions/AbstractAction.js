@@ -31,11 +31,11 @@
          * EXTENSION POINT
          *
          * @param config
-         * @param data
+         * @param actionContext
          * @param callback signature is (err, data)
          * @return {Boolean}
          */
-        execute: function(config, data, callback)
+        execute: function(config, actionContext, callback)
         {
             callback();
         }

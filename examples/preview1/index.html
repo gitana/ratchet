@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Gitana Ratchet MVC - Preview #1</title>
+
+    <!-- code prettifier -->
+    <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="../css/example.css" rel="stylesheet">
+
+    <!-- prettifier -->
+    <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
+
+    <!-- jquery -->
+    <script type="text/javascript" src="../lib/jquery-latest.min.js"></script>
+
+    <!-- samples -->
+    <script type="text/javascript" src="../js/example.js"></script>
+
+    <!-- START_RATCHET_JAVASCRIPT -->
+    <!-- third party -->
+    <script type="text/javascript" src="../../js/thirdparty/base.js"></script>
+    <script type="text/javascript" src="../../js/thirdparty/json2.js"></script>
+    <script type="text/javascript" src="../../js/thirdparty/jquery.history.js"></script>
+    <script type="text/javascript" src="../../js/thirdparty/form2object.js"></script>
+    <!-- ratchet -->
+    <script type="text/javascript" src="../../js/Ratchet.js"></script>
+    <script type="text/javascript" src="../../js/Utils.js"></script>
+    <script type="text/javascript" src="../../js/Observable.js"></script>
+    <script type="text/javascript" src="../../js/Observables.js"></script>
+    <script type="text/javascript" src="../../js/ScopedObservables.js"></script>
+    <script type="text/javascript" src="../../js/RenderContext.js"></script>
+    <script type="text/javascript" src="../../js/Gadget.js"></script>
+    <script type="text/javascript" src="../../js/GadgetRegistry.js"></script>
+    <script type="text/javascript" src="../../js/TemplateEngineRegistry.js"></script>
+    <script type="text/javascript" src="../../js/BaseTemplateEngine.js"></script>
+    <script type="text/javascript" src="../../js/jQueryAdapter.js"></script>
+    <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
+    <!-- END_RATCHET_JAVASCRIPT -->
+
+    <!-- START_RATCHET_TMPL_JAVASCRIPT -->
+    <!-- jQuery Templating Plugin -->
+    <script type="text/javascript" src="../../plugins/tmpl/lib/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="../../plugins/tmpl/jQueryTemplateEngine.js"></script>
+    <!-- END_RATCHET_TMPL_JAVASCRIPT -->
+
+    <!-- configuration -->
+    <script type="text/javascript" src="../../js/config/Configuration.js"></script>
+    <script type="text/javascript" src="../../js/config/AbstractConfigurationEvaluator.js"></script>
+    <script type="text/javascript" src="../../js/config/GadgetConfigurationEvaluator.js"></script>
+    <script type="text/javascript" src="../../js/config/ViewerConfigurationEvaluator.js"></script>
+
+    <!-- dynamics -->
+    <script type="text/javascript" src="../../js/web/AbstractDynamicGadget.js"></script>
+    <script type="text/javascript" src="../../js/web/Dynamic.js"></script>
+
+    <!-- viewer -->
+    <script type="text/javascript" src="../../js/viewer/AbstractViewer.js"></script>
+    <script type="text/javascript" src="../../js/viewer/ViewerRegistry.js"></script>
+
+    <!-- doc viewer gadget -->
+    <script type="text/javascript" src="../../dynamic/docviewer.js"></script>
+    <link rel="stylesheet" href="../../dynamic/docviewer.css">
+
+    <!-- image viewer -->
+    <script type="text/javascript" src="../../dynamic/viewers/image.js"></script>
+    <link rel="stylesheet" href="../../dynamic/viewers/image.css">
+
+    <!-- audio viewer -->
+    <script type="text/javascript" src="../../dynamic/viewers/audio.js"></script>
+    <link rel="stylesheet" href="../../dynamic/viewers/audio.css">
+
+    <!-- video viewer -->
+    <!--
+    <script type="text/javascript" src="../../dynamic/viewers/video.js"></script>
+    <link rel="stylesheet" href="../../dynamic/viewers/video.css">
+    -->
+    <script type="text/javascript" src="../../dynamic/viewers/video2.js"></script>
+    <link rel="stylesheet" href="../../dynamic/viewers/video2.css">
+
+    <!-- flash viewer -->
+    <script type="text/javascript" src="../../dynamic/viewers/flash.js"></script>
+    <link rel="stylesheet" href="../../dynamic/viewers/flash.css">
+
+    <!-- video viewer -->
+    <link href="../../lib/videojs/video-js.css" rel="stylesheet">
+    <script src="../../lib/videojs/video.js"></script>
+    <script type="text/javascript" src="../../dynamic/viewers/video2.js"></script>
+
+    <!-- text viewer -->
+    <script type="text/javascript" src="../../dynamic/viewers/text.js"></script>
+    <link rel="stylesheet" href="../../dynamic/viewers/text.css">
+
+    <!-- EXAMPLE GADGET -->
+    <script type="text/javascript" src="gadget.js"></script>
+
+    <!-- work it -->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $("body").ratchet().run("/");
+
+            $("#resource1").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource1",
+                    "title": "Yoda",
+                    "kind": "file",
+                    "url": "../resources/yoda.jpg",
+                    "size": 10000,
+                    "mimetype": "image/jpeg",
+                    "filename": "yoda.jpg",
+                    "attachments": {
+                        "thumb150": {
+                            "url": "../resources/yoda-150.jpg",
+                            "size": 1000,
+                            "mimetype": "image/jpeg",
+                            "filename": "yoda-150.jpg"
+                        }
+                    }
+                });
+
+            });
+
+            $("#resource2").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource2",
+                    "title": "Luke Skywalker",
+                    "kind": "file",
+                    "url": "../resources/luke.jpg",
+                    "size": 10000,
+                    "mimetype": "image/jpeg",
+                    "filename": "luke.jpg",
+                    "attachments": {
+                        "thumb150": {
+                            "url": "../resources/luke-150.jpg",
+                            "size": 1000,
+                            "mimetype": "image/jpeg",
+                            "filename": "luke-150.jpg"
+                        }
+                    }
+                });
+
+            });
+
+            $("#resource3").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource3",
+                    "title": "The Force will be with you Always",
+                    "kind": "file",
+                    "url": "../resources/force.wav",
+                    "size": 10000,
+                    "mimetype": "audio/wav",
+                    "filename": "force.wav"
+                });
+
+            });
+
+            $("#resource4").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource4",
+                    "title": "Leaves on the Lake",
+                    "kind": "file",
+                    "url": "../resources/lake.mp4",
+                    "size": 100000,
+                    "mimetype": "video/mp4",
+                    "filename": "lake.mp4"
+                });
+
+            });
+
+            $("#resource5").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource5",
+                    "title": "Flash Song",
+                    "kind": "file",
+                    "url": "../resources/song.swf",
+                    "size": 100000,
+                    "mimetype": "application/x-shockwave-flash",
+                    "filename": "song.swf"
+                });
+
+            });
+
+            $("#resource6").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource6",
+                    "title": "Flash Race",
+                    "kind": "file",
+                    "url": "../resources/race.flv",
+                    "size": 100000,
+                    "mimetype": "video/x-flv",
+                    "filename": "race.flv"
+                });
+
+            });
+
+            /*
+            $("#resource7").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource7",
+                    "title": "Turbo Broom Dance",
+                    "kind": "youtube",
+                    "url": "http://www.youtube.com/watch?v=BVrWDPi12zE",
+                    "size": 100000,
+                    "mimetype": "video/youtube"
+                });
+
+            });
+            */
+
+            $("#resource8").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource8",
+                    "title": "Many Kinds of Perfect (demo)",
+                    "kind": "file",
+                    "url": "../resources/song.mp3",
+                    "size": 100000,
+                    "mimetype": "audio/mp3"
+                });
+
+            });
+
+            $("#resource9").click(function(e) {
+
+                Ratchet.observable("previewResource").set({
+                    "id": "resource9",
+                    "title": "Home Page",
+                    "kind": "file",
+                    "url": "../resources/home.html",
+                    "size": 100000,
+                    "mimetype": "text/html"
+                });
+
+            });
+
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+    <div>
+
+        <div style="float:left; width: 30%">
+
+            <div id="resource1" style="cursor: pointer">Image: Yoda</div>
+            <br/>
+            <br/>
+
+            <div id="resource2" style="cursor: pointer">Image: Luke Skywalker</div>
+            <br/>
+            <br/>
+
+            <div id="resource3" style="cursor: pointer">Audio: The Force will be with you Always</div>
+            <br/>
+            <br/>
+
+            <div id="resource4" style="cursor: pointer">Video: Leaves on the Lake</div>
+            <br/>
+            <br/>
+
+            <div id="resource5" style="cursor: pointer">Flash: SWF Song + Video</div>
+            <br/>
+            <br/>
+
+            <div id="resource6" style="cursor: pointer">Video: FLV Race + Video</div>
+            <br/>
+            <br/>
+
+            <!--
+            <div id="resource7" style="cursor: pointer">YouTube Video</div>
+            <br/>
+            <br/>
+            -->
+
+            <div id="resource8" style="cursor: pointer">MP3: Many Kinds of Perfect (demo)</div>
+            <br/>
+            <br/>
+
+            <div id="resource9" style="cursor: pointer">HTML: Home Page</div>
+            <br/>
+            <br/>
+
+        </div>
+
+        <div style="float:right; width: 70%">
+
+            <div gadget="docviewer" style="border: 1px black solid; padding: 20px; margin: 20px;"></div>
+
+        </div>
+
+        <div style="clear:both"></div>
+
+    </div>
+
+
+</body>
+</html>
+

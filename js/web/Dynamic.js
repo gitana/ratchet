@@ -1,13 +1,12 @@
 (function() {
 
     var MODAL_TEMPLATE = ' \
-			<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
-		    	<div class="modal-header"> \
-		        	<h3 class="modal-title"></h3> \
-		    	</div> \
-		    	<div class="modal-body"></div> \
-		    <div class="modal-footer"></div> \
-		</div> \
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
+            <div class="modal-header"> \
+                <h3 class="modal-title"></h3> \
+            </div> \
+            <div class="modal-body"></div> \
+        <div class="modal-footer"></div> \
     ';
 
     Ratchet.blockingModal = null;
@@ -26,9 +25,11 @@
             "title": title,
             "cancel": true,
             "footer": false
-        }, function(div) {
+        }, function(div, cb) {
 
             $(div).find('.modal-body').html("<p align='center'><img src='/components/ratchetweb/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
+
+            cb();
         });
 
         return Ratchet.blockingModal;
@@ -50,65 +51,111 @@
         }
     };
 
-    /*
     Ratchet.startModalGadget = function(options, overrides, beforeRatchetCallback, afterRatchetCallback)
     {
         var self = this;
 
-        // load modal template
-        $.ajax({
-            url: "components/ratchet-web/modal-gadget.html",
-            success: function(modalHtml)
+        Ratchet.showModal({
+            "title": options.title,
+            "cancel": true
+        }, function(div, cb) {
+
+            var gadgetType = options.type;
+            var gadgetConfiguration = options.config;
+            if (!gadgetConfiguration) {
+                gadgetConfiguration = {};
+            }
+
+            var tempGadgetId = options.id;
+            if (!tempGadgetId) {
+                tempGadgetId = "gadget-" + new Date().getTime();
+            }
+            var tempGadgetType = "type-" + new Date().getTime();
+
+            // create an instance of the gadget
+            var dynamicGadget = null;
+            if (Ratchet.DynamicGadgets) {
+                dynamicGadget = Ratchet.DynamicGadgets[gadgetType];
+            }
+            if (dynamicGadget)
             {
-                // build modal dom
-                var div = $(modalHtml);
+                // instantiate - config is loaded by gadget on configure()
+                (function(tempGadgetType, gadgetConfiguration, dynamicGadget) {
 
-                // launch modal
-                $(div).modal('show');
+                    // using meta-programming, create instances of page controllers
+                    Ratchet.GadgetRegistry.register(tempGadgetType, dynamicGadget.extend({
 
-                // attributes
-                $(div).attr("gadget", options.type);
-                if (options.id)
-                {
-                    $(div).attr("id", options.id);
-                }
+                        setup: function() {
+                            this.get("/gadget/" + tempGadgetType, this.index);
+                        },
 
-                // ratchet it up
-                var ratchet = $(div).ratchet(options.parent);
+                        configureDefault: function() {
+                            this.base();
 
-                // set up ratchet callback
-                if (beforeRatchetCallback)
-                {
-                    beforeRatchetCallback.call(self, div, ratchet);
-                }
-
-                // run the ratchet
-                ratchet.run(options.uri);
-
-                if (overrides)
-                {
-                    // get back the gadget bound into the ratchet
-                    for (var i = 0; i < ratchet.gadgetInstances.length; i++)
-                    {
-                        for (var k in overrides)
-                        {
-                            ratchet.gadgetInstances[i][k] = overrides[k];
+                            // push page configuration into config service
+                            this.config(gadgetConfiguration);
                         }
-                    }
-                }
 
-                // call any custom gadget callbacks (after ratchet callback)
-                if (afterRatchetCallback)
+                    }));
+
+                }(tempGadgetType, gadgetConfiguration, dynamicGadget));
+            }
+            else
+            {
+                Ratchet.logError("Cannot start modal for unknown gadget type: " + gadgetType);
+                return;
+            }
+
+            // attributes
+            $(div).find(".modal-body").attr("gadget", tempGadgetType);
+            $(div).find(".modal-body").attr("id", tempGadgetId);
+
+            $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Upload</button>");
+
+             // ratchet it up
+            var ratchet = $(div).ratchet(function() {
+
+                this.parent = options.parent;
+
+            });
+
+            // set up ratchet callback
+            if (beforeRatchetCallback)
+            {
+                beforeRatchetCallback.call(self, div, ratchet);
+            }
+
+            // run the ratchet
+            ratchet.run("/gadget/" + tempGadgetType);
+
+            if (overrides)
+            {
+                // get back the gadget bound into the ratchet
+                for (var i = 0; i < ratchet.gadgetInstances.length; i++)
                 {
-                    for (var i = 0; i < ratchet.gadgetInstances.length; i++)
+                    for (var k in overrides)
                     {
-                        afterRatchetCallback(div, ratchet, ratchet.gadgetInstances[i]);
+                        ratchet.gadgetInstances[i][k] = overrides[k];
                     }
                 }
             }
+
+            // call any custom gadget callbacks (after ratchet callback)
+            if (afterRatchetCallback)
+            {
+                for (var i = 0; i < ratchet.gadgetInstances.length; i++)
+                {
+                    afterRatchetCallback(div, ratchet, ratchet.gadgetInstances[i]);
+                }
+            }
+
+            cb();
+
         });
+
     };
 
+    /*
     Ratchet.startModalWizard = function(parent, wizardId, uri, beforeRatchetCallback, afterRatchetCallback)
     {
         Ratchet.startModalGadget({
@@ -146,7 +193,7 @@
         Ratchet.showModal({
             "title": title,
             "cancel": true
-        }, function(div) {
+        }, function(div, cb) {
 
             $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
             $(div).find('.modal-footer').append("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button><button class='btn btn-danger pull-right confirm-delete'>Delete</button>");
@@ -157,6 +204,8 @@
 
                 onConfirm();
             });
+
+            cb();
         });
     };
 
@@ -165,9 +214,11 @@
         Ratchet.showModal({
             "title": title,
             "cancel": true
-        }, function(div) {
+        }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
             $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+
+            cb();
         });
     };
 
@@ -198,7 +249,7 @@
         }
 
         // set up title
-        $(div).find('.modal-title').html(config.title);
+        $(div).find('.modal-title').html(title);
 
         // set up footer
         $(div).find('.modal-footer').html("");
@@ -228,13 +279,29 @@
             }
 
             // launch modal
-            $(div).modal({
+            var t = $(div).modal({
                 "keyboard": true
             });
+
+            if (config.modalClass) {
+                t.addClass(config.modalClass);
+            }
 
         });
 
         return $(div);
+    };
+
+    // dynamic gadget types are stored here
+    Ratchet.DynamicGadgets = {};
+    Ratchet.DynamicRegistry = {
+        register: function(type, classObject)
+        {
+            Ratchet.DynamicGadgets[type] = classObject;
+            Ratchet.GadgetRegistry.register(type, classObject);
+
+            return classObject;
+        }
     };
 
 })();

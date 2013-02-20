@@ -237,22 +237,22 @@
                         var nextNextSunday = new Date(nextSunday.getTime());
                         nextNextSunday.add(7).days();
 
-                        if (date.getTime() < today.getTime() && date.getTime() > lastSunday.getTime())
+                        if (date.getTime() < today.getTime() && date.getTime() >= lastSunday.getTime())
                         {
-                            // Earlier This week
+                            // earlier This week
                             result = this.message("relative.earlierThisWeek");
                         }
-                        else if (date.getTime() < lastSunday.getTime() && date.getTime() > lastLastSunday.getTime())
+                        else if (date.getTime() < lastSunday.getTime() && date.getTime() >= lastLastSunday.getTime())
                         {
-                            // Last week
+                            // last week
                             result = this.message("relative.lastWeek");
                         }
-                        else if (date.getTime() > today.getTime() && date.getTime() < nextSunday.getTime())
+                        else if (date.getTime() > today.getTime() && date.getTime() <= nextSunday.getTime())
                         {
                             // Later this week
                             result = this.message("relative.laterThisWeek");
                         }
-                        else if (date.getTime() > nextSunday.getTime() && date.getTime() < nextNextSunday.getTime())
+                        else if (date.getTime() > nextSunday.getTime() && date.getTime() <= nextNextSunday.getTime())
                         {
                             // Next Week
                             result = this.message("relative.nextWeek");

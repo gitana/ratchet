@@ -13,14 +13,17 @@
             var blockKeys = [];
             this.config = function(config)
             {
+                var type = self.getGadgetType();
+                var id = self.getGadgetId();
+
                 if (config)
                 {
                     // add config
                     var block = {
                         "evaluator": "gadget",
                         "condition": {
-                            "gadget": self.getGadgetId(),
-                            "gadgetType": self.getGadgetType()
+                            "gadget": id,
+                            "gadgetType": type
                         },
                         "config": {
                             "gadgets": {
@@ -37,8 +40,8 @@
 
                 var c = {};
                 var gadgetConfig = Ratchet.Configuration.evaluate({
-                    "gadget": self.getGadgetId(),
-                    "gadgetType": self.getGadgetType()
+                    "gadget": id,
+                    "gadgetType": type
                 });
                 if (gadgetConfig.gadgets && gadgetConfig.gadgets[type] && gadgetConfig.gadgets[type][id])
                 {
@@ -46,7 +49,7 @@
                 }
                 else
                 {
-                    console.log("Gadget config does not have gadgets[" + type + "][" + id + "] element");
+                    //console.log("Gadget config does not have gadgets[" + type + "][" + id + "] element");
                 }
                 return c;
             };
@@ -60,23 +63,60 @@
             };
         },
 
+        /**
+         * @override
+         */
+        configure: function(gadgetIdentifier)
+        {
+            this.base(gadgetIdentifier);
+
+            if (this.getGadgetId())
+            {
+                this.configureDefault();
+                this.configureAutowire();
+            }
+        },
+
+        /**
+         * @extension_point
+         *
+         *
+         */
+        configureDefault: function()
+        {
+        },
+
+        /**
+         * @extension_point
+         */
+        configureAutowire: function()
+        {
+
+        },
+
+        /**
+         * @override
+         */
         teardown: function()
         {
             var self = this;
 
             this.base();
 
-            // remove all config listeners for this gadget
-            Ratchet.Configuration.removeAllListeners({
-                "evaluator": "gadget",
-                "condition": {
-                    "gadgetId": self.getGadgetId(),
-                    "gadgetType": self.getGadgetType()
-                }
-            });
+            if (this.getGadgetId())
+            {
+                // remove all config listeners for this gadget
+                Ratchet.Configuration.removeAllListeners({
+                    "evaluator": "gadget",
+                    "condition": {
+                        "gadgetId": self.getGadgetId(),
+                        "gadgetType": self.getGadgetType()
+                    }
+                });
 
-            // remove our config from the configuration service
-            this.releaseAllConfigs();
+                // remove our config from the configuration service
+                this.releaseAllConfigs();
+            }
         },
 
         renderTemplate: function(el, templateIdentifier, data, callback) {
@@ -161,7 +201,10 @@
 
         afterSwap: function(el, model, originalContext, callback)
         {
-
+            if (callback)
+            {
+                callback();
+            }
         }
 
     });

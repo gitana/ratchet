@@ -1,0 +1,35 @@
+<!-- Application Bar -->
+
+<div class="appbar">
+    <div class="row-fluid">
+        <div class="span6">
+            {{if logoLink}}
+                <a href="${logoLink}">
+            {{/if}}
+            <img src="${logoUri}" class="logo"/>
+            {{if logoLink}}
+                </a>
+            {{/if}}
+        </div>
+        <div class="span6" align="right">
+
+            <div class="panel">
+
+                <div class="btn-group pull-right">
+
+                    <button class="btn">${userTitle}</button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Log Out</a></li>
+                    </ul>
+
+                </div><!-- /btn-group -->
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

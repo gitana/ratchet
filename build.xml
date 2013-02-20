@@ -30,10 +30,12 @@
         <mkdir dir="${prep.dir}/lib"/>
         <mkdir dir="${prep.dir}/tests"/>
         <mkdir dir="${prep.dir}/examples"/>
+        <mkdir dir="${prep.dir}/dynamic"/>
         <mkdir dir="${package.dir}"/>
         <mkdir dir="${package.dir}/js"/>
         <mkdir dir="${package.dir}/lib"/>
         <mkdir dir="${package.dir}/examples"/>
+        <mkdir dir="${package.dir}/dynamic"/>
 
         <copy todir="${prep.dir}/js">
             <fileset dir="js"/>
@@ -46,6 +48,9 @@
         </copy>
         <copy todir="${prep.dir}/tests">
             <fileset dir="${tests.dir}"/>
+        </copy>
+        <copy todir="${prep.dir}/dynamic">
+            <fileset dir="dynamic"/>
         </copy>
         <copy todir="${prep.dir}/">
             <fileset dir="${project.dir}">
@@ -150,7 +155,6 @@
                 <file name="web/Dynamic.js" />
                 <file name="web/AbstractDynamicGadget.js" />
                 <file name="web/AbstractDynamicPage.js" />
-                <file name="web/DynamicPage.js" />
                 <file name="web/DynamicRegionResolver.js" />
 
             </filelist>
@@ -306,7 +310,6 @@
                 <file name="web/Dynamic.js" />
                 <file name="web/AbstractDynamicGadget.js" />
                 <file name="web/AbstractDynamicPage.js" />
-                <file name="web/DynamicPage.js" />
                 <file name="web/DynamicRegionResolver.js" />
 
             </filelist>
@@ -528,9 +531,9 @@
             <param name="dependencies" value="['ratchet/ratchet', 'gitana', 'alpaca']" />
         </antcall>
 
-        <!-- "ratchet-gadgets" -->
-        <copy todir="${package.dir}/components/ratchet/gadgets">
-            <fileset dir="${project.dir}/gadgets">
+        <!-- "ratchet-dynamic" -->
+        <copy todir="${package.dir}/components/ratchet/dynamic">
+            <fileset dir="${project.dir}/dynamic">
                 <exclude name="**/.DS_Store/*"/>
                 <exclude name="**/.idea/*"/>
             </fileset>
@@ -580,6 +583,7 @@
         <include name="plugins/**/*"/>
         <include name="lib/**/*"/>
         <include name="examples/**/*"/>
+        <include name="dynamic/**/*"/>
         <include name="tests/**/*"/>
         <include name="*.html"/>
         <include name="favicon.ico"/>

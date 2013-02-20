@@ -92,11 +92,8 @@
         equal(bundle.relativeTime(minutesAgo), "3 minutes ago");
         var yesterday = new Date().add(-1).days();
         equal(bundle.relativeDate(yesterday), "yesterday");
-        var nextWeek = new Date().add(6).days();
+        var nextWeek = new Date().add(4).days();
         equal(bundle.relativeDate(nextWeek), "later this week");
-
-
-
 
 
         // all done

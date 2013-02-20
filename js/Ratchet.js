@@ -349,7 +349,6 @@
                 this.setupFunction.call(this);
             }
 
-
             // if the current element being set up is a "<region>" tag, then we instantly convert it to a proper DOM tag
             if ($(this.el)[0].nodeName.toLowerCase() == "region")
             {
@@ -374,7 +373,13 @@
             // if there is a gadget configured for this dom element, boot it up
             if (this.gadgetType)
             {
-                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this.gadgetId, this);
+                // if we don't have a gadget id, we generate one
+                if (!this.gadgetId) {
+                    this.gadgetId = Ratchet.generateGadgetId();
+                }
+
+                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this, this.gadgetId);
+                Ratchet.logDebug("Ratchet.setup() - Instantiated " + this.gadgetInstances.length + " gadget instances for type: " + this.gadgetType + " and id: " + this.gadgetId);
                 $.each(this.gadgetInstances, function(x, y) {
                     y.setup.call(y);
                 });
@@ -409,9 +414,11 @@
             });
 
             // tear down any gadget instances
+            var l1 = this.gadgetInstances.length;
             $.each(this.gadgetInstances, function(i, gadgetInstance) {
                 gadgetInstance.teardown();
             });
+            Ratchet.logDebug("Ratchet.teardown() - Removed " + l1 + " gadget instances");
             this.gadgetInstances = [];
 
             // releases any routes
@@ -1266,6 +1273,7 @@
     };
     Ratchet.logError = function(obj) {
         Ratchet.log(Ratchet.ERROR, obj);
+        console.log(Ratchet.ERROR, new Error().stack);
     };
 
     Ratchet.log = function(level, obj) {

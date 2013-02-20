@@ -95,8 +95,6 @@
 
         constructor: function()
         {
-            var self = this;
-
             this.base();
 
             // keys are generated at runtime
@@ -252,11 +250,20 @@
          */
         add: function(block)
         {
-            // TODO: validate that the block is correctly formatted and structured
-            // TODO: if we find some kind of issue, we should report it right away and exclude it from our array
+            // SAFETY CHECK
+            // if the block has an evaluator, make sure it is one that we know about
+            if (block.evaluator && !this.evaluatorTypes[block.evaluator])
+            {
+                Ratchet.logError("Block added with evaluator type: " + block.evaluator + ", but this evaluator does not exist");
+                throw new Error("Unknown configuration block evaluator: " + block.evaluator);
+            }
 
             // generate a key for this block and register
-            var blockKey = "b-" + Ratchet.uniqueId();
+            var count = Ratchet.uniqueCount();
+            if (block.end) {
+                count = count + 50000;
+            }
+            var blockKey = "b-" + Ratchet.padLeft(count, 5);
             this.blocks[blockKey] = block;
 
             // fire any listeners
@@ -304,18 +311,64 @@
          */
         evaluate: function(context)
         {
-            Ratchet.logDebug("Configuration Eval begins for context: " + (context ? JSON.stringify(context) : "null"));
-
             var self = this;
 
-            var result = {};
-
+            // figure out which blocks to apply
+            var orderedBlockKeys = [];
+            var keepers = {};
             for (var blockKey in this.blocks)
             {
                 var block = this.blocks[blockKey];
 
                 // condition is optional
                 var condition = block.condition;
+
+                if (!block.evaluator)
+                {
+                    // nothing to evaluate, so keep
+                    keepers[blockKey] = block;
+                    orderedBlockKeys.push(blockKey);
+                }
+                else
+                {
+                    // fetch the evaluator
+                    var evaluatorInstance = this.evaluatorInstances[block.evaluator];
+                    if (!evaluatorInstance)
+                    {
+                        Ratchet.logWarn("Missing configuration evaluator: " + block.evaluator);
+                    }
+                    else
+                    {
+                        // evaluate
+                        var valid = evaluatorInstance.evaluate(context, condition);
+                        if (valid)
+                        {
+                            // valid, so keep it
+                            keepers[blockKey] = block;
+                            orderedBlockKeys.push(blockKey);
+                        }
+                    }
+                }
+            }
+
+            // sort the ordered block keys
+            orderedBlockKeys.sort();
+
+            // debugging
+            Ratchet.logDebug("Configuration evaluate() for context: " + (context ? JSON.stringify(context) : "null"));
+            for (var blockKey in keepers)
+            {
+                Ratchet.logDebug(" - keeper[" + blockKey + "]: " + JSON.stringify(keepers[blockKey]));
+            }
+
+            // now apply
+            Ratchet.logDebug("Applying Configuration");
+            var result = {};
+            for (var i = 0; i < orderedBlockKeys.length; i++)
+            {
+                var blockKey = orderedBlockKeys[i];
+
+                var block = keepers[blockKey];
 
                 // config is assumed empty if not available
                 var config = block.config;
@@ -329,42 +382,11 @@
                     replace = true;
                 }
 
-                var apply = function(source, target, replace)
-                {
-                    self.merge(source, target, replace)
-                };
+                Ratchet.logDebug("Applying block: " + blockKey + ": " + JSON.stringify(config));
 
-                if (!block.evaluator)
-                {
-                    Ratchet.logDebug(" -> apply global block: " + blockKey + " with: " + JSON.stringify(config));
-
-                    // no evaluator, so assume okay and merge
-                    apply(config, result, replace);
-                }
-                else
-                {
-                    // fetch the evaluator
-                    var evaluatorInstance = this.evaluatorInstances[block.evaluator];
-                    if (!evaluatorInstance)
-                    {
-                        Ratchet.logWarn("Missing configuration evaluator: " + block.evaluator);
-                    }
-                    else
-                    {
-                        // evaluate
-                        Ratchet.logDebug(" -> evaluate context: " + (context ? JSON.stringify(context) : "null"));
-
-                        var valid = evaluatorInstance.evaluate(context, condition);
-                        if (valid)
-                        {
-                            Ratchet.logDebug(" -> apply block: " + blockKey + " with: " + JSON.stringify(config));
-
-                            // looks good, so merge
-                            apply(config, result, replace);
-                        }
-                    }
-                }
+                self.merge(config, result, replace);
             }
+            Ratchet.logDebug("Applied Configuration: " + JSON.stringify(result));
 
             return result;
         },
@@ -494,9 +516,34 @@
                     listenerFunction();
                 }
             }
+        },
+
+        /**
+         * Creates a clone of the configuration service.  This is useful for manipulating configuration that
+         * will not end up part of the global registry.
+         */
+        clone: function()
+        {
+            var x = new configClass();
+
+            for (var blockKey in this.blocks) {
+                x[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
+            }
+
+            for (var instanceId in this.evaluatorInstances) {
+                x.evaluatorInstances[instanceId] = this.evaluatorInstances[instanceId];
+            }
+
+            for (var typeId in this.evaluatorTypes) {
+                x.evaluatorTypes[typeId] = this.evaluatorTypes[typeId];
+            }
+
+            for (var subscriptionId in this.subscriptions) {
+                x.subscriptions[subscriptionId] = this.subscriptions[subscriptionId];
+            }
+
+            return x;
         }
-
-
 
     });
 

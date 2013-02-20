@@ -6,12 +6,14 @@
          * Logs data to console.
          *
          * @param config
-         * @param data
+         * @param actionContext
          * @param callback
          * @return {Boolean}
          */
-        execute: function(config, data, callback)
+        execute: function(config, actionContext, callback)
         {
+            var data = actionContext.data;
+
             console.log(JSON.stringify(data));
 
             callback();

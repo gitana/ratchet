@@ -74,6 +74,25 @@
             }
 
             action.execute(actionConfig, data, callback);
+        },
+
+        /**
+         * Retrieves all of the action configurations OR a subset (either a single or an array of action ids).
+         *
+         * @param actionId
+         * @param configService (optional)
+         */
+        config: function(actionId, configService)
+        {
+            if (!configService)
+            {
+                configService = Ratchet.Configuration;
+            }
+
+            return configService.evaluate({
+                "evaluator": "action",
+                "condition": actionId
+            });
         }
 
     });

@@ -1,0 +1,11 @@
+.viewer.audio
+{
+   line-height: 325px;
+}
+
+.viewer.audio audio
+{
+   max-height: 100%;
+   max-width: 100%;
+   overflow: auto;
+}

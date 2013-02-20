@@ -22,9 +22,9 @@
 
             var resolutions = {};
 
-            if (this.config.regions)
+            if (regions)
             {
-                for (var regionName in this.config.regions)
+                for (var regionName in regions)
                 {
                     var x = this.config.regions[regionName];
                     if (x)

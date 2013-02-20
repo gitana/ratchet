@@ -4,20 +4,47 @@
     {
         // either (type, _ratchet)
         // or (type, _ratchet, id)
-        constructor: function(type, _ratchet, id)
+        constructor: function(type, _ratchet, _gadgetIdentifier)
         {
             this.base();
 
             var _this = this;
 
             this.type = type;
-            this.id = id;
 
-            // if no id, then assume type as id
-            if (!this.id)
+            // the gadget id assumed to be null until configure() is called
+            // at which point Ratchet will have determined that this gadget instance is to take control of
+            // the dispatching
+            this.id = null;
+
+            // helper function to make sure that any dispatch functions first init the gadget state using the gadget
+            // id if it is provided
+            this.wrapConfigurable = function(array)
             {
-                this.id = this.type;
-            }
+                for (var i = 0; i < array.length; i++)
+                {
+                    var a = array[i];
+                    if (Ratchet.isFunction(a))
+                    {
+                        // new dispatch function
+                        // calls configure() before calling function itself
+                        array[i] = function(dispatchHandlerFunction) {
+
+                            return function() {
+
+                                // call configure first to claim the gadget identifier
+                                _this.configure(_gadgetIdentifier);
+
+                                // now call the actual dispatch handler
+                                dispatchHandlerFunction.apply(_this, arguments);
+                            };
+
+                        }(a);
+
+                        break;
+                    }
+                }
+            };
 
             // keep track of any subscriptions this gadget creates
             this.subscriptions = {};
@@ -74,16 +101,63 @@
         /**
          * @extension_point
          *
-         * This method should be overridden and used to register routes and observables and the like.
+         * This gets called so that the gadget can bind to any routes that it wants to claim.  The routes should
+         * be claimed by making calls to:
+         *
+         *    this.get()
+         *    this.put()
+         *    this.post()
+         *    this.del()
+         *
+         * For example:
+         *
+         *    this.get("/products", this.products);
+         *
+         * This would tell Ratchet that when the #/products route is encountered, this gadget should handle the
+         * processing for any gadgets of this gadget type.
+         *
+         * Any extensions of this method should make sure to call this.base() to ensure that base setup is
+         * achieved ahead of custom setup.
          */
         setup: function()
         {
         },
 
+        /**
+         * @extension_point
+         *
+         * This gets called when Ratchet has decided to dispatch to a new URI.  Before dispatching, any existing
+         * gadgets are dismantled and destroyed.
+         *
+         * Ratchet will have determined that this gadget is to be destroyed.  This method is responsible for
+         * releasing and cleaning up any data that this gadget instance may be holding on to.
+         */
         teardown: function()
         {
             // release any subscriptions this gadget might have had
             this.unsubscribeAll();
+        },
+
+        /**
+         * @extension_point
+         *
+         * This gets called when Ratchet has decided that this gadget instance is going to be the one responsible
+         * for handling the rendering.  At that point, Ratchet passes in the gadgetId that this instance should
+         * assume.
+         *
+         * The gadget might load or setup configuration or do anything else that it would like ahead of dispatching.
+         * The intention is to support late configuration.  All gadget instance-level configuration should happen
+         * within this method.
+         *
+         * In addition, it should be the case that any configuration applied during the call to configure() should
+         * be destroyed when teardown() gets called.
+         *
+         * @param gadgetIdentifier
+         */
+        configure: function(gadgetIdentifier)
+        {
+            // claim the gadget id
+            this.id = gadgetIdentifier;
         },
 
 
@@ -176,6 +250,8 @@
         /////////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
+         * Tells Ratchet to dispatch to another URI.
+         *
          * @param [String] method assumes GET
          * @param {String} uri
          * @param [Object] data
@@ -204,6 +280,7 @@
         {
             var array = Ratchet.makeArray(arguments);
             array.push(this);
+            this.wrapConfigurable(array);
 
             this.ratchet().get.apply(this.ratchet(), array);
         },
@@ -212,6 +289,7 @@
         {
             var array = Ratchet.makeArray(arguments);
             array.push(this);
+            this.wrapConfigurable(array);
 
             this.ratchet().post.apply(this.ratchet(), array);
         },
@@ -220,6 +298,7 @@
         {
             var array = Ratchet.makeArray(arguments);
             array.push(this);
+            this.wrapConfigurable(array);
 
             this.ratchet().put.apply(this.ratchet(), array);
         },
@@ -228,6 +307,7 @@
         {
             var array = Ratchet.makeArray(arguments);
             array.push(this);
+            this.wrapConfigurable(array);
 
             this.ratchet().del.apply(this.ratchet(), array);
         },

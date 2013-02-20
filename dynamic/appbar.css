@@ -1,0 +1,45 @@
+.appbar
+{
+    height: 80px;
+
+    background-color: #eeeeee;
+    background-image: -moz-linear-gradient(top, #ffffff, #eeeeee);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#eeeeee));
+    background-image: -webkit-linear-gradient(top, #ffffff, #eeeeee);
+    background-image: -o-linear-gradient(top, #ffffff, #eeeeee);
+    background-image: linear-gradient(to bottom, #ffffff, #eeeeee);
+    background-repeat: repeat-x;
+    border: 1px solid #d4d4d4;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 0px 0px 4px 4px;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#eeeeeeee', GradientType=0);
+    *zoom: 1;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+
+    /*border-bottom: 1px black solid;*/
+
+}
+
+.appbar .panel
+{
+    height: 80px;
+    line-height: 80px;
+    vertical-align: middle;
+
+    padding-right: 10px;
+}
+
+.appbar .logo
+{
+    height: 70px;
+    line-height: 70px;
+    vertical-align: middle;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    padding-left: 10px;
+}

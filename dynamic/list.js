@@ -78,6 +78,12 @@
 
             // now add in our custom configuration
             this.config({
+                "columnHeaders": true,
+                "options": {
+                    "filter": true,
+                    "paginate": true,
+                    "info": true
+                },
                 "observables": {
                     "query": "query",
                     "sort": "sort",
@@ -219,12 +225,10 @@
             //
             //////////////////////////////////////////////////////////////////////////////
 
+            // default table config
             var tableConfig = {
-                "bPaginate": true,
-                "bFilter": true,
                 "bSort": true,
-                "bInfo": true,
-                "bAutoWidth": false,
+                //"bAutoWidth": false,
                 "oLanguage": {
                     "sLengthMenu": "Display _MENU_ records per page",
                     "sZeroRecords": "Nothing found - sorry",
@@ -235,8 +239,81 @@
                 }
             };
 
+            if (model.options && model.options.filter) {
+                tableConfig.bFilter = true;
+            }
+            if (model.options && model.options.paginate) {
+                tableConfig.bPaginate = true;
+            }
+            if (model.options && model.options.info) {
+                tableConfig.bInfo = true;
+            }
+
             // bootstrap
+            //tableConfig["sDom"] = '<"top"i>rt<"bottom"flp><"clear">';
+            //tableConfig["sDom"] = '<"top"i>rt<"bottom"flp><"clear">';
             //tableConfig["sDom"] = "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>";
+
+            // @see http://datatables.net/usage/options
+            /**
+             'l' - Length changing
+             'f' - Filtering input
+             't' - The table!
+             'i' - Information
+             'p' - Pagination
+             'r' - pRocessing
+             */
+            if (tableConfig.bFilter)
+            {
+                if (tableConfig.bPaginate)
+                {
+                    if (tableConfig.bInfo)
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'i><'span6'p>>";
+                    }
+                    else
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'><'span6'p>>";
+                    }
+                }
+                else
+                {
+                    if (tableConfig.bInfo)
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'i><'span6'>>";
+                    }
+                    else
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>>";
+                    }
+                }
+            }
+            else
+            {
+                if (tableConfig.bPaginate)
+                {
+                    if (tableConfig.bInfo)
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'i><'span6'p>>";
+                    }
+                    else
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'><'span6'p>>";
+                    }
+                }
+                else
+                {
+                    if (tableConfig.bInfo)
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'i><'span6'>>";
+                    }
+                    else
+                    {
+                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>>";
+                    }
+                }
+            }
+
             /*
              $.extend( $.fn.dataTableExt.oStdClasses, {
              "sWrapper": "dataTables_wrapper form-inline"
@@ -267,7 +344,18 @@
                     "bSearchable": false,
                     "bSortable": false,
                     "sWidth": "10px",
-                    "sTitle": "<input type='checkbox' class='list-check-box-all'/>"
+                    "sTitle": "<input type='checkbox' class='list-check-box-all'/>",
+                    "sClass": "list-checkbox-column"
+                });
+            } else if (model.radio)
+            {
+                tableConfig["aoColumns"].push({
+                    "bVisible": true,
+                    "bSearchable": false,
+                    "bSortable": false,
+                    "sWidth": "10px",
+                    "sTitle": "",
+                    "sClass": "list-radio-column"
                 });
             }
             if (model.icon)
@@ -303,6 +391,11 @@
                         config["bVisible"] = false;
                     }
 
+                    if (column.cssClasses)
+                    {
+                        config.sClass = column.cssClasses;
+                    }
+
                     // custom column configuration hook
                     self.handleConfigureColumn(column, config);
 
@@ -313,7 +406,6 @@
             {
                 throw new Error("Missing model.columns");
             }
-
 
 
 
@@ -444,7 +536,7 @@
                 self.handleRowCallback.call(self, el, model, this, nRow, aData, iDisplayIndex);
             };
             tableConfig["fnInitComplete"] = function(oSettings, json) {
-                self.handleInitComplete.call(self, el, model, this, oSettings, json);
+                self.handleInitComplete.call(self, el, model, this, oSettings, json, callback);
             };
 
 
@@ -454,6 +546,8 @@
             }
 
             if (model.hideCheckbox) {
+                tableConfig["aoColumns"][0]["bVisible"] = false;
+            } else if (model.hideRadio) {
                 tableConfig["aoColumns"][0]["bVisible"] = false;
             }
 
@@ -514,10 +608,8 @@
             // init any buttons
             $('.dropdown-toggle', el).dropdown();
 
-            //el.swap();
-
             // all done - fire callback
-            callback();
+            //callback();
         },
 
         /**
@@ -592,6 +684,16 @@
                     data["" + counter] = "<input type='checkbox' class='list-check-box' list-target-object-id='" + id + "'>";
                 }
                 counter++;
+            } else if (model.radio)
+            {
+                if (readOnly) {
+                    data["" + counter] = "";
+                } else {
+                    var radioName = "list-radio-selector-" + self.getGadgetId();
+
+                    data["" + counter] = "<input type='radio' name='" + radioName + "' class='list-radio' list-target-object-id='" + id + "'>";
+                }
+                counter++;
             }
 
 
@@ -602,9 +704,13 @@
                 if (self.iconUri) {
                     var iconUri = self.iconUri.call(self, row, model, context);
                     if (iconUri) {
-                        markup = "<a href='" + linkUri + "'>";
+                        if (linkUri){
+                            markup = "<a href='" + linkUri + "'>";
+                        }
                         markup += "<img align='center' src='" + iconUri + "'>";
-                        markup += "</a>";
+                        if (linkUri) {
+                            markup += "</a>";
+                        }
                     }
                 }
 
@@ -714,27 +820,35 @@
             this.createdRow(el, model, table, nRow, aData, iDataIndex);
         },
 
-        handleInitComplete: function(el, model, table, oSettings, json)
+        handleInitComplete: function(el, model, table, oSettings, json, callback)
         {
             table.fnAdjustColumnSizing();
             table.fnDraw();
 
-            $('.dataTables_scrollBody').css('overflow','hidden');
+            $(el).find('.dataTables_scrollBody').css('overflow','hidden');
+
+            // if columnHeaders is false, hide all column headers using CSS
+            if (!model.columnHeaders)
+            {
+                $(el).find(".dataTables_wrapper table thead").css({
+                    "display": "none"
+                });
+            }
 
             this.initComplete(el, model, table, oSettings, json);
+
+            callback();
         },
 
         handleRowCallback: function(el, model, table, nRow, aData, iDisplayIndex)
         {
             var self = this;
 
-            // remove any previously registered click handlers
-            $(nRow).find(".list-check-box").off();
-
             // center the checkbox
             $(nRow).find(".list-check-box").parent().css("vertical-align", "middle");
 
             // individual checkbox selections
+            $(nRow).find(".list-check-box").off();
             $(nRow).find(".list-check-box").click(function(el, model, table, nRow, aData, iDisplayIndex) {
 
                 return function(event)
@@ -768,6 +882,36 @@
                                 break;
                             }
                         }
+                    }
+
+                    // set the selected items
+                    self.selectedItems(currentSelectedItems);
+                };
+            }(el, model, table, nRow, aData, iDisplayIndex));
+
+            // individual radio selection
+            $(nRow).find(".list-radio").off();
+            $(nRow).find(".list-radio").click(function(el, model, table, nRow, aData, iDisplayIndex) {
+
+                return function(event)
+                {
+                    var targetObjectId = $(this).attr("list-target-object-id");
+
+                    // find the row item
+                    var item = null;
+                    for (var i = 0; i < model.rows.length; i++)
+                    {
+                        if (model.rows[i].id == targetObjectId)
+                        {
+                            item = model.rows[i];
+                            break;
+                        }
+                    }
+
+                    // set ourselves to the selected item
+                    var currentSelectedItems = [];
+                    if (item) {
+                        currentSelectedItems.push(item);
                     }
 
                     // set the selected items

@@ -28,6 +28,27 @@
 .list-icon-column
 {
     vertical-align: middle !important;
+    width: 70px;
+}
+
+.list-checkbox-column
+{
+    vertical-align: middle !important;
+    width: 10px;
+}
+.list-checkbox-column input[type="checkbox"]
+{
+    margin: 0px;
+}
+
+.list-radio-column
+{
+    vertical-align: middle !important;
+    width: 10px;
+}
+.list-radio-column input[type="radio"]
+{
+    margin: 0px;
 }
 
 .list-row-info

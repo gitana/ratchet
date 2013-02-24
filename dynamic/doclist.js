@@ -267,22 +267,8 @@
 
                 self.formatSortDirectionSelector();
 
+                callback();
             });
-        },
-
-        changeSelectedItems: function() {
-
-            this.base();
-
-            var selectedItems = this.selectedItems();
-
-            // either enable or disable the selected... buttons
-            $(".list-button-multi-documents-action-selector").addClass("disabled");
-
-            // if we have selected items, then enable selected... buttons
-            if (selectedItems.length > 0) {
-                $(".list-button-multi-documents-action-selector").removeClass("disabled");
-            }
         },
 
         clickButtonBarButton: function(event, model, button)
@@ -367,6 +353,8 @@
                     }
                     else
                     {
+                        actionConfig = actionConfig.actions[actionId];
+
                         var title = actionConfig.title;
                         if (!title) {
                             title = "Unknown Action Title";
@@ -390,7 +378,7 @@
             return value;
         },
 
-        handleRowCallback: function(el, model, table, nRow, aData, iDisplayIndex)
+        rowCallback: function(el, model, table, nRow, aData, iDisplayIndex)
         {
             this.base(el, model, table, nRow, aData, iDisplayIndex);
 
@@ -449,6 +437,21 @@
             else if (sortDirection == 1)
             {
                 $(".list-button-sort-direction-selector").html("<div class='sort-ascending'></div>");
+            }
+        },
+
+        changeSelectedItems: function() {
+
+            this.base();
+
+            var selectedItems = this.selectedItems();
+
+            // either enable or disable the selected... buttons
+            $(".list-button-multi-documents-action-selector").addClass("disabled");
+
+            // if we have selected items, then enable selected... buttons
+            if (selectedItems.length > 0) {
+                $(".list-button-multi-documents-action-selector").removeClass("disabled");
             }
         }
 

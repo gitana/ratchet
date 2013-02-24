@@ -156,6 +156,8 @@
                 <file name="web/AbstractDynamicGadget.js" />
                 <file name="web/AbstractDynamicPage.js" />
                 <file name="web/DynamicRegionResolver.js" />
+                <file name="web/AbstractViewer.js" />
+                <file name="web/ViewerRegistry.js" />
 
             </filelist>
         </concat>
@@ -198,6 +200,7 @@
                 <file name="config/LocaleConfigurationEvaluator.js"/>
                 <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
+                <file name="config/ViewerConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 
@@ -311,6 +314,8 @@
                 <file name="web/AbstractDynamicGadget.js" />
                 <file name="web/AbstractDynamicPage.js" />
                 <file name="web/DynamicRegionResolver.js" />
+                <file name="web/AbstractViewer.js" />
+                <file name="web/ViewerRegistry.js" />
 
             </filelist>
         </concat>
@@ -362,6 +367,7 @@
                 <file name="config/GadgetConfigurationEvaluator.js"/>
                 <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
+                <file name="config/ViewerConfigurationEvaluator.js"/>
             </filelist>
         </concat>
 

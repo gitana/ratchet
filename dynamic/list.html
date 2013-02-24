@@ -9,7 +9,7 @@
 
         <div class="gadget list {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html">
 
-            {{if buttons}}
+            {{if buttons && buttons.length > 0}}
             <div class="buttonbar">
                 <div class="pull-left">
 
@@ -99,6 +99,9 @@
 
                     <!-- checkbox -->
                     {{if checkbox}}
+                    <th></th>
+                    {{/if}}
+                    {{if radio}}
                     <th></th>
                     {{/if}}
 

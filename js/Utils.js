@@ -97,6 +97,10 @@
 
     Ratchet.isArray = function(thing)
     {
+        if (thing === true || thing === false || Ratchet.isUndefined(thing)) {
+            return false;
+        }
+
         return thing.push && thing.slice;
     };
 
@@ -125,6 +129,10 @@
 
     Ratchet.isObject = function(thing)
     {
+        if (thing === true || thing === false || Ratchet.isUndefined(thing)) {
+            return false;
+        }
+
         return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
     };
 

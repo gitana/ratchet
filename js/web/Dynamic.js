@@ -190,15 +190,26 @@
 
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {
+        Ratchet.showModalConfirm(title, body, "Delete", "btn-danger", function() {
+            onConfirm();
+        });
+    };
+
+    Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm)
+    {
+        if (!confirmButtonClass) {
+            confirmButtonClass = "";
+        }
+
         Ratchet.showModal({
             "title": title,
             "cancel": true
         }, function(div, cb) {
 
             $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button><button class='btn btn-danger pull-right confirm-delete'>Delete</button>");
+            $(div).find('.modal-footer').append("<button class='btn pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
 
-            $(div).find('.confirm-delete').click(function() {
+            $(div).find('.confirm-button').click(function() {
 
                 $(div).modal('hide');
 

@@ -182,7 +182,7 @@
                 {
                     var self = this;
 
-                    if (Ratchet.isObject(format)) {
+                    if (format && Ratchet.isObject(format)) {
                         options = format;
                     }
 

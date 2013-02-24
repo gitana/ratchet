@@ -59,15 +59,22 @@
                         "filename": "",
 
                         "attachments": {
-
                         }
                     }
                 },
                 "observables": {
-                    "previewResource": "previewResource" // the observable id to watch defining the resource
+                    "viewerResource": "viewerResource" // the observable id to watch defining the resource
                 }
             });
 
+            this.configureDefault();
+        },
+
+        /**
+         * @extension_point
+         */
+        configureDefault: function()
+        {
         },
 
         beforeSwap: function(el, model, callback)
@@ -79,8 +86,8 @@
                 // set up observables
                 var refreshHandler = self.refreshHandler(el);
 
-                // when the "previewResource" observable changes, update the doc viewer
-                self.subscribe(model.observables.previewResource, refreshHandler);
+                // when the "viewerResource" observable changes, update the doc viewer
+                self.subscribe(model.observables.viewerResource, refreshHandler);
 
                 callback();
 
@@ -95,15 +102,15 @@
             this.base(el, model, context, function() {
 
                 // find the container
-                var container = $(el).find(".viewer");
+                var container = $(el).find(".docviewer");
 
                 // load the resource
                 var resource = {};
                 Ratchet.merge(self.config().defaults.resource, resource);
-                var previewResource = self.observable("previewResource").get();
-                if (previewResource)
+                var viewerResource = self.observable(model.observables.viewerResource).get();
+                if (viewerResource)
                 {
-                    Ratchet.merge(previewResource, resource);
+                    Ratchet.merge(viewerResource, resource);
 
                     // build the condition
                     var condition = {};

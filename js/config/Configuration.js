@@ -171,7 +171,40 @@
 
                             // merge array elements
                             $.each(source, function(index) {
-                                target.push(copyOf(source[index]));
+
+                                var added = false;
+
+                                // if the thing we're copying into the array is an object and has a "key" field
+                                // then perform a merge
+                                // otherwise, simply push into the array
+
+                                if (Ratchet.isObject(source[index]))
+                                {
+                                    if (!Ratchet.isUndefined(source[index].key))
+                                    {
+                                        // the source has a "key" field
+
+                                        // now walk the target array elements and find a "key"
+                                        // if the keys match, then merge
+                                        for (var x = 0; x < target.length; x++)
+                                        {
+                                            if (Ratchet.isObject(target[x]))
+                                            {
+                                                if (target[x].key == source[index].key)
+                                                {
+                                                    target[x] = merge(source[index], target[x]);
+                                                    added = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (!added)
+                                {
+                                    target.push(copyOf(source[index]));
+                                }
+
                             });
                         }
                         else

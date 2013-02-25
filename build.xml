@@ -92,6 +92,7 @@
                 <file name="TemplateEngineRegistry.js"/>
                 <file name="BaseTemplateEngine.js"/>
                 <file name="AbstractAuthenticator.js"/>
+                <file name="Events.js"/>
 
                 <!-- jQuery Support -->
                 <file name="jQueryAdapter.js"/>
@@ -253,6 +254,7 @@
                 <file name="TemplateEngineRegistry.js"/>
                 <file name="BaseTemplateEngine.js"/>
                 <file name="AbstractAuthenticator.js"/>
+                <file name="Events.js"/>
 
                 <!-- jQuery Support -->
                 <file name="jQueryAdapter.js"/>

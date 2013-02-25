@@ -960,6 +960,61 @@
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         //
+        // EVENTS
+        //
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * Binds a single event handler.
+         *
+         * @param [String] scope an optional behavior scope
+         * @param {String} eventId
+         * @param {Function} eventHandler
+         */
+        on: function()
+        {
+            return Ratchet.Events.on.apply(this, arguments);
+        },
+
+        /**
+         * Binds a single event to be triggered only once.  After triggering, the handler is removed.
+         *
+         * @param [String] scope an optional behavior scope
+         * @param {String} eventId
+         * @param {Function} eventHandler
+         */
+        once: function()
+        {
+            return Ratchet.Events.once.apply(this, arguments);
+        },
+
+        /**
+         * Removes an event handler.
+         *
+         * @param [String] scope an optional behavior scope
+         * @param {String} eventId
+         * @param {Function} eventHandler
+         */
+        off: function()
+        {
+            return Ratchet.Events.off.apply(this, arguments);
+        },
+
+        /**
+         * Triggers an event.
+         *
+         * @param [String] scope an optional behavior scope
+         * @param {String} eventId
+         * @param [Object] eventParameters
+         */
+        trigger: function()
+        {
+            return Ratchet.Events.trigger.apply(this, arguments);
+        },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        //
         // AUTHENTICATION
         //
         /////////////////////////////////////////////////////////////////////////////////////////////////

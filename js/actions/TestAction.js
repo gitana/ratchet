@@ -12,16 +12,11 @@
          */
         execute: function(config, actionContext, callback)
         {
-            var data = actionContext.data;
+            Ratchet.___test = actionContext;
 
-            Ratchet.___test = data;
-
-            var exists = false;
-            if (data) {
-                exists = true;
-            }
-
-            callback(null, {"success": exists});
+            callback({
+                "message": "hello"
+            }, {"success": true});
         }
 
     }));

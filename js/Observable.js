@@ -10,8 +10,6 @@
 
             this.id = scope + "-" + id;
 
-            //Ratchet.debug("created: " + this.id);
-
             this.value = null;
             this.subscribers = {};
 
@@ -28,7 +26,7 @@
                 $.each(this.subscribers, function(id, handler) {
                     //Ratchet.debug("Notifying subscriber: " + id + " of update to: " + _this.id);
                     handler(_this.value, prior);
-                })
+                });
             };
 
             this.notifyDependents = function(prior)
@@ -70,7 +68,7 @@
 
         isSubscribed: function(id)
         {
-            return this.subscribers[id];
+            return (this.subscribers[id] ? true: false);
         },
 
         markDependentOnUs: function(observable)

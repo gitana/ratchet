@@ -163,6 +163,11 @@
         return "l-" + Ratchet.uniqueCount();
     };
 
+    Ratchet.generateEventHandlerId = function()
+    {
+        return "ev-" + Ratchet.uniqueCount();
+    };
+
     Ratchet.uniqueCount = function()
     {
         var x = 0;

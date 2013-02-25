@@ -12,8 +12,10 @@
         actions.execute("test", null, {
             "booya": "shakka"
         }, function(err, data) {
+
             equal(Ratchet.___test.booya, "shakka", "Test action fired properly");
-            ok(Ratchet.isEmpty(err));
+            ok(!Ratchet.isEmpty(err));
+            equal(err.message, "hello", "Error message came back properly");
             equal(data.success, true, "Success was true");
         });
 

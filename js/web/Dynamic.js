@@ -1,7 +1,7 @@
 (function() {
 
     var MODAL_TEMPLATE = ' \
-        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
+        <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
             <div class="modal-header"> \
                 <h3 class="modal-title"></h3> \
             </div> \
@@ -10,44 +10,80 @@
     ';
 
     Ratchet.blockingModal = null;
-    Ratchet.block = function(title, message)
+    Ratchet.block = function(title, message, configOrAfterShownCallback)
     {
         if (Ratchet.blockingModal)
         {
             Ratchet.unblock(function() {
-                Ratchet.block(title, message);
+                Ratchet.block(title, message, config);
             });
 
             return;
         }
 
-        Ratchet.blockingModal = Ratchet.showModal({
-            "title": title,
-            "cancel": true,
-            "footer": false
-        }, function(div, cb) {
+        var config = {};
+        if (Ratchet.isFunction(configOrAfterShownCallback)) {
+            config.afterShownCallback = configOrAfterShownCallback;
+        }
+        else if (Ratchet.isObject(configOrAfterShownCallback))
+        {
+            Ratchet.copyInto(config, configOrAfterShownCallback);
+        }
 
-            $(div).find('.modal-body').html("<p align='center'><img src='/components/ratchetweb/please-wait.gif'></p><br/><p align='center'>" + message + "<br/><br/></p>");
+        config.title = title;
+        if (Ratchet.isUndefined(config.cancel)) {
+            config.cancel = true;
+        }
+        if (Ratchet.isUndefined(config.footer)) {
+            config.footer = false;
+        }
 
-            cb();
-        });
+        Ratchet.blockingModal = Ratchet.showModal(config, function(config) {
+            return function(div, cb) {
+
+                $(div).find('.modal-body').html("<div align='center'><div class='modal-please-wait'></div></div><br/><p align='center'>" + message + "<br/><br/></p>");
+
+                cb(function() {
+
+                    // after shown
+                    if (config.afterShownCallback) {
+                        config.afterShownCallback();
+                    }
+                });
+            };
+        }(config));
 
         return Ratchet.blockingModal;
     };
 
-    Ratchet.unblock = function(callback)
+    Ratchet.unblock = function(configOrAfterHiddenCallback)
     {
+        var config = {};
+        if (Ratchet.isFunction(configOrAfterHiddenCallback)) {
+            config.afterHiddenCallback = configOrAfterHiddenCallback;
+        }
+        else if (Ratchet.isObject(configOrAfterHiddenCallback))
+        {
+            Ratchet.copyInto(config, configOrAfterHiddenCallback);
+        }
+
         if (Ratchet.blockingModal)
         {
-            $(Ratchet.blockingModal).modal('hide');
-            $(Ratchet.blockingModal).on('shown', function() {
-                Ratchet.blockingModal = null;
+            $(Ratchet.blockingModal).on('hidden', function(config) {
+                return function() {
+                    Ratchet.blockingModal = null;
 
-                if (callback)
-                {
-                    callback();
-                }
-            });
+                    if (config.afterHiddenCallback)
+                    {
+                        config.afterHiddenCallback();
+                    }
+                };
+            }(config));
+            $(Ratchet.blockingModal).modal('hide');
+        }
+        else
+        {
+            config.afterHiddenCallback();
         }
     };
 
@@ -252,6 +288,10 @@
 
         // build modal dom
         var div = $(MODAL_TEMPLATE);
+
+        if (config.modalClass) {
+            $(div).addClass(config.modalClass);
+        }
 
         var title = "";
         if (config.title)

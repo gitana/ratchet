@@ -61,10 +61,10 @@
          *
          * @param actionId
          * @param actionConfig
-         * @param data
+         * @param actionContext
          * @param callback
          */
-        execute: function(actionId, actionConfig, data, callback)
+        execute: function(actionId, actionConfig, actionContext, callback)
         {
             var action = instances[actionId];
             if (!action)
@@ -73,7 +73,7 @@
                 throw new Error("Cannot find action for action id: " + actionId);
             }
 
-            action.execute(actionConfig, data, callback);
+            action.execute(actionConfig, actionContext, callback);
         },
 
         /**

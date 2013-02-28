@@ -204,7 +204,7 @@
 
         }(scope, id, handler);
 
-        this.on(scope, id, _eventHandler);
+        return this.on(scope, id, _eventHandler);
     };
 
     /**

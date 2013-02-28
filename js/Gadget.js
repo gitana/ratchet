@@ -49,6 +49,9 @@
             // keep track of any subscriptions this gadget creates
             this.subscriptions = {};
 
+            // keep track of any event handlers this gadget registers
+            this.eventHandlers = {};
+
             // privileged methods
 
             this.route = function(uri, method, viewHandler, controllerHandler)
@@ -134,8 +137,11 @@
          */
         teardown: function()
         {
-            // release any subscriptions this gadget might have had
+            // release any subscriptions this gadget might have
             this.unsubscribeAll();
+
+            // release any event handlers this gadget might have
+            this.offAll();
         },
 
         /**
@@ -174,6 +180,8 @@
             var subscriptionKey = Ratchet.toLinearForm(descriptor);
 
             this.subscriptions[subscriptionKey] = descriptor;
+
+            return descriptor;
         },
 
         unsubscribe: function()
@@ -183,6 +191,8 @@
             var subscriptionKey = Ratchet.toLinearForm(descriptor);
 
             delete this.subscriptions[subscriptionKey];
+
+            return descriptor;
         },
 
         unsubscribeAll: function()
@@ -342,7 +352,12 @@
          */
         on: function()
         {
-            return Ratchet.Events.on.apply(this, arguments);
+            var descriptor = Ratchet.Events.on.apply(this, arguments);
+
+            var eventKey = Ratchet.toLinearForm(descriptor);
+            this.eventHandlers[eventKey] = descriptor;
+
+            return descriptor;
         },
 
         /**
@@ -366,7 +381,28 @@
          */
         off: function()
         {
-            return Ratchet.Events.off.apply(this, arguments);
+            var descriptor = Ratchet.Events.off.apply(this, arguments);
+
+            var eventKey = Ratchet.toLinearForm(descriptor);
+
+            delete this.eventHandlers[eventKey];
+
+            return descriptor;
+        },
+
+        /**
+         * Clears all registered events for this gadget.
+         */
+        offAll: function()
+        {
+            for (var eventKey in this.eventHandlers)
+            {
+                var descriptor = this.eventHandlers[eventKey];
+
+                Ratchet.Events.off(descriptor.scope, descriptor.id, descriptor.handlerId);
+            }
+
+            Ratchet.clearObject(this.eventHandlers);
         },
 
         /**

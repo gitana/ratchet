@@ -1253,7 +1253,7 @@
 
                     var attrs = {
                         "iTotalRecords": results.totalRows,
-                        "iTotalDisplayRecords": results.size
+                        "iTotalDisplayRecords": results.totalRows
                     };
 
                     // set onto model

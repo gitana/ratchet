@@ -361,6 +361,9 @@
                         if (!title) {
                             title = "Unknown Action Title";
                         }
+                        if (selectorGroupItem.title) {
+                            title = selectorGroupItem.title;
+                        }
 
                         var html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + row.id + "'>";
                         if (actionConfig.iconClass) {

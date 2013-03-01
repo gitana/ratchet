@@ -4,22 +4,56 @@
     {
         doRender: function(el, name, html, model, callback)
         {
+            var ex = null;
+
             if (name)
             {
                 if (!$.template[name]) {
                     $.template(name, html);
                 }
 
-                html = $.tmpl(name, model);
+                try
+                {
+                    html = $.tmpl(name, model);
+                }
+                catch (e)
+                {
+                    ex = e;
+                }
             }
             else
             {
-                html = $.tmpl(html, model);
+                try
+                {
+                    html = $.tmpl(html, model);
+                }
+                catch (e)
+                {
+                    ex = e;
+                }
+            }
+
+            var err = null;
+            if (ex) {
+                err = {};
+                err.lineNumber = ex.lineNumber;
+                err.columnNumber = ex.columnNumber;
+                err.stack = ex.stack;
+                err.templateEngine = "tmpl";
+                err.templateName = name;
+                err.templateHtml = html;
+                err.message = ex.message + " (line: " + err.lineNumber + ", column: " + err.columnNumber + ")";
+            }
+
+            if (err) {
+                Ratchet.logDebug(err.message);
             }
 
             // fire callback
             if (callback) {
-                callback(null, html);
+                callback(err, html);
+            } else {
+                throw new Error(err);
             }
         }
 

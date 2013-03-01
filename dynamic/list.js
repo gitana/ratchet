@@ -79,6 +79,7 @@
             // now add in our custom configuration
             this.config({
                 "columnHeaders": true,
+                "buttons": [],
                 "options": {
                     "filter": true,
                     "paginate": true,

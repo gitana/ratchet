@@ -97,7 +97,7 @@
 
     Ratchet.isArray = function(thing)
     {
-        if (thing === true || thing === false || Ratchet.isUndefined(thing)) {
+        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing == null) {
             return false;
         }
 
@@ -129,7 +129,7 @@
 
     Ratchet.isObject = function(thing)
     {
-        if (thing === true || thing === false || Ratchet.isUndefined(thing)) {
+        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing == null) {
             return false;
         }
 

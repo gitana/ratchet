@@ -226,7 +226,7 @@
 
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {
-        Ratchet.showModalConfirm(title, body, "Delete", "btn-danger", function() {
+        Ratchet.startModalConfirm(title, body, "Delete", "btn-danger", function() {
             onConfirm();
         });
     };
@@ -267,6 +267,19 @@
 
             cb();
         });
+    };
+
+    Ratchet.fadeModal = function(config, setupFunction)
+    {
+        if (!config) {
+            config = {};
+        }
+
+        if (!config.modalClass) {
+            config.modalClass = "fade";
+        }
+
+        return Ratchet.showModal(config, setupFunction);
     };
 
     Ratchet.showModal = function(config, setupFunction)

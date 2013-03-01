@@ -350,7 +350,7 @@
          * @param {Function} successCallback
          * @param [Function] failureCallback
          */
-        transform: function(templateIdentifier, data, successCallback, failureCallback)
+        transform: function()
         {
             var _this = this;
 
@@ -421,11 +421,11 @@
                     successCallback(el);
                 }
 
-            }, function(el, http) {
+            }, function(el, err) {
 
                 if (failureCallback)
                 {
-                    failureCallback(el, http);
+                    failureCallback(el, err);
                 }
 
             });

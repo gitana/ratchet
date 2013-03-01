@@ -1326,9 +1326,12 @@
     Ratchet.logWarn = function(obj) {
         Ratchet.log(Ratchet.WARN, obj);
     };
-    Ratchet.logError = function(obj) {
+    Ratchet.logError = function(obj, includeStack) {
         Ratchet.log(Ratchet.ERROR, obj);
-        console.log(Ratchet.ERROR, new Error().stack);
+        if (includeStack)
+        {
+            console.log(Ratchet.ERROR, new Error().stack);
+        }
     };
 
     Ratchet.log = function(level, obj) {

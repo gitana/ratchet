@@ -54,7 +54,7 @@
             var renderCallback = function(err, html)
             {
                 if (err) {
-                    failureCallback.call(failureCallback, err);
+                    failureCallback.call(failureCallback, el, err);
                     return;
                 }
 

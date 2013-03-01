@@ -136,11 +136,19 @@
 
                 var isArray = function(thing)
                 {
+                    if (!thing) {
+                        return false;
+                    }
+
                     return (typeof(thing) === "object") && (typeof(thing.length) !== "undefined");
                 };
 
                 var isObject = function(thing)
                 {
+                    if (!thing) {
+                        return false;
+                    }
+
                     return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
                 };
 

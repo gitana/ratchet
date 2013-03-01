@@ -121,14 +121,29 @@
 
         renderTemplate: function(el, templateIdentifier, data, callback) {
 
+            var self = this;
+
+            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] renderTemplate -> templateIdentifier: " + templateIdentifier);;
+
             if (data && callback) {
                 el.transform(templateIdentifier, data, function(el) {
                     callback(el);
+                }, function(el, err) {
+
+                    Ratchet.logError("Error transforming gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "]");
+                    Ratchet.logError("Error Message: " + err.message);
+
+                    callback(el, err);
                 });
             } else {
                 callback = data;
                 el.transform(templateIdentifier, function(el) {
                     callback(el);
+                }, function(el, err) {
+
+                    Ratchet.logError("Error transforming gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "]");
+                    Ratchet.logError("Error Message: " + err.message);
+
                 });
             }
         },
@@ -150,11 +165,19 @@
         {
             var self = this;
 
+            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] start render chain");
+
+            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call prepareModel()");
             this.prepareModel(context, model, function() {
+                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
                 self.render(context, model, function(el) {
+                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
                     self.beforeSwap(context, model, function() {
+                        Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
                         context.swap(function() {
+                            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
                             self.afterSwap($(self.ratchet().el)[0], model, context, function() {
+                                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
 
                                 // nothing to do
 
@@ -169,7 +192,7 @@
         {
             var self = this;
 
-            self.renderTemplate(el, self.TEMPLATE, model, function(el) {
+            self.renderTemplate(el, self.TEMPLATE, model, function(el, err) {
                 callback(el);
             });
         },

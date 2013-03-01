@@ -42,27 +42,27 @@
 
             {{each(k, dashlet) column.dashlets}}
 
-            {{if (dashlet.type != null)}}
-            {{if (dashlet.chrome != null)}}
-            <div class="dashlet dashlet-header">
-                <div class="dashlet-title">${dashlet.title}</div>
-                {{if (dashlet.buttons != null)}}
-                <div class="btn-group pull-right" data-toggle="buttons-checkbox">
-                    <button type="button" class="btn">+</button>
-                </div>
+                {{if (dashlet.type)}}
+                    {{if (dashlet.chrome)}}
+                        <div class="dashlet dashlet-header">
+                            <div class="dashlet-title">${dashlet.title}</div>
+                            {{if (dashlet.buttons)}}
+                            <div class="btn-group pull-right" data-toggle="buttons-checkbox">
+                                <button type="button" class="btn">+</button>
+                            </div>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+                    {{if dashlet.chrome}}
+                        <div class="dashlet dashlet-body">
+                    {{/if}}
+                            <gadget type="${dashlet.type}" {{if (dashlet.id)}}id="${dashlet.id}"{{/if}}></gadget>
+                    {{if dashlet.chrome}}
+                        </div>
+                    {{/if}}
                 {{/if}}
-            </div>
-            {{/if}}
-            {{if dashlet.chrome != null}}
-            <div class="dashlet dashlet-body">
-                {{/if}}
-                <gadget type="${dashlet.type}" {{if (dashlet.id != null)}}id="${dashlet.id}"{{/if}}></gadget>
-                {{if dashlet.chrome != null}}
-            </div>
-            {{/if}}
-            {{/if}}
 
-            <br/>
+                <br/>
 
             {{/each}}
 

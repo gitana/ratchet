@@ -552,7 +552,7 @@
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-actions-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/actions.js"/>
             <param name="variableName" value="Ratchet.Actions" />
-            <param name="dependencies" value="['ratchet/ratchet']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
         </antcall>
 
         <!-- "ratchet-config" -->

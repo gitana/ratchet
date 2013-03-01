@@ -15,11 +15,39 @@
          *
          * @param actionId
          * @param action
+         * @param configService optional config service to register against
          */
-        register: function(actionId, actionClass)
+        register: function(actionId, actionClass, configService)
         {
             types[actionId] = actionClass;
             instances[actionId] = new actionClass(actionId);
+
+            if (!configService)
+            {
+                configService = Ratchet.Configuration;
+            }
+
+            // see if the action has any default config that it'd like to provide
+            var actionConfig = instances[actionId].defaultConfiguration();
+            if (!actionConfig) {
+                actionConfig = {};
+            }
+
+            if (!actionConfig.title) {
+                actionConfig.title = actionId;
+            }
+            if (!actionConfig.iconClass) {
+                actionConfig.iconClass = "icon-" + actionId;
+            }
+
+            // register default config
+            var c = {
+                "config": {
+                    "actions": {}
+                }
+            };
+            c.config.actions[actionId] = actionConfig;
+            configService.add(c);
 
             return types[actionId];
         },

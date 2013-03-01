@@ -31,3 +31,9 @@ button.btn-large.list-button-sort-direction-selector
     margin: 0px;
     padding: 8px;
 }
+
+.gadget.list TD.actions
+{
+    vertical-align: middle;
+    text-align: center;
+}

@@ -9,6 +9,8 @@
         <div class="modal-footer"></div> \
     ';
 
+    Ratchet.defaultModalFadeClass = "fade";
+
     Ratchet.blockingModal = null;
     Ratchet.block = function(title, message, configOrAfterShownCallback)
     {
@@ -231,25 +233,37 @@
         });
     };
 
-    Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm)
+    Ratchet.fadeModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm)
+    {
+        return Ratchet.startModalConfirm(title, body, confirmButtonTitle, confirmButtonClass, onConfirm, {
+            "modalClass": Ratchet.defaultModalFadeClass
+        });
+    };
+
+    Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm, config)
     {
         if (!confirmButtonClass) {
             confirmButtonClass = "";
         }
 
-        Ratchet.showModal({
-            "title": title,
-            "cancel": true
-        }, function(div, cb) {
+        if (!config) {
+            config = {};
+        }
+        config.title = title;
+        config.cancel = true;
+
+        Ratchet.showModal(config, function(div, cb) {
 
             $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
             $(div).find('.modal-footer').append("<button class='btn pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
 
             $(div).find('.confirm-button').click(function() {
 
+                $(div).on('hidden', function() {
+                    onConfirm(div);
+                });
                 $(div).modal('hide');
 
-                onConfirm();
             });
 
             cb();
@@ -276,7 +290,7 @@
         }
 
         if (!config.modalClass) {
-            config.modalClass = "fade";
+            config.modalClass = Ratchet.defaultModalFadeClass;
         }
 
         return Ratchet.showModal(config, setupFunction);

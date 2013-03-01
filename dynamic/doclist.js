@@ -299,9 +299,19 @@
                 }
 
                 this._clickAction(button.action, actionContext, function() {
-                    alert("action: " + button.action + " completed");
+                    self.afterActionComplete(button.action, actionContext);
                 });
             }
+        },
+
+        /**
+         * EXTENSION POINT
+         *
+         * @param actionId
+         * @param actionContext
+         */
+        afterActionComplete: function(actionId, actionContext)
+        {
         },
 
         columnValue: function(row, item)

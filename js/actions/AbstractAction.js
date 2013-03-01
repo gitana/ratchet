@@ -30,6 +30,16 @@
         /**
          * EXTENSION POINT
          *
+         * @return {Object}
+         */
+        defaultConfiguration: function()
+        {
+            return {};
+        },
+
+        /**
+         * EXTENSION POINT
+         *
          * @param config
          * @param actionContext
          * @param callback signature is (err, data)

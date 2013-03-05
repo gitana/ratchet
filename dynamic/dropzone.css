@@ -1,0 +1,15 @@
+.dzholder-frame
+{
+    width: 100%;
+    align: center;
+}
+
+.dzholder
+{
+    width: 500px;
+    height: 300px;
+    border: 2px #ccc dotted;
+    line-height: 300px;
+    vertical-align: middle;
+    text-align: center;
+}

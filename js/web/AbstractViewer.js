@@ -41,6 +41,83 @@
                 return c;
             };
 
+            /**
+             * Determines whether the resource supports a preview URI for the given mimetype.
+             *
+             * @param resource
+             * @param mimetype
+             */
+            var findUrl = function(resource, mimetype)
+            {
+                var url = null;
+
+                // regular expression matching
+                var regex = Ratchet.wildcardToRegExp(mimetype);
+
+                if (resource.attachments)
+                {
+                    for (var k in resource.attachments)
+                    {
+                        var arr = resource.attachments[k].mimetype.match(regex);
+                        if (arr && arr.length > 0)
+                        {
+                            url = resource.attachments[k].url;
+                            break;
+                        }
+                    }
+                }
+
+                if (!uri)
+                {
+                    var arr = resource.mimetype.match(regex);
+                    if (arr && arr.length > 0)
+                    {
+                        url = resource.url;
+                    }
+                }
+
+                return url;
+            };
+
+            var urlMatches = function(resource, mimetypes)
+            {
+                var matches = [];
+
+                for (var i = 0; i < mimetypes.length; i++)
+                {
+                    var url = findUrl(resource, mimetypes[i]);
+                    if (url)
+                    {
+                        matches.push({
+                            mimetype: mimetypes[i],
+                            url: url
+                        });
+                    }
+                }
+
+                return matches;
+            };
+
+            this.findAttachments = function(resource)
+            {
+                var mimetypes = this.listSupportedMimetypes();
+
+                return urlMatches(resource, mimetypes);
+            };
+
+            this.findAttachment = function(resource)
+            {
+                var attachment = null;
+
+                var attachments = this.findAttachments(resource);
+                if (attachments.length > 0)
+                {
+                    attachment = attachments[0];
+                }
+
+                return attachment;
+            };
+
         },
 
         // one-time setup call to allow the viewer to register its configuration
@@ -57,6 +134,28 @@
         doConfigure: function()
         {
 
+        },
+
+        /**
+         * Describes any supported attachment mimetypes that this viewer can render.
+         *
+         * @return {Array}
+         */
+        listSupportedMimetypes: function()
+        {
+            return [];
+        },
+
+        /**
+         * Validates whether this viewer can operate in the current device or browser.  This method should check
+         * whether all required libraries or browser capabilities exist.  If not, then the method can indicate to the
+         * framework that it is not able to proceed.
+         *
+         * @return {Boolean}
+         */
+        canOperate: function()
+        {
+            return false;
         },
 
         /**
@@ -96,19 +195,7 @@
          */
         canHandle: function(resource)
         {
-            return false;
-        },
-
-        /**
-         * Validates whether this viewer can operate in the current device or browser.  This method should check
-         * whether all required libraries or browser capabilities exist.  If not, then the method can indicate to the
-         * framework that it is not able to proceed.
-         *
-         * @return {Boolean}
-         */
-        canOperate: function()
-        {
-            return false;
+            return (this.findAttachments(resource).length > 0);
         },
 
         /**

@@ -93,10 +93,20 @@
     {
         var self = this;
 
-        Ratchet.showModal({
-            "title": options.title,
-            "cancel": true
-        }, function(div, cb) {
+        if (!options) {
+            options = {};
+        }
+        if (Ratchet.isUndefined(options.cancel)) {
+            options.cancel = true;
+        }
+        if (Ratchet.isUndefined(options.title)) {
+            options.title = "Unknown Title";
+        }
+        if (Ratchet.isUndefined(options.completeButtonTitle)) {
+            options.completeButtonTitle = "Done";
+        }
+
+        Ratchet.showModal(options, function(div, cb) {
 
             var gadgetType = options.type;
             var gadgetConfiguration = options.config;
@@ -148,14 +158,17 @@
             $(div).find(".modal-body").attr("gadget", tempGadgetType);
             $(div).find(".modal-body").attr("id", tempGadgetId);
 
-            $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Upload</button>");
+            $(div).find('.modal-footer').append("<button class='btn pull-right complete-button' data-dismiss='modal' aria-hidden='true'>" + options.completeButtonTitle + "</button>");
 
              // ratchet it up
-            var ratchet = $(div).ratchet(function() {
+            var parentRatchet = $(div).ratchet(function() {
 
                 this.parent = options.parent;
 
             });
+
+            // ratchet for our gadget
+            var ratchet = Ratchet.firstValueInObject(parentRatchet.childRatchets);
 
             // set up ratchet callback
             if (beforeRatchetCallback)
@@ -275,6 +288,20 @@
         Ratchet.showModal({
             "title": title,
             "cancel": true
+        }, function(div, cb) {
+            $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
+            $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+
+            cb();
+        });
+    };
+
+    Ratchet.fadeModalMessage = function(title, message)
+    {
+        Ratchet.showModal({
+            "title": title,
+            "cancel": true,
+            "modalClass": "fade"
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
             $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");

@@ -260,6 +260,16 @@
         return null;
     };
 
+    Ratchet.urlEncode = function(text)
+    {
+        return encodeURIComponent(text);
+    };
+
+    Ratchet.urlDecode = function(text)
+    {
+        return decodeURIComponent(text);
+    };
+
     /*
     Ratchet.removeFromArray = function(array, value, all)
     {
@@ -352,6 +362,26 @@
         };
 
         merge(source, target)
+    };
+
+    /**
+     * Combines one or more path elements into a combined path.
+     *
+     * @return {String}
+     */
+    Ratchet.paths = function()
+    {
+        var result = "";
+
+        for (var i = 0; i < arguments.length; i++)
+        {
+            result += "/" + arguments[i];
+        }
+
+        result = result.replace("//", "/");
+        result = result.replace("//", "/");
+
+        return result;
     };
 
     /**
@@ -619,6 +649,30 @@
         var observables = Ratchet.ScopedObservables.get(scope);
 
         return observables.dependentObservable(id, func);
+    };
+
+    Ratchet.firstValueInObject = function(object)
+    {
+        var value = null;
+
+        var firstKey = Ratchet.firstKeyInObject(object);
+        if (firstKey) {
+            value = object[firstKey];
+        }
+
+        return value;
+    };
+
+    Ratchet.firstKeyInObject = function(object)
+    {
+        if (object) {
+            for (var k in object) {
+                if (object.propertyIsEnumerable(k)) {
+                    return k;
+                }
+            }
+        }
+        return null;
     };
 
     Ratchet.clearArray = function(array)

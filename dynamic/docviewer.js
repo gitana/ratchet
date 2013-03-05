@@ -94,7 +94,6 @@
             });
         },
 
-
         afterSwap: function(el, model, context, callback)
         {
             var self = this;

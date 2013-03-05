@@ -29,33 +29,24 @@
             });
         },
 
+        listSupportedMimetypes: function()
+        {
+            return [
+                "image/*"
+            ];
+        },
+
         canOperate: function()
         {
             // yes, all browsers support the image tag
             return true;
         },
 
-        canHandle: function(resource)
-        {
-            // we can only render images if they have a URL
-            if (!resource.url) {
-                return false;
-            }
-
-            // make sure the mimetype is an image
-            if (resource.mimetype) {
-                if (resource.mimetype.indexOf("image/") == 0) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
         render: function(resource, container, callback)
         {
+            var attachment = this.findAttachment(resource);
+
             // required resource properties
-            var src = resource.url;
             var title = resource.title;
 
             // markup
@@ -67,7 +58,7 @@
                 html = this.messageFrame("The image cannot render as it is too large");
             }
             else {
-                html = "<img src='" + src + "' alt='" + title + "' title='" + title + "'/>";
+                html = "<img src='" + attachment.url + "' alt='" + title + "' title='" + title + "'/>";
             }
 
             $(container).addClass("image");

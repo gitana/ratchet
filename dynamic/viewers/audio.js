@@ -30,6 +30,13 @@
             });
         },
 
+        listSupportedMimetypes: function()
+        {
+            return [
+                "audio/*"
+            ];
+        },
+
         canOperate: function()
         {
             var valid = true;
@@ -55,28 +62,11 @@
             return valid;
         },
 
-        canHandle: function(resource)
-        {
-            // we can only render audio files if they have a URL
-            if (!resource.url) {
-                return false;
-            }
-
-            // make sure the mimetype is an audio file
-            if (resource.mimetype) {
-                if (resource.mimetype.indexOf("audio/") == 0) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
         render: function(resource, container, callback)
         {
+            var attachment = this.findAttachment(resource);
+
             // resource properties
-            var src = resource.url;
-            var mimetype = resource.mimetype;
             var title = resource.title ? resource.title: "";
 
             // audio configuration
@@ -93,7 +83,7 @@
                 html += " controls='controls'";
             }
             html += ">";
-            html += "   <source src='" + src + "'  type='" + mimetype + "'>";
+            html += "   <source src='" + attachment.url + "'  type='" + attachment.mimetype + "'>";
             html += "</audio>";
 
             $(container).addClass("audio");

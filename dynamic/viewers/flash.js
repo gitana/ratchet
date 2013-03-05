@@ -9,19 +9,29 @@
 
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
-            var swfobject = require("swfobject");
 
-            return factory(Ratchet, $, swfobject);
+            return factory(Ratchet, $);
         });
     }
     else
     {
-        return factory(root.Ratchet, root.$, root.swfobject);
+        return factory(root.Ratchet, root.$);
     }
 
-}(this, function(Ratchet, $, swfobject) {
+}(this, function(Ratchet, $) {
 
     return Ratchet.ViewerRegistry.register("flash", Ratchet.AbstractViewer.extend({
+
+        doConfigure: function()
+        {
+        },
+
+        listSupportedMimetypes: function()
+        {
+            return [
+                "application/x-shockwave-flash"
+            ];
+        },
 
         canOperate: function()
         {
@@ -29,26 +39,10 @@
             return true;
         },
 
-        canHandle: function(resource)
-        {
-            // we can only render flash files if they have a URL
-            if (!resource.url) {
-                return false;
-            }
-
-            if (resource.mimetype == "application/x-shockwave-flash") {
-                // supported
-            }
-            else {
-                // not supported mimetype
-                return false;
-            }
-
-            return true;
-        },
-
         render: function(resource, container, callback)
         {
+            var attachment = this.findAttachment(resource);
+
             // OBJECT dom element properties
             var id = "flash_object_" + new Date().getTime();
             var widthStr = "100%";
@@ -66,7 +60,7 @@
 
             // params
             var params = {
-                "movie": resource.url,
+                "movie": attachment.url,
                 "quality": "high",
                 "bgcolor": "#ffffff",
                 "allowScriptAccess": "never",
@@ -80,14 +74,14 @@
 
             // embed
             html += "<embed";
-            html += " src='" + resource.url + "'";
+            html += " src='" + attachment.url + "'";
             html += " quality='" + params.quality + "'";
             html += " bgcolor='" + params.bgcolor + "'";
             html += " width='" + widthStr + "'";
             html += " height='" + heightStr + "'";
             html += " name='" + resource.id + "'";
             html += " align=''";
-            html += " type='" + resource.mimetype + "'";
+            html += " type='" + attachment.mimetype + "'";
             html += " pluginspage='http://www.macromedia.com/go/getflashplayer'";
             html += ">";
             html += "</embed>";

@@ -10,6 +10,9 @@
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
+            require("css!ratchet/dynamic/viewers/videojs/video-js.css");
+            require("ratchet/dynamic/viewers/videojs/video");
+
             return factory(Ratchet, $);
         });
     }
@@ -30,58 +33,26 @@
             });
         },
 
-        canOperate: function()
+        listSupportedMimetypes: function()
         {
-            var valid = true;
-
-            /*
-            // <video> tag not supported in IE < 9
-            if (Ratchet.Browser.msie && Ratchet.Browser.version < 9)
-            {
-                valid = false;
-            }
-
-            // <video> tag not supported in Firefox < 3.5
-            if (Ratchet.Browser.firefox && Ratchet.Browser.version < 4)
-            {
-                valid = false;
-            }
-
-            // <video> tag not supported in Safari < 3 (523)
-            if (Ratchet.Browser.safari && Ratchet.Browser.version < 523)
-            {
-                valid = false;
-            }
-            */
-
-            return valid;
+            return [
+                "video/*"
+            ];
         },
 
-        canHandle: function(resource)
+        canOperate: function()
         {
-            // we can only render video files if they have a URL
-            if (!resource.url) {
-                return false;
-            }
-
-            // make sure the mimetype is a video file
-            if (resource.mimetype) {
-                if (resource.mimetype.indexOf("video/") == 0) {
-
-                    return true;
-                }
-            }
-
-            return false;
+            return true;
         },
 
         render: function(resource, container, callback)
         {
+            var attachment = this.findAttachment(resource);
+
             // resource properties
-            var src = resource.url;
-            var mimetype = resource.mimetype;
             var title = resource.title ? resource.title: "";
 
+            // dom
             var id = "video2-" + new Date().getTime();
 
             // audio configuration
@@ -115,7 +86,7 @@
             }
             html += " preload='auto'";
             html += ">";
-            html += "<source type='" + mimetype + "' src='" + src + "' title='" + title + "'>";
+            html += "<source type='" + attachment.mimetype + "' src='" + attachment.url + "' title='" + title + "'></source>";
             html += "</video>";
 
             $(container).addClass("video");

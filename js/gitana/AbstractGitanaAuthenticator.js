@@ -30,7 +30,11 @@
             var self = this;
 
             // init gitana
-            var gitana = new Gitana(self.config.client);
+            var config = {};
+            if (self.config) {
+                Ratchet.copyInto(config, self.config);
+            }
+            var gitana = new Gitana(config);
 
             // now authenticate
             gitana.authenticate({
@@ -53,19 +57,23 @@
          * To be called once authentication successfully completed.
          * This sets up any contextual information onto the top ratchet.
          *
-         * @param chain
+         * @param platform
          * @param context
          * @param successCallback
          * @param failureCallback
          */
-        handlePostAuthenticate: function(chain, context, successCallback, failureCallback)
+        handlePostAuthenticate: function(platform, context, successCallback, failureCallback)
         {
             var self = this;
 
-            Gitana.Authentication.platform = chain;
+            Gitana.Authentication.platform = function(platform) {
+                return function() {
+                    return Chain(platform);
+                };
+            }(platform);
             Gitana.Authentication.gitanaAuthenticated = true;
 
-            var authInfo = chain.getDriver().getAuthInfo();
+            var authInfo = platform.getDriver().getAuthInfo();
 
             context.observable("authInfo").set(authInfo);
 
@@ -73,14 +81,14 @@
 
             var userName = authInfo.getPrincipalName();
             var domainId = authInfo.getPrincipalDomainId();
-            chain.readDomain(domainId).then(function() {
+            platform.readDomain(domainId).then(function() {
                 context.observable("domain").set(this);
                 this.readPrincipal(userName).then(function() {
                     self.populateAuthenticatedUser(context, this);
                 });
             });
 
-            chain.then(function() {
+            platform.then(function() {
                 if (successCallback) {
                     successCallback();
                 }
@@ -120,7 +128,7 @@
                  "avatarUrl": "" // TODO: platform attachment?
              };
 
-             var platform = Gitana.Authentication.platform;
+             var platform = Gitana.Authentication.platform();
 
              platform.tenantAttachment('avatar').trap(function() {
                  context.observable("tenantDetails").set(tenantDetails);
@@ -139,7 +147,7 @@
 
         logout: function(context, callback)
         {
-            var platform = Gitana.Authentication.platform;
+            var platform = Gitana.Authentication.platform();
             platform.logout().then(function()
             {
                 if (callback)

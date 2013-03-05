@@ -5,20 +5,27 @@
         // AMD
         define(function(require, exports, module) {
 
-            require("css!ratchet/dynamic/viewers/text.css");
-
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
-            return factory(Ratchet, $);
+            // note: prettyPrint isn't AMD-friendly
+            // these pollute the window.prettyPrint namespace
+            // however, this seems to be par-for-the-course with prettyPrint
+            require("ratchet/dynamic/viewers/prettify/prettify");
+            require("css!ratchet/dynamic/viewers/prettify/prettify.css");
+            //require("ratchet/dynamic/viewers/prettify/lang-css");
+
+            require("css!ratchet/dynamic/viewers/text.css");
+
+            return factory(Ratchet, $, window.prettyPrint);
         });
     }
     else
     {
-        return factory(root.Ratchet, root.$);
+        return factory(root.Ratchet, root.$, root.prettyPrint);
     }
 
-}(this, function(Ratchet, $) {
+}(this, function(Ratchet, $, prettyPrint) {
 
     return Ratchet.ViewerRegistry.register("text", Ratchet.AbstractViewer.extend({
 
@@ -30,35 +37,27 @@
             });
         },
 
+        listSupportedMimetypes: function()
+        {
+            return [
+                "text/*"
+            ];
+        },
+
         canOperate: function()
         {
             return (typeof(prettyPrint) == "function") ? true: false;
         },
 
-        canHandle: function(resource)
-        {
-            // we require a url to load the document
-            if (!resource.url) {
-                return false;
-            }
-
-            // make sure the mimetype is an text
-            if (resource.mimetype) {
-                if (resource.mimetype.indexOf("text/") == 0) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
         render: function(resource, container, callback)
         {
+            var attachment = this.findAttachment(resource);
+
             var lang = this.config().lang;
             if (!lang)
             {
                 // auto-determine from mimetype
-                if (resource.mimetype == "text/html") {
+                if (attachment.mimetype == "text/html") {
                     lang = "html";
                 }
             }
@@ -67,7 +66,7 @@
 
             // load the text
             $.ajax({
-                "url": resource.url,
+                "url": attachment.url,
                 "dataType": "text",
                 "success": function(text)
                 {
@@ -75,7 +74,7 @@
 
                     var classes = 'prettyprint ' + (lang ? 'lang-' + lang : '');
                     if (linenums) {
-                        classes += " linenums";
+                        classes += " linenums:4";
                     }
 
                     var html = "<pre class='" + classes + "'>" + text + "</pre>";
@@ -92,7 +91,7 @@
                 {
                     // fire back error
                     callback({
-                        "message": "Unable to load resource: " + resource.url + " with message: " + http.message
+                        "message": "Unable to load resource: " + attachment.url + " with message: " + http.message
                     });
                 }
             });

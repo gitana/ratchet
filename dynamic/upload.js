@@ -2,18 +2,21 @@ define(function(require, exports, module) {
 
     require("css!ratchet/dynamic/common.css");
 
+    require("css!ratchet/dynamic/upload.css");
     var html = require("text!ratchet/dynamic/upload.html");
     var Ratchet = require("ratchet/web");
 
     require("ratchet/tmpl");
     require("bootstrap");
 
-    //require("css!jquery-fileupload/css/style.css");
-    //require("css!jquery-fileupload/css/jquery.fileupload-ui.css");
+    /*require("jquery.ui.widget");*/
     require("jquery-fileupload/js/jquery.iframe-transport");
     require("jquery-fileupload/js/jquery.fileupload");
-    //require("jquery-fileupload/js/jquery.fileupload-fp");
-    //require("jquery-fileupload/js/jquery.fileupload-ui");
+    require("jquery-fileupload/js/jquery.fileupload-fp");
+    require("jquery-fileupload/js/jquery.fileupload-ui");
+    require("css!jquery-fileupload/css/jquery.fileupload-ui.css");
+
+    var tmpl = require("tmpl");
 
     return Ratchet.DynamicRegistry.register("upload", Ratchet.AbstractDynamicGadget.extend({
 
@@ -23,37 +26,37 @@ define(function(require, exports, module) {
 	    {
 	        var self = this;
 
-	        var fileUploadConfig = {};
+            // defaults
+            if (!config.method) {
+                config.method = "post";
+            }
+            if (!config.url) {
+                alert("URL is required");
+            }
 
-            if (!Ratchet.isUndefined(config.url)) {
-	            fileUploadConfig.url = config.url;
-	        }
+            // build config
+	        var fileUploadConfig = {
+                "dataType": "json",
+                "method": config.method,
+                "url": config.url,
+                "uploadTemplateId": null,
+                "uploadTemplate": tmpl($(el).find("#template-upload").html()),
+                "downloadTemplateId": null,
+                "downloadTemplate": tmpl($(el).find("#template-download").html()),
+                "filesContainer": $(el).find(".files"),
+                "dropZone": $(el).find(".upload-dropzone")
+            };
 
-            if (!Ratchet.isUndefined(config.method)) {
-	            fileUploadConfig.type = config.method;
-	        }
-
-            if (!Ratchet.isUndefined(config.dataType)) {
-	            fileUploadConfig.dataType = config.dataType;
-	        }
-
-            if (!Ratchet.isUndefined(config.autoUpload)) {
-	            /**
-	            fileUploadConfig.add = function(e, data){
-	                var jqXHR = data.submit();
-	            };
-	             **/
-	            // UI ONLY
-	            fileUploadConfig.autoUpload = config.autoUpload;
-	        }
-
+            // optional config
             if (!Ratchet.isUndefined(config.maxFileSize)) {
 	            fileUploadConfig.maxFileSize = config.maxFileSize;
 	        }
-
             if (!Ratchet.isUndefined(config.maxNumberOfFiles)) {
 	            fileUploadConfig.maxNumberOfFiles = config.maxNumberOfFiles;
 	        }
+            if (!Ratchet.isUndefined(config.autoUpload)) {
+                fileUploadConfig.autoUpload = config.autoUpload;
+            }
 
 	        //if (config.filetypes)
 	        //{
@@ -61,9 +64,10 @@ define(function(require, exports, module) {
 	        //}
 
 	        // bind control
-	        var fileUpload = $('.files-fileupload').fileupload(fileUploadConfig);
+	        var fileUpload = $(el).find('.fileupload-form').fileupload(fileUploadConfig);
+            this.fileUpload = fileUpload;
 
-	        /////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////
 	        //
 	        // CORE CALLBACKS FOR FILEUPLOAD
 	        //
@@ -72,7 +76,6 @@ define(function(require, exports, module) {
 	        fileUpload.bind("fileuploadcustombeforesend", function(e, data) {
 	            self.onCustomBeforeSend.call(self, e, data, this, config);
 	        });
-
 	        fileUpload.bind("fileuploadadd", function(e, data) {
 	            self.onAdd.call(self, e, data, this, config);
 	        });
@@ -129,48 +132,29 @@ define(function(require, exports, module) {
 	            self.onDragover.call(self, e, data, this, config);
 	        });
 
-
-	        /////////////////////////////////////////////////////////////////////////////////////////
-	        //
-	        // EXTENDED "UI" CALLBACKS FOR FILEUPLOAD
-	        //
-	        /////////////////////////////////////////////////////////////////////////////////////////
-
-	        fileUpload.bind("fileuploaddestroy", function(e, data) {
-	            self.onDestroy.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploaddestroyed", function(e, data) {
-	            self.onDestroyed.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploadadded", function(e, data) {
-	            self.onAdded.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploadsent", function(e, data) {
-	            self.onSent.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploadcompleted", function(e, data) {
-	            self.onCompleted.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploadfailed", function(e, data) {
-	            self.onFailed.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploadstarted", function(e, data) {
-	            self.onStarted.call(self, e, data, this, config);
-	        });
-
-	        fileUpload.bind("fileuploadstopped", function(e, data) {
-	            self.onStopped.call(self, e, data, this, config);
-	        });
+            /// drop zone
+            $(document).bind('dragover', function (e) {
+                var dropZone = $('.upload-dropzone'),
+                    timeout = window.dropZoneTimeout;
+                if (!timeout) {
+                    dropZone.addClass('in');
+                } else {
+                    clearTimeout(timeout);
+                }
+                if (e.target === dropZone[0]) {
+                    dropZone.addClass('hover');
+                } else {
+                    dropZone.removeClass('hover');
+                }
+                window.dropZoneTimeout = setTimeout(function () {
+                    window.dropZoneTimeout = null;
+                    dropZone.removeClass('in hover');
+                }, 100);
+            });
 	    },
 
 	    /**
-	     * Attach any additional properties to the upload.
+	     * Attach any additional properties or pass multi-part parameters to the upload handler.
 	     *
 	     * @param e
 	     * @param data
@@ -180,21 +164,32 @@ define(function(require, exports, module) {
 	    onCustomBeforeSend: function(e, data, domEl, model)
 	    {
 	        // clean out and mix any new hidden fields for all of the files being transmitted
-	        $(domEl).find('.properties-field').remove();
+	        $(domEl).find('.custom-send-field').remove();
 	        $(domEl).find("input:hidden").remove();
 	        $.each(data.files, function(index, file)
 	        {
-	            var alpacaId = file['alpacaId'];
-
-	            if (model["uploadProperties"])
+                /**
+                 * Properties are content metadata properties to be attached to each node.
+                 */
+	            if (model["properties"])
 	            {
-	                for (var propertyName in model["uploadProperties"])
+	                for (var propertyName in model["properties"])
 	                {
-	                    var propertyValue = model["uploadProperties"][propertyName];
+	                    var propertyValue = model["properties"][propertyName];
 
-	                    $(domEl).append('<input class="properties-field" type="hidden" name="property' + index + '__' + propertyName + '" value="' + propertyValue + '">');
+	                    $(domEl).append('<input class="custom-send-field" type="hidden" name="property' + index + '__' + propertyName + '" value="' + propertyValue + '">');
 	                }
 	            }
+
+                if (model["params"])
+                {
+                    for (var paramName in model["params"])
+                    {
+                        var paramValue = model["params"][paramName];
+
+                        $(domEl).append('<input class="custom-send-field" type="hidden" name="param' + index + '__' + paramName + '" value="' + paramValue + '">');
+                    }
+                }
 	        });
 
 	        var thisContext = [];
@@ -281,47 +276,8 @@ define(function(require, exports, module) {
 	    // Callback for dragover events of the dropZone(s):
 	    onDragover: function(e, data, domEl, model)
 	    {
-	    },
+	    }
 
-	    // custom handler for file upload destroy event
-	    onDestroy: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload destroyed event
-	    onDestroyed: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload added event
-	    onAdded: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload sent event
-	    onSent: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload completed event
-	    onCompleted: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload failed event
-	    onFailed: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload started event
-	    onStarted: function(e, data, domEl, model)
-	    {
-	    },
-
-	    // custom handler for file upload stop event
-	    onStopped: function(e, data, domEl, model)
-	    {
-	    }		
 	}));
 });
 

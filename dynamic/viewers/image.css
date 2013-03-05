@@ -1,11 +1,12 @@
-.viewer.image
+.docviewer.image
 {
-   line-height: 325px;
+    vertical-align: middle;
+    text-align: center;
 }
 
-.viewer.image img
+.docviewer.image img
 {
-   max-height: 100%;
-   max-width: 100%;
-   overflow: auto;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
 }

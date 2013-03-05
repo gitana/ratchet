@@ -8,6 +8,10 @@
 
         <div class="gadget list {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html">
 
+            {{if navbox}}
+            <div class="navbox"></div>
+            {{/if}}
+
             {{if buttons && buttons.length > 0}}
             <div class="buttonbar">
                 <div class="pull-left">
@@ -17,7 +21,7 @@
 
                     <div class="button-container {{if button.buttons}}dropdown{{/if}}">
 
-                        <button id="list-button-${key}" class="btn btn-large list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                        <button id="list-button-${key}" class="btn list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                             {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                                 ${button.title}&nbsp;
                             {{if button.buttons}}
@@ -56,7 +60,7 @@
 
                     <div class="button-container {{if button.buttons}}dropdown{{/if}}">
 
-                        <button id="list-button-${key}" class="btn btn-large list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                        <button id="list-button-${key}" class="btn list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                             {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                                 ${button.title}&nbsp;
                             {{if button.buttons}}
@@ -88,8 +92,6 @@
 
                 </div>
             </div>
-            <br style="clear:both"/>
-            <br style="clear:both"/>
             {{/if}}
 
             <table width="100%" style="width: 100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover">

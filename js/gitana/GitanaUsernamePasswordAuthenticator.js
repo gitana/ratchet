@@ -6,22 +6,28 @@
         {
             var self = this;
 
-            // init gitana
-            var gitana = new Gitana(self.config.client);
+            var config = {};
+            if (self.config)
+            {
+                Ratchet.copyInto(config, self.config);
+            }
+            config.username = username;
+            config.password = password;
 
-            // now authenticate
-            gitana.authenticate({
-                "username": username,
-                "password": password
-            },function() {
+            // connect to Gitana
+            Gitana.connect(config, function(err) {
 
-                // failed, so pop up username/password dialog
-                self.loginDialog(context, username, password, successCallback, failureCallback, true);
+                // if err, then something went wrong
+                if (err)
+                {
+                    self.loginDialog(context, username, password, successCallback, failureCallback, true);
+                    return;
+                }
 
-            }).then(function() {
+                // no error
 
-                self.handlePostAuthenticate(this, context, successCallback, failureCallback);
-
+                // if an "application" was specified in the config...
+                self.handlePostAuthenticate((this.platform ? this.platform() : this), context, successCallback, failureCallback);
             });
         },
 

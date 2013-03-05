@@ -80,6 +80,7 @@
             this.config({
                 "columnHeaders": true,
                 "buttons": [],
+                "navbox": false,
                 "options": {
                     "filter": true,
                     "paginate": true,

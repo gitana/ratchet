@@ -25,16 +25,29 @@
     vertical-align: middle;
 }
 
-.list-icon-column
+TD.list-icon-column
 {
     vertical-align: middle !important;
     width: 70px;
+    text-align: center;
 }
 
-.list-checkbox-column
+TD.list-icon-column DIV
+{
+    margin-left: 15px;
+}
+
+TD.list-icon-column IMG
+{
+    border: 0px;
+    border-radius: 3px;
+}
+
+TD.list-checkbox-column
 {
     vertical-align: middle !important;
     width: 10px;
+    text-align: center;
 }
 
 .list-checkbox-column input[type="checkbox"]

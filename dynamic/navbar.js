@@ -72,6 +72,7 @@
             {
                 var item = model.items[i];
 
+                /*
                 // look up the page uri that this nav item references
                 // if we find a uri, write it onto the item
                 var z = Ratchet.Configuration.evaluate({
@@ -80,6 +81,7 @@
                 if (z.pages && z.pages[item.key]) {
                     item.uri = z.pages[item.key].uri;
                 }
+                */
 
                 if (item.uri)
                 {

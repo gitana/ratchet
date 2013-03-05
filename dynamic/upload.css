@@ -1,0 +1,48 @@
+.upload-dropzone {
+    background: white;
+    border: 2px #ccc dotted;
+    /**width: 100%;**/
+    /*height: 200px;
+    line-height: 200px;*/
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    color: #aaa;
+}
+.upload-dropzone.in {
+    width: 600px;
+    /*height: 200px;
+    line-height: 200px;*/
+    font-size: larger;
+}
+.upload-dropzone.hover {
+    background: lawngreen;
+}
+.upload-dropzone.fade {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    opacity: 1;
+}
+
+tr.template-upload td.size
+{
+    white-space: nowrap
+}
+
+tr.template-upload td.start
+{
+    display: none;
+}
+
+tr.template-upload td.cancel
+{
+    white-space: nowrap
+}
+
+tr.template-upload td.preview
+{
+    display:none;
+}

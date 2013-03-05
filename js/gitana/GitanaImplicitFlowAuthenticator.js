@@ -60,7 +60,12 @@
             var redirectUri = window.location.href.substring(0, window.location.href.indexOf("#"));
 
             // init gitana
-            var gitana = new Gitana(self.config.client);
+            var config = {};
+            if (self.config)
+            {
+                Ratchet.copyInto(config, self.config);
+            }
+            var gitana = new Gitana(config);
 
             // now authenticate
             gitana.authenticate({

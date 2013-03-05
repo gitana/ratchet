@@ -77,19 +77,35 @@
         {
         },
 
+        /**
+         * @extension_point
+         */
+        loadResource: function(el, model, callback)
+        {
+            callback();
+        },
+
         beforeSwap: function(el, model, callback)
         {
             var self = this;
 
             this.base(el, model, function() {
 
-                // set up observables
-                var refreshHandler = self.refreshHandler(el);
+                self.loadResource(el, model, function(resource)
+                {
+                    if (resource) {
+                        self.observable(model.observables.viewerResource).set(resource);
+                    }
 
-                // when the "viewerResource" observable changes, update the doc viewer
-                self.subscribe(model.observables.viewerResource, refreshHandler);
+                    // set up observables
+                    var refreshHandler = self.refreshHandler(el);
 
-                callback();
+                    // when the "viewerResource" observable changes, update the doc viewer
+                    self.subscribe(model.observables.viewerResource, refreshHandler);
+
+                    callback();
+
+                });
 
             });
         },

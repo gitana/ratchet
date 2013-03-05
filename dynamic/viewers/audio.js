@@ -83,7 +83,7 @@
                 html += " controls='controls'";
             }
             html += ">";
-            html += "   <source src='" + attachment.url + "'  type='" + attachment.mimetype + "'>";
+            html += " <source src='" + attachment.url + "'  type='" + attachment.mimetype + "'>";
             html += "</audio>";
 
             $(container).addClass("audio");

@@ -47,9 +47,9 @@
              * @param resource
              * @param mimetype
              */
-            var findUrl = function(resource, mimetype)
+            var findUrlMatch = function(resource, mimetype)
             {
-                var url = null;
+                var match = null;
 
                 // regular expression matching
                 var regex = Ratchet.wildcardToRegExp(mimetype);
@@ -61,22 +61,28 @@
                         var arr = resource.attachments[k].mimetype.match(regex);
                         if (arr && arr.length > 0)
                         {
-                            url = resource.attachments[k].url;
+                            match = {
+                                "url": resource.attachments[k].url,
+                                "mimetype": resource.attachments[k].mimetype
+                            };
                             break;
                         }
                     }
                 }
 
-                if (!uri)
+                if (!match)
                 {
                     var arr = resource.mimetype.match(regex);
                     if (arr && arr.length > 0)
                     {
-                        url = resource.url;
+                        match = {
+                            "url": resource.url,
+                            "mimetype": resource.mimetype
+                        };
                     }
                 }
 
-                return url;
+                return match;
             };
 
             var urlMatches = function(resource, mimetypes)
@@ -85,12 +91,12 @@
 
                 for (var i = 0; i < mimetypes.length; i++)
                 {
-                    var url = findUrl(resource, mimetypes[i]);
-                    if (url)
+                    var match = findUrlMatch(resource, mimetypes[i]);
+                    if (match)
                     {
                         matches.push({
-                            mimetype: mimetypes[i],
-                            url: url
+                            mimetype: match.mimetype,
+                            url: match.url
                         });
                     }
                 }

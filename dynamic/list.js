@@ -719,7 +719,13 @@
                 if (!markup && self.iconClass) {
                     var iconClass = self.iconClass.call(self, row, model, context);
                     if (iconClass) {
-                        markup = "<div class='" + iconClass + "'></div>";
+                        if (linkUri){
+                            markup = "<a href='" + linkUri + "'>";
+                        }
+                        markup += "<div class='" + iconClass + "'></div>";
+                        if (linkUri) {
+                            markup += "</a>";
+                        }
                     }
                 }
 

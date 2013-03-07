@@ -48,6 +48,8 @@
                             callback(err, result);
                         }
                     });
+
+                    return false;
                 }
             };
         },
@@ -298,7 +300,7 @@
                     actionContext.data = self.selectedItems();
                 }
 
-                this._clickAction(button.action, actionContext, function() {
+                return this._clickAction(button.action, actionContext, function() {
                     self.afterActionComplete(button.action, actionContext);
                 });
             }
@@ -424,12 +426,8 @@
                 actionContext.model = model;
                 actionContext.data = item;
 
-                self._clickAction(actionId, actionContext, function(err, data) {
-                    var message = "The action completed successfully";
-                    if (err) {
-                        message = JSON.stringify(err);
-                    }
-                    Ratchet.showModalMessage("Action Status", message);
+                return self._clickAction(actionId, actionContext, function(err, data) {
+                    self.afterActionComplete(actionId, actionContext);
                 });
 
             });

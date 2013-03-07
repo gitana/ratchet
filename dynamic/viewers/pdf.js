@@ -10,24 +10,14 @@
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
-            var html = require("text!ratchet/dynamic/viewers/pdf.html");
-
             var VIEWER_URL = module.uri + "/../pdfjs/viewer.html";
-
-            /*
-            // pdf.js dependency
-            require("ratchet/dynamic/viewers/pdfjs/l10n");
-            var PDFJS = require("ratchet/dynamic/viewers/pdfjs/pdf");
-            require("ratchet/dynamic/viewers/pdfjs/debugger");
-            PDFJS.workerSrc = 'ratchet/dynamic/viewers/pdfjs/pdf.js';
-            */
 
             return factory(Ratchet, $, VIEWER_URL);
         });
     }
     else
     {
-        return factory(root.Ratchet, root.$, "./pdf.html", "./pdfjs/viewer.html");
+        return factory(root.Ratchet, root.$, "./pdfjs/viewer.html");
     }
 
 }(this, function(Ratchet, $, VIEWER_URL) {

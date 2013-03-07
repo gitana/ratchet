@@ -365,6 +365,17 @@
     };
 
     /**
+     * Finds if an string ends with a given suffix.
+     *
+     * @param {String} text The string being evaluated.
+     * @param {String} suffix Suffix.
+     * @returns {Boolean} True if the string ends with the given suffix, false otherwise.
+     */
+    Ratchet.endsWith = function(text, suffix) {
+        return text.indexOf(suffix, text.length - suffix.length) !== -1;
+    };
+
+    /**
      * Combines one or more path elements into a combined path.
      *
      * @return {String}

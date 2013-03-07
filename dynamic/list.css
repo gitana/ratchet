@@ -19,12 +19,6 @@
     left: auto;
 }
 
-
-.gadget.list TD.actions
-{
-    vertical-align: middle;
-}
-
 TD.list-icon-column
 {
     vertical-align: middle !important;
@@ -34,7 +28,7 @@ TD.list-icon-column
 
 TD.list-icon-column DIV
 {
-    margin-left: 15px;
+    margin-left: 4px;
 }
 
 TD.list-icon-column IMG

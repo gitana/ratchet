@@ -35,5 +35,14 @@ button.btn-large.list-button-sort-direction-selector
 .gadget.list TD.actions
 {
     vertical-align: middle;
+}
+
+.gadget.list TD.actions .dropdown
+{
     text-align: center;
+}
+
+.gadget.list TD.actions .dropdown UL.dropdown-menu
+{
+    text-align: left;
 }

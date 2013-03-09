@@ -15,6 +15,9 @@
 
             this.cleanMarkup = function(el, html)
             {
+                // replace img "src" attributes with "no_load_src" attribute
+                html = html.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function (match, capture) {return "<img no_load_src=\"" +capture+ "\" />";});
+
                 // convert to a dom briefly
                 var dom = $(html);
 
@@ -26,6 +29,9 @@
                         html = $(dom).html();
                     }
                 }
+
+                // replace img "no_load_src" attributes with "src" attribute
+                html = html.replace(/<img [^>]*no_load_src=['"]([^'"]+)[^>]*>/gi, function (match, capture) {return "<img src=\"" +capture+ "\" />";});
 
                 return html;
             }

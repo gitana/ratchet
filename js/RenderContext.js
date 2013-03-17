@@ -110,7 +110,8 @@
                                 var current = self[0].childNodes[index];
                                 if (current.nodeName == "#text")
                                 {
-                                    if (current.textContent.trim() == 0)
+                                    //if (current.textContent.trim() == 0)
+                                    if (Ratchet.trim(current.textContent).length == 0)
                                     {
                                         self[0].removeChild(current);
                                     }

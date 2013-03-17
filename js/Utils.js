@@ -882,6 +882,27 @@
         }
     };
 
+    /**
+     * Strips any excess whitespace characters from the given text.
+     * Returns the trimmed string.
+     *
+     * @param str
+     *
+     * @return trimmed string
+     */
+    Ratchet.trim = function(text)
+    {
+        var trimmed = text;
+
+        if (trimmed && Ratchet.isString(trimmed))
+        {
+            trimmed = trimmed.replace(/^\s+|\s+$/g, '');
+        }
+
+        return trimmed;
+    };
+
+
 
 
     // browser detection

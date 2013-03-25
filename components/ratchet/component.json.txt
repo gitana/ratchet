@@ -11,7 +11,7 @@
         "ejs": "*",
         "gitana": "*",
 		"alpaca": "*",
-        "jquery.tmpl": "*",
+        "jquery-tmpl": "*",
         "bootstrap": "*"
     },
     "main": ["ratchet.js"]

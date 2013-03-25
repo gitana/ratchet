@@ -504,7 +504,7 @@
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-tmpl-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/tmpl.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet/ratchet', 'jquery.tmpl']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'jquery-tmpl']" />
         </antcall>
 
         <!-- "ratchet-ejs" -->

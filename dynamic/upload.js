@@ -10,11 +10,11 @@ define(function(require, exports, module) {
     require("bootstrap");
 
     /*require("jquery.ui.widget");*/
-    require("jquery-fileupload/js/jquery.iframe-transport");
-    require("jquery-fileupload/js/jquery.fileupload");
-    require("jquery-fileupload/js/jquery.fileupload-fp");
-    require("jquery-fileupload/js/jquery.fileupload-ui");
-    require("css!jquery-fileupload/css/jquery.fileupload-ui.css");
+    require("jquery-file-upload/js/jquery.iframe-transport");
+    require("jquery-file-upload/js/jquery.fileupload");
+    //require("jquery-file-upload/js/jquery.fileupload-fp");
+    //require("jquery-file-upload/js/jquery.fileupload-ui");
+    require("css!jquery-file-upload/css/jquery.fileupload-ui.css");
 
     var tmpl = require("tmpl");
 

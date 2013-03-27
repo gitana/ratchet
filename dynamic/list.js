@@ -983,6 +983,12 @@
 
         handleButtonBarButtonClick: function(event, model, button)
         {
+            // prevent the event from propagating (so as to prevent following href attributes on anchor)
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+
+            // custom handler
             this.clickButtonBarButton(event, model, button);
         },
 

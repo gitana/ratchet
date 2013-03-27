@@ -300,8 +300,8 @@
                     actionContext.data = self.selectedItems();
                 }
 
-                return this._clickAction(button.action, actionContext, function() {
-                    self.afterActionComplete(button.action, actionContext);
+                return this._clickAction(button.action, actionContext, function(err) {
+                    self.afterActionComplete(button.action, actionContext, err);
                 });
             }
         },
@@ -311,8 +311,9 @@
          *
          * @param actionId
          * @param actionContext
+         * @param err
          */
-        afterActionComplete: function(actionId, actionContext)
+        afterActionComplete: function(actionId, actionContext, err)
         {
         },
 
@@ -425,6 +426,11 @@
                 actionContext.ratchet = self.ratchet();
                 actionContext.model = model;
                 actionContext.data = item;
+
+                // prevent the event from propagating (so as to prevent following href attributes on anchor)
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                event.stopPropagation();
 
                 return self._clickAction(actionId, actionContext, function(err, data) {
                     self.afterActionComplete(actionId, actionContext);

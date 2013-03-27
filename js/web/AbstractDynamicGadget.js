@@ -211,6 +211,15 @@
                 model.observables = {};
             }
 
+            model.tokens = {};
+            if (el.tokens)
+            {
+                for (var k in el.tokens)
+                {
+                    model.tokens[k] = el.tokens[k];
+                }
+            }
+
             callback();
         },
 

@@ -902,6 +902,27 @@
         return trimmed;
     };
 
+    /**
+     * Resolves dot-notation references into the given object.
+     *
+     * @param obj
+     * @param string
+     * @return {*} null if not found
+     */
+    Ratchet.resolveDotNotation = function(obj, string)
+    {
+        var parts = string.split('.');
+        var newObj = obj[parts[0]];
+        if (parts[1])
+        {
+            parts.splice(0,1);
+
+            var newString = parts.join('.');
+            return Ratchet.resolveDotNotation(newObj,newString);
+        }
+
+        return newObj;
+    };
 
 
 

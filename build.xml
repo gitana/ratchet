@@ -33,12 +33,16 @@
         <mkdir dir="${prep.dir}/dynamic"/>
         <mkdir dir="${package.dir}"/>
         <mkdir dir="${package.dir}/js"/>
+        <mkdir dir="${package.dir}/thirdparty"/>
         <mkdir dir="${package.dir}/lib"/>
         <mkdir dir="${package.dir}/examples"/>
         <mkdir dir="${package.dir}/dynamic"/>
 
         <copy todir="${prep.dir}/js">
             <fileset dir="js"/>
+        </copy>
+        <copy todir="${prep.dir}/thirdparty">
+            <fileset dir="thirdparty"/>
         </copy>
         <copy todir="${prep.dir}/lib">
             <fileset dir="${lib.dir}"/>

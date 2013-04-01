@@ -1,3 +1,4 @@
+/*jshint -W004 */ // duplicate variables
 (function($) {
 
     /**
@@ -265,7 +266,7 @@
                     return target;
                 };
 
-                merge(source, target, 0, replaceFirstLevel)
+                merge(source, target, 0, replaceFirstLevel);
             };
         },
 

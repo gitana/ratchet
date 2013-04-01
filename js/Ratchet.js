@@ -1,3 +1,4 @@
+/*jshint -W004 */ // duplicate variables
 (function($)
 {
     Ratchet = Base.extend(
@@ -29,9 +30,10 @@
             // figure out arguments
             var args = Ratchet.makeArray(arguments);
 
+            var arg = null;
             do
             {
-                var arg = args.shift();
+                arg = args.shift();
                 if (arg)
                 {
                     if (Ratchet.isArray(arg) && (Ratchet.isNode(arg[0]) || Ratchet.isElement(arg[0])))
@@ -158,16 +160,18 @@
                 var array2 = text.split("/");
 
                 // short cut - zero length matches
-                if ((array1.length == 0) && (array2.length == 0))
+                if ((array1.length === 0) && (array2.length === 0))
                 {
                     printDebug();
                     return tokens;
                 }
 
+                var pattern = null;
+                var value = null;
                 do
                 {
-                    var pattern = array1.shift();
-                    var value = array2.shift();
+                    pattern = array1.shift();
+                    value = array2.shift();
 
                     var patternEmpty = (Ratchet.isEmpty(pattern) || pattern === "");
                     var valueEmpty = (Ratchet.isEmpty(value) || value === "");
@@ -316,14 +320,14 @@
             {
                 $.history.init(function(hash) {
 
-                    if(hash == "")
+                    if(hash === "")
                     {
                         // TODO: assume any default dispatching?
                         // i.e.
                         // hash = "/";
                     }
 
-                    if (hash != "")
+                    if (hash !== "")
                     {
                         // restore the state from hash
                         _this.dispatch({
@@ -400,9 +404,13 @@
             });
 
             // delete child ratchets
+            var _gadgetIds = [];
             $.each(this.childRatchets, function(_gadgetId, childRatchet) {
-                delete childRatchet;
+                _gadgetIds.push(_gadgetId);
             });
+            for (var x = 0; x < _gadgetIds.length; x++) {
+                delete this.childRatchets[_gadgetIds[x]];
+            }
             this.childRatchets = {};
 
             // remove the ratchet id from our dom element
@@ -543,8 +551,7 @@
                 {
                     callback.call(this);
                 }
-            })
-
+            });
         },
 
         /**
@@ -607,7 +614,7 @@
                     Ratchet.logDebug("Ratcheting sub-gadget [type=" + subGadgetType + ", id=" + subGadgetId + "]");
 
                     // instantiate a child ratchet on top of this element
-                    childRatchet = new Ratchet($(this), _this, function() {
+                    var childRatchet = new Ratchet($(this), _this, function() {
                         this.gadgetType = subGadgetType;
                         this.gadgetId = subGadgetId;
                         this.gadgetStrategy = subGadgetStrategy;
@@ -872,7 +879,7 @@
             };
 
             var args = Ratchet.makeArray(arguments);
-            if (args.length == 0)
+            if (args.length === 0)
             {
                 uri = window.location.href;
                 if (uri.indexOf("#") > -1)
@@ -943,7 +950,7 @@
 
         observable: function()
         {
-            return Ratchet.observable.apply(this, arguments)
+            return Ratchet.observable.apply(this, arguments);
         },
 
         clearObservable: function()
@@ -1043,7 +1050,7 @@
             var _this = this;
 
             // short cut
-            if (this.authRequiredPatterns.length == 0)
+            if (this.authRequiredPatterns.length === 0)
             {
                 successCallback();
             }

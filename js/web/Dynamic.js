@@ -1,3 +1,5 @@
+/*jshint -W014 */ // bad line breaking
+/*jshint -W004 */ // duplicate variables
 (function() {
 
     var MODAL_TEMPLATE = ' \

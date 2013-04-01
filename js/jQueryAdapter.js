@@ -28,7 +28,7 @@
     $.fn.closestDescendants = function(selector) {
 
         // short cut
-        if (!selector || selector == '')
+        if (!selector || selector === '')
         {
             return $();
         }

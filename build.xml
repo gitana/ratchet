@@ -72,13 +72,16 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/js">
+            <filelist dir="${prep.dir}/thirdparty">
 
                 <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
-                <file name="thirdparty/json2.js"/>
-                <file name="thirdparty/jquery.history.js"/>
-                <file name="thirdparty/form2object.js"/>
+                <file name="base.js"/>
+                <file name="json2.js"/>
+                <file name="jquery.history.js"/>
+                <file name="form2object.js"/>
+
+            </filelist>
+            <filelist dir="${prep.dir}/js">
 
                 <!-- Ratchet Core -->
                 <file name="Ratchet.js"/>
@@ -147,10 +150,13 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/js">
+            <filelist dir="${prep.dir}/thirdparty">
 
                 <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
+                <file name="base.js"/>
+
+            </filelist>
+            <filelist dir="${prep.dir}/js">
 
                 <!-- dynamics -->
                 <file name="web/Dynamic.js" />
@@ -210,11 +216,10 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
+            <filelist dir="${prep.dir}/thirdparty">
+                <file name="date.js"/>
+            </filelist>
             <filelist dir="${prep.dir}/js">
-
-                <!-- Required Classes -->
-                <file name="thirdparty/date.js"/>
-
                 <file name="messages/Messages.js"/>
             </filelist>
         </concat>
@@ -234,13 +239,16 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/js">
+            <filelist dir="${prep.dir}/thirdparty">
 
                 <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
-                <file name="thirdparty/json2.js"/>
-                <file name="thirdparty/jquery.history.js"/>
-                <file name="thirdparty/form2object.js"/>
+                <file name="base.js"/>
+                <file name="json2.js"/>
+                <file name="jquery.history.js"/>
+                <file name="form2object.js"/>
+
+            </filelist>
+            <filelist dir="${prep.dir}/js">
 
                 <!-- Ratchet Core -->
                 <file name="Ratchet.js"/>
@@ -306,10 +314,10 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
+            <filelist dir="${prep.dir}/thirdparty">
+                <file name="base.js"/>
+            </filelist>
             <filelist dir="${prep.dir}/js">
-
-                <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
 
                 <!-- dynamics -->
                 <file name="web/Dynamic.js" />
@@ -340,11 +348,10 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
+            <filelist dir="${prep.dir}/thirdparty">
+                <file name="base.js"/>
+            </filelist>
             <filelist dir="${prep.dir}/js">
-
-                <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
-
                 <file name="actions/Actions.js"/>
                 <file name="actions/AbstractAction.js"/>
                 <file name="actions/ConsoleLogAction.js"/>
@@ -356,10 +363,10 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
+            <filelist dir="${prep.dir}/thirdparty">
+                <file name="base.js"/>
+            </filelist>
             <filelist dir="${prep.dir}/js">
-
-                <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
 
                 <file name="config/Configuration.js"/>
                 <file name="config/AbstractConfigurationEvaluator.js"/>
@@ -378,12 +385,11 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
+            <filelist dir="${prep.dir}/thirdparty">
+                <file name="base.js"/>
+                <file name="date.js"/>
+            </filelist>
             <filelist dir="${prep.dir}/js">
-
-                <!-- Required Base Classes -->
-                <file name="thirdparty/base.js"/>
-                <file name="thirdparty/date.js"/>
-
                 <file name="messages/Messages.js"/>
             </filelist>
         </concat>

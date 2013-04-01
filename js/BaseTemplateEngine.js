@@ -34,7 +34,7 @@
                 html = html.replace(/<img [^>]*no_load_src=['"]([^'"]+)[^>]*>/gi, function (match, capture) {return "<img src=\"" +capture+ "\" />";});
 
                 return html;
-            }
+            };
         },
 
         renderUri: function(el, uri, model, successCallback, failureCallback)
@@ -69,7 +69,7 @@
 
                 if (successCallback)
                 {
-                    successCallback.call(successCallback, el)
+                    successCallback.call(successCallback, el);
                 }
             };
 

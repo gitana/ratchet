@@ -123,7 +123,7 @@
 
             var self = this;
 
-            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] renderTemplate -> templateIdentifier: " + templateIdentifier);;
+            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] renderTemplate -> templateIdentifier: " + templateIdentifier);
 
             if (data && callback) {
                 el.transform(templateIdentifier, data, function(el) {

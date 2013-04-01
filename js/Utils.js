@@ -1,3 +1,5 @@
+/*jshint -W014 */ // bad line breaking
+/*jshint -W004 */ // duplicate variables
 (function($)
 {
     /**
@@ -97,7 +99,7 @@
 
     Ratchet.isArray = function(thing)
     {
-        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing == null) {
+        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing === null) {
             return false;
         }
 
@@ -111,7 +113,7 @@
 
     Ratchet.isEmpty = function(thing)
     {
-        return this.isUndefined(thing) || thing == null;
+        return this.isUndefined(thing) || thing === null;
     };
 
     Ratchet.isEmptyObject = function(thing)
@@ -129,7 +131,7 @@
 
     Ratchet.isObject = function(thing)
     {
-        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing == null) {
+        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing === null) {
             return false;
         }
 
@@ -361,7 +363,7 @@
             return target;
         };
 
-        merge(source, target)
+        merge(source, target);
     };
 
     /**

@@ -209,7 +209,7 @@
 
         observable: function()
         {
-            return Ratchet.observable.apply(this, arguments)
+            return Ratchet.observable.apply(this, arguments);
         },
 
         clearObservable: function()

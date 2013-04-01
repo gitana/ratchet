@@ -111,7 +111,7 @@
                                 if (current.nodeName == "#text")
                                 {
                                     //if (current.textContent.trim() == 0)
-                                    if (Ratchet.trim(current.textContent).length == 0)
+                                    if (Ratchet.trim(current.textContent).length === 0)
                                     {
                                         self[0].removeChild(current);
                                     }
@@ -166,7 +166,7 @@
                             });
 
                             // copy mergepoint attributes to target
-                            var attributes = $(mergePoint).prop("attributes");
+                            attributes = $(mergePoint).prop("attributes");
                             $.each(attributes, function() {
                                 $(newEl).attr(this.name, this.value);
                             });
@@ -407,7 +407,7 @@
             var renderType = "url"; // assume url
             var renderValue = templateIdentifier;
             var renderCacheKey = null;
-            if (templateIdentifier.indexOf("#") == 0) {
+            if (templateIdentifier.indexOf("#") === 0) {
                 renderType = "selector";
             }
             else if (templateIdentifier.indexOf("<") > -1 || templateIdentifier.indexOf(" ") > -1) {
@@ -463,7 +463,7 @@
 
         observable: function()
         {
-            return Ratchet.observable.apply(this, arguments)
+            return Ratchet.observable.apply(this, arguments);
         },
 
         clearObservable: function()

@@ -1,3 +1,4 @@
+/*jshint -W004 */ // duplicate variables
 (function($)
 {
     Ratchet.DynamicRegionResolver = Base.extend(

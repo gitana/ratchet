@@ -63,7 +63,12 @@
             this.base();
 
             // now add in our custom configuration
-            this.config({
+            this.config(this.doclistDefaultConfig());
+        },
+
+        doclistDefaultConfig: function()
+        {
+            return {
                 "checkbox": true,
                 "icon": true,
                 "buttons": [],
@@ -87,7 +92,7 @@
                         "fields": []
                     }
                 }
-            });
+            };
         },
 
         /**

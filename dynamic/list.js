@@ -84,7 +84,8 @@
                 "options": {
                     "filter": true,
                     "paginate": true,
-                    "info": true
+                    "info": true,
+                    "sizing": true
                 },
                 "observables": {
                     "query": "query",
@@ -250,6 +251,10 @@
             if (model.options && model.options.info) {
                 tableConfig.bInfo = true;
             }
+            var showSizing = false;
+            if (model.options && model.options.sizing) {
+                showSizing = model.options.sizing;
+            }
 
             // bootstrap
             //tableConfig["sDom"] = '<"top"i>rt<"bottom"flp><"clear">';
@@ -265,28 +270,57 @@
              'p' - Pagination
              'r' - pRocessing
              */
+
             if (tableConfig.bFilter)
             {
                 if (tableConfig.bPaginate)
                 {
                     if (tableConfig.bInfo)
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'i><'span6'p>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlft>><'row-fluid'<'span6'i><'span6'p>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'i><'span6'p>>";
+                        }
                     }
                     else
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'><'span6'p>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlft>><'row-fluid'<'span6'><'span6'p>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'><'span6'p>>";
+                        }
                     }
                 }
                 else
                 {
                     if (tableConfig.bInfo)
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'i><'span6'>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlft>><'row-fluid'<'span6'i><'span6'>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rft>><'row-fluid'<'span6'i><'span6'>>";
+                        }
                     }
                     else
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rft>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlft>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rft>>";
+                        }
                     }
                 }
             }
@@ -296,22 +330,50 @@
                 {
                     if (tableConfig.bInfo)
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'i><'span6'p>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlt>><'row-fluid'<'span6'i><'span6'p>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'i><'span6'p>>";
+                        }
                     }
                     else
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'><'span6'p>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlt>><'row-fluid'<'span6'><'span6'p>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'><'span6'p>>";
+                        }
                     }
                 }
                 else
                 {
                     if (tableConfig.bInfo)
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'i><'span6'>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlt>><'row-fluid'<'span6'i><'span6'>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rt>><'row-fluid'<'span6'i><'span6'>>";
+                        }
                     }
                     else
                     {
-                        tableConfig["sDom"] = "<'row-fluid'<'span12'rt>>";
+                        if (showSizing)
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rlt>>";
+                        }
+                        else
+                        {
+                            tableConfig["sDom"] = "<'row-fluid'<'span12'rt>>";
+                        }
                     }
                 }
             }

@@ -209,9 +209,9 @@
             // walk all variables in the model and see if we can perform ${} substitutions
             // substitution sources include el.tokens and observables
 
-            var subst = function(objOrArray)
+            var subst = function(objOrArray, level)
             {
-                if (!objOrArray)
+                if (!objOrArray || level > 3)
                 {
                     return;
                 }
@@ -222,7 +222,7 @@
                     {
                         if (Ratchet.isObject(objOrArray[i]) || Ratchet.isArray(objOrArray[i]))
                         {
-                            subst(objOrArray[i]);
+                            subst(objOrArray[i], level + 1);
                         }
                     }
                 }
@@ -283,14 +283,14 @@
                             }
                             else if (Ratchet.isObject(objOrArray[k]) || Ratchet.isArray(objOrArray[k]))
                             {
-                                subst(objOrArray[k]);
+                                subst(objOrArray[k], level + 1);
                             }
                         }
                     }
                 }
             };
 
-            subst(model);
+            subst(model, 0);
 
             callback();
         },

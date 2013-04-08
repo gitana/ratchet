@@ -136,6 +136,9 @@
                     if (handlers.length == 0)
                     {
                         console.log("No resource viewer could be found for condition: " + JSON.stringify(condition));
+
+                        $(container).append("This document does not have any attachments.");
+
                         callback();
                         return;
                     }

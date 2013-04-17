@@ -26,6 +26,94 @@
  */
 
 (function($) {
+
+    // CUSTOM: browser detection
+    // implemented here because $.browser is gone in jQuery 1.9.x
+    var Browser = function($) {
+
+        var jQversion = jQuery.fn.jquery.split(".");
+        if(jQversion[1]<8)
+            return;
+
+        var browser = {};
+        //browser.mozilla = false;
+        //browser.webkit = false;
+        browser.safari = false;
+        browser.chrome = false;
+        browser.opera = false;
+        browser.ie = false;
+        browser.firefox = false;
+
+        var nAgt = navigator.userAgent;
+        browser.name  = navigator.appName;
+        browser.fullVersion  = ''+parseFloat(navigator.appVersion);
+        browser.majorVersion = parseInt(navigator.appVersion,10);
+        var nameOffset,verOffset,ix;
+
+        // In Opera, the true version is after "Opera" or after "Version"
+        if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
+            browser.opera = true;
+            browser.name = "Opera";
+            browser.fullVersion = nAgt.substring(verOffset+6);
+            if ((verOffset=nAgt.indexOf("Version"))!=-1)
+                browser.fullVersion = nAgt.substring(verOffset+8);
+        }
+        // In MSIE, the true version is after "MSIE" in userAgent
+        else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
+            browser.ie = true;
+            browser.name = "Microsoft Internet Explorer";
+            browser.fullVersion = nAgt.substring(verOffset+5);
+        }
+        // In Chrome, the true version is after "Chrome"
+        else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
+            //browser.webkit = true;
+            browser.chrome = true;
+            browser.name = "Chrome";
+            browser.fullVersion = nAgt.substring(verOffset+7);
+        }
+        // In Safari, the true version is after "Safari" or after "Version"
+        else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
+            //browser.webkit = true;
+            browser.safari = true;
+            browser.name = "Safari";
+            browser.fullVersion = nAgt.substring(verOffset+7);
+            if ((verOffset=nAgt.indexOf("Version"))!=-1)
+                browser.fullVersion = nAgt.substring(verOffset+8);
+        }
+        // In Firefox, the true version is after "Firefox"
+        else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
+            browser.firefox = true;
+            browser.name = "Firefox";
+            browser.fullVersion = nAgt.substring(verOffset+8);
+        }
+        // In most other browsers, "name/version" is at the end of userAgent
+        else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) <
+            (verOffset=nAgt.lastIndexOf('/')) )
+        {
+            browser.name = nAgt.substring(nameOffset,verOffset);
+            browser.fullVersion = nAgt.substring(verOffset+1);
+            if (browser.name.toLowerCase()==browser.name.toUpperCase()) {
+                browser.name = navigator.appName;
+            }
+        }
+        // trim the fullVersion string at semicolon/space if present
+        if ((ix=browser.fullVersion.indexOf(";"))!=-1)
+            browser.fullVersion=browser.fullVersion.substring(0,ix);
+        if ((ix=browser.fullVersion.indexOf(" "))!=-1)
+            browser.fullVersion=browser.fullVersion.substring(0,ix);
+
+        browser.majorVersion = parseInt(''+browser.fullVersion,10);
+        if (isNaN(browser.majorVersion)) {
+            browser.fullVersion  = ''+parseFloat(navigator.appVersion);
+            browser.majorVersion = parseInt(navigator.appVersion,10);
+        }
+        browser.version = browser.majorVersion;
+
+        return browser;
+    }($);
+
+
+
     var locationWrapper = {
         put: function(hash, win) {
             (win || window).location.hash = this.encoder(hash);
@@ -33,7 +121,7 @@
         get: function(win) {
             var hash = ((win || window).location.hash).replace(/^#/, '');
             try {
-                return $.browser.mozilla ? hash : decodeURIComponent(hash);
+                return Browser.firefox ? hash : decodeURIComponent(hash);
             }
             catch (error) {
                 return hash;
@@ -181,7 +269,7 @@
 
     var self = $.extend({}, implementations.base);
 
-    if($.browser.msie && ($.browser.version < 8 || document.documentMode < 8)) {
+    if(Browser.ie && (Browser.majorVersion < 8 || document.documentMode < 8)) {
         self.type = 'iframeTimer';
     } else if("onhashchange" in window) {
         self.type = 'hashchangeEvent';

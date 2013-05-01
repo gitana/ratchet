@@ -48,9 +48,9 @@
 
             }).then(function() {
 
-                self.handlePostAuthenticate(this, context, successCallback, failureCallback);
+                    self.handlePostAuthenticate(this, context, successCallback, failureCallback);
 
-            });
+                });
         },
 
         /**
@@ -105,44 +105,36 @@
             var userDetails = user;
             userDetails['friendlyName'] = user["firstName"] ? user["firstName"] : user["name"];
             userDetails['fullName'] = user["firstName"] && user["lastName"] ? user["firstName"] + " " + user["lastName"] : userDetails['friendlyName'];
-            user.attachment('avatar').trap(function() {
-                context.observable("userDetails").set(userDetails);
-            }).then(function() {
-                if (this.getLength() > 0) {
-                    userDetails['avatarUrl'] = this.getDownloadUri()+ "?timestamp=" + new Date().getTime();
-                }
-
-                // load user settings
-                context.observable("userDetails").set(userDetails);
+            userDetails['avatarUrl'] = user.getPreviewUri("avatar48", {
+                "attachment": "avatar",
+                "size": 48,
+                "timestamp": new Date().getTime()
             });
+
+            // load user settings
+            context.observable("userDetails").set(userDetails);
         },
 
         populateTenant: function (context, authInfo) {
 
-             // we build up an object to hold tenant info
-             var tenantDetails = {
-                 "id": authInfo.getTenantId(),
-                 "title": authInfo.getTenantTitle(),
-                 "description": authInfo.getTenantDescription(),
-                 "friendlyName": authInfo.getTenantTitle() ? authInfo.getTenantTitle() : authInfo.getTenantId(),
-                 "avatarUrl": "" // TODO: platform attachment?
-             };
+            // we build up an object to hold tenant info
+            var tenantDetails = {
+                "id": authInfo.getTenantId(),
+                "title": authInfo.getTenantTitle(),
+                "description": authInfo.getTenantDescription(),
+                "friendlyName": authInfo.getTenantTitle() ? authInfo.getTenantTitle() : authInfo.getTenantId(),
+                "avatarUrl": "" // TODO: platform attachment?
+            };
 
-             var platform = Gitana.Authentication.platform();
+            var platform = Gitana.Authentication.platform();
+            tenantDetails['avatarUrl'] = platform.getTenantPreviewUri("avatar48", {
+                "attachment": "avatar",
+                "size": 48,
+                "timestamp": new Date().getTime()
+            });
 
-             platform.tenantAttachment('avatar').trap(function() {
-                 context.observable("tenantDetails").set(tenantDetails);
-             }).then(function() {
-                 if (this.getLength() > 0) {
-                     tenantDetails['avatarUrl'] = this.getDownloadUri()+ "?timestamp=" + new Date().getTime();
-                 }
-
-                 // load user settings
-                 context.observable("tenantDetails").set(tenantDetails);
-             });
-
-             // update user observable
-             //context.observable("tenantDetails").set(tenantDetails);
+            // update tenant observable
+            context.observable("tenantDetails").set(tenantDetails);
         },
 
         logout: function(context, callback)

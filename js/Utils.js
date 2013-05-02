@@ -304,8 +304,27 @@
         return text;
     };
 
-    Ratchet.merge = function(source, target)
+    Ratchet.merge = function(source, target, fns)
     {
+        if (!fns) {
+            fns = {};
+        }
+
+        // by default, for arrays, we compare on key "_key"
+        if (!fns.existsInArray) {
+            fns.existsInArray = function(array, object)
+            {
+                if (object._key) {
+                    for (var i = 0; i < array.length; i++) {
+                        if (array[i]._key == object._key) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+        }
+
         var isArray = Ratchet.isArray;
         var isObject = Ratchet.isObject;
         var isUndefined = Ratchet.isUndefined;
@@ -323,7 +342,13 @@
                 {
                     // merge array elements
                     $.each(source, function(index) {
-                        target.push(copyOf(source[index]));
+
+                        var existsInArray = fns.existsInArray(target, source[index]);
+                        if (!existsInArray)
+                        {
+                            var theCopy = copyOf(source[index]);
+                            target.push(theCopy);
+                        }
                     });
                 }
                 else

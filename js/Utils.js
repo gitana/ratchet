@@ -312,15 +312,28 @@
 
         // by default, for arrays, we compare on key "_key"
         if (!fns.existsInArray) {
-            fns.existsInArray = function(array, object)
-            {
-                if (object._key) {
-                    for (var i = 0; i < array.length; i++) {
-                        if (array[i]._key == object._key) {
+            fns.existsInArray = function(array, object) {
+
+                for (var i = 0; i < array.length; i++) {
+
+                    if (Ratchet.isString(object)) {
+
+                        if (Ratchet.isString(array[i]) && array[i] == object)
+                        {
                             return true;
                         }
+
+                    } else if (Ratchet.isObject(object)) {
+
+                        if (object._key && array[i]._key) {
+                            if (array[i]._key == object._key) {
+                                return true;
+                            }
+                        }
+
                     }
                 }
+
                 return false;
             };
         }

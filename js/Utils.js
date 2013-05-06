@@ -142,9 +142,31 @@
     {
         var copy = thing;
 
-        if (Ratchet.isArray(thing) || Ratchet.isObject(thing))
+        if (Ratchet.isArray(thing))
         {
             copy = JSON.parse(JSON.stringify(thing));
+        }
+        else if (Ratchet.isObject(thing))
+        {
+            if (thing instanceof Date)
+            {
+                // date
+                return new Date(thing.getTime());
+            }
+            else if (thing instanceof RegExp)
+            {
+                // regular expression
+                return new RegExp(thing);
+            }
+            else if (thing.nodeType && "cloneNode" in thing)
+            {
+                // DOM node
+                copy = thing.cloneNode(true);
+            }
+            else
+            {
+                copy = JSON.parse(JSON.stringify(thing));
+            }
         }
 
         return copy;

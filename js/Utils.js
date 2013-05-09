@@ -144,7 +144,12 @@
 
         if (Ratchet.isArray(thing))
         {
-            copy = JSON.parse(JSON.stringify(thing));
+            copy = [];
+
+            for (var i = 0; i < thing.length; i++)
+            {
+                copy.push(Ratchet.copyOf(thing[i]));
+            }
         }
         else if (Ratchet.isObject(thing))
         {
@@ -163,9 +168,22 @@
                 // DOM node
                 copy = thing.cloneNode(true);
             }
+            else if ($.isPlainObject(thing))
+            {
+                copy = {};
+
+                for (var k in thing)
+                {
+                    if (thing.hasOwnProperty(k))
+                    {
+                        copy[k] = Ratchet.copyOf(thing[k]);
+                    }
+                }
+            }
             else
             {
-                copy = JSON.parse(JSON.stringify(thing));
+                // otherwise, it's some other kind of object so we just do a referential copy
+                // in other words, not a copy
             }
         }
 

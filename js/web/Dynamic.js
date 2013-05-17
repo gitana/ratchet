@@ -390,6 +390,13 @@
                 "keyboard": true
             });
 
+            // vertical center
+            $(div).on("shown", function() {
+                $(div).css({
+                    "margin-top": ($(div).outerHeight() / 2)
+                });
+            });
+
             if (config.modalClass) {
                 t.addClass(config.modalClass);
             }

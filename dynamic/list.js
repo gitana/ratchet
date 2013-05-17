@@ -1284,24 +1284,24 @@
                     var aaData = [];
                     var rows = [];
 
-                    for (var k in resultMap) {
-                        if (resultMap.hasOwnProperty(k) && !Ratchet.isFunction(resultMap[k])) {
-                            var obj = resultMap[k];
-                            obj["id"] = obj["_doc"];
-                            rows.push(obj);
-                            aaData.push(self.toDataTableRow(model, obj, context));
-                        }
-                    }
+                    Chain(resultMap).each(function(_doc, obj) {
+                        obj["id"] = _doc;
+                        rows.push(obj);
+                        aaData.push(self.toDataTableRow(model, obj, context));
+                    }).then(function() {
 
-                    var attrs = {
-                        "iTotalRecords": totalRows,
-                        "iTotalDisplayRecords": totalRows
-                    };
+                        var attrs = {
+                            "iTotalRecords": totalRows,
+                            "iTotalDisplayRecords": totalRows
+                        };
 
-                    // set onto model
-                    model.rows = rows;
+                        // set onto model
+                        model.rows = rows;
 
-                    callback.call(self, aaData, attrs);
+                        callback.call(self, aaData, attrs);
+
+                    });
+
                 });
             },
             "remote": function(context, model, keyValues, sSource, aoData, searchTerm, query, pagination, callback) {

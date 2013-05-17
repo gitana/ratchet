@@ -141,6 +141,10 @@
                             $(div).modal('show');
                             $(div).on('shown', function() {
 
+                                $(div).css({
+                                    "margin-top": ($(div).outerHeight() / 2)
+                                });
+
                                 control.getControlByPath("username").focus();
 
                             });

@@ -47,13 +47,9 @@
                         {
                             var dashlet = column.dashlets[k];
 
-                            var dashletConfig = dashlet.config;
-                            if (!dashletConfig) {
-                                dashletConfig = {};
+                            if (!dashlet.config) {
+                                dashlet.config = {};
                             }
-
-                            //var subscriptionKey = "gadget_" + dashlet.type + "_" + dashlet.id;
-                            //self.observable(subscriptionKey).set(dashletConfig);
 
                             // the gadget configuration for the dashlets is not preloaded by the dynamic gadget code...
                             var c = Ratchet.Configuration.evaluate({
@@ -78,7 +74,7 @@
                                     }
                                 };
                                 z.config.gadgets[dashlet.type] = {};
-                                z.config.gadgets[dashlet.type][dashlet.id] = dashletConfig;
+                                z.config.gadgets[dashlet.type][dashlet.id] = dashlet.config;
 
                                 // add to configuration service
                                 Ratchet.Configuration.add(z);

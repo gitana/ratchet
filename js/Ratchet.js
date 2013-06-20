@@ -377,12 +377,8 @@
             // if there is a gadget configured for this dom element, boot it up
             if (this.gadgetType)
             {
-                // if we don't have a gadget id, we generate one
-                if (!this.gadgetId) {
-                    this.gadgetId = Ratchet.generateGadgetId();
-                }
-
-                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this, this.gadgetId);
+                // if we don't have a gadget id, one will be generated inside of the gadgetRegistry.instantiate() call
+                this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this.gadgetId, this);
                 Ratchet.logDebug("Ratchet.setup() - Instantiated " + this.gadgetInstances.length + " gadget instances for type: " + this.gadgetType + " and id: " + this.gadgetId);
                 $.each(this.gadgetInstances, function(x, y) {
                     y.setup.call(y);

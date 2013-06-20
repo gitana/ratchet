@@ -85,7 +85,8 @@
                     "filter": true,
                     "paginate": true,
                     "info": true,
-                    "sizing": true
+                    "sizing": true,
+                    "processing": true
                 },
                 "observables": {
                     "query": "query",
@@ -900,9 +901,18 @@
             // if columnHeaders is false, hide all column headers using CSS
             if (!model.columnHeaders)
             {
+                /*
                 $(el).find(".dataTables_wrapper table thead").css({
                     "display": "none"
                 });
+                */
+                $(el).find(".dataTables_wrapper table thead").remove();
+            }
+
+            // if processing is false, hide the processing field
+            if (model.options && !model.options.processing)
+            {
+                $(el).find(".dataTables_processing").css("display", "none");
             }
 
             this.initComplete(el, model, table, oSettings, json);

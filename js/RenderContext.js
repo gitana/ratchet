@@ -218,25 +218,26 @@
                         var replacements = $($(self)[0].childNodes);
 
                         // swap in replacements
-                        $(self.ratchet().el).replaceWith(replacements);
+                        var replacementsEl = $(replacements); // an array of elements
+                        $(self.ratchet().el).replaceWith(replacementsEl);
 
                         // now update the ratchet "el" reference
-                        self.ratchet().el = null;
+                        self.ratchet().el = replacementsEl;
 
                         postSwap(function() {
 
                             // if swapping in multiple DOM elements, apply ratchet and gadget tags up to the parent
-                            if ($(replacements).children().length > 1) {
-                                $(replacements).parent().attr("gadget", originalAttributes["gadget"]);
-                                $(replacements).parent().attr("ratchet", originalAttributes["ratchet"]);
+                            if ($(replacementsEl).children().length > 1) {
+                                $(replacementsEl).parent().attr("gadget", originalAttributes["gadget"]);
+                                $(replacementsEl).parent().attr("ratchet", originalAttributes["ratchet"]);
                             }
 
                             // if we really only have one dom element that serves as a replacement
                             // i.e. getting rid of all text (comments)
-                            if ($(replacements).filter("*").length == 1)
+                            if ($(replacementsEl).filter("*").length == 1)
                             {
                                 // then copy original dom attributes (from gadget tag) back to replacement node
-                                var replacement = $($(replacements).filter("*")[0]);
+                                var replacement = $($(replacementsEl).filter("*")[0]);
                                 $.each(originalAttributes, function(name, value) {
 
                                     if (name == "id")

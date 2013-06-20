@@ -16,21 +16,21 @@
                 return false;
             }
 
-            var gadgetType = context.gadgetType;
-            if (!gadgetType) {
-                gadgetType = context.gadgetTypeId;
+            var gadgetTypeId = context.gadgetType;
+            if (!gadgetTypeId) {
+                gadgetTypeId = context.gadgetTypeId;
             }
             var gadgetId = context.gadgetId;
             if (!gadgetId) {
                 gadgetId = context.gadget;
             }
 
-            var m1 = this.hasMatch(condition.gadgetType, gadgetType);
+            var m1 = this.hasMatch(condition.gadgetType, gadgetTypeId);
             var m2 = this.hasMatch(condition.gadget, gadgetId);
 
             // if only one of the conditions is specified, then filter only on that
             var b = true;
-            if (gadgetType) {
+            if (gadgetTypeId) {
                 b = b & m1;
             }
             if (gadgetId) {
@@ -38,7 +38,7 @@
             }
 
             // however, if neither are specified, then false
-            if (!gadgetType && !gadgetId) {
+            if (!gadgetTypeId && !gadgetId) {
                 b = false;
             }
 

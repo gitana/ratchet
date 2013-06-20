@@ -390,12 +390,14 @@
                 "keyboard": true
             });
 
+            /*
             // vertical center
             $(div).on("shown", function() {
                 $(div).css({
                     "margin-top": ($(div).outerHeight() / 2)
                 });
             });
+            */
 
             if (config.modalClass) {
                 t.addClass(config.modalClass);
@@ -412,7 +414,17 @@
         register: function(type, classObject)
         {
             Ratchet.DynamicGadgets[type] = classObject;
-            Ratchet.GadgetRegistry.register(type, classObject);
+
+            return classObject;
+        }
+    };
+
+    // dashlet gadget types are stored here
+    Ratchet.DashletGadgets = {};
+    Ratchet.DashletRegistry = {
+        register: function(type, classObject)
+        {
+            Ratchet.DashletGadgets[type] = classObject;
 
             return classObject;
         }

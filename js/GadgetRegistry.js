@@ -4,42 +4,125 @@
 
     Ratchet.GadgetRegistry = {
 
-        register: function(type, classObject)
+        /**
+         *
+         * @param type
+         * @param id (optional)
+         * @param classObject
+         * @returns {*}
+         */
+        register: function(type, id, classObject)
         {
+            // id is optional
+            if (!classObject)
+            {
+                classObject = id;
+                id = null;
+            }
+
             if (!gadgetRegistry[type]) {
                 gadgetRegistry[type] = [];
             }
 
-            gadgetRegistry[type].push(classObject);
+            var registration = {
+                "classObject": classObject
+            };
+            if (id) {
+                registration.id = id;
+            }
+
+            gadgetRegistry[type].push(registration);
 
             return classObject;
         },
 
         list: function(type)
         {
-            return gadgetRegistry[type];
-        },
+            var list = [];
 
-        instantiate: function(type, ratchet, id)
-        {
-            var instances = [];
-
-            var classObjects = gadgetRegistry[type];
-            if (classObjects)
+            var registrations = gadgetRegistry[type];
+            if (registrations)
             {
-                for (var i = 0; i < classObjects.length; i++)
+                for (var i = 0; i < registrations.length; i++)
                 {
-                    var classObject = classObjects[i];
-
-                    var instance = new classObject(type, ratchet, id);
-                    instances.push(instance);
-
+                    list.push(registrations[i].classObject);
                 }
             }
 
-            // we reverse the list so that defaults appear at the end
-            // that way, we can override by URI
-            return instances.reverse();
+            return list;
+        },
+
+        /**
+         * Instantiates any gadgets for the given type and optional ID.
+         *
+         * If an ID is provided, then this method instantiates any gadgets for the given type and instance.
+         * If none are found, then type instances are handed back instead.
+         *
+         * If no ID is provided, then type instances are handed back.
+         *
+         * @param type
+         * @param id
+         * @param ratchet
+         * @returns {Array}
+         */
+        instantiate: function(type, id, ratchet)
+        {
+            if (!ratchet)
+            {
+                ratchet = id;
+                id = null;
+            }
+
+            // if we don't have an assignable gadget ID, we generate one here
+            var gadgetId = id;
+            if (!gadgetId)
+            {
+                gadgetId = Ratchet.generateGadgetId();
+            }
+
+            var instances = [];
+
+            // registrations
+            var registrations = gadgetRegistry[type];
+            if (registrations)
+            {
+                // if we have an ID, then try to produce instance matches
+                // if no instance matches found, we hand back type-only matches
+                if (id)
+                {
+                    for (var i = 0; i < registrations.length; i++)
+                    {
+                        var registration = registrations[i];
+
+                        if (id && registration.id && id == registration.id)
+                        {
+                            var classObject = registration.classObject;
+
+                            var instance = new classObject(type, ratchet, gadgetId);
+                            instances.unshift(instance); // inserts at front
+                        }
+                    }
+                }
+
+                // fallback to type only matches
+                if (!id || instances.length == 0)
+                {
+                    // produce type only matches
+                    for (var i = 0; i < registrations.length; i++)
+                    {
+                        var registration = registrations[i];
+                        if (!registration.id)
+                        {
+                            var classObject = registration.classObject;
+
+                            var instance = new classObject(type, ratchet, gadgetId);
+                            instances.unshift(instance); // inserts at front
+                        }
+                    }
+                }
+            }
+
+            return instances;
         }
 
     };

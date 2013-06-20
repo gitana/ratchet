@@ -49,7 +49,7 @@
                             {{if (dashlet.buttons)}}
                                 {{each(i, button) buttons}}
                                 <div class="btn-group pull-right">
-                                    <button type="button" class="btn btn-large ${button.class}">${button.label}</button>
+                                    <button type="button" class="btn ${button.class}" data-dashlet-button-key="${button.key}">${button.label}</button>
                                 </div>
                                 {{/each}}
                             {{/if}}

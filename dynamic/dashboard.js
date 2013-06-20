@@ -51,6 +51,7 @@
                                 dashlet.config = {};
                             }
 
+                            /*
                             // the gadget configuration for the dashlets is not preloaded by the dynamic gadget code...
                             var c = Ratchet.Configuration.evaluate({
                                 "gadgetType": dashlet.type,
@@ -59,9 +60,16 @@
                             if (c.gadgets && c.gadgets[dashlet.type] && c.gadgets[dashlet.type][dashlet.id])
                             {
                                 // already configured into the configuration service
+
+                                // we assume this also means that the dynamic dashlet gadget has been added to the
+                                // gadget registry
                             }
                             else
                             {
+                                // we need to create and apply the config
+                                // we also need to register the dynamic dashlet gadget
+
+                                // CONFIG
                                 var z = {
                                     "evaluator": "gadget",
                                     "condition": {
@@ -75,10 +83,44 @@
                                 };
                                 z.config.gadgets[dashlet.type] = {};
                                 z.config.gadgets[dashlet.type][dashlet.id] = dashlet.config;
-
-                                // add to configuration service
                                 Ratchet.Configuration.add(z);
+*/
+
+                                // DYNAMIC GADGET INSTANCE
+                                var dashletGadget = null;
+                                if (Ratchet.DashletGadgets) {
+                                    dashletGadget = Ratchet.DashletGadgets[dashlet.type];
+                                }
+                                if (dashletGadget)
+                                {
+                                    // register an instance of the dashlet as a gadget instance
+                                    var newType = (function(gadgetConfiguration, dashletGadget) {
+
+                                        // using meta-programming, create instances of gadget controllers
+                                        // config is loaded by gadget on configure()
+                                        return dashletGadget.extend({
+
+                                            setup: function() {
+                                                this.get(this.index);
+                                            },
+
+                                            configureDefault: function() {
+
+                                                this.base();
+
+                                                // push page configuration into config service
+                                                this.config(gadgetConfiguration);
+                                            }
+
+                                        });
+
+                                    }(dashlet.config, dashletGadget));
+
+                                    Ratchet.GadgetRegistry.register(dashlet.type, dashlet.id, newType);
+                                }
+                            /*
                             }
+                            */
                         }
                     }
                 }

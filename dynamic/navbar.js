@@ -59,6 +59,33 @@
                 }
             }
 
+            // configure brand
+            if (model.brand)
+            {
+                if (!model.brand.uri)
+                {
+                    model.brand.uri = "/";
+                }
+            }
+
+            var tokenSubstitutionFunction = function(uri)
+            {
+                var last = 0;
+                var x = -1;
+                do
+                {
+                    x = uri.indexOf("{", last);
+                    if (x > -1)
+                    {
+                        uri = uri.substring(0, x) + uri.substring(x).replace("{", "${");
+                        last = x + 2;
+                    }
+                }
+                while (x > -1);
+
+                return uri;
+            };
+
             // perform token substitutions
             // replace any { with ${ so that substitutions occur
             // we use "{" to parse tokens from URI and "${" to substitute in
@@ -67,19 +94,12 @@
                 var item = model.items[i];
                 if (item.uri)
                 {
-                    var last = 0;
-                    var x = -1;
-                    do
-                    {
-                        x = item.uri.indexOf("{", last);
-                        if (x > -1)
-                        {
-                            item.uri = item.uri.substring(0, x) + item.uri.substring(x).replace("{", "${");
-                            last = x + 2;
-                        }
-                    }
-                    while (x > -1);
+                    item.uri = tokenSubstitutionFunction(item.uri);
                 }
+            }
+            if (model.brand && model.brand.uri)
+            {
+                model.brand.uri = tokenSubstitutionFunction(model.brand.uri);
             }
         }
 		

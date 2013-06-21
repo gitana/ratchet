@@ -1113,7 +1113,7 @@
         /**
          * EXTENSION POINT
          */
-        linkUri: function(row)
+        linkUri: function(row, model, context)
         {
             return null;
         },

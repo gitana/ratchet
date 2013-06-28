@@ -63,7 +63,7 @@
                 self.authenticateWithCookie(context, successCallback, function() {
 
                     // didn't work, pop up dialog
-                    self.loginDialog(context, null, null, successCallback, failureCallback, true);
+                    self.loginDialog(context, null, null, successCallback, failureCallback, false);
                 });
             }
         },
@@ -116,6 +116,7 @@
                     var div = $(loginHtml);
 
                     $('.modal-body', div).alpaca({
+                        "view": "VIEW_WEB_CREATE",
                         "data": data,
                         "schema": schema,
                         "options": options,
@@ -141,9 +142,11 @@
                             $(div).modal('show');
                             $(div).on('shown', function() {
 
+                                /*
                                 $(div).css({
                                     "margin-top": ($(div).outerHeight() / 2)
                                 });
+                                */
 
                                 control.getControlByPath("username").focus();
 

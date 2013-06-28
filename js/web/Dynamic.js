@@ -264,8 +264,15 @@
         if (!config) {
             config = {};
         }
-        config.title = title;
-        config.cancel = true;
+
+        if (typeof(config.title) === "undefined")
+        {
+            config.title = title;
+        }
+        if (typeof(config.cancel) === "undefined")
+        {
+            config.cancel = true;
+        }
 
         Ratchet.showModal(config, function(div, cb) {
 

@@ -194,6 +194,7 @@
             <filelist dir="${prep.dir}/js">
                 <file name="actions/Actions.js"/>
                 <file name="actions/AbstractAction.js"/>
+                <file name="actions/AbstractUIAction.js"/>
                 <file name="actions/ConsoleLogAction.js"/>
             </filelist>
         </concat>
@@ -358,6 +359,7 @@
             <filelist dir="${prep.dir}/js">
                 <file name="actions/Actions.js"/>
                 <file name="actions/AbstractAction.js"/>
+                <file name="actions/AbstractUIAction.js"/>
                 <file name="actions/ConsoleLogAction.js"/>
             </filelist>
         </concat>

@@ -72,6 +72,44 @@
                     callback();
                 });
             };
+
+            this.block = function(title, message, callback)
+            {
+                if (typeof(message) === "function")
+                {
+                    callback = message;
+                    message = title;
+                    title = "Please wait...";
+                }
+
+                Ratchet.block(title, message, function() {
+                    callback();
+                });
+            };
+
+            this.unblock = function(callback)
+            {
+                Ratchet.unblock(function() {
+                    callback();
+                });
+            };
+
+            this.showError = function(title, message, callback)
+            {
+                if (typeof(message) === "function")
+                {
+                    callback = message;
+                    message = title;
+                    title = "There was a problem...";
+                }
+
+                Ratchet.startModalConfirm(title, message, this.okayButtonTitle, null, function() {
+                    callback();
+                }, {
+                    "cancel": false
+                });
+            };
+
         }
 
     });

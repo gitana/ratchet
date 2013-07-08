@@ -113,7 +113,7 @@
 
     Ratchet.isEmpty = function(thing)
     {
-        return this.isUndefined(thing) || thing === null;
+        return this.isUndefined(thing) || (thing === null);
     };
 
     Ratchet.isEmptyObject = function(thing)
@@ -1002,6 +1002,30 @@
         }
 
         return newObj;
+    };
+
+    /**
+     * Counts the number of properties in an object.
+     *
+     * @param obj
+     * @returns {number}
+     */
+    Ratchet.countProperties = function(obj)
+    {
+        var count = 0;
+
+        if (obj)
+        {
+            for (var k in obj)
+            {
+                if (obj.hasOwnProperty(obj[k]) && typeof(obj[k]) === "function")
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     };
 
 

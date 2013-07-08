@@ -128,6 +128,18 @@
              */
             this.executeMatch = function(matcher, text)
             {
+                // strip matcher from "/a/b/c" to "a/b/c"
+                if (matcher && matcher.length > 0 && matcher.substring(0,1) === "/")
+                {
+                    matcher = matcher.substring(1);
+                }
+
+                // strip text from "/a/b/c" to "a/b/c"
+                if (text && text.length > 0 && text.substring(0,1) === "/")
+                {
+                    text = text.substring(1);
+                }
+
                 var tokens = {};
 
                 var printDebug = function()
@@ -135,35 +147,46 @@
                     //console.log("Matched - pattern: " + matcher + ", text: " + text + ", tokens: " + JSON.stringify(tokens));
                 };
 
-                // short cut - **
-                if (matcher == "**")
+                var array1 = [];
+                if (matcher)
                 {
-                    // it's a match, pull out wildcard token
-                    tokens["**"] = text;
-                    printDebug();
-                    return tokens;
+                    array1 = matcher.split("/");
                 }
-
-                // if matcher has no wildcards or tokens...
-                if ((matcher.indexOf("{") == -1) && (matcher.indexOf("*") == -1))
+                var array2 = [];
+                if (text)
                 {
-                    // if they're equal...
-                    if (matcher == text)
-                    {
-                        // it's a match, no tokens
-                        printDebug();
-                        return tokens;
-                    }
+                    array2 = text.split("/");
                 }
-
-                var array1 = matcher.split("/");
-                var array2 = text.split("/");
 
                 // short cut - zero length matches
                 if ((array1.length === 0) && (array2.length === 0))
                 {
                     printDebug();
                     return tokens;
+                }
+
+                if (matcher)
+                {
+                    // short cut - **
+                    if (matcher == "**")
+                    {
+                        // it's a match, pull out wildcard token
+                        tokens["**"] = text;
+                        printDebug();
+                        return tokens;
+                    }
+
+                    // if matcher has no wildcards or tokens...
+                    if ((matcher.indexOf("{") == -1) && (matcher.indexOf("*") == -1))
+                    {
+                        // if they're equal...
+                        if (matcher == text)
+                        {
+                            // it's a match, no tokens
+                            printDebug();
+                            return tokens;
+                        }
+                    }
                 }
 
                 var pattern = null;
@@ -237,6 +260,7 @@
                 // walk through the routes and find one that matches this URI and method
                 var tokens = null;
                 var discoveredHandler = null;
+
                 for (var routeId in _this.routes)
                 {
                     var route = _this.routes[routeId];

@@ -25,11 +25,6 @@
 
         TEMPLATE: html,
 
-        index: function(el)
-        {
-            this.base(el);
-        },
-
         prepareModel: function(el, model, callback)
         {
             var self = this;

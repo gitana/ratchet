@@ -1018,7 +1018,7 @@
         {
             for (var k in obj)
             {
-                if (obj.hasOwnProperty(obj[k]) && typeof(obj[k]) === "function")
+                if (obj.hasOwnProperty(k) && typeof(obj[k]) !== "function")
                 {
                     count++;
                 }

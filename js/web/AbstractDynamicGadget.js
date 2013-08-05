@@ -148,21 +148,24 @@
             }
         },
 
-        index: function(el)
+        index: function(el, callback)
         {
             var self = this;
 
-            var handleRender = function(el, model, callback)
+            var handleRender = function(el, model, cb)
             {
                 self.doRender(el, model, function() {
-                    callback();
+                    cb();
                 });
             };
 
             var model = JSON.parse(JSON.stringify(this.config()));
             handleRender(el, model, function() {
 
-                // TODO: add callback to index call?
+                if (callback)
+                {
+                    callback();
+                }
 
             });
         },

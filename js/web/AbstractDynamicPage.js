@@ -1,9 +1,9 @@
 (function($) {
     Ratchet.AbstractDynamicPage = Ratchet.Gadget.extend(
     {
-        index: function(el)
+        index: function(el, callback)
         {
-            this.doIndex(el);
+            this.doIndex(el, callback);
         },
 
         /**
@@ -12,10 +12,10 @@
          * @extension_point
          *
          * @param el
+         * @param callback
          */
-        doIndex: function(el)
+        doIndex: function(el, callback)
         {
-
         },
 
         renderTemplate: function(el, templateIdentifier, data, callback) {

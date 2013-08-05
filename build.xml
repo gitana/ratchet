@@ -603,6 +603,7 @@
         <include name="plugins/**/*"/>
         <include name="lib/**/*"/>
         <include name="examples/**/*"/>
+        <include name="thirdparty/**/*"/>
         <include name="dynamic/**/*"/>
         <include name="tests/**/*"/>
         <include name="*.html"/>

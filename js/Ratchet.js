@@ -65,6 +65,16 @@
             // child ratchets
             this.childRatchets = {};
 
+            this.hasChildRatchets = function()
+            {
+                return (this.childRatchetCount() > 0);
+            };
+
+            this.childRatchetCount = function()
+            {
+                return Ratchet.countProperties(this.childRatchets);
+            };
+
             // authentication filters
             this.authRequiredPatterns = [];
 
@@ -288,9 +298,11 @@
                     // wrap the handler into a closure (convenience function)
                     handler = function(invocationContext)
                     {
-                        return function()
+                        return function(callback)
                         {
-                            discoveredHandler.call(discoveredHandler, invocationContext, invocationContext.route.data);
+                            discoveredHandler.call(discoveredHandler, invocationContext, function(err) {
+                                callback(err);
+                            });
                         };
                     }(invocationContext);
                 }
@@ -342,9 +354,11 @@
             // NOTE: only for the top-most dispatcher
             if (!this.parent)
             {
+                // defines the function that handles changes to the hash
+                // whenever hashlink changes, this function gets called
                 $.history.init(function(hash) {
 
-                    if(hash === "")
+                    if (hash === "")
                     {
                         // TODO: assume any default dispatching?
                         // i.e.
@@ -357,6 +371,18 @@
                         _this.dispatch({
                             "method": "GET",
                             "uri": "#" + hash
+                        }, {
+                            "primary": true
+                        }, function() {
+
+                            // allows for callback to be stored temporarily when a run() is called and the hashlink
+                            // is toggled as a means of dispatching (see run method)
+                            if (Ratchet.tempCallback)
+                            {
+                                Ratchet.tempCallback();
+                            }
+
+                            Ratchet.tempCallback = null;
                         });
                     }
                 },{
@@ -486,7 +512,7 @@
             //
             $(context.closestDescendants('region')).each(function() {
                 Ratchet.convertRegionTag(this);
-                Ratchet.logDebug("Converted region tag: " + $(this).outerHTML());
+                Ratchet.logDebug("Converted region tag: " + $(this).html());
             });
 
 
@@ -590,7 +616,7 @@
             //
             $(context.closestDescendants('gadget')).each(function() {
                 Ratchet.convertGadgetTag(this);
-                Ratchet.logDebug("Converted region tag: " + $(this).outerHTML());
+                Ratchet.logDebug("Converted gadget tag: " + $(this).html());
             });
 
 
@@ -658,20 +684,48 @@
                 });
             });
 
-            // dispatch the child ratchets
-            $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
-
-                Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + ")");
-
-                var subParams = params[childRatchetId];
-
-                childRatchet.dispatch(context.route, subParams);
-            });
-
-            // fire the callback
-            if (callback)
+            // if there are child ratchets, dispatch them
+            // don't fire until all are complete
+            if (_this.hasChildRatchets())
             {
-                callback.call(this);
+                var count = 0;
+                $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
+
+                    Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + ")");
+
+                    var subParams = params[childRatchetId];
+
+                    childRatchet.dispatch(context.route, subParams, function(err) {
+
+                        // call back completion
+
+                        count++;
+                        if (count === _this.childRatchetCount() && Ratchet.useHandlerCallbacks)
+                        {
+                            if (callback)
+                            {
+                                callback.call(this);
+                            }
+                        }
+                    });
+                });
+
+                // fire the callback directly if callbacks not being used
+                if (!Ratchet.useHandlerCallbacks)
+                {
+                    if (callback)
+                    {
+                        callback.call(this);
+                    }
+                }
+            }
+            else
+            {
+                // otherwise, no child ratchets, so we're done
+                if (callback)
+                {
+                    callback.call(this);
+                }
             }
         },
 
@@ -808,8 +862,8 @@
 
             // wrap handler in closure
             var func = function(that, handler) {
-                return function(el, data) {
-                    handler.call(that, el, data);
+                return function(el, callback) {
+                    handler.call(that, el, callback);
                 };
             }(that, handler);
 
@@ -842,9 +896,21 @@
          * }
          *
          * @param config
+         * @param params
+         * @param callback
          */
-        dispatch: function(config, params)
+        dispatch: function(config, params, callback)
         {
+            if (typeof(params) === "function")
+            {
+                callback = params;
+                params = {};
+            }
+            if (!params)
+            {
+                params = {};
+            }
+
             var _this = this;
 
             // teardown: clean up old observers, routes, gadget instances and the like
@@ -859,7 +925,21 @@
                 config.uri = config.uri.substring(1);
             }
 
-            var context = new Ratchet.RenderContext(this, config, null, params);
+            var isPrimary = params["primary"];
+
+            var context = null;
+            if (isPrimary)
+            {
+                // create a temporary ratchet onto a temp div
+                var tempEl = $("<div style='display:none'></div>");
+                var tempRatchet = new Ratchet(tempEl, this);
+
+                context = new Ratchet.RenderContext(tempRatchet, config, null, params);
+            }
+            else
+            {
+                context = new Ratchet.RenderContext(this, config, null, params);
+            }
 
             // increment dispatch count
             this.incrementDispatchCount();
@@ -867,17 +947,65 @@
             // ensure authentication filter passes
             this.ensureAuthentication.call(this, context, function() {
 
+                // callback that gets trigger once handler completes
+                var handlerCompletionCallback = function(err)
+                {
+                    // if primary + we have a page transition block function
+                    if (isPrimary && Ratchet.pageTransitionBlocker)
+                    {
+                        Ratchet.pageTransitionBlocker(false);
+                    }
+
+                    // TEMP
+                    if (isPrimary)
+                    {
+                        // now flick to el
+                        $(this.el).append(tempEl.children());
+                    }
+
+                    if (callback)
+                    {
+                        callback();
+                    }
+                };
+
                 // find the controller handler method that matches this uri
                 var wrappedHandler = _this.findHandler(context);
                 if (wrappedHandler)
                 {
+                    // if primary + we have a page transition block function
+                    if (isPrimary && Ratchet.pageTransitionBlocker)
+                    {
+                        Ratchet.pageTransitionBlocker(true);
+                    }
+
                     // invoke the handler
-                    wrappedHandler();
+                    wrappedHandler(function(err) {
+
+                        if (Ratchet.useHandlerCallbacks)
+                        {
+                            handlerCompletionCallback(err);
+                        }
+
+                    });
+                }
+
+                // if we're not using completion callbacks, then callback right away
+                if (!Ratchet.useHandlerCallbacks || !wrappedHandler)
+                {
+                    handlerCompletionCallback();
                 }
 
             }, function() {
 
                 alert("Authentication failed - not authenticated");
+
+                if (callback)
+                {
+                    callback({
+                        "message": "Authentication failed"
+                    });
+                }
 
             });
         },
@@ -888,6 +1016,7 @@
          * @param [String] method assumes GET
          * @param {String} uri
          * @param [Object] data
+         * @param [Function] callback
          */
         run: function()
         {
@@ -898,10 +1027,27 @@
                 "data": {}
             };
 
+            var callback = null;
+
             var args = Ratchet.makeArray(arguments);
+            if (args.length === 1)
+            {
+                var uri = args.shift();
+                if (typeof(uri) === "function")
+                {
+                    callback = uri;
+                    uri = null;
+                    args = [];
+                }
+                if (uri)
+                {
+                    config.uri = uri;
+                }
+            }
+
             if (args.length === 0)
             {
-                uri = window.location.href;
+                var uri = window.location.href;
                 if (uri.indexOf("#") > -1)
                 {
                     uri = uri.substring(uri.indexOf("#") + 1);
@@ -911,10 +1057,6 @@
                     uri = self.DEFAULT_URI;
                 }
                 config.uri = uri;
-            }
-            else if (args.length == 1)
-            {
-                config.uri = args.shift();
             }
             else if (args.length == 2)
             {
@@ -930,6 +1072,12 @@
                 {
                     config.uri = a1;
                     config.data = a2;
+
+                    if (typeof(config.data) === "function")
+                    {
+                        callback = config.data;
+                        config.data = null;
+                    }
                 }
             }
             else if (args.length == 3)
@@ -937,17 +1085,44 @@
                 config.method = args.shift();
                 config.uri = args.shift();
                 config.data = args.shift();
+
+                if (typeof(config.data) === "function")
+                {
+                    callback = config.data;
+                    config.data = null;
+                }
+            }
+            else if (args.length == 4)
+            {
+                config.method = args.shift();
+                config.uri = args.shift();
+                config.data = args.shift();
+                callback = args.shift();
             }
 
             // if we're the top dispatcher (app scope) and we're doing a get, store onto history
             // this lets the history callback make the dispatch for us
             if (config.method == "GET" && !this.parent)
             {
+                // if we have a callback, store it in a temp place so that the hashlink listener can pick it up
+                if (callback)
+                {
+                    Ratchet.tempCallback = callback;
+                }
+
                 $.history.load(config.uri);
             }
             else
             {
-                this.dispatch(config);
+                this.dispatch(config, {
+                    "primary": true
+                }, function() {
+
+                    if (callback)
+                    {
+                        callback();
+                    }
+                });
             }
         },
 
@@ -1379,5 +1554,11 @@
             }
         }
     };
+
+    // this should be false for Cloud CMS console (for now)
+    Ratchet.useHandlerCallbacks = false;
+
+    // page transition blocker
+    Ratchet.pageTransitionBlocker = null;
 
 })(jQuery);

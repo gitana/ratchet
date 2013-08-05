@@ -139,6 +139,23 @@
                                 failureCallback();
                             });
 
+                            control.childrenByPropertyId["username"].on("keypress", function(e) {
+
+                                if (e.charCode === 13)
+                                {
+                                    $(div).find(".login_button_login").click();
+                                }
+                            });
+
+                            control.childrenByPropertyId["password"].on("keypress", function(e) {
+
+                                if (e.charCode === 13)
+                                {
+                                    $(div).find(".login_button_login").click();
+                                }
+                            });
+
+
                             $(div).modal('show');
                             $(div).on('shown', function() {
 

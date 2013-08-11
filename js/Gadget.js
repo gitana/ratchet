@@ -381,6 +381,11 @@
          */
         off: function()
         {
+            if (arguments.length === 0)
+            {
+                return this.offAll();
+            }
+
             var descriptor = Ratchet.Events.off.apply(this, arguments);
 
             var eventKey = Ratchet.toLinearForm(descriptor);

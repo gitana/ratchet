@@ -39,7 +39,7 @@
             });
 	    },
 
-	    afterSwap: function(el, model, originalContext)
+	    afterSwap: function(el, model, originalContext, callback)
 	    {
 	        var self = this;
 
@@ -59,6 +59,12 @@
 	                })(model, item, originalContext);
 	            }
 	        }
+
+            if (callback)
+            {
+                callback();
+            }
+
 	    },
 
 	    handleClick: function(clickedEl, model, item, originalContext)

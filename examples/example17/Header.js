@@ -7,7 +7,7 @@
             this.get(this.index);
         },
 
-        index: function(el, data, callback)
+        index: function(el, callback)
         {
             // intentionally wait 2 seconds before rendering to produce a delay
             // if swap process works correctly, this should not produce flicker

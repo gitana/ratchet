@@ -7,7 +7,7 @@
             this.get("/page1", this.index);
         },
 
-        index: function(el, data, callback)
+        index: function(el, callback)
         {
             el.transform("page1", function(el) {
                 el.swap(function() {

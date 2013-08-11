@@ -8,7 +8,8 @@
                 <h3 class="modal-title"></h3> \
             </div> \
             <div class="modal-body"></div> \
-        <div class="modal-footer"></div> \
+            <div class="modal-footer"></div> \
+        </div> \
     ';
 
     Ratchet.defaultModalFadeClass = "fade";
@@ -350,7 +351,7 @@
         }
 
         // build modal dom
-        var div = $(MODAL_TEMPLATE);
+        var div = $(MODAL_TEMPLATE.trim());
 
         if (config.modalClass) {
             $(div).addClass(config.modalClass);

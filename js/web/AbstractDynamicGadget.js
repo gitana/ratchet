@@ -175,6 +175,7 @@
             var self = this;
 
             Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] start render chain");
+            console.log("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] start render chain");
 
             Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call prepareModel()");
             this.prepareModel(context, model, function() {
@@ -189,6 +190,7 @@
                                 Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
                                 self.afterSwap($(self.ratchet().el)[0], model, context, function() {
                                     Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
+                                    console.log("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
 
                                     // nothing more to do
 

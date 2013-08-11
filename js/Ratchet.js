@@ -1047,16 +1047,19 @@
 
             if (args.length === 0)
             {
-                var uri = window.location.href;
-                if (uri.indexOf("#") > -1)
+                if (!config.uri)
                 {
-                    uri = uri.substring(uri.indexOf("#") + 1);
+                    var uri = window.location.href;
+                    if (uri.indexOf("#") > -1)
+                    {
+                        uri = uri.substring(uri.indexOf("#") + 1);
+                    }
+                    else
+                    {
+                        uri = self.DEFAULT_URI;
+                    }
+                    config.uri = uri;
                 }
-                else
-                {
-                    uri = self.DEFAULT_URI;
-                }
-                config.uri = uri;
             }
             else if (args.length == 2)
             {

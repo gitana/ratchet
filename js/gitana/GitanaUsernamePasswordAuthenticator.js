@@ -110,12 +110,12 @@
 
             // load the template
             $.ajax({
-                url: "/components/ratchet/gitana/login.html",
+                url: Ratchet.gitanaLoginHtmlUrl,
                 success: function(loginHtml)
                 {
                     var div = $(loginHtml);
 
-                    $('.modal-body', div).alpaca({
+                    $('.modal-body', div).find('.login-body').alpaca({
                         "view": "VIEW_WEB_CREATE",
                         "data": data,
                         "schema": schema,
@@ -174,5 +174,7 @@
             });
         }
     });
+
+    Ratchet.gitanaLoginHtmlUrl = "/components/ratchet/gitana/login.html";
 
 })(jQuery);

@@ -81,7 +81,7 @@
 	        };
 	        */
 
-	        $("#" + model.formId).alpaca(alpacaConfig);
+	        $(el).find("#" + model.formId).alpaca(alpacaConfig);
 	    },
 
 	    postRender: function(control, model, callback)

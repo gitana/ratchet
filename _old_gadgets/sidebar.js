@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 
 	                // look up the dom element
 	                (function(model, item, originalContext) {
-	                    $("." + classname, el).click(function() {
+	                    $(el).find("." + classname).click(function() {
 	                        self.handleClick.call(self, this, model, item, originalContext);
 	                    });
 	                })(model, item, originalContext);

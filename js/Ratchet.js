@@ -138,124 +138,7 @@
              */
             this.executeMatch = function(matcher, text)
             {
-                // strip matcher from "/a/b/c" to "a/b/c"
-                if (matcher && matcher.length > 0 && matcher.substring(0,1) === "/")
-                {
-                    matcher = matcher.substring(1);
-                }
-
-                // strip text from "/a/b/c" to "a/b/c"
-                if (text && text.length > 0 && text.substring(0,1) === "/")
-                {
-                    text = text.substring(1);
-                }
-
-                var tokens = {};
-
-                var printDebug = function()
-                {
-                    //console.log("Matched - pattern: " + matcher + ", text: " + text + ", tokens: " + JSON.stringify(tokens));
-                };
-
-                var array1 = [];
-                if (matcher)
-                {
-                    array1 = matcher.split("/");
-                }
-                var array2 = [];
-                if (text)
-                {
-                    array2 = text.split("/");
-                }
-
-                // short cut - zero length matches
-                if ((array1.length === 0) && (array2.length === 0))
-                {
-                    printDebug();
-                    return tokens;
-                }
-
-                if (matcher)
-                {
-                    // short cut - **
-                    if (matcher == "**")
-                    {
-                        // it's a match, pull out wildcard token
-                        tokens["**"] = text;
-                        printDebug();
-                        return tokens;
-                    }
-
-                    // if matcher has no wildcards or tokens...
-                    if ((matcher.indexOf("{") == -1) && (matcher.indexOf("*") == -1))
-                    {
-                        // if they're equal...
-                        if (matcher == text)
-                        {
-                            // it's a match, no tokens
-                            printDebug();
-                            return tokens;
-                        }
-                    }
-                }
-
-                var pattern = null;
-                var value = null;
-                do
-                {
-                    pattern = array1.shift();
-                    value = array2.shift();
-
-                    var patternEmpty = (Ratchet.isEmpty(pattern) || pattern === "");
-                    var valueEmpty = (Ratchet.isEmpty(value) || value === "");
-
-                    // if there are remaining pattern and value elements
-                    if (!patternEmpty && !valueEmpty)
-                    {
-                        if (pattern == "*")
-                        {
-                            // wildcard - element matches
-                        }
-                        else if (pattern == "**")
-                        {
-                            // wildcard - match everything else, so break out
-                            tokens["**"] = "/" + [].concat(value, array2).join("/");
-                            break;
-                        }
-                        else if (Ratchet.startsWith(pattern, "{"))
-                        {
-                            // token, assume match, pull into token map
-                            var key = pattern.substring(1, pattern.length - 1);
-                            tokens[key] = value;
-                        }
-                        else
-                        {
-                            // check for exact match
-                            if (pattern == value)
-                            {
-                                // exact match
-                            }
-                            else
-                            {
-                                // not a match, thus fail
-                                return null;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // if we expected a pattern but empty value or we have a value but no pattern
-                        // then it is a mismatch
-                        if ((pattern && valueEmpty) || (patternEmpty && value))
-                        {
-                            return null;
-                        }
-                    }
-                }
-                while (!Ratchet.isEmpty(pattern) && !Ratchet.isEmpty(value));
-
-                printDebug();
-                return tokens;
+                return Ratchet.executeMatch(matcher, text);
             };
 
             /**
@@ -1564,4 +1447,125 @@
     // page transition blocker
     Ratchet.pageTransitionBlocker = null;
 
+    Ratchet.executeMatch = function(matcher, text)
+    {
+        // strip matcher from "/a/b/c" to "a/b/c"
+        if (matcher && matcher.length > 0 && matcher.substring(0,1) === "/")
+        {
+            matcher = matcher.substring(1);
+        }
+
+        // strip text from "/a/b/c" to "a/b/c"
+        if (text && text.length > 0 && text.substring(0,1) === "/")
+        {
+            text = text.substring(1);
+        }
+
+        var tokens = {};
+
+        var printDebug = function()
+        {
+            //console.log("Matched - pattern: " + matcher + ", text: " + text + ", tokens: " + JSON.stringify(tokens));
+        };
+
+        var array1 = [];
+        if (matcher)
+        {
+            array1 = matcher.split("/");
+        }
+        var array2 = [];
+        if (text)
+        {
+            array2 = text.split("/");
+        }
+
+        // short cut - zero length matches
+        if ((array1.length === 0) && (array2.length === 0))
+        {
+            printDebug();
+            return tokens;
+        }
+
+        if (matcher)
+        {
+            // short cut - **
+            if (matcher == "**")
+            {
+                // it's a match, pull out wildcard token
+                tokens["**"] = text;
+                printDebug();
+                return tokens;
+            }
+
+            // if matcher has no wildcards or tokens...
+            if ((matcher.indexOf("{") == -1) && (matcher.indexOf("*") == -1))
+            {
+                // if they're equal...
+                if (matcher == text)
+                {
+                    // it's a match, no tokens
+                    printDebug();
+                    return tokens;
+                }
+            }
+        }
+
+        var pattern = null;
+        var value = null;
+        do
+        {
+            pattern = array1.shift();
+            value = array2.shift();
+
+            var patternEmpty = (Ratchet.isEmpty(pattern) || pattern === "");
+            var valueEmpty = (Ratchet.isEmpty(value) || value === "");
+
+            // if there are remaining pattern and value elements
+            if (!patternEmpty && !valueEmpty)
+            {
+                if (pattern == "*")
+                {
+                    // wildcard - element matches
+                }
+                else if (pattern == "**")
+                {
+                    // wildcard - match everything else, so break out
+                    tokens["**"] = "/" + [].concat(value, array2).join("/");
+                    break;
+                }
+                else if (Ratchet.startsWith(pattern, "{"))
+                {
+                    // token, assume match, pull into token map
+                    var key = pattern.substring(1, pattern.length - 1);
+                    tokens[key] = value;
+                }
+                else
+                {
+                    // check for exact match
+                    if (pattern == value)
+                    {
+                        // exact match
+                    }
+                    else
+                    {
+                        // not a match, thus fail
+                        return null;
+                    }
+                }
+            }
+            else
+            {
+                // if we expected a pattern but empty value or we have a value but no pattern
+                // then it is a mismatch
+                if ((pattern && valueEmpty) || (patternEmpty && value))
+                {
+                    return null;
+                }
+            }
+        }
+        while (!Ratchet.isEmpty(pattern) && !Ratchet.isEmpty(value));
+
+        printDebug();
+        return tokens;
+    };
 })(jQuery);

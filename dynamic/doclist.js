@@ -270,9 +270,9 @@
 
             this.base(el, model, context, function() {
 
-                $(".list-button-multi-documents-action-selector").addClass("disabled");
+                $(el).find(".list-button-multi-documents-action-selector").addClass("disabled");
 
-                self.formatSortDirectionSelector();
+                self.formatSortDirectionSelector(el);
 
                 callback();
             });
@@ -457,19 +457,25 @@
             }
         },
 
-        formatSortDirectionSelector: function()
+        formatSortDirectionSelector: function(el)
         {
             var self = this;
+
+            var selector = $(".list-button-sort-direction-selector");
+            if (el)
+            {
+                selector = $(el).find(".list-button-sort-direction-selector");
+            }
 
             // set up sort selector
             var sortDirection = self.sortDirection();
             if (sortDirection == -1)
             {
-                $(".list-button-sort-direction-selector").html("<div class='sort-descending'></div>");
+                $(selector).html("<div class='sort-descending'></div>");
             }
             else if (sortDirection == 1)
             {
-                $(".list-button-sort-direction-selector").html("<div class='sort-ascending'></div>");
+                $(selector).html("<div class='sort-ascending'></div>");
             }
         },
 

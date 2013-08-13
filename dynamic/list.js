@@ -630,10 +630,10 @@
             // select/unselect-all checkbox
             $(el).find(".list-check-box-all").click(function() {
 
-                if ($(this).attr("checked")) {
+                if ($(this).prop("checked")) {
                     $(el).find(".list-check-box").each(function() {
-                        if (! $(this).attr("checked")) {
-                            $(this).attr("checked", true);
+                        if (! $(this).prop("checked")) {
+                            $(this).prop("checked", true);
                         }
                     });
                     self.clearSelectedItems();
@@ -659,8 +659,8 @@
                 } else {
 
                     $(el).find(".list-check-box").each(function() {
-                        if ($(this).attr("checked")) {
-                            $(this).attr("checked", false);
+                        if ($(this).prop("checked")) {
+                            $(this).prop("checked", false);
                         }
                     });
                     self.clearSelectedItems();
@@ -948,7 +948,7 @@
 
                     // add or remove ourselves
                     var currentSelectedItems = self.selectedItems();
-                    if ($(this).attr("checked"))
+                    if ($(this).prop("checked"))
                     {
                         currentSelectedItems.push(item);
                     }

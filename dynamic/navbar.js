@@ -40,6 +40,7 @@
 
         doPrepareModel: function(el, model)
         {
+            /*
             // figure out the active page
             var pageKey = this.observable("page").get()["key"];
             for (var i = 0; i < model.items.length; i++)
@@ -50,6 +51,38 @@
                     item.classes = "active";
                 }
             }
+            */
+
+            var self = this;
+
+            // find the active page item and mark it as such
+            var pageUris = self.observable("page").get()["uri"];
+            if (typeof(pageUris) === "string")
+            {
+                pageUris = [pageUris];
+            }
+            var maxLen = -1;
+            var maxItem = null;
+            for (var a = 0; a < pageUris.length; a++)
+            {
+                var pageUri = pageUris[a];
+
+                for (var i = 0; i < model.items.length; i++)
+                {
+                    var item = model.items[i];
+                    if (pageUri.indexOf(item.uri) === 0 && item.uri.length > maxLen)
+                    {
+                        maxLen = item.uri.length;
+                        maxItem = item;
+                    }
+                }
+            }
+            if (maxItem)
+            {
+                maxItem.classes = "active";
+            }
+
+
 
             // configure search
             if (model.search)

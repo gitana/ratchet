@@ -2,6 +2,11 @@
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator = Ratchet.AbstractGitanaAuthenticator.extend({
 
+        getTemplate: function()
+        {
+            return Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE.trim();
+        },
+
         _authenticate: function(context, username, password, successCallback, failureCallback)
         {
             var self = this;
@@ -109,72 +114,81 @@
             }
 
             // load the template
-            $.ajax({
-                url: Ratchet.gitanaLoginHtmlUrl,
-                success: function(loginHtml)
+            var div = $(this.getTemplate());
+
+            $('.modal-body', div).find('.login-body').alpaca({
+                "view": "VIEW_WEB_CREATE",
+                "data": data,
+                "schema": schema,
+                "options": options,
+                "postRender": function(control)
                 {
-                    var div = $(loginHtml);
+                    $(div).find(".login_button_login").click(function(e) {
 
-                    $('.modal-body', div).find('.login-body').alpaca({
-                        "view": "VIEW_WEB_CREATE",
-                        "data": data,
-                        "schema": schema,
-                        "options": options,
-                        "postRender": function(control)
+                        var username = control.getValue()["username"];
+                        var password = control.getValue()["password"];
+
+                        self._authenticate(context, username, password, successCallback, failureCallback);
+
+                        $(div).modal('hide');
+                    });
+
+                    $(div).find(".login_button_cancel").click(function() {
+
+                        $(div).modal('hide');
+
+                        failureCallback();
+                    });
+
+                    control.childrenByPropertyId["username"].on("keypress", function(e) {
+
+                        if (e.charCode === 13)
                         {
-                            $(div).find(".login_button_login").click(function(e) {
-
-                                var username = control.getValue()["username"];
-                                var password = control.getValue()["password"];
-
-                                self._authenticate(context, username, password, successCallback, failureCallback);
-
-                                $(div).modal('hide');
-                            });
-
-                            $(div).find(".login_button_cancel").click(function() {
-
-                                $(div).modal('hide');
-
-                                failureCallback();
-                            });
-
-                            control.childrenByPropertyId["username"].on("keypress", function(e) {
-
-                                if (e.charCode === 13)
-                                {
-                                    $(div).find(".login_button_login").click();
-                                }
-                            });
-
-                            control.childrenByPropertyId["password"].on("keypress", function(e) {
-
-                                if (e.charCode === 13)
-                                {
-                                    $(div).find(".login_button_login").click();
-                                }
-                            });
-
-
-                            $(div).modal('show');
-                            $(div).on('shown', function() {
-
-                                /*
-                                $(div).css({
-                                    "margin-top": ($(div).outerHeight() / 2)
-                                });
-                                */
-
-                                control.getControlByPath("username").focus();
-
-                            });
+                            $(div).find(".login_button_login").click();
                         }
+                    });
+
+                    control.childrenByPropertyId["password"].on("keypress", function(e) {
+
+                        if (e.charCode === 13)
+                        {
+                            $(div).find(".login_button_login").click();
+                        }
+                    });
+
+
+                    $(div).modal('show');
+                    $(div).on('shown', function() {
+
+                        /*
+                        $(div).css({
+                            "margin-top": ($(div).outerHeight() / 2)
+                        });
+                        */
+
+                        control.getControlByPath("username").focus();
+
                     });
                 }
             });
         }
     });
 
-    Ratchet.gitanaLoginHtmlUrl = "/components/ratchet/gitana/login.html";
+    Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE = ' \
+        <div class="modal hide fade" style="overflow: visible !important"> \
+            <div class="modal-header"> \
+                <h3>Log in</h3> \
+            </div> \
+            <div class="modal-body"> \
+                <div class="login-header"></div> \
+                <div class="login-body"></div> \
+                <div class="login-footer"></div> \
+            </div> \
+            <div class="modal-footer"> \
+                <a href="javascript:void(0);" class="btn login_button_cancel">Cancel</a> \
+                <a href="javascript:void(0);" class="btn btn-primary login_button_login">Log In</a> \
+            </div> \
+        </div> \
+    ';
 
 })(jQuery);

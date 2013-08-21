@@ -12,21 +12,21 @@ button.btn DIV.sort-descending
     height: 16px;
 }
 
-button.btn-large DIV.sort-ascending
+button.btn-lg DIV.sort-ascending
 {
     background-image: url(./sort_ascending-24.png);
     width: 24px;
     height: 24px;
 }
 
-button.btn-large DIV.sort-descending
+button.btn-lg DIV.sort-descending
 {
     background-image: url(./sort_descending-24.png);
     width: 24px;
     height: 24px;
 }
 
-button.btn-large.list-button-sort-direction-selector
+button.btn-lg.list-button-sort-direction-selector
 {
     margin: 0px;
     padding: 8px;

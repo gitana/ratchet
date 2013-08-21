@@ -18,6 +18,11 @@
     <!-- samples -->
     <script type="text/javascript" src="../js/example.js"></script>
 
+    <!-- bootstrap -->
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap-theme.css"/>
+
     <!-- START_RATCHET_JAVASCRIPT -->
     <!-- third party -->
     <script type="text/javascript" src="../../thirdparty/base.js"></script>
@@ -66,42 +71,51 @@
 </head>
 
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <a class="brand" href="../../index.html">
-            <span class="logo"></span>
-            Ratchet
-        </a>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 
-        <div class="nav-collapse">
-            <ul class="nav">
-                <li>
-                    <a href="../../index.html">Home</a>
-                </li>
-                <li class="active">
-                    <a href="../index.html">Examples</a>
-                </li>
-                <li>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../index.html">Ratchet</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../index.html">Examples</a></li>
             </ul>
+        </div><!-- /.navbar-collapse -->
+
+    </div>
+    <div class="container">
+        <div class="row">
+
+
+            <h2>Basic Example #3</h2>
+            <div id="sample"></div>
+            <pre class="prettyprint linenums">
+            $(document).ready(function() {
+                $('#sample').ratchet(function() {
+                    var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
+                    this.get("/", function(el) {
+                        for (var i = 0; i < 10; i++) {
+                            $("<div></div>").html(lorem).appendTo(el);
+                        }
+                        // swap our content in
+                        el.swap();
+                    });
+                }).run("/");
+            });
+            </pre>
+
+
         </div>
     </div>
-</div>
-<h2>Basic Example #3</h2>
-<div id="sample"></div>
-<pre class="prettyprint linenums">
-$(document).ready(function() {
-    $('#sample').ratchet(function() {
-        var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
-        this.get("/", function(el) {
-            for (var i = 0; i < 10; i++) {
-                $("<div></div>").html(lorem).appendTo(el);
-            }
-            // swap our content in
-            el.swap();
-        });
-    }).run("/");
-});
-</pre>
 </body>
 
 </html>

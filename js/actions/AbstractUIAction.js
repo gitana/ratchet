@@ -65,7 +65,7 @@
                 }
 
                 $(this.modalDiv).modal('hide');
-                $(this.modalDiv).on('hidden', function() {
+                $(this.modalDiv).on('hidden.bs.modal', function() {
 
                     this.modalDiv = null;
 

@@ -158,7 +158,7 @@
 
 
                     $(div).modal('show');
-                    $(div).on('shown', function() {
+                    $(div).on('shown.bs.modal', function() {
 
                         /*
                         $(div).css({
@@ -175,18 +175,22 @@
     });
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE = ' \
-        <div class="modal hide fade" style="overflow: visible !important"> \
-            <div class="modal-header"> \
-                <h3>Log in</h3> \
-            </div> \
-            <div class="modal-body"> \
-                <div class="login-header"></div> \
-                <div class="login-body"></div> \
-                <div class="login-footer"></div> \
-            </div> \
-            <div class="modal-footer"> \
-                <a href="javascript:void(0);" class="btn login_button_cancel">Cancel</a> \
-                <a href="javascript:void(0);" class="btn btn-primary login_button_login">Log In</a> \
+        <div class="modal fade" style="overflow: visible !important"> \
+            <div class="modal-dialog"> \
+                <div class="modal-content"> \
+                    <div class="modal-header"> \
+                        <h4>Log In</h4> \
+                    </div> \
+                    <div class="modal-body"> \
+                        <div class="login-header"></div> \
+                        <div class="login-body"></div> \
+                        <div class="login-footer"></div> \
+                    </div> \
+                    <div class="modal-footer"> \
+                        <a href="javascript:void(0);" class="btn btn-default login_button_cancel">Cancel</a> \
+                        <a href="javascript:void(0);" class="btn btn-default btn-primary login_button_login">Log In</a> \
+                    </div> \
+                </div> \
             </div> \
         </div> \
     ';

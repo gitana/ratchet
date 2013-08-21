@@ -21,7 +21,7 @@
 
                     <div class="button-container {{if button.buttons}}dropdown{{/if}}">
 
-                        <button id="list-button-${key}" class="btn list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                        <button id="list-button-${key}" class="btn btn-default list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                             {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                                 ${button.title}&nbsp;
                             {{if button.buttons}}
@@ -60,7 +60,7 @@
 
                     <div class="button-container {{if button.buttons}}dropdown{{/if}}">
 
-                        <button id="list-button-${key}" class="btn list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
+                        <button id="list-button-${key}" class="btn btn-default list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                             {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                                 ${button.title}&nbsp;
                             {{if button.buttons}}
@@ -91,6 +91,7 @@
                     {{/each}}
 
                 </div>
+                <div style="clear:both"></div>
             </div>
             {{/if}}
 

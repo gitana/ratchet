@@ -1,8 +1,8 @@
 <!-- Application Bar -->
 
 <div class="appbar">
-    <div class="row-fluid">
-        <div class="span6">
+    <div class="row">
+        <div class="col-md-6">
             {{if logoLink}}
                 <a href="${logoLink}">
             {{/if}}
@@ -11,14 +11,14 @@
                 </a>
             {{/if}}
         </div>
-        <div class="span6" align="right">
+        <div class="col-md-6" align="right">
 
             <div class="panel">
 
                 <div class="btn-group pull-right">
 
-                    <button class="btn">${userTitle}</button>
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <button class="btn btn-default">${userTitle}</button>
+                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">

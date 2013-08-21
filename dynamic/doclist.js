@@ -340,7 +340,7 @@
                 var MODAL_TEMPLATE = ' \
                     <div> \
                         <div class="dropdown single-document-action-dropdown">\
-                            <button id="' + id + '" class="btn dropdown-toggle" data-toggle="dropdown">';
+                            <button id="' + id + '" class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
 
                     if (item.selector && item.selector.iconClass) {
                         MODAL_TEMPLATE += '<i class="' + item.selector.iconClass + ' icon-black"></i>';

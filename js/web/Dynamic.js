@@ -4,11 +4,16 @@
 
     var MODAL_TEMPLATE = ' \
         <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
-            <div class="modal-header"> \
-                <h3 class="modal-title"></h3> \
+            <div class="modal-dialog"> \
+                <div class="modal-content"> \
+                    <div class="modal-header"> \
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> \
+                        <h4 class="modal-title"></h4> \
+                    </div> \
+                    <div class="modal-body"></div> \
+                    <div class="modal-footer"></div> \
+                </div> \
             </div> \
-            <div class="modal-body"></div> \
-            <div class="modal-footer"></div> \
         </div> \
     ';
 
@@ -74,7 +79,7 @@
 
         if (Ratchet.blockingModal)
         {
-            $(Ratchet.blockingModal).on('hidden', function(config) {
+            $(Ratchet.blockingModal).on('hidden.bs.modal', function(config) {
                 return function() {
                     Ratchet.blockingModal = null;
 
@@ -161,7 +166,7 @@
             $(div).find(".modal-body").attr("gadget", tempGadgetType);
             $(div).find(".modal-body").attr("id", tempGadgetId);
 
-            $(div).find('.modal-footer').append("<button class='btn pull-right complete-button' data-dismiss='modal' aria-hidden='true'>" + options.completeButtonTitle + "</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right complete-button' data-dismiss='modal' aria-hidden='true'>" + options.completeButtonTitle + "</button>");
 
              // ratchet it up
             var parentRatchet = $(div).ratchet(function() {
@@ -278,11 +283,11 @@
         Ratchet.showModal(config, function(div, cb) {
 
             $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
 
             $(div).find('.confirm-button').click(function() {
 
-                $(div).on('hidden', function() {
+                $(div).on('hidden.bs.modal', function() {
                     onConfirm(div);
                 });
                 $(div).modal('hide');
@@ -300,7 +305,7 @@
             "cancel": true
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
 
             cb();
         });
@@ -314,7 +319,7 @@
             "modalClass": "fade"
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
 
             cb();
         });
@@ -372,7 +377,7 @@
         // auto-add cancel button
         if (config.cancel)
         {
-            $(div).find('.modal-footer').append("<button class='btn pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-default pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
         }
 
         if (typeof(config.footer) === "undefined") {
@@ -388,7 +393,7 @@
         setupFunction.call(self, div, function(afterShownCallback) {
 
             if (afterShownCallback) {
-                $(div).on("shown", function() {
+                $(div).on("shown.bs.modal", function() {
                     afterShownCallback();
                 });
             }
@@ -400,7 +405,7 @@
 
             /*
             // vertical center
-            $(div).on("shown", function() {
+            $(div).on("shown.bs.modal", function() {
                 $(div).css({
                     "margin-top": ($(div).outerHeight() / 2)
                 });

@@ -18,6 +18,11 @@
     <!-- samples -->
     <script type="text/javascript" src="../js/example.js"></script>
 
+    <!-- bootstrap -->
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap-theme.css"/>
+
     <!-- START_RATCHET_JAVASCRIPT -->
     <!-- third party -->
     <script type="text/javascript" src="../../thirdparty/base.js"></script>
@@ -62,108 +67,120 @@
 </head>
 
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <a class="brand" href="../../index.html">
-            <span class="logo"></span>
-            Ratchet
-        </a>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 
-        <div class="nav-collapse">
-            <ul class="nav">
-                <li>
-                    <a href="../../index.html">Home</a>
-                </li>
-                <li class="active">
-                    <a href="../index.html">Examples</a>
-                </li>
-                <li>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../index.html">Ratchet</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../index.html">Examples</a></li>
             </ul>
+        </div><!-- /.navbar-collapse -->
+
+    </div>
+    <div class="container">
+        <div class="row">
+
+
+
+
+            <h2>Gadget Example #10</h2>
+            <div gadget="page"></div>
+            <pre class="prettyprint linenums">
+                Component = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id, ratchet);
+                        var val = $(this.ratchet().el).attr('subscription');
+                        this.subscription = val ? val : id;
+                    },
+
+                    setup: function()
+                    {
+                        this.get(this.index);
+                    },
+
+                    refresh: function()
+                    {
+                        this.run("/");
+                    },
+
+                    index: function(el)
+                    {
+
+                        // detect changes to the pairs and redraw when they occur
+                        this.subscribe(this.subscription, this.refresh);
+
+                        var model = el.model;
+
+                        model["component"] = this.observable(this.subscription).get();
+
+                        el.transform("templates/component", function() {
+                            el.swap();
+                        });
+                    }
+                });
+
+                Ratchet.GadgetRegistry.register("component", Component);
+            </pre>
+            <pre class="prettyprint linenums">
+                Page = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id, ratchet);
+                    },
+
+                    setup: function()
+                    {
+                        this.get(this.page);
+                    },
+
+                    page: function(el)
+                    {
+                        this.observable('component').set({
+                            "value" : "Component Value"
+                        });
+
+                        this.observable('component1').set({
+                            "value" : "Component Value 1"
+                        });
+
+                        this.observable('component2').set({
+                            "value" : "Component Value 2"
+                        });
+
+                        el.transform("templates/page", function(el) {
+                            el.swap();
+                        });
+                    }
+                });
+
+                Ratchet.GadgetRegistry.register("page", Page);
+            </pre>
+            <pre class="prettyprint linenums">
+                    $(document).ready(function() {
+
+                        $(document.body).ratchet().run("/");
+
+                    });
+            </pre>
+
+
+
         </div>
     </div>
-</div>
-<h2>Gadget Example #10</h2>
-<div gadget="page"></div>
-<pre class="prettyprint linenums">
-    Component = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id, ratchet);
-            var val = $(this.ratchet().el).attr('subscription');
-            this.subscription = val ? val : id;
-        },
-
-        setup: function()
-        {
-            this.get(this.index);
-        },
-
-        refresh: function()
-        {
-            this.run("/");
-        },
-
-        index: function(el)
-        {
-
-            // detect changes to the pairs and redraw when they occur
-            this.subscribe(this.subscription, this.refresh);
-
-            var model = el.model;
-
-            model["component"] = this.observable(this.subscription).get();
-
-            el.transform("templates/component", function() {
-                el.swap();
-            });
-        }
-    });
-
-    Ratchet.GadgetRegistry.register("component", Component);
-</pre>
-<pre class="prettyprint linenums">
-    Page = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id, ratchet);
-        },
-
-        setup: function()
-        {
-            this.get(this.page);
-        },
-
-        page: function(el)
-        {
-            this.observable('component').set({
-                "value" : "Component Value"
-            });
-
-            this.observable('component1').set({
-                "value" : "Component Value 1"
-            });
-
-            this.observable('component2').set({
-                "value" : "Component Value 2"
-            });
-
-            el.transform("templates/page", function(el) {
-                el.swap();
-            });
-        }
-    });
-
-    Ratchet.GadgetRegistry.register("page", Page);
-</pre>
-<pre class="prettyprint linenums">
-        $(document).ready(function() {
-
-            $(document.body).ratchet().run("/");
-
-        });
-</pre>
 </body>
 
 </html>

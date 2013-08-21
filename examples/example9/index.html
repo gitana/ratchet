@@ -18,6 +18,11 @@
     <!-- samples -->
     <script type="text/javascript" src="../js/example.js"></script>
 
+    <!-- bootstrap -->
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap-theme.css"/>
+
     <!-- START_RATCHET_JAVASCRIPT -->
     <!-- third party -->
     <script type="text/javascript" src="../../thirdparty/base.js"></script>
@@ -65,193 +70,206 @@
 </head>
 
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <a class="brand" href="../../index.html">
-            <span class="logo"></span>
-            Ratchet
-        </a>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
 
-        <div class="nav-collapse">
-            <ul class="nav">
-                <li>
-                    <a href="../../index.html">Home</a>
-                </li>
-                <li class="active">
-                    <a href="../index.html">Examples</a>
-                </li>
-                <li>
-            </ul>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../index.html">Ratchet</a>
         </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../index.html">Examples</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+
     </div>
-</div>
-<h2>Gadget Example #9</h2>
-<a href="#/page1">Page 1</a>
-<br/>
-<a href="#/page2">Page 2</a>
-<br/>
+    <div class="container">
+        <div class="row">
 
-<hr/>
 
-<div gadget="page"></div>
-<pre class="prettyprint linenums">
-    Display1 = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id, ratchet);
-        },
 
-        setup: function()
-        {
-            this.get(this.index);
-        },
 
-        index: function(el)
-        {
-            var _this = this;
+            <h2>Gadget Example #9</h2>
+            <a href="#/page1">Page 1</a>
+            <br/>
+            <a href="#/page2">Page 2</a>
+            <br/>
 
-            // subscribe to observable
-            this.subscribe("value", function() {
+            <hr/>
 
-                //Ratchet.debug("Display 1 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
+            <div gadget="page"></div>
+            <pre class="prettyprint linenums">
+                Display1 = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id, ratchet);
+                    },
 
-                this.run("GET", "/");
-            });
+                    setup: function()
+                    {
+                        this.get(this.index);
+                    },
 
-            el.model["value"] = this.observable("value").get();
+                    index: function(el)
+                    {
+                        var _this = this;
 
-            el.transform("templates/display1", function() {
-                el.swap();
-            });
+                        // subscribe to observable
+                        this.subscribe("value", function() {
 
-        }
-    });
+                            //Ratchet.debug("Display 1 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
 
-    Ratchet.GadgetRegistry.register("display1", Display1);
-</pre>
-<pre class="prettyprint linenums">
-    Display2 = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id, ratchet);
-        },
+                            this.run("GET", "/");
+                        });
 
-        setup: function()
-        {
-            this.get(this.index);
-        },
+                        el.model["value"] = this.observable("value").get();
 
-        index: function(el)
-        {
-            var _this = this;
+                        el.transform("templates/display1", function() {
+                            el.swap();
+                        });
 
-            // subscribe to observable
-            this.subscribe("value", function() {
-
-                //Ratchet.debug("Display 2 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
-
-                this.run("GET", "/");
-            });
-
-            el.model["value"] = this.observable("value").get();
-
-            el.transform("templates/display2", function() {
-                el.swap();
-            });
-
-        }
-    });
-
-    Ratchet.GadgetRegistry.register("display2", Display2);
-</pre>
-<pre class="prettyprint linenums">
-    Form = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id, ratchet);
-        },
-
-        setup: function()
-        {
-            this.get(this.index);
-        },
-
-        index: function(el)
-        {
-            var _this = this;
-
-            el.model["value"] = this.observable("value").get();
-
-            el.transform("templates/form", function(el) {
-
-                el.find("input").keyup(function() {
-                    _this.observable("value").set(this.value);
+                    }
                 });
 
-                el.swap();
-            });
-        }
+                Ratchet.GadgetRegistry.register("display1", Display1);
+            </pre>
+            <pre class="prettyprint linenums">
+                Display2 = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id, ratchet);
+                    },
 
-    });
+                    setup: function()
+                    {
+                        this.get(this.index);
+                    },
 
-    Ratchet.GadgetRegistry.register("form", Form);
-</pre>
-<pre class="prettyprint linenums">
-    Page1 = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id ,ratchet);
-        },
+                    index: function(el)
+                    {
+                        var _this = this;
 
-        setup: function()
-        {
-            this.get("/page1", this.index);
-        },
+                        // subscribe to observable
+                        this.subscribe("value", function() {
 
-        index: function(el)
-        {
-            el.transform("templates/page1", function(el) {
-                el.swap();
-            });
-        }
-    });
+                            //Ratchet.debug("Display 2 updating: " + this.observable("value").get() + ", ratchet: " + $(_this.ratchet().el).attr("ratchet"));
 
-    Ratchet.GadgetRegistry.register("page", Page1);
-</pre>
-<pre class="prettyprint linenums">
-    Page2 = Ratchet.Gadget.extend(
-    {
-        constructor: function(id, ratchet)
-        {
-            this.base(id ,ratchet);
-        },
+                            this.run("GET", "/");
+                        });
 
-        setup: function()
-        {
-            this.get("/page2", this.index);
-        },
+                        el.model["value"] = this.observable("value").get();
 
-        index: function(el)
-        {
-            el.transform("templates/page2", function(el) {
-                el.swap();
-            });
-        }
-    });
+                        el.transform("templates/display2", function() {
+                            el.swap();
+                        });
 
-    Ratchet.GadgetRegistry.register("page", Page2);
-</pre>
-<pre class="prettyprint linenums">
-        $(document).ready(function() {
+                    }
+                });
 
-            $(document.body).ratchet().run("/");
+                Ratchet.GadgetRegistry.register("display2", Display2);
+            </pre>
+            <pre class="prettyprint linenums">
+                Form = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id, ratchet);
+                    },
 
-        });
-</pre>
+                    setup: function()
+                    {
+                        this.get(this.index);
+                    },
+
+                    index: function(el)
+                    {
+                        var _this = this;
+
+                        el.model["value"] = this.observable("value").get();
+
+                        el.transform("templates/form", function(el) {
+
+                            el.find("input").keyup(function() {
+                                _this.observable("value").set(this.value);
+                            });
+
+                            el.swap();
+                        });
+                    }
+
+                });
+
+                Ratchet.GadgetRegistry.register("form", Form);
+            </pre>
+            <pre class="prettyprint linenums">
+                Page1 = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id ,ratchet);
+                    },
+
+                    setup: function()
+                    {
+                        this.get("/page1", this.index);
+                    },
+
+                    index: function(el)
+                    {
+                        el.transform("templates/page1", function(el) {
+                            el.swap();
+                        });
+                    }
+                });
+
+                Ratchet.GadgetRegistry.register("page", Page1);
+            </pre>
+            <pre class="prettyprint linenums">
+                Page2 = Ratchet.Gadget.extend(
+                {
+                    constructor: function(id, ratchet)
+                    {
+                        this.base(id ,ratchet);
+                    },
+
+                    setup: function()
+                    {
+                        this.get("/page2", this.index);
+                    },
+
+                    index: function(el)
+                    {
+                        el.transform("templates/page2", function(el) {
+                            el.swap();
+                        });
+                    }
+                });
+
+                Ratchet.GadgetRegistry.register("page", Page2);
+            </pre>
+            <pre class="prettyprint linenums">
+                    $(document).ready(function() {
+
+                        $(document.body).ratchet().run("/");
+
+                    });
+            </pre>
+
+
+
+
+        </div>
+    </div>
 </body>
 
 </html>

@@ -188,7 +188,7 @@
                     </div> \
                     <div class="modal-footer"> \
                         <a href="javascript:void(0);" class="btn btn-default login_button_cancel">Cancel</a> \
-                        <a href="javascript:void(0);" class="btn btn-default btn-primary login_button_login">Log In</a> \
+                        <a href="javascript:void(0);" class="btn btn-primary login_button_login">Log In</a> \
                     </div> \
                 </div> \
             </div> \

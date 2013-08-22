@@ -1,0 +1,5 @@
+.nav-stacked LI.active
+{
+    background-color: #eeeeee;
+    border-color: #428bca;
+}

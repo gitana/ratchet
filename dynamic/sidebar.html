@@ -1,20 +1,31 @@
-<div class="well sidebar-nav {{if cssClasses}}${cssClasses}{{/if}}">
+{{if chrome}}
+<div>
+    <div class="chrome chrome-header">
+        <div class="chrome-title">${chrome.title}</div>
+    </div>
+    <div class="chrome chrome-body">
+        {{/if}}
+
+
+
+
+<div class="sidebar-nav {{if cssClasses}}${cssClasses}{{/if}}">
 
     {{if items.length > 0}}
-    <ul class="nav nav-list">
+    <ul class="nav nav-list nav-stacked">
         {{each(i, item) items}}
         {{if !item.hidden}}
             {{if item.header}}
             <li class="nav-header">${item.title}</li>
             {{else}}
-            <li {{if item.current}}class="active"{{/if}}>
+            <li class="${item.classes}">
             <a href="javascript:void(0);" class="{{if item.items}}nav-sub-items {{/if}}sidebar-item-${i}">
                 ${item.title}
             </a>
             {{if item.items}}
-            <ul class="nav nav-list sub-nav" {{if !item.current}}style="display:none;"{{/if}}>
+            <ul class="nav nav-list sub-nav nav-stacked" {{if !item.current}}style="display:none;"{{/if}}>
                 {{each(j, subItem) item.items}}
-                <li {{if subItem.current}}class="active"{{/if}}>
+                <li class="${subItem.classes}">
                 <a href="javascript:void(0);" class="sidebar-item-${i}-sub-${j}">
                     &nbsp;
                     ${subItem.title}
@@ -32,4 +43,11 @@
         There are no items configured.
     {{/if}}
 
-</div><!--/.well -->
+</div>
+
+
+
+{{if chrome}}
+    </div>
+</div>
+{{/if}}

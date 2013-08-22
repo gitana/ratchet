@@ -7,3 +7,8 @@
 {
     padding-left: 20px;
 }
+
+.filterbar-wrapper label
+{
+    font-weight: normal;
+}

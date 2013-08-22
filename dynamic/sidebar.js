@@ -27,6 +27,8 @@
 		
 	    prepareModel: function(el, model, callback)
 	    {
+            var self = this;
+
             this.base(el, model, function() {
 
                 if (!model.items)
@@ -34,10 +36,48 @@
                     model.items = [];
                 }
 
+                self.doPrepareModel(el, model);
+
                 callback();
 
             });
 	    },
+
+        doPrepareModel: function(el, model)
+        {
+            var self = this;
+
+            // walk all items and mark the current on
+            var pageUris = self.observable("page").get()["uri"];
+            if (typeof(pageUris) === "string")
+            {
+                pageUris = [pageUris];
+            }
+            var maxLen = -1;
+            var maxItem = null;
+            for (var a = 0; a < pageUris.length; a++)
+            {
+                var pageUri = pageUris[a]; // does not have hash
+
+                for (var i = 0; i < model.items.length; i++)
+                {
+                    var item = model.items[i];
+                    var uri = item.uri || item.link;
+                    if (uri.indexOf("#") === 0) {
+                        uri = uri.substring(1);
+                    }
+                    if (pageUri.indexOf(uri) === 0 && uri.length > maxLen)
+                    {
+                        maxLen = uri.length;
+                        maxItem = item;
+                    }
+                }
+            }
+            if (maxItem)
+            {
+                maxItem.classes = "active";
+            }
+        },
 
 	    afterSwap: function(el, model, originalContext, callback)
 	    {

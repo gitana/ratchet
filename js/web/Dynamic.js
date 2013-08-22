@@ -264,7 +264,7 @@
     Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm, config)
     {
         if (!confirmButtonClass) {
-            confirmButtonClass = "";
+            confirmButtonClass = "btn-default";
         }
 
         if (!config) {
@@ -283,7 +283,7 @@
         Ratchet.showModal(config, function(div, cb) {
 
             $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
+            $(div).find('.modal-footer').append("<button class='btn pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
 
             $(div).find('.confirm-button').click(function() {
 

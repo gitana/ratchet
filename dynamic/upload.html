@@ -9,14 +9,14 @@
                 <div class="col-md-4">
 
                     <!-- The fileinput-button span is used to style the file input field as button -->
-                    <span class="btn btn-default btn-success fileinput-button">
+                    <span class="btn btn-success fileinput-button">
                         <i class="icon-plus icon-white"></i>
                         <span>Add files...</span>
                         <input type="file" name="files[]" multiple>
                     </span>
 
                     {{if showSubmitButton}}
-                    <button type="submit" class="btn btn-default btn-primary start">
+                    <button type="submit" class="btn btn-primary start">
                         <i class="icon-upload icon-white"></i>
                         <span>Start upload</span>
                     </button>
@@ -27,7 +27,7 @@
 
                     <!-- The global progress bar -->
                     <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                        <div class="bar" style="width:0%;"></div>
+                        <div class="progress-bar" role="progressbar" style="width:0%;"></div>
                     </div>
                     <!-- The extended global progress information -->
                     <div class="progress-extended">&nbsp;</div>
@@ -97,10 +97,10 @@
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
             {% } else if (o.files.valid && !i) { %}
             <td>
-                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar" style="width:0%;"></div></div>
             </td>
             <td class="start">{% if (!o.options.autoUpload) { %}
-                <button class="btn btn-default btn-primary">
+                <button class="btn btn-primary">
                     <i class="icon-upload icon-white"></i>
                     <span>Start</span>
                 </button>
@@ -109,7 +109,7 @@
             <td colspan="2"></td>
             {% } %}
             <td class="cancel">{% if (!i) { %}
-                <button class="btn btn-default btn-warning">
+                <button class="btn btn-warning">
                     <i class="icon-ban-circle icon-white"></i>
                     <span>Cancel</span>
                 </button>
@@ -137,7 +137,7 @@
             <td colspan="2"></td>
             {% } %}
             <td class="delete">
-                <button class="btn btn-default btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                 <i class="icon-trash icon-white"></i>
                 <span>Delete</span>
                 </button>

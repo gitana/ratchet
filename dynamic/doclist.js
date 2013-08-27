@@ -102,50 +102,79 @@
         {
             // call this first
             this.base();
+        },
 
+        /**
+         * Extension point for letting configuration service load model configuration for doclist.
+         *
+         * @param model
+         */
+        applyDynamicConfiguration: function(model)
+        {
+        },
+
+        /**
+         * Auto-configures additional model state based on current model properties.
+         *
+         * @param model
+         */
+        autoDynamicConfiguration: function(model)
+        {
             // sort-selector-group
-            if (this.config()["selectorGroups"]["sort-selector-group"]["fields"].length > 0)
-            {
-                this.config({
-                    "buttons": [{
-                        "key": "sort-direction-selector",
-                        "align": "right"
-                    },{
-                        "key": "sort-selector",
-                        "title": "Sort...",
-                        "align": "right",
-                        //"iconClass": "icon-pencil",
-                        "buttons": []
-                    }]
-                });
+            if (model["selectorGroups"]) {
+                if (model["selectorGroups"]["sort-selector-group"]) {
+                    if (model["selectorGroups"]["sort-selector-group"]["fields"]) {
+                        if (model["selectorGroups"]["sort-selector-group"]["fields"].length > 0) {
+                            model.buttons.push({
+                                    "key": "sort-direction-selector",
+                                    "align": "right"
+                                },{
+                                    "key": "sort-selector",
+                                    "title": "Sort...",
+                                    "align": "right",
+                                    //"iconClass": "icon-pencil",
+                                    "buttons": []
+                            });
+                        }
+                    }
+                }
             }
 
             // multi-documents-action-selector-group
-            if (this.config()["selectorGroups"]["multi-documents-action-selector-group"]["actions"].length > 0)
-            {
-                this.config({
-                    "buttons": [{
-                        "key": "multi-documents-action-selector",
-                        "title": "Selected...",
-                        "align": "right"//,
-                        //"iconClass": "icon-pencil"
-                    }]
-                });
+            if (model["selectorGroups"]) {
+                if (model["selectorGroups"]["multi-documents-action-selector-group"]) {
+                    if (model["selectorGroups"]["multi-documents-action-selector-group"]["actions"]) {
+                        if (model["selectorGroups"]["multi-documents-action-selector-group"]["actions"].length > 0) {
+                            model.buttons.push({
+                                "key": "multi-documents-action-selector",
+                                "title": "Selected...",
+                                "align": "right"//,
+                                //"iconClass": "icon-pencil"
+                            });
+                        }
+                    }
+                }
             }
 
             // add a column to the table for ACTIONS if configured
-            if (this.config()["selectorGroups"]["single-document-action-selector-group"]["actions"].length > 0)
-            {
-                this.config({
-                    "columns": [{
-                        "key": "actions",
-                        "title": "Actions",
-                        "selector": {
-                            "title": "Actions..."
+            if (model["selectorGroups"]) {
+                if (model["selectorGroups"]["single-document-action-selector-group"]) {
+                    if (model["selectorGroups"]["single-document-action-selector-group"]["actions"]) {
+                        if (model["selectorGroups"]["single-document-action-selector-group"]["actions"].length > 0) {
+                            model.buttons.push({
+                                "columns": [{
+                                    "key": "actions",
+                                    "title": "Actions",
+                                    "selector": {
+                                        "title": "Actions..."
+                                    }
+                                }]
+                            });
                         }
-                    }]
-                });
+                    }
+                }
             }
+
         },
 
         /**
@@ -156,6 +185,10 @@
             var self = this;
 
             this.base(el, model, function() {
+
+                self.applyDynamicConfiguration(model);
+
+                self.autoDynamicConfiguration(model);
 
                 // if there is a ""sort-selector" button (dropdown)
                 var sortButton = self._findButton(model, "sort-selector");
@@ -168,7 +201,7 @@
 
 
                     // load actions from the "sort-selector" dropdown configuration
-                    var selectorGroup = self.config()["selectorGroups"]["sort-selector-group"];
+                    var selectorGroup = model["selectorGroups"]["sort-selector-group"];
                     $.each(selectorGroup.fields, function(index, selectorGroupItem) {
 
                         var key = selectorGroupItem.key;
@@ -202,7 +235,7 @@
                     Ratchet.clearArray(selectButton.buttons);
 
                     // load actions from the "multi-documents-action-selector" dropdown configuration
-                    var selectorGroup = self.config()["selectorGroups"]["multi-documents-action-selector-group"];
+                    var selectorGroup = model["selectorGroups"]["multi-documents-action-selector-group"];
                     $.each(selectorGroup.actions, function(index, selectorGroupItem) {
 
                         var actionId = selectorGroupItem.action;
@@ -272,7 +305,7 @@
 
                 $(el).find(".list-button-multi-documents-action-selector").addClass("disabled");
 
-                self.formatSortDirectionSelector(el);
+                self.formatSortDirectionSelector(model, el);
 
                 callback();
             });
@@ -284,14 +317,14 @@
 
             if (button.selectorGroup === "sort-selector-group")
             {
-                self.sort(button.field);
+                self.sort(model, button.field);
             }
             else if (button.key === "sort-direction-selector")
             {
-                var sortDirection = self.sortDirection() * -1;
-                self.sortDirection(sortDirection);
+                var sortDirection = self.sortDirection(model) * -1;
+                self.sortDirection(model, sortDirection);
 
-                self.formatSortDirectionSelector();
+                self.formatSortDirectionSelector(model);
             }
             else if (button.action)
             {
@@ -302,7 +335,7 @@
 
                 if (button.selectorGroup === "multi-documents-action-selector-group")
                 {
-                    actionContext.data = self.selectedItems();
+                    actionContext.data = self.selectedItems(model);
                 }
 
                 return this._clickAction(button.action, actionContext, function(err) {
@@ -322,7 +355,7 @@
         {
         },
 
-        columnValue: function(row, item)
+        columnValue: function(row, item, model, context)
         {
             var self = this;
 
@@ -358,7 +391,7 @@
                 var template = $(MODAL_TEMPLATE);
 
                 // load actions from the "single-document-action-selector-group" configuration
-                var selectorGroup = this.config()["selectorGroups"]["single-document-action-selector-group"];
+                var selectorGroup = model["selectorGroups"]["single-document-action-selector-group"];
                 $.each(selectorGroup.actions, function(index, selectorGroupItem) {
 
                     var actionId = selectorGroupItem.action;
@@ -457,7 +490,7 @@
             }
         },
 
-        formatSortDirectionSelector: function(el)
+        formatSortDirectionSelector: function(model, el)
         {
             var self = this;
 
@@ -468,7 +501,7 @@
             }
 
             // set up sort selector
-            var sortDirection = self.sortDirection();
+            var sortDirection = self.sortDirection(model);
             if (sortDirection == -1)
             {
                 $(selector).html("<div class='sort-descending'></div>");
@@ -479,11 +512,11 @@
             }
         },
 
-        changeSelectedItems: function() {
+        changeSelectedItems: function(model) {
 
             this.base();
 
-            var selectedItems = this.selectedItems();
+            var selectedItems = this.selectedItems(model);
 
             // either enable or disable the selected... buttons
             $(".list-button-multi-documents-action-selector").addClass("disabled");

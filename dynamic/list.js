@@ -106,9 +106,9 @@
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        selectedItems: function(array) {
+        selectedItems: function(model, array) {
 
-            var observable = this.observable(this.config().observables.selectedItems);
+            var observable = this.observable(model.observables.selectedItems);
             if (array) {
                 observable.set(array);
             }
@@ -121,9 +121,9 @@
             return selectedItems;
         },
 
-        clearSelectedItems: function() {
+        clearSelectedItems: function(model) {
 
-            var observable = this.observable(this.config().observables.selectedItems);
+            var observable = this.observable(model.observables.selectedItems);
             observable.clear();
 
         },
@@ -133,9 +133,9 @@
          *
          * @param sortDirection
          */
-        sortDirection: function(sortDirection)
+        sortDirection: function(model, sortDirection)
         {
-            var observable = this.observable(this.config().observables.sortDirection);
+            var observable = this.observable(model.observables.sortDirection);
             if (!Ratchet.isUndefined(sortDirection))
             {
                 observable.set(sortDirection);
@@ -156,9 +156,9 @@
          * @param sortField
          * @return {*}
          */
-        sort: function(sortField)
+        sort: function(model, sortField)
         {
-            var observable = this.observable(this.config().observables.sort);
+            var observable = this.observable(model.observables.sort);
             if (!Ratchet.isUndefined(sortField))
             {
                 observable.set(sortField);
@@ -182,6 +182,8 @@
 
         prepareModel: function(el, model, callback)
         {
+            var self = this;
+
             this.base(el, model, function() {
 
                 if (!model.items)
@@ -209,11 +211,11 @@
             self.subscribe(model.observables.sortDirection, refreshHandler);
 
             // clear selected items
-            self.clearSelectedItems();
+            self.clearSelectedItems(model);
 
             // when the selected items change
             self.subscribe(model.observables.selectedItems, function() {
-                self.handleChangeSelectedItems();
+                self.handleChangeSelectedItems(model);
             });
 
             callback();
@@ -544,11 +546,11 @@
                 }
 
                 // apply sort from observable?
-                var sortField = self.sort();
+                var sortField = self.sort(model);
                 if (sortField)
                 {
                     pagination["sort"] = {};
-                    pagination["sort"][sortField] = self.sortDirection();
+                    pagination["sort"][sortField] = self.sortDirection(model);
                 }
 
 
@@ -636,7 +638,7 @@
                             $(this).prop("checked", true);
                         }
                     });
-                    self.clearSelectedItems();
+                    self.clearSelectedItems(model);
 
                     var items = [];
                     $(el).find("input:checkbox[list-target-object-id]").each(function() {
@@ -655,7 +657,7 @@
                         }
                         items.push(item);
                     });
-                    self.selectedItems(items);
+                    self.selectedItems(model, items);
                 } else {
 
                     $(el).find(".list-check-box").each(function() {
@@ -663,7 +665,7 @@
                             $(this).prop("checked", false);
                         }
                     });
-                    self.clearSelectedItems();
+                    self.clearSelectedItems(model);
                 }
             });
 
@@ -947,7 +949,7 @@
                     }
 
                     // add or remove ourselves
-                    var currentSelectedItems = self.selectedItems();
+                    var currentSelectedItems = self.selectedItems(model);
                     if ($(this).prop("checked"))
                     {
                         currentSelectedItems.push(item);
@@ -965,7 +967,7 @@
                     }
 
                     // set the selected items
-                    self.selectedItems(currentSelectedItems);
+                    self.selectedItems(model, currentSelectedItems);
                 };
             }(el, model, table, nRow, aData, iDisplayIndex));
 
@@ -995,7 +997,7 @@
                     }
 
                     // set the selected items
-                    self.selectedItems(currentSelectedItems);
+                    self.selectedItems(model, currentSelectedItems);
                 };
             }(el, model, table, nRow, aData, iDisplayIndex));
 
@@ -1064,9 +1066,9 @@
             this.clickButtonBarButton(event, model, button);
         },
 
-        handleChangeSelectedItems: function()
+        handleChangeSelectedItems: function(model)
         {
-            this.changeSelectedItems();
+            this.changeSelectedItems(model);
         },
 
         handleConfigureColumn: function(column, config)
@@ -1163,7 +1165,7 @@
         /**
          * EXTENSION POINT
          */
-        changeSelectedItems: function()
+        changeSelectedItems: function(model)
         {
 
         },

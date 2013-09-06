@@ -268,10 +268,12 @@
                                                 // otherwise, it is dot-delimitted, which means we'll pick observable
                                                 // and then walk it if we can
                                                 var parts = token.split(".");
-                                                var observed = self.observable(parts[0]).get();
+                                                var first = parts.shift();
+                                                var observed = self.observable(first).get();
                                                 if (observed)
                                                 {
-                                                    replacement = Ratchet.resolveDotNotation(observed, token);
+                                                    var remainderDotNotation = parts.join(".");
+                                                    replacement = Ratchet.resolveDotNotation(observed, remainderDotNotation);
                                                 }
                                             }
 

@@ -338,6 +338,14 @@
                     actionContext.data = self.selectedItems(model);
                 }
 
+                // reference to the current gadget
+                actionContext.gadget = self;
+
+                // useful methods
+                actionContext.observable = self.observable;
+                actionContext.trigger = self.trigger;
+                actionContext.on = self.on;
+
                 return this._clickAction(button.action, actionContext, function(err) {
                     self.afterActionComplete(button.action, actionContext, err);
                 });
@@ -514,7 +522,7 @@
 
         changeSelectedItems: function(model) {
 
-            this.base();
+            this.base(model);
 
             var selectedItems = this.selectedItems(model);
 

@@ -209,6 +209,69 @@
 
         substituteModelVariables: function(el, model, callback)
         {
+            this.substituteVariables(el, model, model, function() {
+                if (callback) {
+                    callback();
+                }
+            });
+        },
+
+        substituteVariables: function(el, model, obj, callback)
+        {
+            var self = this;
+
+            var replacementFunction = function(token)
+            {
+                var replacement = "";
+                if (token.indexOf(".") == -1)
+                {
+                    // not dot-delimited
+
+                    replacement = model[token];
+                    if (!replacement)
+                    {
+                        replacement = self.observable(token).get();
+                    }
+                    if (!replacement && el && el.tokens)
+                    {
+                        replacement = el.tokens[token];
+                    }
+                }
+                else
+                {
+                    // otherwise, it is dot-delimited...
+                    var parts = token.split(".");
+                    var first = parts.shift();
+
+                    var initial = model[first];
+                    if (!initial)
+                    {
+                        initial = self.observable(first).get();
+                    }
+                    if (!initial && el && el.tokens)
+                    {
+                        initial = el.tokens[first];
+                    }
+                    if (initial)
+                    {
+                        var remainderDotNotation = parts.join(".");
+
+                        replacement = Ratchet.resolveDotNotation(initial, remainderDotNotation);
+                    }
+                }
+
+                return replacement;
+            };
+
+            self.substitute(obj, replacementFunction, function() {
+                if (callback) {
+                    callback();
+                }
+            });
+        },
+
+        substitute: function(obj, replacementFunction, callback)
+        {
             var self = this;
 
             // walk all variables in the model and see if we can perform ${} substitutions
@@ -241,42 +304,32 @@
                             {
                                 var text = objOrArray[k];
 
+                                var CARS = ["${", "{"];
+
                                 // substitute any tokens
                                 var x = -1;
                                 do
                                 {
-                                    x = text.indexOf("${");
+                                    var car = null;
+                                    for (var a = 0; a < CARS.length; a++)
+                                    {
+                                        car = CARS[a];
+
+                                        x = text.indexOf(car);
+                                        if (x > -1)
+                                        {
+                                            break;
+                                        }
+                                    }
+
                                     if (x > -1)
                                     {
                                         var y = text.indexOf("}", x);
                                         if (y > -1)
                                         {
-                                            var token = text.substring(x+2, y);
+                                            var token = text.substring(x + car.length, y);
 
-                                            var replacement = null;
-                                            if (token.indexOf(".") == -1)
-                                            {
-                                                // not dot-delimitted, so pick form tokens
-                                                replacement = el.tokens[token];
-                                                // if nothing found, then pick from observables
-                                                if (!replacement) {
-                                                    replacement = self.observable(token).get();
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // otherwise, it is dot-delimitted, which means we'll pick observable
-                                                // and then walk it if we can
-                                                var parts = token.split(".");
-                                                var first = parts.shift();
-                                                var observed = self.observable(first).get();
-                                                if (observed)
-                                                {
-                                                    var remainderDotNotation = parts.join(".");
-                                                    replacement = Ratchet.resolveDotNotation(observed, remainderDotNotation);
-                                                }
-                                            }
-
+                                            var replacement = replacementFunction(token);
                                             if (!replacement) {
                                                 replacement = "";
                                             }
@@ -297,9 +350,11 @@
                 }
             };
 
-            subst(model, 0);
+            subst(obj, 0);
 
-            callback();
+            if (callback) {
+                callback();
+            }
         },
 
         render: function(el, model, callback)

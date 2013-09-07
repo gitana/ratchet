@@ -345,6 +345,13 @@
                 actionContext.observable = self.observable;
                 actionContext.trigger = self.trigger;
                 actionContext.on = self.on;
+                actionContext.substituteVariables = function(obj, callback) {
+                    self.substituteVariables(null, model, obj, function() {
+                        if (callback) {
+                            callback();
+                        }
+                    });
+                };
 
                 return this._clickAction(button.action, actionContext, function(err) {
                     self.afterActionComplete(button.action, actionContext, err);

@@ -1,0 +1,30 @@
+<div>
+    <div class="dashlet dashlet-header">
+        <div class="dashlet-title">${title}</div>
+    </div>
+    <div class="dashlet dashlet-body">
+
+        <div class="selectbar-wrapper">
+
+            {{if items.length == 0}}
+            No items are configured.
+            {{/if}}
+
+            {{if items.length > 0}}
+            <ul class="nav nav-list nav-pills nav-stacked">
+                {{each(i, item) items}}
+
+                <li {{if item.selected}}class="active"{{/if}}>
+                <a href="javascript:void(0);" data-selectbar-item-key="${item.key}">
+                    ${item.title}
+                </a>
+                </li>
+
+                {{/each}}
+            </ul>
+            {{/if}}
+
+        </div>
+
+    </div>
+</div>

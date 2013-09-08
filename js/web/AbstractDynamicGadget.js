@@ -222,7 +222,7 @@
 
             var replacementFunction = function(token)
             {
-                var replacement = "";
+                var replacement = null;
                 if (token.indexOf(".") == -1)
                 {
                     // not dot-delimited
@@ -308,6 +308,7 @@
 
                                 // substitute any tokens
                                 var x = -1;
+                                var b = 0;
                                 do
                                 {
                                     var car = null;
@@ -315,7 +316,7 @@
                                     {
                                         car = CARS[a];
 
-                                        x = text.indexOf(car);
+                                        x = text.indexOf(car, b);
                                         if (x > -1)
                                         {
                                             break;
@@ -330,12 +331,13 @@
                                             var token = text.substring(x + car.length, y);
 
                                             var replacement = replacementFunction(token);
-                                            if (!replacement) {
-                                                replacement = "";
+                                            if (replacement)
+                                            {
+                                                text = text.substring(0, x) + replacement + text.substring(y+1);
+                                                objOrArray[k] = text;
                                             }
 
-                                            text = text.substring(0, x) + replacement + text.substring(y+1);
-                                            objOrArray[k] = text;
+                                            b = y + 1;
                                         }
                                     }
                                 }

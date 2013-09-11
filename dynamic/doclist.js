@@ -352,6 +352,7 @@
                         }
                     });
                 };
+                actionContext.button = button;
 
                 return this._clickAction(button.action, actionContext, function(err) {
                     self.afterActionComplete(button.action, actionContext, err);

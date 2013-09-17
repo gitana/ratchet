@@ -396,6 +396,15 @@
 
         beforeSwap: function(el, model, callback)
         {
+            var self = this;
+
+            // set up observables
+            var refreshHandler = self.refreshHandler(el);
+
+            // refresh handler
+            model.observables.refresh = "refresh_" + self.getGadgetType() + "_" + self.getGadgetId();// + new Date().getTime();
+            self.on(model.observables.refresh, refreshHandler);
+
             if (callback)
             {
                 callback();
@@ -407,6 +416,17 @@
             if (callback)
             {
                 callback();
+            }
+        },
+
+        refresh: function(model) {
+
+            // forces refresh by clearing selected items
+            var self = this;
+
+            if (model && model.observables && model.observables.refresh)
+            {
+                self.trigger(model.observables.refresh);
             }
         }
 

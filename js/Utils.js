@@ -1004,6 +1004,63 @@
         return newObj;
     };
 
+    Ratchet.writeDotNotation = function(obj, string, value)
+    {
+        var n = obj;
+
+        var parts = string.split(".");
+        if (parts.length == 0)
+        {
+        }
+        else if (parts.length == 1)
+        {
+            obj[string] = value;
+        }
+        else if (parts.length > 1)
+        {
+            for (var i = 0; i < parts.length - 1; i++)
+            {
+                if (!n[parts[i]])
+                {
+                    n[parts[i]] = {};
+                }
+                n = n[parts[i]];
+            }
+            n[parts[parts.length-1]] = value;
+        }
+    };
+
+    Ratchet.removeDotNotation = function(obj, string)
+    {
+        var n = obj;
+
+        var parts = string.split(".");
+        if (parts.length == 0)
+        {
+        }
+        else if (parts.length == 1)
+        {
+            delete obj[string];
+        }
+        else if (parts.length > 1)
+        {
+            for (var i = 0; i < parts.length - 1; i++)
+            {
+                if (!n[parts[i]])
+                {
+                    break;
+                }
+
+                n = n[parts[i]];
+            }
+
+            if (i == parts.length - 1)
+            {
+                delete n[parts[parts.length-1]];
+            }
+        }
+    };
+
     /**
      * Counts the number of properties in an object.
      *

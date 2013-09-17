@@ -125,7 +125,6 @@
 
             var observable = this.observable(model.observables.selectedItems);
             observable.clear();
-
         },
 
         /**
@@ -200,25 +199,45 @@
         {
             var self = this;
 
-            // set up observables
-            var refreshHandler = self.refreshHandler(el);
+            this.base(el, model, function() {
 
-            // when the "query" observable changes, update the list
-            self.subscribe(model.observables.query, refreshHandler);
-            // when the "sort" observable changes, update the list
-            self.subscribe(model.observables.sort, refreshHandler);
-            // when the "sort direction" observable changes, update the list
-            self.subscribe(model.observables.sortDirection, refreshHandler);
+                // set up observables
+                var refreshHandler = self.refreshHandler(el);
 
-            // clear selected items
-            self.clearSelectedItems(model);
+                // when the "query" observable changes, update the list
+                self.subscribe(model.observables.query, refreshHandler);
+                // when the "sort" observable changes, update the list
+                self.subscribe(model.observables.sort, refreshHandler);
+                // when the "sort direction" observable changes, update the list
+                self.subscribe(model.observables.sortDirection, refreshHandler);
 
-            // when the selected items change
-            self.subscribe(model.observables.selectedItems, function() {
-                self.handleChangeSelectedItems(model);
+                // clear selected items
+                self.clearSelectedItems(model);
+
+                // when the selected items change
+                self.subscribe(model.observables.selectedItems, function() {
+                    self.handleChangeSelectedItems(model);
+                });
+
+                callback();
+
             });
+        },
 
-            callback();
+        tableConfig: function()
+        {
+            return {
+                "bSort": true,
+                //"bAutoWidth": false,
+                "oLanguage": {
+                    "sLengthMenu": "Display _MENU_ records per page",
+                    "sZeroRecords": "No items were found",
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+                    "sInfoEmpty": "Showing 0 to 0 of 0 records",
+                    "sInfoFiltered": "(filtered from _MAX_ total records)",
+                    "sSearch": "Filter:"
+                }
+            };
         },
 
         afterSwap: function(el, model, context, callback)
@@ -232,18 +251,7 @@
             //////////////////////////////////////////////////////////////////////////////
 
             // default table config
-            var tableConfig = {
-                "bSort": true,
-                //"bAutoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ records per page",
-                    "sZeroRecords": "Nothing found - sorry",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-                    "sInfoEmpty": "Showing 0 to 0 of 0 records",
-                    "sInfoFiltered": "(filtered from _MAX_ total records)",
-                    "sSearch": "Filter:"
-                }
-            };
+            var tableConfig = self.tableConfig();
 
             if (model.options && model.options.filter) {
                 tableConfig.bFilter = true;

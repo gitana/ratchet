@@ -174,7 +174,18 @@
                     }
                 }
             }
+        },
 
+        tableConfig: function()
+        {
+            var tableConfig = this.base();
+
+            tableConfig.oLanguage.sLengthMenu = "Display _MENU_ documents per page";
+            tableConfig.oLanguage.sInfo = "Showing _START_ to _END_ of _TOTAL_ documents";
+            tableConfig.oLanguage.sInfoEmpty = "Showing 0 to 0 of 0 documents";
+            tableConfig.oLanguage.sInfoFiltered = "(filtered from _MAX_ total documents)";
+
+            return tableConfig;
         },
 
         /**
@@ -280,9 +291,6 @@
             });
         },
 
-        /**
-         * @override
-         */
         beforeSwap: function(el, model, callback)
         {
             var self = this;
@@ -290,8 +298,8 @@
             this.base(el, model, function() {
 
                 callback();
-            });
 
+            });
         },
 
         /**
@@ -329,35 +337,51 @@
             else if (button.action)
             {
                 // fire the action
-                var actionContext = {};
-                actionContext.model = model;
-                actionContext.ratchet = self.ratchet();
-
-                if (button.selectorGroup === "multi-documents-action-selector-group")
-                {
-                    actionContext.data = self.selectedItems(model);
-                }
-
-                // reference to the current gadget
-                actionContext.gadget = self;
-
-                // useful methods
-                actionContext.observable = self.observable;
-                actionContext.trigger = self.trigger;
-                actionContext.on = self.on;
-                actionContext.substituteVariables = function(obj, callback) {
-                    self.substituteVariables(null, model, obj, function() {
-                        if (callback) {
-                            callback();
-                        }
-                    });
-                };
-                actionContext.button = button;
+                var actionContext = self.buildActionContext(model, button);
 
                 return this._clickAction(button.action, actionContext, function(err) {
                     self.afterActionComplete(button.action, actionContext, err);
                 });
             }
+        },
+
+        buildActionContext: function(model, button)
+        {
+            var self = this;
+
+            var actionContext = {};
+            actionContext.model = model;
+            actionContext.ratchet = self.ratchet();
+
+            if (button.selectorGroup === "multi-documents-action-selector-group")
+            {
+                actionContext.data = self.selectedItems(model);
+            }
+
+            // reference to the current gadget
+            actionContext.gadget = self;
+
+            // useful methods
+            actionContext.observable = self.observable;
+            actionContext.trigger = self.trigger;
+            actionContext.on = self.on;
+            actionContext.substituteVariables = function(obj, callback) {
+                self.substituteVariables(null, model, obj, function() {
+                    if (callback) {
+                        callback();
+                    }
+                });
+            };
+            actionContext.button = button;
+
+            self.customizeActionContext(actionContext, model, button);
+
+            return actionContext;
+        },
+
+        customizeActionContext: function(actionContext, model, button)
+        {
+
         },
 
         /**

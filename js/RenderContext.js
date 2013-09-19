@@ -192,7 +192,7 @@
                             postSwap(function() {
                                 if (callback)
                                 {
-                                    callback.call(self);
+                                    callback.call(self, $(self.ratchet().el));
                                 }
                             });
                             return;
@@ -256,7 +256,7 @@
 
                             if (callback)
                             {
-                                callback.call(self);
+                                callback.call(self, $(self.ratchet().el));
                             }
                         });
 
@@ -276,7 +276,7 @@
                     postSwap(function() {
                         if (callback)
                         {
-                            callback.call(self);
+                            callback.call(self, $(self.ratchet().el));
                         }
                     });
                 });

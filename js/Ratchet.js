@@ -574,7 +574,8 @@
                 var count = 0;
                 $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
 
-                    Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + ")");
+                    Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + "), gadget type: " + $(childRatchet.el).attr("gadget"));
+                    //console.log("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + "), gadget type: " + $(childRatchet.el).attr("gadget"));
 
                     var subParams = params[childRatchetId];
 
@@ -583,6 +584,8 @@
                         // call back completion
 
                         count++;
+                        Ratchet.logDebug("Heard complete: " + count + " of: " + _this.childRatchetCount() + ", gadget type: " + $(childRatchet.el).attr("gadget"));
+                        //console.log("Heard complete: " + count + " of: " + _this.childRatchetCount() + ", gadget type: " + $(childRatchet.el).attr("gadget"));
                         if (count === _this.childRatchetCount() && Ratchet.useHandlerCallbacks)
                         {
                             if (callback)

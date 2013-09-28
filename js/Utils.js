@@ -995,6 +995,11 @@
         var newObj = obj[parts[0]];
         if (parts[1])
         {
+            if (!newObj)
+            {
+                return null;
+            }
+
             parts.splice(0,1);
 
             var newString = parts.join('.');

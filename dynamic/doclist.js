@@ -366,11 +366,12 @@
             actionContext.trigger = self.trigger;
             actionContext.on = self.on;
             actionContext.substituteVariables = function(obj, callback) {
-                self.substituteVariables(null, model, obj, function() {
-                    if (callback) {
-                        callback();
-                    }
-                });
+                self.substituteVariables(null, model, obj);
+
+                if (callback) {
+                    callback();
+                }
+
             };
             actionContext.button = button;
 

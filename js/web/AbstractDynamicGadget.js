@@ -180,26 +180,27 @@
             Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call prepareModel()");
             this.prepareModel(context, model, function() {
                 Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call substituteModelVariables()");
-                self.substituteModelVariables(context, model, function() {
-                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
-                    self.render(context, model, function(el) {
-                        Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
-                        self.beforeSwap(context, model, function() {
-                            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
-                            context.swap(function() {
-                                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
-                                self.afterSwap($(self.ratchet().el)[0], model, context, function() {
-                                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
+
+                self.substituteModelVariables(context, model);
+
+                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
+                self.render(context, model, function(el) {
+                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
+                    self.beforeSwap(context, model, function() {
+                        Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
+                        context.swap(function() {
+                            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
+                            self.afterSwap($(self.ratchet().el)[0], model, context, function() {
+                                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
 //                                    console.log("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
 
-                                    // nothing more to do
+                                // nothing more to do
 
-                                    if (callback)
-                                    {
-                                        callback();
-                                    }
+                                if (callback)
+                                {
+                                    callback();
+                                }
 
-                                });
                             });
                         });
                     });
@@ -207,156 +208,19 @@
             });
         },
 
-        substituteModelVariables: function(el, model, callback)
+        substituteModelVariables: function(el, model)
         {
-            this.substituteVariables(el, model, model, function() {
-                if (callback) {
-                    callback();
-                }
-            });
+            this.substituteVariables(el, model, model);
         },
 
-        substituteVariables: function(el, model, obj, callback)
+        substituteVariables: function(el, model, obj)
         {
-            var self = this;
-
-            var replacementFunction = function(token)
-            {
-                var replacement = null;
-                if (token.indexOf(".") == -1)
-                {
-                    // not dot-delimited
-
-                    replacement = model[token];
-                    if (!replacement)
-                    {
-                        replacement = self.observable(token).get();
-                    }
-                    if (!replacement && el && el.tokens)
-                    {
-                        replacement = el.tokens[token];
-                    }
-                }
-                else
-                {
-                    // otherwise, it is dot-delimited...
-                    var parts = token.split(".");
-                    var first = parts.shift();
-
-                    var initial = model[first];
-                    if (!initial)
-                    {
-                        initial = self.observable(first).get();
-                    }
-                    if (!initial && el && el.tokens)
-                    {
-                        initial = el.tokens[first];
-                    }
-                    if (initial)
-                    {
-                        var remainderDotNotation = parts.join(".");
-
-                        replacement = Ratchet.resolveDotNotation(initial, remainderDotNotation);
-                    }
-                }
-
-                return replacement;
-            };
-
-            self.substitute(obj, replacementFunction, function() {
-                if (callback) {
-                    callback();
-                }
-            });
+            Ratchet.substituteVariables(obj, model, el.tokens, el);
         },
 
-        substitute: function(obj, replacementFunction, callback)
+        substitute: function(obj, replacementFunction)
         {
-            var self = this;
-
-            // walk all variables in the model and see if we can perform ${} substitutions
-            // substitution sources include el.tokens and observables
-
-            var subst = function(objOrArray, level)
-            {
-                if (!objOrArray || level > 3)
-                {
-                    return;
-                }
-
-                if (Ratchet.isArray(objOrArray))
-                {
-                    for (var i = 0; i < objOrArray.length; i++)
-                    {
-                        if (Ratchet.isObject(objOrArray[i]) || Ratchet.isArray(objOrArray[i]))
-                        {
-                            subst(objOrArray[i], level + 1);
-                        }
-                    }
-                }
-                else if (Ratchet.isObject(objOrArray))
-                {
-                    for (var k in objOrArray)
-                    {
-                        if (objOrArray.hasOwnProperty(k))
-                        {
-                            if (Ratchet.isString(objOrArray[k]))
-                            {
-                                var text = objOrArray[k];
-
-                                var CARS = ["${", "{"];
-
-                                // substitute any tokens
-                                var x = -1;
-                                var b = 0;
-                                do
-                                {
-                                    var car = null;
-                                    for (var a = 0; a < CARS.length; a++)
-                                    {
-                                        car = CARS[a];
-
-                                        x = text.indexOf(car, b);
-                                        if (x > -1)
-                                        {
-                                            break;
-                                        }
-                                    }
-
-                                    if (x > -1)
-                                    {
-                                        var y = text.indexOf("}", x);
-                                        if (y > -1)
-                                        {
-                                            var token = text.substring(x + car.length, y);
-
-                                            var replacement = replacementFunction(token);
-                                            if (replacement)
-                                            {
-                                                text = text.substring(0, x) + replacement + text.substring(y+1);
-                                                objOrArray[k] = text;
-                                            }
-
-                                            b = y + 1;
-                                        }
-                                    }
-                                }
-                                while(x > -1);
-                            }
-                            else if (Ratchet.isObject(objOrArray[k]) || Ratchet.isArray(objOrArray[k]))
-                            {
-                                subst(objOrArray[k], level + 1);
-                            }
-                        }
-                    }
-                }
-            };
-
-            subst(obj, 0);
-
-            if (callback) {
-                callback();
-            }
+            Ratchet.substitute(obj, replacementFunction);
         },
 
         render: function(el, model, callback)

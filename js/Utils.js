@@ -1090,6 +1090,137 @@
         return count;
     };
 
+    Ratchet.substituteVariables = function(obj, model, tokens, observableHolder)
+    {
+        var replacementFunction = function(token)
+        {
+            var replacement = null;
+            if (token.indexOf(".") == -1)
+            {
+                // not dot-delimited
+
+                replacement = model[token];
+                if (!replacement && observableHolder)
+                {
+                    replacement = observableHolder.observable(token).get();
+                }
+                if (!replacement && tokens)
+                {
+                    replacement = tokens[token];
+                }
+            }
+            else
+            {
+                // otherwise, it is dot-delimited...
+                var parts = token.split(".");
+                var first = parts.shift();
+
+                var initial = model[first];
+                if (!initial)
+                {
+                    initial = observableHolder.observable(first).get();
+                }
+                if (!initial && tokens)
+                {
+                    initial = tokens[first];
+                }
+                if (initial)
+                {
+                    var remainderDotNotation = parts.join(".");
+
+                    replacement = Ratchet.resolveDotNotation(initial, remainderDotNotation);
+                }
+            }
+
+            return replacement;
+        };
+
+        Ratchet.substitute(obj, replacementFunction);
+    };
+
+    Ratchet.substitute = function(obj, replacementFunction)
+    {
+        // walk all variables in the model and see if we can perform ${} substitutions
+        // substitution sources include el.tokens and observables
+
+        var subst = function(objOrArray, level)
+        {
+            if (!objOrArray || level > 3)
+            {
+                return;
+            }
+
+            if (Ratchet.isArray(objOrArray))
+            {
+                for (var i = 0; i < objOrArray.length; i++)
+                {
+                    if (Ratchet.isObject(objOrArray[i]) || Ratchet.isArray(objOrArray[i]))
+                    {
+                        subst(objOrArray[i], level + 1);
+                    }
+                }
+            }
+            else if (Ratchet.isObject(objOrArray))
+            {
+                for (var k in objOrArray)
+                {
+                    if (objOrArray.hasOwnProperty(k))
+                    {
+                        if (Ratchet.isString(objOrArray[k]))
+                        {
+                            var text = objOrArray[k];
+
+                            var CARS = ["${", "{"];
+
+                            // substitute any tokens
+                            var x = -1;
+                            var b = 0;
+                            do
+                            {
+                                var car = null;
+                                for (var a = 0; a < CARS.length; a++)
+                                {
+                                    car = CARS[a];
+
+                                    x = text.indexOf(car, b);
+                                    if (x > -1)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                if (x > -1)
+                                {
+                                    var y = text.indexOf("}", x);
+                                    if (y > -1)
+                                    {
+                                        var token = text.substring(x + car.length, y);
+
+                                        var replacement = replacementFunction(token);
+                                        if (replacement)
+                                        {
+                                            text = text.substring(0, x) + replacement + text.substring(y+1);
+                                            objOrArray[k] = text;
+                                        }
+
+                                        b = y + 1;
+                                    }
+                                }
+                            }
+                            while(x > -1);
+                        }
+                        else if (Ratchet.isObject(objOrArray[k]) || Ratchet.isArray(objOrArray[k]))
+                        {
+                            subst(objOrArray[k], level + 1);
+                        }
+                    }
+                }
+            }
+        };
+
+        subst(obj, 0);
+    };
+
 
 
     // browser detection

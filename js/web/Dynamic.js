@@ -168,15 +168,9 @@
 
             $(div).find('.modal-footer').append("<button class='btn btn-default pull-right complete-button' data-dismiss='modal' aria-hidden='true'>" + options.completeButtonTitle + "</button>");
 
-             // ratchet it up
-            var parentRatchet = $(div).ratchet(function() {
-
-                this.parent = options.parent;
-
+            // ratchet it up
+            var ratchet = new Ratchet($(div).find(".modal-body")[0], options.parent, function() {
             });
-
-            // ratchet for our gadget
-            var ratchet = Ratchet.firstValueInObject(parentRatchet.childRatchets);
 
             // set up ratchet callback
             if (beforeRatchetCallback)
@@ -213,39 +207,6 @@
         });
 
     };
-
-    /*
-    Ratchet.startModalWizard = function(parent, wizardId, uri, beforeRatchetCallback, afterRatchetCallback)
-    {
-        Ratchet.startModalGadget({
-            "parent": parent,
-            "type": "wizard",
-            "id": wizardId,
-            "uri": uri
-        }, {
-            "closeWizard": function()
-            {
-                $(this.ratchet().el).modal("hide");
-            }
-        }, function(div, ratchet) {
-
-            // append wizard attributes
-            $(div).find('.modal-title').addClass("wizard-title");
-            $(div).find('.modal-body').addClass("wizard-body");
-            $(div).find('.modal-footer').addClass("wizard-buttons");
-
-            if (beforeRatchetCallback) {
-                beforeRatchetCallback.call(this, div, ratchet);
-            }
-
-        }, function(div, ratchet, gadget) {
-
-            if (afterRatchetCallback) {
-                afterRatchetCallback.call(this, div, ratchet, gadget);
-            }
-        });
-    };
-    */
 
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {

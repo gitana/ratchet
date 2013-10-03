@@ -31,14 +31,13 @@
 
             this.base(el, model, function() {
 
-                self.doPrepareModel(el, model);
-
-                callback();
-
+                self.doPrepareModel(el, model, function() {
+                    callback();
+                });
             });
 	    },
 
-        doPrepareModel: function(el, model)
+        doPrepareModel: function(el, model, callback)
         {
             var self = this;
 
@@ -125,6 +124,8 @@
             {
                 model.brand.uri = tokenSubstitutionFunction(model.brand.uri);
             }
+
+            callback();
         }
 		
 	}));

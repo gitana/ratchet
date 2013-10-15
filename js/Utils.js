@@ -462,11 +462,13 @@
      */
     Ratchet.paths = function()
     {
+        var args = Ratchet.makeArray(arguments);
+
         var result = "";
 
-        for (var i = 0; i < arguments.length; i++)
+        for (var i = 0; i < args.length; i++)
         {
-            result += "/" + arguments[i];
+            result += "/" + args[i];
         }
 
         result = result.replace("//", "/");

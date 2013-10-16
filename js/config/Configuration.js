@@ -564,12 +564,15 @@
          * Creates a clone of the configuration service.  This is useful for manipulating configuration that
          * will not end up part of the global registry.
          */
-        clone: function()
+        clone: function(empty)
         {
             var x = new configClass();
 
-            for (var blockKey in this.blocks) {
-                x[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
+            if (!empty)
+            {
+                for (var blockKey in this.blocks) {
+                    x[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
+                }
             }
 
             for (var instanceId in this.evaluatorInstances) {
@@ -580,8 +583,11 @@
                 x.evaluatorTypes[typeId] = this.evaluatorTypes[typeId];
             }
 
-            for (var subscriptionId in this.subscriptions) {
-                x.subscriptions[subscriptionId] = this.subscriptions[subscriptionId];
+            if (!empty)
+            {
+                for (var subscriptionId in this.subscriptions) {
+                    x.subscriptions[subscriptionId] = this.subscriptions[subscriptionId];
+                }
             }
 
             return x;

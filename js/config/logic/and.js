@@ -35,14 +35,26 @@
                 conditions.push(condition);
             }
 
-            // evaluate all conditions in the array
-            var evaluation = true;
+            // child engine
+            // add sub-conditions as new blocks
+            var childEngine = engine.clone(true);
             for (var i = 0; i < conditions.length; i++)
             {
-                evaluation = evaluation || engine.evaluate(engine, context, conditions[i]);
+                var block = {
+                    "evaluator": conditions[i].evaluator,
+                    "condition": conditions[i].condition,
+                    "config": {
+                        "results": ["true"]
+                    }
+                };
+                childEngine.add(block);
             }
 
-            return evaluation;
+            // evaluate
+            var childConfig = childEngine.evaluate(context);
+
+            // valid if size of array == size of conditions
+            return (childConfig && childConfig.results && childConfig.results.length == conditions.length);
         }
 
     }));

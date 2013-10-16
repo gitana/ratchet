@@ -17,7 +17,20 @@
                 return false;
             }
 
-            return !engine.evaluate(engine, context, condition);
+            // child engine
+            var childEngine = engine.clone(true);
+            var block = {
+                "evaluator": condition.evaluator,
+                "condition": condition.condition,
+                "config": [true]
+            };
+            childEngine.add(block);
+
+            // evaluate
+            var result = childEngine.evaluate(context);
+
+            // valid if size of array == 0
+            return (result.length == 0);
         }
 
     }));

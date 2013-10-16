@@ -213,6 +213,12 @@
                 <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
                 <file name="config/ViewerConfigurationEvaluator.js"/>
+
+                <!-- logic -->
+                <file name="config/logic/and.js"/>
+                <file name="config/logic/or.js"/>
+                <file name="config/logic/not.js"/>
+
             </filelist>
         </concat>
 
@@ -383,6 +389,12 @@
                 <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
                 <file name="config/ViewerConfigurationEvaluator.js"/>
+
+                <!-- logic -->
+                <file name="config/logic/and.js"/>
+                <file name="config/logic/or.js"/>
+                <file name="config/logic/not.js"/>
+
             </filelist>
         </concat>
 

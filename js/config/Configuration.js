@@ -382,7 +382,7 @@
                     else
                     {
                         // evaluate
-                        var valid = evaluatorInstance.evaluate(context, condition);
+                        var valid = evaluatorInstance.evaluate(self, context, condition);
                         if (valid)
                         {
                             // valid, so keep it

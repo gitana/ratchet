@@ -5,12 +5,13 @@
         /**
          * Checks whether the "page" property of the context matches the condition.
          *
+         * @param engine
          * @param context
          * @param condition
          *
          * @return {Boolean}
          */
-        evaluate: function(context, condition)
+        evaluate: function(engine, context, condition)
         {
             if (!context) {
                 return false;

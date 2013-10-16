@@ -12,12 +12,13 @@
         /**
          * EXTENSION POINT
          *
+         * @param engine
          * @param context
          * @param condition (optional)
          *
          * @return {Boolean}
          */
-        evaluate: function(context, condition)
+        evaluate: function(engine, context, condition)
         {
             return true;
         },

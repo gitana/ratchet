@@ -64,13 +64,24 @@
                     return;
                 }
 
-                $(this.modalDiv).modal('hide');
+                var display = $(this.modalDiv).css("display");
+                if (display == "none")
+                {
+                    $(this.modalDiv).remove();
+                    this.modalDiv = null;
+
+                    callback();
+                    return;
+                }
+
                 $(this.modalDiv).on('hidden.bs.modal', function() {
 
+                    $(this.modalDiv).remove();
                     this.modalDiv = null;
 
                     callback();
                 });
+                $(this.modalDiv).modal('hide');
             };
 
             this.block = function(title, message, callback)

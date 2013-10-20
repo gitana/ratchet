@@ -175,14 +175,14 @@
                                     $(container).empty();
 
                                     // try next one
-                                    exec(handlers, index + 1);
+                                    exec(handlers, index+1);
                                 }
                             });
                         }
                         else
                         {
                             // try next one
-                            exec(handlers, index + 1);
+                            exec(handlers, index+1);
                         }
                     };
                     exec(handlers, 0);

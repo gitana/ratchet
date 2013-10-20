@@ -40,6 +40,11 @@
             return this.config().mimetypes;
         },
 
+        cleanup: function(text)
+        {
+            return text;
+        },
+
         render: function(resource, container, callback)
         {
             var self = this;
@@ -50,6 +55,8 @@
             var readonly = this.config().readonly;
 
             self.load(resource, function(err, text) {
+
+                text = self.cleanup(text);
 
                 if (err)
                 {
@@ -63,6 +70,7 @@
                 }
 
                 var el = $("<div class='text-editor'></div>");
+                container.empty();
                 container.append(el);
 
                 if (window.ace)
@@ -145,6 +153,9 @@
                     if (text)
                     {
                         text = Ratchet.trim(text);
+
+                        // remove null characters since ace freaks on some of these
+                        text = Ratchet.replaceAll(text, '\\u0000', '');
                     }
 
                     callback(null, text);

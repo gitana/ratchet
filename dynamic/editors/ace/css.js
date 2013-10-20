@@ -29,6 +29,11 @@
                 "mode": "ace/mode/css",
                 "mimetypes": ["text/css"]
             });
+        },
+
+        cleanup: function(text)
+        {
+            return text;
         }
 
     }));

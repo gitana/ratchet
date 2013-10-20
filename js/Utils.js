@@ -984,6 +984,11 @@
         return trimmed;
     };
 
+    Ratchet.replaceAll = function(text, find, replace)
+    {
+        return text.replace(new RegExp(find, 'g'), replace);
+    };
+
     /**
      * Resolves dot-notation references into the given object.
      *

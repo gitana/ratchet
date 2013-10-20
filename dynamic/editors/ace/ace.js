@@ -56,10 +56,9 @@
 
             self.load(resource, function(err, text) {
 
-                text = self.cleanup(text);
-
                 if (err)
                 {
+                    // resource does exist but it failed to load
                     callback(err);
                     return;
                 }
@@ -68,6 +67,8 @@
                 {
                     text = "";
                 }
+
+                text = self.cleanup(text);
 
                 var el = $("<div class='text-editor'></div>");
                 container.empty();
@@ -144,6 +145,12 @@
 
         load: function(resource, callback)
         {
+            // if resource is known not yet to exist, hand back empty
+            if (!resource.exists)
+            {
+                callback(null, "");
+            }
+
             $.ajax({
                 "url": resource.url,
                 "dataType": "text",

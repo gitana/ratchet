@@ -169,6 +169,8 @@
                 <file name="web/DynamicRegionResolver.js" />
                 <file name="web/AbstractViewer.js" />
                 <file name="web/ViewerRegistry.js" />
+                <file name="web/AbstractEditor.js" />
+                <file name="web/EditorRegistry.js" />
 
             </filelist>
         </concat>
@@ -213,6 +215,7 @@
                 <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
                 <file name="config/ViewerConfigurationEvaluator.js"/>
+                <file name="config/EditorConfigurationEvaluator.js"/>
 
                 <!-- logic -->
                 <file name="config/logic/and.js"/>
@@ -337,6 +340,8 @@
                 <file name="web/DynamicRegionResolver.js" />
                 <file name="web/AbstractViewer.js" />
                 <file name="web/ViewerRegistry.js" />
+                <file name="web/AbstractEditor.js" />
+                <file name="web/EditorRegistry.js" />
 
             </filelist>
         </concat>
@@ -389,6 +394,7 @@
                 <file name="config/ApplicationConfigurationEvaluator.js"/>
                 <file name="config/PageConfigurationEvaluator.js"/>
                 <file name="config/ViewerConfigurationEvaluator.js"/>
+                <file name="config/EditorConfigurationEvaluator.js"/>
 
                 <!-- logic -->
                 <file name="config/logic/and.js"/>

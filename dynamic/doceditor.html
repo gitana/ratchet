@@ -1,0 +1,14 @@
+{{if chrome}}
+<div>
+    <div class="chrome chrome-header">
+        <div class="chrome-title">${chrome.title}</div>
+    </div>
+    <div class="chrome chrome-body">
+{{/if}}
+
+        <div class="gadget doceditor {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html"></div>
+
+{{if chrome}}
+    </div>
+</div>
+{{/if}}

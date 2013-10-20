@@ -6,10 +6,10 @@
         define(function(require, exports, module) {
 
             require("css!ratchet/dynamic/common.css");
-            require("css!ratchet/dynamic/docviewer.css");
+            require("css!ratchet/dynamic/doceditor.css");
 
             var Ratchet = require("ratchet/web");
-            var html = require("text!ratchet/dynamic/docviewer.html");
+            var html = require("text!ratchet/dynamic/doceditor.html");
 
             require("ratchet/tmpl");
             require("bootstrap");
@@ -19,12 +19,12 @@
     }
     else
     {
-        return factory(root.Ratchet, "./docviewer.html");
+        return factory(root.Ratchet, "./doceditor.html");
     }
 
 }(this, function(Ratchet, html) {
 
-    return Ratchet.Gadgets.DocViewer = Ratchet.DynamicRegistry.register("docviewer", Ratchet.AbstractDynamicGadget.extend({
+    return Ratchet.Gadgets.DocEditor = Ratchet.DynamicRegistry.register("doceditor", Ratchet.AbstractDynamicGadget.extend({
 
 		TEMPLATE: html,
 
@@ -50,20 +50,10 @@
                 "defaults": {
                     "resource": {
                         "id": "",
-                        "title": "",
-                        "kind": "",
-                        "url": "",
-
                         "size": -1,
                         "mimetype": "",
-                        "filename": "",
-
-                        "attachments": {
-                        }
+                        "filename": ""
                     }
-                },
-                "observables": {
-                    "viewerResource": "viewerResource" // the observable id to watch defining the resource
                 }
             });
 
@@ -93,21 +83,16 @@
 
                 self.loadResource(el, model, function(resource)
                 {
-                    if (resource) {
-                        self.observable(model.observables.viewerResource).set(resource);
-                    }
-
-                    // set up observables
-                    var refreshHandler = self.refreshHandler(el);
-
-                    // when the "viewerResource" observable changes, update the doc viewer
-                    self.subscribe(model.observables.viewerResource, refreshHandler);
-
                     callback();
 
                 });
 
             });
+        },
+
+        container: function(el)
+        {
+            return $(el).find(".doceditor");
         },
 
         afterSwap: function(el, model, context, callback)
@@ -117,27 +102,28 @@
             this.base(el, model, context, function() {
 
                 // find the container
-                var container = $(el).find(".docviewer");
+                var container = self.container(el);
 
                 // load the resource
                 var resource = {};
                 Ratchet.merge(self.config().defaults.resource, resource);
-                var viewerResource = self.observable(model.observables.viewerResource).get();
-                if (viewerResource)
+                //var editorResource = self.observable(model.observables.editorResource).get();
+                var editorResource = model.resource;
+                if (editorResource)
                 {
-                    Ratchet.merge(viewerResource, resource);
+                    Ratchet.merge(editorResource, resource);
 
                     // build the condition
                     var condition = {};
                     Ratchet.merge(resource, condition);
 
                     // find all of the potential handlers
-                    var handlers = Ratchet.ViewerRegistry.lookupHandlers(condition);
+                    var handlers = Ratchet.EditorRegistry.lookupHandlers(condition);
                     if (handlers.length == 0)
                     {
-                        console.log("No resource viewer could be found for condition: " + JSON.stringify(condition));
+                        console.log("No resource editor could be found for condition: " + JSON.stringify(condition));
 
-                        $(container).append("This document does not have any attachments.");
+                        $(container).append("An editor handler could not be found.");
 
                         callback();
                         return;
@@ -149,7 +135,7 @@
                         if (index == handlers.length)
                         {
                             // ran off the end, didn't work
-                            alert("Docviewer failed to render");
+                            alert("Doceditor failed to render");
 
                             callback();
 
@@ -157,12 +143,13 @@
                         }
 
                         var handler = handlers[index];
-
                         if (handler.canOperate())
                         {
                             handler.render(resource, container, function(err) {
 
                                 if (!err) {
+
+                                    self.handler = handler;
 
                                     // success
                                     callback();
@@ -192,6 +179,15 @@
                     // nothing to do
                     callback();
                 }
+            });
+        },
+
+        saveResource: function(resource, callback)
+        {
+            var self = this;
+
+            self.handler.save(resource, function(err) {
+                callback(err);
             });
         }
 

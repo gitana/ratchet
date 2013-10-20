@@ -22,7 +22,7 @@
 
             instance.configure(id);
 
-            return instance;
+            return previewerClass;
         },
 
         /**

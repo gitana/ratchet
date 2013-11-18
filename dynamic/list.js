@@ -259,6 +259,9 @@
             if (model.options && model.options.paginate) {
                 tableConfig.bPaginate = true;
             }
+            if (model.options && model.options.processing) {
+                tableConfig.bProcessing = true;
+            }
             if (model.options && model.options.info) {
                 tableConfig.bInfo = true;
             }
@@ -290,22 +293,50 @@
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'ft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
                         }
                     }
                     else
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lft>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'ft>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
                         }
                     }
                 }
@@ -315,22 +346,50 @@
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lft>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'ft>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
                         }
                     }
                     else
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlft>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlft>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lft>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rft>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rft>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'ft>>";
+                            }
                         }
                     }
                 }
@@ -343,22 +402,50 @@
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                            }
                         }
                     }
                     else
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lt>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'><'col-md-6'p>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'p>>";
+                            }
                         }
                     }
                 }
@@ -368,22 +455,50 @@
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lt>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12't>><'row'<'col-md-6'i><'col-md-6'>>";
+                            }
                         }
                     }
                     else
                     {
                         if (showSizing)
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rlt>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rlt>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'lt>>";
+                            }
                         }
                         else
                         {
-                            tableConfig["sDom"] = "<'row'<'col-md-12'rt>>";
+                            if (tableConfig.bProcessing)
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12'rt>>";
+                            }
+                            else
+                            {
+                                tableConfig["sDom"] = "<'row'<'col-md-12't>>";
+                            }
                         }
                     }
                 }
@@ -409,7 +524,7 @@
             if (tableExists) {
                 tableConfig.bDestroy = tableExists;
             }
-            tableConfig["bProcessing"] = true;
+            //tableConfig["bProcessing"] = true;
             tableConfig["bServerSide"] = true;
             tableConfig["aoColumns"] = [];
             if (model.checkbox)
@@ -561,6 +676,12 @@
                     pagination["sort"][sortField] = self.sortDirection(model);
                 }
 
+                // if sort to provided, allow for a default sort
+                if (!pagination.sort)
+                {
+                    self.applyDefaultSort(pagination);
+                }
+
 
 
 
@@ -577,6 +698,8 @@
                 if (!loader) {
                     throw new Error("Cannot find loader: " + loaderId);
                 }
+
+                self.startProcessing.call(self, context, model);
 
                 loader.call(self, context, model, keyValues, sSource, aoData, searchTerm, query, pagination, function(aaData, attrs) {
 
@@ -597,6 +720,8 @@
                             json["iTotalDisplayRecords"] = attrs.iTotalDisplayRecords;
                         }
                     }
+
+                    self.endProcessing.call(self, context, model, json);
 
                     fnCallback(json);
                 });
@@ -848,6 +973,7 @@
 
 
 
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         //
         // CALLBACKS
@@ -923,6 +1049,11 @@
             if (model.options && !model.options.processing)
             {
                 $(el).find(".dataTables_processing").css("display", "none");
+
+                // add in some spacing between table and button bar
+                $(el).find(".buttonbar").css({
+                    "padding-bottom": "20px"
+                });
             }
 
             this.initComplete(el, model, table, oSettings, json);
@@ -1096,6 +1227,30 @@
         // EXTENSION POINTS
         //
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /**
+         * EXTENSION POINT
+         */
+        startProcessing: function(context, model)
+        {
+
+        },
+
+        /**
+         * EXTENSION POINT
+         */
+        endProcessing: function(context, model, json)
+        {
+
+        },
+
+        /**
+         * EXTENSION POINT
+         */
+        applyDefaultSort: function(pagination)
+        {
+
+        },
 
         /**
          * EXTENSION POINT

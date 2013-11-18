@@ -63,13 +63,16 @@
                 {
                     var item = model.items[i];
                     var uri = item.uri || item.link;
-                    if (uri.indexOf("#") === 0) {
-                        uri = uri.substring(1);
-                    }
-                    if (pageUri.indexOf(uri) === 0 && uri.length > maxLen)
+                    if (uri)
                     {
-                        maxLen = uri.length;
-                        maxItem = item;
+                        if (uri.indexOf("#") === 0) {
+                            uri = uri.substring(1);
+                        }
+                        if (pageUri.indexOf(uri) === 0 && uri.length > maxLen)
+                        {
+                            maxLen = uri.length;
+                            maxItem = item;
+                        }
                     }
                 }
             }

@@ -22,15 +22,6 @@
     Ratchet.blockingModal = null;
     Ratchet.block = function(title, message, configOrAfterShownCallback)
     {
-        if (Ratchet.blockingModal)
-        {
-            Ratchet.unblock(function() {
-                Ratchet.block(title, message, config);
-            });
-
-            return;
-        }
-
         var config = {};
         if (Ratchet.isFunction(configOrAfterShownCallback)) {
             config.afterShownCallback = configOrAfterShownCallback;
@@ -38,6 +29,16 @@
         else if (Ratchet.isObject(configOrAfterShownCallback))
         {
             Ratchet.copyInto(config, configOrAfterShownCallback);
+        }
+
+        // if already blocking, then first unblock
+        if (Ratchet.blockingModal)
+        {
+            Ratchet.unblock(function() {
+                Ratchet.block(title, message, config);
+            });
+
+            return;
         }
 
         config.title = title;
@@ -48,15 +49,23 @@
             config.footer = false;
         }
 
-        Ratchet.blockingModal = Ratchet.showModal(config, function(config) {
+        Ratchet.showModal(config, function(config) {
             return function(div, cb) {
 
                 $(div).find('.modal-body').html("<div align='center'><div class='modal-please-wait'></div></div><br/><p align='center'>" + message + "<br/><br/></p>");
 
                 cb(function() {
 
+                    // if they click the "close" button, wipe down the Ratchet.blockingModal
+                    $(div).find(".close").click(function() {
+                        Ratchet.blockingModal = null;
+                    });
+
                     // start the spinner
                     Ratchet.spin($(div).find(".modal-please-wait"));
+
+                    // store div
+                    Ratchet.blockingModal = $(div);
 
                     // after shown
                     if (config.afterShownCallback) {
@@ -65,8 +74,6 @@
                 });
             };
         }(config));
-
-        return Ratchet.blockingModal;
     };
 
     Ratchet.unblock = function(configOrAfterHiddenCallback)

@@ -76,7 +76,9 @@
             };
 
             // authentication filters
-            this.authRequiredPatterns = [];
+            this.authPatterns = [];
+            this.noAuthPatterns = [];
+            this.guestAuthPatterns = [];
 
             // routes
             this.routes = {};
@@ -1117,7 +1119,37 @@
          */
         requireAuthentication: function(pattern)
         {
-            this.authRequiredPatterns.push(pattern);
+            this.addAuthPattern(pattern);
+        },
+
+        /**
+         * Marks a URI patterns as requiring authentication.  Supports wildcards.
+         *
+         * @param pattern
+         */
+        addAuthPattern: function(pattern)
+        {
+            this.authPatterns.push(pattern);
+        },
+
+        /**
+         * Marks a URI patterns as not requiring authentication.  Supports wildcards.
+         *
+         * @param pattern
+         */
+        addNoAuthPattern: function(pattern)
+        {
+            this.noAuthPatterns.push(pattern);
+        },
+
+        /**
+         * Marks a URI patterns as not requiring authentication.  Supports wildcards.
+         *
+         * @param pattern
+         */
+        addGuestAuthPattern: function(pattern)
+        {
+            this.guestAuthPatterns.push(pattern);
         },
 
         /**
@@ -1133,61 +1165,86 @@
         {
             var _this = this;
 
-            // short cut
-            if (this.authRequiredPatterns.length === 0)
+            // is this a URL that requires non-guest authentication?
+            var tripUserAuthPattern = false;
+            for (var i = 0; i < this.authPatterns.length; i++)
             {
-                successCallback();
-            }
-            else
-            {
-                // walk the patterns and see if any trip
-                var tripped = false;
-                for (var i = 0; i < this.authRequiredPatterns.length; i++)
-                {
-                    var pattern = this.authRequiredPatterns[i];
+                var pattern = this.authPatterns[i];
 
-                    var tokens = this.executeMatch(pattern, context.route.uri);
-                    if (tokens)
-                    {
-                        tripped = true;
-                    }
+                var tokens = this.executeMatch(pattern, context.route.uri);
+                if (tokens)
+                {
+                    tripUserAuthPattern = true;
+                }
+            }
+
+            // is this a URL that allows guest authentication?
+            var tripGuestAuthPattern = false;
+            for (var i = 0; i < this.guestAuthPatterns.length; i++)
+            {
+                var pattern = this.guestAuthPatterns[i];
+
+                var tokens = this.executeMatch(pattern, context.route.uri);
+                if (tokens)
+                {
+                    tripGuestAuthPattern = true;
+                }
+            }
+
+            // is this a URL that allows no authentication?
+            var tripNoAuthPattern = false;
+            for (var i = 0; i < this.noAuthPatterns.length; i++)
+            {
+                var pattern = this.noAuthPatterns[i];
+
+                var tokens = this.executeMatch(pattern, context.route.uri);
+                if (tokens)
+                {
+                    tripNoAuthPattern = true;
+                }
+            }
+
+
+            // if we tripped "required authentication" and didn't trip "required no authentication"
+            // then redirect for a sign in
+            if (!tripNoAuthPattern)
+            {
+                // we need to authenticate - either as "guest" or as an actual user
+                var methodName = "authenticateGuest";
+                if (tripUserAuthPattern) {
+                    methodName = "authenticateUser";
                 }
 
-                if (tripped)
+                // if we have a plugin authenticator, we use that
+                if (this.authenticator && this.authenticator[methodName])
                 {
-                    // we require authentication
+                    this.authenticator[methodName](context, function() {
 
-                    // if an authenticator instance has been provided, then call it's authenticate() method
-                    if (this.authenticator && this.authenticator.authenticate)
-                    {
-                        this.authenticator.authenticate(context, function() {
+                        successCallback();
 
-                            successCallback();
+                    }, function() {
 
-                        }, function() {
+                        failureCallback();
 
-                            failureCallback();
-
-                        });
-                    }
-                    else
-                    {
-                        // if an authenticate() method has been provided directly, we can use that
-                        this.authenticate.call(_this, context, function() {
-
-                            successCallback();
-
-                        }, function() {
-
-                            failureCallback();
-
-                        });
-                    }
+                    });
                 }
                 else
                 {
-                    successCallback();
+                    // otherwise, we call our direct methods
+                    this[methodName].call(_this, context, function() {
+
+                        successCallback();
+
+                    }, function() {
+
+                        failureCallback();
+
+                    });
                 }
+            }
+            else
+            {
+                successCallback();
             }
         },
 
@@ -1201,7 +1258,23 @@
          * @param successCallback
          * @param failureCallback
          */
-        authenticate: function(context, successCallback, failureCallback)
+        authenticateUser: function(context, successCallback, failureCallback)
+        {
+            // default logic, just fire back
+            successCallback();
+        },
+
+        /**
+         * @extension_point
+         *
+         * This gets called when a decision has been made to automatically sign on with guest authentication.
+         * This method should first check whether authentication already exists and if so, just fire the callback.
+         *
+         * @param context
+         * @param successCallback
+         * @param failureCallback
+         */
+        authenticateGuest: function(context, successCallback, failureCallback)
         {
             // default logic, just fire back
             successCallback();

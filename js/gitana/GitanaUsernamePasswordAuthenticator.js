@@ -2,82 +2,86 @@
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator = Ratchet.AbstractGitanaAuthenticator.extend({
 
+        /**
+         * OVERRIDE
+         */
+        authenticateUser: function(context, successCallback, failureCallback)
+        {
+            var self = this;
+
+            // are we already authenticated?
+            var handled = false;
+            if (self.isAuthenticated() && self.isUserAuthenticated())
+            {
+                // yes - therefore, we should have a cookie
+                if (self.ticket())
+                {
+                    // authenticate using the cookie
+                    self.authenticateWithCookie(context, successCallback, function() {
+
+                        // didn't work, pop up dialog
+                        self.loginDialog(context, null, null, successCallback, failureCallback, false);
+                    });
+
+                    handled = true;
+                }
+            }
+
+            if (!handled)
+            {
+                // make sure to clear out anything
+                // self.cleanCookies();
+
+                // pop up dialog
+                self.loginDialog(context, null, null, successCallback, failureCallback, false);
+            }
+        },
+
+        /**
+         * OVERRIDE
+         */
+        authenticateGuest: function(context, successCallback, failureCallback)
+        {
+            var self = this;
+
+            // are we already authenticated as a user or a guest?
+            var handled = false;
+            if (self.isAuthenticated() && (self.isUserAuthenticated() || self.isGuestAuthenticated()))
+            {
+                // yes - therefore, we should have a cookie
+                if (self.ticket())
+                {
+                    // authenticate using the cookie
+                    self.authenticateWithCookie(context, successCallback, function() {
+
+                        // didn't work, pop up dialog
+                        self._authenticateAsGuest(context, successCallback, failureCallback, false);
+                    });
+
+                    handled = true;
+                }
+            }
+
+            if (!handled)
+            {
+                // make sure to clear out anything
+                // self.cleanCookies();
+
+                // auto-authenticate as guest
+
+                // pop up dialog
+                self._authenticateAsGuest(context, successCallback, failureCallback, false);
+            }
+        },
+
         getTemplate: function()
         {
             return Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE.trim();
         },
 
-        _authenticate: function(context, username, password, successCallback, failureCallback)
-        {
-            var self = this;
-
-            var config = {};
-            if (self.config)
-            {
-                Ratchet.copyInto(config, self.config);
-            }
-            config.username = username;
-            config.password = password;
-
-            // connect to Gitana
-            Gitana.connect(config, function(err) {
-
-                // if err, then something went wrong
-                if (err)
-                {
-                    self.loginDialog(context, username, password, successCallback, failureCallback, true);
-                    return;
-                }
-
-                // no error
-
-                // if an "application" was specified in the config...
-                self.handlePostAuthenticate((this.platform ? this.platform() : this), context, successCallback, failureCallback);
-            });
-        },
-
-        authenticate: function(context, successCallback, failureCallback)
-        {
-            var self = this;
-
-            if (Gitana.Authentication.gitanaAuthenticated) {
-                successCallback();
-                return;
-            }
-
-            /**
-             * Check for one of three scenarios:
-             *
-             *  1) This is the user's first arrival to the page.  In this case, they do not have a GITANA_TICKET
-             *     cookie.  We pop up a dialog and ask for their username/password.
-             *
-             *  2) They have supplied their username/password via the dialog.
-             *     We sign in to Gitana and acquire a GITANA_TICKET cookie and proceed with the app.
-             *
-             *  3) They already have a GITANA_TICKET cookie.  Authenticate using this cookie.
-             *
-             * If cookies are not supported by the browser, scenario #1 and #2 will occur for each page reload.
-             */
-            if (!this.gitanaTicket)
-            {
-                self.loginDialog(context, null, null, successCallback, failureCallback, false);
-            }
-            else
-            {
-                // authenticate using the cookie
-                self.authenticateWithCookie(context, successCallback, function() {
-
-                    // didn't work, pop up dialog
-                    self.loginDialog(context, null, null, successCallback, failureCallback, false);
-                });
-            }
-        },
-
         loginDialog : function(context, username, password, successCallback, failureCallback, retry)
         {
             var self = this;
-
-            //  VIEW_WEB_EDIT_fieldSet
 
             var data = {
                 "username" : username ? username : "",
@@ -160,18 +164,53 @@
                     $(div).modal('show');
                     $(div).on('shown.bs.modal', function() {
 
-                        /*
-                        $(div).css({
-                            "margin-top": ($(div).outerHeight() / 2)
-                        });
-                        */
-
                         control.getControlByPath("username").focus();
 
                     });
                 }
             });
+        },
+
+        _authenticateAsGuest: function(context, successCallback, failureCallback)
+        {
+            var self = this;
+
+            self._authenticate(context, null, null, successCallback, failureCallback);
+        },
+
+        _authenticate: function(context, username, password, successCallback, failureCallback)
+        {
+            var self = this;
+
+            var config = {};
+            if (self.config)
+            {
+                Ratchet.copyInto(config, self.config);
+            }
+            if (username) {
+                config.username = username;
+            }
+            if (password) {
+                config.password = password;
+            }
+
+            // connect to Gitana
+            Gitana.connect(config, function(err) {
+
+                // if err, then something went wrong
+                if (err)
+                {
+                    self.loginDialog(context, username, password, successCallback, failureCallback, true);
+                    return;
+                }
+
+                // no error
+
+                // if an "application" was specified in the config...
+                self.handlePostAuthenticate((this.platform ? this.platform() : this), context, successCallback, failureCallback);
+            });
         }
+
     });
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE = ' \

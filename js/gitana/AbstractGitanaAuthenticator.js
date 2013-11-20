@@ -5,17 +5,70 @@
         {
             this.base(config);
 
-            this.gitanaTicket = null;
+            this.cleanCookies = function()
+            {
+                Gitana.deleteCookie("RATCHET_AUTH_USER_NAME");
+                Gitana.deleteCookie("RATCHET_AUTH_USER_ID");
+            }
         },
 
         /**
-         * Stores the GITANA_TICKET
+         * OVERRIDE
          */
-        init: function()
+        currentUserName: function()
         {
-            this.base();
+            return Gitana.readCookie('RATCHET_AUTH_USER_NAME');
+        },
 
-            this.gitanaTicket = Gitana.readCookie('GITANA_TICKET');
+        /**
+         * OVERRIDE
+         */
+        currentUserId: function()
+        {
+            return Gitana.readCookie('RATCHET_AUTH_USER_ID');
+        },
+
+        /**
+         * OVERRIDE
+         */
+        isAuthenticated: function()
+        {
+            var self = this;
+
+            var currentUserName = self.currentUserName();
+            return (currentUserName ? true : false);
+        },
+
+        /**
+         * OVERRIDE
+         */
+        isUserAuthenticated: function()
+        {
+            var self = this;
+
+            var currentUserName = self.currentUserName();
+            return (currentUserName && "guest" != currentUserName);
+        },
+
+        /**
+         * OVERRIDE
+         */
+        isGuestAuthenticated: function()
+        {
+            var self = this;
+
+            var currentUserName = self.currentUserName();
+            return (currentUserName && "guest" == currentUserName);
+        },
+
+        /**
+         * Retrieves the Gitana Ticket.
+         *
+         * @returns {*}
+         */
+        ticket: function()
+        {
+            return Gitana.readCookie('GITANA_TICKET');
         },
 
         /**
@@ -34,6 +87,7 @@
             if (self.config) {
                 Ratchet.copyInto(config, self.config);
             }
+
             var gitana = new Gitana(config);
 
             // now authenticate
@@ -48,9 +102,9 @@
 
             }).then(function() {
 
-                    self.handlePostAuthenticate(this, context, successCallback, failureCallback);
+                self.handlePostAuthenticate(this, context, successCallback, failureCallback);
 
-                });
+            });
         },
 
         /**
@@ -71,10 +125,15 @@
                     return Chain(platform);
                 };
             }(platform);
-            Gitana.Authentication.gitanaAuthenticated = true;
 
             var authInfo = platform.getDriver().getAuthInfo();
+            var username = authInfo.getPrincipalName();
+            var userDomainQualifiedId = authInfo.getPrincipalDomainId() + "/" + authInfo.getPrincipalId();
 
+            Gitana.writeCookie("RATCHET_AUTH_USER_NAME", username);
+            Gitana.writeCookie("RATCHET_AUTH_USER_ID", userDomainQualifiedId);
+
+            /*
             context.observable("authInfo").set(authInfo);
 
             self.populateTenant(context, authInfo);
@@ -87,6 +146,7 @@
                     self.populateAuthenticatedUser(context, this);
                 });
             });
+            */
 
             platform.then(function() {
                 if (successCallback) {
@@ -95,6 +155,7 @@
             });
         },
 
+        /*
         populateAuthenticatedUser: function (context, user)
         {
             // update user observable
@@ -136,12 +197,18 @@
             // update tenant observable
             context.observable("tenantDetails").set(tenantDetails);
         },
+        */
 
         logout: function(context, callback)
         {
+            var self = this;
+
             var platform = Gitana.Authentication.platform();
             platform.logout().then(function()
             {
+                // clean out any cookies
+                self.cleanCookies();
+
                 if (callback)
                 {
                     callback();

@@ -194,6 +194,13 @@
                 config.password = password;
             }
 
+            // disconnect
+            var disconnectKey = null;
+            if (config.key) {
+                disconnectKey = config.key;
+            }
+            Gitana.disconnect(disconnectKey);
+
             // connect to Gitana
             Gitana.connect(config, function(err) {
 

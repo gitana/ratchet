@@ -190,9 +190,23 @@
                     model.items = [];
                 }
 
-                callback();
+                // filter
+                self.filterModel(model, function() {
+                    callback();
+                });
 
             });
+        },
+
+        /**
+         * Provides an extension point for potentially permission and authority checking items on the model
+         * ahead of applying the render.
+         *
+         * @param model
+         * @param callback
+         */
+        filterModel: function(model, callback) {
+            callback();
         },
 
         beforeSwap: function(el, model, callback)

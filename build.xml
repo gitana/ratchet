@@ -310,7 +310,7 @@
             </filelist>
         </concat>
 
-        <!-- "ratchet-ejs" -->
+        <!-- "ratchet-handlebars" -->
         <concat destfile="${prep.dir}/js/${appkey}-handlebars-component.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
@@ -545,9 +545,9 @@
             <param name="dependencies" value="['ratchet/ratchet', 'ejs']" />
         </antcall>
 
-        <!-- "ratchet-ejs" -->
+        <!-- "ratchet-handlebars" -->
         <antcall target="umd">
-            <param name="scriptFile" value="${prep.dir}/js/${appkey}-ejs-component.js"/>
+            <param name="scriptFile" value="${prep.dir}/js/${appkey}-handlebars-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/handlebars.js"/>
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet']" />

@@ -281,6 +281,18 @@
                             if (actionConfig.iconClass) {
                                 button.iconClass = actionConfig.iconClass;
                             }
+                            if (selectorGroupItem.allowPermission) {
+                                button.allowPermission = selectorGroupItem.allowPermission;
+                            }
+                            if (selectorGroupItem.rejectPermission) {
+                                button.rejectPermission = selectorGroupItem.rejectPermission;
+                            }
+                            if (selectorGroupItem.allowAuthority) {
+                                button.allowAuthority = selectorGroupItem.allowAuthority;
+                            }
+                            if (selectorGroupItem.rejectAuthority) {
+                                button.rejectAuthority = selectorGroupItem.rejectAuthority;
+                            }
                             selectButton.buttons.push(button);
                         }
                     });

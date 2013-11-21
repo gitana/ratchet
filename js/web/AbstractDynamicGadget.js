@@ -183,27 +183,36 @@
 
                 self.substituteModelVariables(context, model);
 
-                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
-                self.render(context, model, function(el) {
-                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
-                    self.beforeSwap(context, model, function() {
-                        Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
-                        context.swap(function() {
-                            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
-                            self.afterSwap($(self.ratchet().el)[0], model, context, function() {
-                                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
-//                                    console.log("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
+                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call filterModel()");
+                self.filterModel(model, function() {
 
-                                // nothing more to do
+                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call postFilterModel()");
+                    self.postFilterModel(model, function() {
 
-                                if (callback)
-                                {
-                                    callback();
-                                }
+                        Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
+                        self.render(context, model, function(el) {
+                            Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
+                            self.beforeSwap(context, model, function() {
+                                Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
+                                context.swap(function() {
+                                    Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
+                                    self.afterSwap($(self.ratchet().el)[0], model, context, function() {
+                                        Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
+    //                                    console.log("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
 
+                                        // nothing more to do
+
+                                        if (callback)
+                                        {
+                                            callback();
+                                        }
+
+                                    });
+                                });
                             });
                         });
                     });
+
                 });
             });
         },
@@ -255,6 +264,21 @@
                 }
             }
 
+            callback();
+        },
+
+        /**
+         * Provides an extension point for potentially permission and authority checking items on the model
+         * ahead of applying the render.
+         *
+         * @param model
+         * @param callback
+         */
+        filterModel: function(model, callback) {
+            callback();
+        },
+
+        postFilterModel: function(model, callback) {
             callback();
         },
 

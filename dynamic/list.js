@@ -190,22 +190,28 @@
                     model.items = [];
                 }
 
-                // filter
-                self.filterModel(model, function() {
-                    callback();
-                });
-
+                callback();
             });
         },
 
-        /**
-         * Provides an extension point for potentially permission and authority checking items on the model
-         * ahead of applying the render.
-         *
-         * @param model
-         * @param callback
-         */
-        filterModel: function(model, callback) {
+        postFilterModel: function(model, callback)
+        {
+            var self = this;
+
+            if (model.buttons)
+            {
+                for (var i = 0; i < model.buttons.length; i++)
+                {
+                    var button = model.buttons[i];
+
+                    if (button.buttons && button.buttons.length == 0)
+                    {
+                        model.buttons = model.buttons.splice(i,1);
+                    }
+
+                }
+            }
+
             callback();
         },
 

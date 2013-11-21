@@ -82,28 +82,31 @@
         {
             var self = this;
 
-            // init gitana
             var config = {};
-            if (self.config) {
+            if (self.config)
+            {
                 Ratchet.copyInto(config, self.config);
             }
+            config.cookie = true;
 
-            var gitana = new Gitana(config);
+            // connect to Gitana
+            Gitana.connect(config, function(err) {
 
-            // now authenticate
-            gitana.authenticate({
-                "cookie": true
-            },function() {
-
-                if (failureCallback)
+                // if err, then something went wrong
+                if (err)
                 {
-                    failureCallback();
+                    if (failureCallback)
+                    {
+                        failureCallback();
+                    }
+
+                    return;
                 }
 
-            }).then(function() {
+                // no error
 
-                self.handlePostAuthenticate(this, context, successCallback, failureCallback);
-
+                // if an "application" was specified in the config...
+                self.handlePostAuthenticate((this.platform ? this.platform() : this), context, successCallback, failureCallback);
             });
         },
 

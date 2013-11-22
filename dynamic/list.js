@@ -206,7 +206,7 @@
 
                     if (button.buttons && button.buttons.length == 0)
                     {
-                        model.buttons = model.buttons.splice(i,1);
+                        model.buttons.splice(i,1);
                     }
 
                 }

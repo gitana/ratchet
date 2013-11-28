@@ -27,7 +27,7 @@
         {
             this.config({
                 "mode": "ace/mode/html",
-                "mimetypes": ["text/html"]
+                "mimetypes": ["text/html", "application/freemarker"]
             });
         }
 

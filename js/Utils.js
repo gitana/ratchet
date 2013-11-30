@@ -1228,6 +1228,103 @@
         subst(obj, 0);
     };
 
+    /**
+     * Writes a cookie.
+     *
+     * @param {String} name
+     * @param {String} value
+     * @param [String] path optional path (assumed "/" if not provided)
+     * @param [Number] days optional # of days to store cookie (assumes session cookie if null)
+     * @param [String] domain optional domain (otherwise assumes wildcard base domain)
+     */
+    Ratchet.writeCookie = function(name, value, path, days, domain)
+    {
+        if (typeof(document) !== "undefined")
+        {
+            function createCookie(name, value, path, days, host)
+            {
+                // path
+                if (!path)
+                {
+                    path = "/";
+                }
+                var pathString = "; path=" + path;
+
+                // expiration
+                var expirationString = "";
+                if (days)
+                {
+                    var date = new Date();
+                    date.setTime(date.getTime()+(days*24*60*60*1000));
+                    expirationString = "; expires="+date.toGMTString();
+                }
+
+                // domain
+                var domainString = "";
+                if (host)
+                {
+                    domainString = "; domain=" + host;
+                }
+
+                document.cookie = name + "=" + value + expirationString + pathString + domainString;
+            }
+
+            createCookie(name, value, path, days, domain);
+        }
+    };
+
+    /**
+     * Deletes a cookie.
+     *
+     * @param name
+     * @param path
+     */
+    Ratchet.deleteCookie = function(name, path)
+    {
+        if (typeof(document) !== "undefined")
+        {
+            // uses the browser's assumed domain
+            Ratchet.writeCookie(name, "", path, -1);
+
+            // also delete for our specific domain
+            // this is because some browsers seem to assume a different root domain than cookie may have come back
+            // from if it was written through, say, an Apache Proxy (using cookie domain rewriting)
+            Ratchet.writeCookie(name, "", path, -1, window.location.host)
+        }
+    };
+
+    Ratchet.readCookie = function(name)
+    {
+        function _readCookie(name)
+        {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++)
+            {
+                var c = ca[i];
+                while (c.charAt(0)==' ')
+                {
+                    c = c.substring(1,c.length);
+                }
+
+                if (c.indexOf(nameEQ) == 0)
+                {
+                    return c.substring(nameEQ.length,c.length);
+                }
+            }
+            return null;
+        }
+
+        var value = null;
+
+        if (typeof(document) !== "undefined")
+        {
+            value = _readCookie(name);
+        }
+
+        return value;
+    };
+
 
 
     // browser detection

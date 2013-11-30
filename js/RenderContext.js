@@ -63,6 +63,9 @@
 
                     var postSwap = function(onComplete)
                     {
+                        // mark the element as complete
+                        $(self.ratchet().el).addClass("ratchet-completed");
+
                         // fire post-swap custom event
                         $('body').trigger('swap', [self.ratchet()]);
 

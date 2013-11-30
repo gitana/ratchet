@@ -848,7 +848,7 @@
                     if (isPrimary)
                     {
                         // now flick to el
-                        $(this.el).append(tempEl.children());
+                        $(_this.el).append(tempEl.children());
                     }
 
                     if (callback)
@@ -866,6 +866,9 @@
                     {
                         Ratchet.pageTransitionBlocker(true);
                     }
+
+                    // remove the ratchet-completed class
+                    $(_this.el).removeClass("ratchet-completed");
 
                     // invoke the handler
                     wrappedHandler(function(err) {

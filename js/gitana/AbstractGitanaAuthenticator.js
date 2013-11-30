@@ -151,6 +151,8 @@
             });
             */
 
+            self.onLogin(platform);
+
             platform.then(function() {
                 if (successCallback) {
                     successCallback();
@@ -212,11 +214,23 @@
                 // clean out any cookies
                 self.cleanCookies();
 
+                self.onLogout();
+
                 if (callback)
                 {
                     callback();
                 }
             });
+        },
+
+        onLogin: function(platform)
+        {
+
+        },
+
+        onLogout: function()
+        {
+
         }
 
     });

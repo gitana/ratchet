@@ -142,6 +142,11 @@
 
             // assume sort descending
             sortDirection = -1;
+            // if the model specifies a default sort direction, we use that
+            if (model.options && model.options.defaultSortDirection)
+            {
+                sortDirection = model.options.defaultSortDirection;
+            }
             if (observable && observable.get()) {
                 sortDirection = observable.get();
             }
@@ -164,6 +169,11 @@
             }
 
             var sort = null;
+            // if the model specifies a default sort, we use that
+            if (model.options && model.options.defaultSort)
+            {
+                sort = model.options.defaultSort;
+            }
             if (observable && observable.get())
             {
                 sort = observable.get();
@@ -524,12 +534,6 @@
                 }
             }
 
-            /*
-             $.extend( $.fn.dataTableExt.oStdClasses, {
-             "sWrapper": "dataTables_wrapper form-inline"
-             } );
-             */
-
             if (model.lengthMenu)
             {
                 tableConfig["aLengthMenu"] = [];
@@ -538,13 +542,10 @@
                 //[[10, 25, 50, -1], [10, 25, 50, "All"]]
             }
 
-            //tableConfig["bJQueryUI"] = true;
-            //tableConfig["sPaginationType"] = "full_numbers";
             var tableExists = ($(el).find(".display").length > 0);
             if (tableExists) {
                 tableConfig.bDestroy = tableExists;
             }
-            //tableConfig["bProcessing"] = true;
             tableConfig["bServerSide"] = true;
             tableConfig["aoColumns"] = [];
             if (model.checkbox)
@@ -617,219 +618,227 @@
                 throw new Error("Missing model.columns");
             }
 
-
-
-            //////////////////////////////////////////////////////////////////////////////
-            //
-            // FUNCTIONS FOR INTERPRETING DATA THAT IS LOADED INTO THE TABLE
-            //
-            //////////////////////////////////////////////////////////////////////////////
-
-            // load
-            tableConfig["fnServerData"] = function(sSource, aoData, fnCallback)
-            {
-                // create key value map for facility of looking up DataTables values
-                var keyValues = {};
-                for (var i = 0; i < aoData.length; i++) {
-                    keyValues[aoData[i].name] = aoData[i].value;
-                }
-
-                // build json that we'll pass into data tables
-                var json = {};
-                json["sEcho"] = keyValues["sEcho"];
-                json["aaData"] = [];
-
+            // custom hook for specifying settings-driven overrides
+            self.applyDynamicConfig(model, tableConfig, function(tableConfig) {
 
                 //////////////////////////////////////////////////////////////////////////////
-                // SEARCH TERM
+                //
+                // FUNCTIONS FOR INTERPRETING DATA THAT IS LOADED INTO THE TABLE
+                //
                 //////////////////////////////////////////////////////////////////////////////
 
-                // allow search term from data tables default control
-                var searchTerm = keyValues["sSearch"];
-                if (!searchTerm) {
-
-                    // if not specified, allow lookup from an observable
-                    searchTerm = self.observable(model.observables.searchTerm).get();
-                }
-
-
-                //////////////////////////////////////////////////////////////////////////////
-                // QUERY
-                //////////////////////////////////////////////////////////////////////////////
-
-                // allow query to be set from an external observable
-                var query = self.observable(model.observables.query).get();
-
-
-
-                //////////////////////////////////////////////////////////////////////////////
-                // PAGINATION
-                //////////////////////////////////////////////////////////////////////////////
-
-                var pagination = {
-                    "skip": keyValues["iDisplayStart"],
-                    "limit": keyValues["iDisplayLength"]
-                };
-
-                // apply sort to pagination
-                var sortColIndex = keyValues["iSortCol_0"];
-                if (sortColIndex > 1) {
-                    var sortColProperty = model.columns[sortColIndex - 2].property;
-                    if (sortColProperty)
-                    {
-                        pagination["sort"] = {};
-                        var direction = keyValues["sSortDir_0"] == 'asc' ? 1 : -1;
-                        if (Ratchet.isString((sortColProperty))) {
-                            pagination["sort"][sortColProperty] = direction;
-                        }
-                        if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
-                            pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
-                        }
-                    }
-                }
-
-                // apply sort from observable?
-                var sortField = self.sort(model);
-                if (sortField)
+                // load
+                tableConfig["fnServerData"] = function(sSource, aoData, fnCallback)
                 {
-                    pagination["sort"] = {};
-                    pagination["sort"][sortField] = self.sortDirection(model);
-                }
-
-                // if sort to provided, allow for a default sort
-                if (!pagination.sort)
-                {
-                    self.applyDefaultSort(pagination);
-                }
-
-
-
-
-
-                //////////////////////////////////////////////////////////////////////////////
-                // LOAD FROM SERVER
-                //////////////////////////////////////////////////////////////////////////////
-
-                var loaderId = model.loader;
-                if (!loaderId) {
-                    loaderId = "default";
-                }
-                var loader = self.loaders[loaderId];
-                if (!loader) {
-                    throw new Error("Cannot find loader: " + loaderId);
-                }
-
-                self.startProcessing.call(self, context, model);
-
-                loader.call(self, context, model, keyValues, sSource, aoData, searchTerm, query, pagination, function(aaData, attrs) {
-
-                    for (var i = 0; i < aaData.length; i++)
-                    {
-                        json["aaData"].push(aaData[i]);
+                    // create key value map for facility of looking up DataTables values
+                    var keyValues = {};
+                    for (var i = 0; i < aoData.length; i++) {
+                        keyValues[aoData[i].name] = aoData[i].value;
                     }
 
-                    if (attrs)
-                    {
-                        if (attrs.iTotalRecords || attrs.iTotalRecords == 0)
-                        {
-                            json["iTotalRecords"] = attrs.iTotalRecords;
-                        }
+                    // build json that we'll pass into data tables
+                    var json = {};
+                    json["sEcho"] = keyValues["sEcho"];
+                    json["aaData"] = [];
 
-                        if (attrs.iTotalDisplayRecords || attrs.iTotalDisplayRecords == 0)
-                        {
-                            json["iTotalDisplayRecords"] = attrs.iTotalDisplayRecords;
-                        }
+
+                    //////////////////////////////////////////////////////////////////////////////
+                    // SEARCH TERM
+                    //////////////////////////////////////////////////////////////////////////////
+
+                    // allow search term from data tables default control
+                    var searchTerm = keyValues["sSearch"];
+                    if (!searchTerm) {
+
+                        // if not specified, allow lookup from an observable
+                        searchTerm = self.observable(model.observables.searchTerm).get();
                     }
 
-                    self.endProcessing.call(self, context, model, json);
 
-                    fnCallback(json);
-                });
-            };
+                    //////////////////////////////////////////////////////////////////////////////
+                    // QUERY
+                    //////////////////////////////////////////////////////////////////////////////
 
-
-            // register callbacks
-            tableConfig["fnCreatedRow"] = function( nRow, aData, iDataIndex ) {
-                self.handleCreatedRow.call(self, el, model, this, nRow, aData, iDataIndex);
-            };
-            tableConfig["fnRowCallback"] = function(nRow, aData, iDisplayIndex) {
-                self.handleRowCallback.call(self, el, model, this, nRow, aData, iDisplayIndex);
-            };
-            tableConfig["fnInitComplete"] = function(oSettings, json) {
-                self.handleInitComplete.call(self, el, model, this, oSettings, json, callback);
-            };
+                    // allow query to be set from an external observable
+                    var query = self.observable(model.observables.query).get();
 
 
 
-            if (model.tableConfig) {
-                $.extend(true, tableConfig, model.tableConfig);
-            }
+                    //////////////////////////////////////////////////////////////////////////////
+                    // PAGINATION
+                    //////////////////////////////////////////////////////////////////////////////
 
-            if (model.hideCheckbox) {
-                tableConfig["aoColumns"][0]["bVisible"] = false;
-            } else if (model.hideRadio) {
-                tableConfig["aoColumns"][0]["bVisible"] = false;
-            }
+                    var pagination = {
+                        "skip": keyValues["iDisplayStart"],
+                        "limit": keyValues["iDisplayLength"]
+                    };
 
-            if (model.hideIcon) {
-                tableConfig["aoColumns"][1]["bVisible"] = false;
-            }
-
-            // RENDER THE TABLE
-            self.oTable = $(el).find("table").dataTable(tableConfig);
-
-            if (el.uniform) {
-                $("select, input:checkbox, input:text, input:password, input:radio, input:file, textarea",$(el)).uniform();
-            }
-
-            // select/unselect-all checkbox
-            $(el).find(".list-check-box-all").click(function() {
-
-                if ($(this).prop("checked")) {
-                    $(el).find(".list-check-box").each(function() {
-                        if (! $(this).prop("checked")) {
-                            $(this).prop("checked", true);
-                        }
-                    });
-                    self.clearSelectedItems(model);
-
-                    var items = [];
-                    $(el).find("input:checkbox[list-target-object-id]").each(function() {
-
-                        var itemId = $(this).attr("list-target-object-id");
-
-                        // find the item row
-                        var item = null;
-                        for (var i = 0; i < model.rows.length; i++)
+                    // apply sort to pagination
+                    var sortColIndex = keyValues["iSortCol_0"];
+                    if (sortColIndex > 1) {
+                        var sortColProperty = model.columns[sortColIndex - 2].property;
+                        if (sortColProperty)
                         {
-                            if (model.rows[i].id == itemId)
-                            {
-                                item = model.rows[i];
-                                break;
+                            pagination["sort"] = {};
+                            var direction = keyValues["sSortDir_0"] == 'asc' ? 1 : -1;
+                            if (Ratchet.isString((sortColProperty))) {
+                                pagination["sort"][sortColProperty] = direction;
+                            }
+                            if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
+                                pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
                             }
                         }
-                        items.push(item);
-                    });
-                    self.selectedItems(model, items);
-                } else {
+                    }
 
-                    $(el).find(".list-check-box").each(function() {
-                        if ($(this).prop("checked")) {
-                            $(this).prop("checked", false);
+                    // apply sort from observable?
+                    var sortField = self.sort(model);
+                    if (sortField)
+                    {
+                        pagination["sort"] = {};
+                        pagination["sort"][sortField] = self.sortDirection(model);
+                    }
+
+                    // if sort to provided, allow for a default sort
+                    if (!pagination.sort)
+                    {
+                        self.applyDefaultSort(pagination);
+                    }
+
+
+
+
+
+                    //////////////////////////////////////////////////////////////////////////////
+                    // LOAD FROM SERVER
+                    //////////////////////////////////////////////////////////////////////////////
+
+                    var loaderId = model.loader;
+                    if (!loaderId) {
+                        loaderId = "default";
+                    }
+                    var loader = self.loaders[loaderId];
+                    if (!loader) {
+                        throw new Error("Cannot find loader: " + loaderId);
+                    }
+
+                    self.startProcessing.call(self, context, model);
+
+                    loader.call(self, context, model, keyValues, sSource, aoData, searchTerm, query, pagination, function(aaData, attrs) {
+
+                        for (var i = 0; i < aaData.length; i++)
+                        {
+                            json["aaData"].push(aaData[i]);
                         }
+
+                        if (attrs)
+                        {
+                            if (attrs.iTotalRecords || attrs.iTotalRecords == 0)
+                            {
+                                json["iTotalRecords"] = attrs.iTotalRecords;
+                            }
+
+                            if (attrs.iTotalDisplayRecords || attrs.iTotalDisplayRecords == 0)
+                            {
+                                json["iTotalDisplayRecords"] = attrs.iTotalDisplayRecords;
+                            }
+                        }
+
+                        self.endProcessing.call(self, context, model, json);
+
+                        fnCallback(json);
                     });
-                    self.clearSelectedItems(model);
+                };
+
+
+                // register callbacks
+                tableConfig["fnCreatedRow"] = function( nRow, aData, iDataIndex ) {
+                    self.handleCreatedRow.call(self, el, model, this, nRow, aData, iDataIndex);
+                };
+                tableConfig["fnRowCallback"] = function(nRow, aData, iDisplayIndex) {
+                    self.handleRowCallback.call(self, el, model, this, nRow, aData, iDisplayIndex);
+                };
+                tableConfig["fnInitComplete"] = function(oSettings, json) {
+                    self.handleInitComplete.call(self, el, model, this, oSettings, json, callback);
+                };
+
+
+
+                if (model.tableConfig) {
+                    $.extend(true, tableConfig, model.tableConfig);
                 }
+
+                if (model.hideCheckbox) {
+                    tableConfig["aoColumns"][0]["bVisible"] = false;
+                } else if (model.hideRadio) {
+                    tableConfig["aoColumns"][0]["bVisible"] = false;
+                }
+
+                if (model.hideIcon) {
+                    tableConfig["aoColumns"][1]["bVisible"] = false;
+                }
+
+                // RENDER THE TABLE
+                self.oTable = $(el).find("table").dataTable(tableConfig);
+
+                if (el.uniform) {
+                    $("select, input:checkbox, input:text, input:password, input:radio, input:file, textarea",$(el)).uniform();
+                }
+
+                // select/unselect-all checkbox
+                $(el).find(".list-check-box-all").click(function() {
+
+                    if ($(this).prop("checked")) {
+                        $(el).find(".list-check-box").each(function() {
+                            if (! $(this).prop("checked")) {
+                                $(this).prop("checked", true);
+                            }
+                        });
+                        self.clearSelectedItems(model);
+
+                        var items = [];
+                        $(el).find("input:checkbox[list-target-object-id]").each(function() {
+
+                            var itemId = $(this).attr("list-target-object-id");
+
+                            // find the item row
+                            var item = null;
+                            for (var i = 0; i < model.rows.length; i++)
+                            {
+                                if (model.rows[i].id == itemId)
+                                {
+                                    item = model.rows[i];
+                                    break;
+                                }
+                            }
+                            items.push(item);
+                        });
+                        self.selectedItems(model, items);
+                    } else {
+
+                        $(el).find(".list-check-box").each(function() {
+                            if ($(this).prop("checked")) {
+                                $(this).prop("checked", false);
+                            }
+                        });
+                        self.clearSelectedItems(model);
+                    }
+                });
+
+                // handle any other dom element bindings for the list
+                self.handleBindEvents(el, model);
+
+                // init any buttons
+                $('.dropdown-toggle', el).dropdown();
+
+                // if we have a display length selector, adjust it for bootstrap 3 manually
+                $(".dataTables_length label select", el).addClass("form-control");
+
+                // if we have a filter box, adjust it for bootstrap 3 manually
+                $(".dataTables_filter label input", el).addClass("form-control").css("width", "initial");
+
+                // all done - fire callback
+                //callback();
             });
-
-            // handle any other dom element bindings for the list
-            self.handleBindEvents(el, model);
-
-            // init any buttons
-            $('.dropdown-toggle', el).dropdown();
-
-            // all done - fire callback
-            //callback();
         },
 
         /**
@@ -1270,6 +1279,14 @@
         applyDefaultSort: function(pagination)
         {
 
+        },
+
+        /**
+         * EXTENSION POINT
+         */
+        applyDynamicConfig: function(model, config, callback)
+        {
+            callback(config);
         },
 
         /**

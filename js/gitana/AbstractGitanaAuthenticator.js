@@ -151,7 +151,7 @@
             });
             */
 
-            self.onLogin(platform);
+            self.onLogin(platform, context);
 
             platform.then(function() {
                 if (successCallback) {
@@ -223,7 +223,7 @@
             });
         },
 
-        onLogin: function(platform)
+        onLogin: function(platform, context)
         {
 
         },

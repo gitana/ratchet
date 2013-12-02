@@ -204,7 +204,7 @@
         },
         */
 
-        logout: function(context, callback)
+        logout: function(lcallback)
         {
             var self = this;
 

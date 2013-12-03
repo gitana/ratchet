@@ -151,12 +151,16 @@
             });
             */
 
-            self.onLogin(platform, context);
+            self.postLogin(platform, context, function() {
 
-            platform.then(function() {
-                if (successCallback) {
-                    successCallback();
-                }
+                self.onLogin(platform, context);
+
+                platform.then(function() {
+                    if (successCallback) {
+                        successCallback();
+                    }
+                });
+
             });
         },
 
@@ -214,18 +218,32 @@
                 // clean out any cookies
                 self.cleanCookies();
 
-                self.onLogout();
+                self.postLogout(function() {
 
-                if (callback)
-                {
-                    callback();
-                }
+                    self.onLogout();
+
+                    if (callback)
+                    {
+                        callback();
+                    }
+
+                });
             });
+        },
+
+        postLogin: function(platform, context, callback)
+        {
+            callback();
         },
 
         onLogin: function(platform, context)
         {
 
+        },
+
+        postLogout: function(callback)
+        {
+            callback();
         },
 
         onLogout: function()

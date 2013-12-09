@@ -581,45 +581,45 @@
                 });
             }
 
-            // push for each column
-            if (model.columns)
-            {
-                for (var i = 0; i < model.columns.length; i++) {
-                    var column = model.columns[i];
-
-                    var columnSortable = false;
-                    if (!Ratchet.isEmpty(column.sort)) {
-                        columnSortable = column.sort;
-                    }
-
-                    var config = {
-                        "bVisible": true,
-                        "bSearchable": true,
-                        "bSortable": columnSortable
-                    };
-
-                    if (column.hidden) {
-                        config["bVisible"] = false;
-                    }
-
-                    if (column.cssClasses)
-                    {
-                        config.sClass = column.cssClasses;
-                    }
-
-                    // custom column configuration hook
-                    self.handleConfigureColumn(column, config);
-
-                    tableConfig["aoColumns"].push(config);
-                }
-            }
-            else
-            {
-                throw new Error("Missing model.columns");
-            }
-
             // custom hook for specifying settings-driven overrides
             self.applyDynamicConfig(model, tableConfig, function(tableConfig) {
+
+                // push for each column
+                if (model.columns)
+                {
+                    for (var i = 0; i < model.columns.length; i++) {
+                        var column = model.columns[i];
+
+                        var columnSortable = false;
+                        if (!Ratchet.isEmpty(column.sort)) {
+                            columnSortable = column.sort;
+                        }
+
+                        var config = {
+                            "bVisible": true,
+                            "bSearchable": true,
+                            "bSortable": columnSortable
+                        };
+
+                        if (column.hidden) {
+                            config["bVisible"] = false;
+                        }
+
+                        if (column.cssClasses)
+                        {
+                            config.sClass = column.cssClasses;
+                        }
+
+                        // custom column configuration hook
+                        self.handleConfigureColumn(column, config);
+
+                        tableConfig["aoColumns"].push(config);
+                    }
+                }
+                else
+                {
+                    throw new Error("Missing model.columns");
+                }
 
                 //////////////////////////////////////////////////////////////////////////////
                 //

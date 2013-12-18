@@ -222,21 +222,17 @@
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE = ' \
         <div class="modal fade" style="overflow: visible !important"> \
-            <div class="modal-dialog"> \
-                <div class="modal-content"> \
-                    <div class="modal-header"> \
-                        <h4>Log In</h4> \
-                    </div> \
-                    <div class="modal-body"> \
-                        <div class="login-header"></div> \
-                        <div class="login-body"></div> \
-                        <div class="login-footer"></div> \
-                    </div> \
-                    <div class="modal-footer"> \
-                        <a href="javascript:void(0);" class="btn btn-default login_button_cancel">Cancel</a> \
-                        <a href="javascript:void(0);" class="btn btn-primary login_button_login">Log In</a> \
-                    </div> \
-                </div> \
+            <div class="modal-header"> \
+                <h4>Log In</h4> \
+            </div> \
+            <div class="modal-body"> \
+                <div class="login-header"></div> \
+                <div class="login-body"></div> \
+                <div class="login-footer"></div> \
+            </div> \
+            <div class="modal-footer"> \
+                <a href="javascript:void(0);" class="btn btn-default login_button_cancel">Cancel</a> \
+                <a href="javascript:void(0);" class="btn btn-primary login_button_login">Log In</a> \
             </div> \
         </div> \
     ';

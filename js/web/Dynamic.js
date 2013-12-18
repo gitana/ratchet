@@ -2,6 +2,7 @@
 /*jshint -W004 */ // duplicate variables
 (function() {
 
+    /*
     var MODAL_TEMPLATE = ' \
         <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
             <div class="modal-dialog"> \
@@ -14,6 +15,18 @@
                     <div class="modal-footer"></div> \
                 </div> \
             </div> \
+        </div> \
+    ';
+    */
+
+    var MODAL_TEMPLATE = ' \
+        <div class="modal fade" tabindex="-1" data-width="760" style="display:none"> \
+            <div class="modal-header"> \
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> \
+                <h4 class="modal-title"></h4> \
+            </div> \
+            <div class="modal-body"></div> \
+            <div class="modal-footer"></div> \
         </div> \
     ';
 

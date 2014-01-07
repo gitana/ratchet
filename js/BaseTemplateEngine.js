@@ -18,8 +18,14 @@
                 // replace img "src" attributes with "no_load_src" attribute
                 html = html.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function (match, capture) {return "<img no_load_src=\"" +capture+ "\" />";});
 
+                // wrap in div tag to convert to dom (in case starts with {} tags)
+                html = "<div>" + html + "</div>";
+
                 // convert to a dom briefly
                 var dom = $(html);
+
+                // pop out the div wrapper tags
+                dom = dom.children()[0];
 
                 // if if starts with a script tag, then we strip that out
                 if ($(dom).length == 1)

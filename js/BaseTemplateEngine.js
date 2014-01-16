@@ -98,24 +98,36 @@
                     url += "." + fileExtension;
                 }
 
-                $.ajax({
-                    "url": url,
-                    "dataType": "html",
-                    "success": function(html)
-                    {
-                        // cleanup html
-                        html = self.cleanMarkup(el, html);
+                var html = self.retrievePreloadedJST(url);
+                if (html)
+                {
+                    // cleanup html
+                    html = self.cleanMarkup(el, html);
 
-                        self.doRender(el, cacheKey, html, model, renderCallback);
-                    },
-                    "failure": function(http)
-                    {
-                        if (failureCallback)
+                    self.doRender(el, cacheKey, html, model, renderCallback);
+                }
+                else
+                {
+                    // load from ajax
+                    $.ajax({
+                        "url": url,
+                        "dataType": "html",
+                        "success": function(html)
                         {
-                            failureCallback.call(failureCallback, el, http);
+                            // cleanup html
+                            html = self.cleanMarkup(el, html);
+
+                            self.doRender(el, cacheKey, html, model, renderCallback);
+                        },
+                        "failure": function(http)
+                        {
+                            if (failureCallback)
+                            {
+                                failureCallback.call(failureCallback, el, http);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             else
             {
@@ -140,6 +152,40 @@
         doRender: function(el, name, html, model, callback)
         {
 
+        },
+
+        /**
+         * Extension point for handing back a preloaded JST html string for a given uri.
+         *
+         * @param url
+         */
+        retrievePreloadedJST: function(url)
+        {
+            var self = this;
+
+            var html = null;
+
+            if (window && window.JSTTemplates)
+            {
+                var name = url;
+
+                // strip front "/" if it exists
+                if (name.substring(0,1) == "/")
+                {
+                    name = name.substring(1);
+                }
+
+                // remove extension if it exists
+                var extensionIndex = name.indexOf("." + self.fileExtension());
+                if (extensionIndex > -1)
+                {
+                    name = name.substring(0, extensionIndex);
+                }
+
+                html = window.JSTTemplates[name];
+            }
+
+            return html;
         }
 
     });

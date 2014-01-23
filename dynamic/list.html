@@ -21,6 +21,7 @@
 
                     <div class="button-container {{if button.buttons}}dropdown{{/if}}">
 
+                        {{if !button.select}}
                         <button id="list-button-${key}" class="btn btn-default list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                             {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                                 ${button.title}&nbsp;
@@ -28,6 +29,17 @@
                                 <span class="caret"></span>
                             {{/if}}
                         </button>
+                        {{/if}}
+
+                        {{if button.select}}
+                        <div class="form-group">
+                            <select id="list-select-${key}" class="list-select-${key} form-control">
+                                {{each(o, option) button.options}}
+                                <option value="${option.value}">${option.label}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{/if}}
 
                         {{if button.buttons}}
                         <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-${key}">
@@ -60,6 +72,7 @@
 
                     <div class="button-container {{if button.buttons}}dropdown{{/if}}">
 
+                        {{if !button.select}}
                         <button id="list-button-${key}" class="btn btn-default list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
                             {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
                                 ${button.title}&nbsp;
@@ -67,6 +80,17 @@
                                 <span class="caret"></span>
                             {{/if}}
                         </button>
+                        {{/if}}
+
+                        {{if button.select}}
+                        <div class="form-group">
+                            <select id="list-select-${key}" class="list-select-${key} form-control">
+                                {{each(o, option) button.options}}
+                                <option value="${option.value}">${option.label}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{/if}}
 
                         {{if button.buttons}}
                         <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-${key}">

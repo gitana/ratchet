@@ -1039,14 +1039,28 @@
                     }
                     else
                     {
-                        // single click button
-                        $(el).find(".list-button-" + button.key).off();
+                        if (button.select)
+                        {
+                            // select changes
+                            $(el).find(".list-select-" + button.key).off();
+                            $(el).find(".list-select-" + button.key).change(function(b) {
+                                return function(event) {
+                                    var v = $(event.target).val();
+                                    self.handleButtonBarSelectChange.call(self, event, model, b, v);
+                                };
+                            }(button));
+                        }
+                        else
+                        {
+                            // single click button
+                            $(el).find(".list-button-" + button.key).off();
 
-                        $(el).find(".list-button-" + button.key).click(function(b) {
-                            return function(event) {
-                                self.handleButtonBarButtonClick.call(self, event, model, b);
-                            };
-                        }(button));
+                            $(el).find(".list-button-" + button.key).click(function(b) {
+                                return function(event) {
+                                    self.handleButtonBarButtonClick.call(self, event, model, b);
+                                };
+                            }(button));
+                        }
                     }
                 }
             }
@@ -1234,6 +1248,17 @@
             this.clickButtonBarButton(event, model, button);
         },
 
+        handleButtonBarSelectChange: function(event, model, button, value)
+        {
+            // prevent the event from propagating (so as to prevent following href attributes on anchor)
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+
+            // custom handler
+            this.changeButtonBarSelect(event, model, button, value);
+        },
+
         handleChangeSelectedItems: function(model)
         {
             this.changeSelectedItems(model);
@@ -1348,6 +1373,14 @@
          * EXTENSION POINT
          */
         clickButtonBarButton: function(event, model, button)
+        {
+
+        },
+
+        /**
+         * EXTENSION POINT
+         */
+        changeButtonBarSelect: function(event, model, button, value)
         {
 
         },

@@ -144,7 +144,24 @@
                         failureCallback();
                     });
 
-                    control.childrenByPropertyId["username"].on("keypress", function(e) {
+                    var usernameField = control.childrenByPropertyId["username"];
+                    var passwordField = control.childrenByPropertyId["password"];
+
+                    var enableDisableLoginButton = function()
+                    {
+                        // disable the login button
+                        $(div).find(".login_button_login").attr("disabled", true);
+
+                        // if a username and password is provided, show the login button
+                        if (usernameField.getValue() && passwordField.getValue())
+                        {
+                            // disable the login button
+                            $(div).find(".login_button_login").attr("disabled", false);
+                        }
+                    };
+                    enableDisableLoginButton();
+
+                    usernameField.on("keypress", function(e) {
 
                         if (e.charCode === 13)
                         {
@@ -152,12 +169,20 @@
                         }
                     });
 
-                    control.childrenByPropertyId["password"].on("keypress", function(e) {
+                    passwordField.on("keypress", function(e) {
 
                         if (e.charCode === 13)
                         {
                             $(div).find(".login_button_login").click();
                         }
+                    });
+
+                    usernameField.on("keyup", function(e) {
+                        enableDisableLoginButton();
+                    });
+
+                    passwordField.on("keyup", function(e) {
+                        enableDisableLoginButton();
                     });
 
 

@@ -121,7 +121,7 @@
             var div = $(this.getTemplate());
 
             $('.modal-body', div).find('.login-body').alpaca({
-                "view": "VIEW_WEB_CREATE",
+                //"view": "VIEW_WEB_CREATE",
                 "data": data,
                 "schema": schema,
                 "options": options,

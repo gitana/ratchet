@@ -114,7 +114,8 @@
             };
 
             if (retry) {
-                options.fields.password['helper'] = "Login Failed. Try Again!";
+                //options.fields.password['helper'] = "Login Failed. Try Again!";
+                options.fields.password['helper'] = "Unable to log in.  Please try again.";
             }
 
             // load the template

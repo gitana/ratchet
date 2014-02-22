@@ -1,76 +1,70 @@
 <!-- Dashboard -->
 
-<div class="row" class="{{if cssClasses}}${cssClasses}{{/if}}">
+<div>
 
-    <div class="container">
+    {{if buttons}}
+    <div class="row">
 
-        {{if buttons}}
-        <div class="row">
-
-            <!-- left -->
-            <div class="btn-group pull-left" data-toggle="buttons-checkbox">
-                {{each(i, button) buttons}}
-                {{if !button.align || button.align == 'left'}}
-                <button type="button" class="btn btn-default btn-lg ${button.class}">${button.label}</button>
-                {{/if}}
-                {{/each}}
-            </div>
-
-            <!-- right -->
-            <div class="btn-group pull-right" data-toggle="buttons-checkbox">
-                {{each(i, button) buttons}}
-                {{if button.align == 'right'}}
-                <button type="button" class="btn btn-default btn-lg ${button.class}">${button.label}</button>
-                {{/if}}
-                {{/each}}
-            </div>
-
+        <!-- left -->
+        <div class="btn-group pull-left" data-toggle="buttons-checkbox">
+            {{each(i, button) buttons}}
+            {{if !button.align || button.align == 'left'}}
+            <button type="button" class="btn btn-default btn-lg ${button.class}">${button.label}</button>
+            {{/if}}
+            {{/each}}
         </div>
 
-        <br/>
+        <!-- right -->
+        <div class="btn-group pull-right" data-toggle="buttons-checkbox">
+            {{each(i, button) buttons}}
+            {{if button.align == 'right'}}
+            <button type="button" class="btn btn-default btn-lg ${button.class}">${button.label}</button>
+            {{/if}}
+            {{/each}}
+        </div>
 
-        {{/if}}
+    </div>
+
+    <br/>
+
+    {{/if}}
 
 
 
 
-        {{each(i, row) rows}}
+    {{each(i, row) rows}}
 
-        <div class="row">
+    <div class="row">
 
-            {{each(j, column) row.columns}}
+        {{each(j, column) row.columns}}
 
-            <div class="{{if column.css}}${column.css}{{/if}}">
+        <div class="{{if column.css}}${column.css}{{/if}}">
 
-                {{each(k, dashlet) column.dashlets}}
+            {{each(k, dashlet) column.dashlets}}
 
-                    {{if (dashlet.type)}}
-                        {{if (dashlet.chrome)}}
-                            <div class="dashlet dashlet-header">
-                                <div class="dashlet-title">${dashlet.title}</div>
-                                {{if (dashlet.buttons)}}
-                                    {{each(i, button) buttons}}
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-default ${button.class}" data-dashlet-button-key="${button.key}">${button.label}</button>
-                                    </div>
-                                    {{/each}}
-                                {{/if}}
-                            </div>
-                        {{/if}}
-                        {{if dashlet.chrome}}
-                            <div class="dashlet dashlet-body">
-                        {{/if}}
-                                <gadget type="${dashlet.type}" {{if (dashlet.id)}}id="${dashlet.id}"{{/if}}></gadget>
-                        {{if dashlet.chrome}}
-                            </div>
-                        {{/if}}
+                {{if (dashlet.type)}}
+                    {{if (dashlet.chrome)}}
+                        <div class="dashlet dashlet-header">
+                            <div class="dashlet-title">${dashlet.title}</div>
+                            {{if (dashlet.buttons)}}
+                                {{each(i, button) buttons}}
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-default ${button.class}" data-dashlet-button-key="${button.key}">${button.label}</button>
+                                </div>
+                                {{/each}}
+                            {{/if}}
+                        </div>
                     {{/if}}
+                    {{if dashlet.chrome}}
+                        <div class="dashlet dashlet-body">
+                    {{/if}}
+                            <gadget type="${dashlet.type}" {{if (dashlet.id)}}id="${dashlet.id}"{{/if}}></gadget>
+                    {{if dashlet.chrome}}
+                        </div>
+                    {{/if}}
+                {{/if}}
 
-                    <br/>
-
-                {{/each}}
-
-            </div>
+                <br/>
 
             {{/each}}
 
@@ -79,5 +73,7 @@
         {{/each}}
 
     </div>
+
+    {{/each}}
 
 </div>

@@ -671,7 +671,7 @@
         }
 
         var observable = null;
-        if (!id)
+        if (id == null || typeof(id) == "undefined")
         {
             Ratchet.logError("Missing observable id: " + JSON.stringify(args));
         }

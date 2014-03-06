@@ -847,8 +847,11 @@
                     // TEMP
                     if (isPrimary)
                     {
-                        // now flick to el
-                        $(_this.el).append(tempEl.children());
+                        // remove the extra div that ends up at the top
+                        var d = $(_this.el).children()[0];
+                        var children = $(d).children();
+                        $(_this.el).append(children);
+                        $(d).remove();
                     }
 
                     if (callback)

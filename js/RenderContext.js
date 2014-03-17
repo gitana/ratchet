@@ -6,7 +6,7 @@
         {
             this.base();
 
-            var container = $("<div></div>");
+            var container = $("<div class='temp-wrapper'></div>");
             if (domEl)
             {
                 container.html($(domEl).html());

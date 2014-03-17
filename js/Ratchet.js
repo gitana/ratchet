@@ -844,14 +844,17 @@
                         Ratchet.pageTransitionBlocker(false);
                     }
 
-                    // TEMP
+                    // if the "temp-wrapper" remains strayed up at the top, we remove it here
                     if (isPrimary)
                     {
-                        // remove the extra div that ends up at the top
+                        // remove the extra "temp-wrapper" div that ends up at the top
                         var d = $(_this.el).children()[0];
-                        var children = $(d).children();
-                        $(_this.el).append(children);
-                        $(d).remove();
+                        if ($(d).hasClass("temp-wrapper"))
+                        {
+                            var children = $(d).children();
+                            $(_this.el).append(children);
+                            $(d).remove();
+                        }
                     }
 
                     if (callback)

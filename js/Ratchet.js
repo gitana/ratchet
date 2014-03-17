@@ -573,6 +573,7 @@
             // don't fire until all are complete
             if (_this.hasChildRatchets())
             {
+                /*
                 var count = 0;
                 $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
 
@@ -603,6 +604,57 @@
                 {
                     if (callback)
                     {
+                        callback.call(this);
+                    }
+                }
+                */
+
+                // do these in parallel
+                var funcs = [];
+                var count = 0;
+                $.each(_this.childRatchets, function(childRatchetId, childRatchet)
+                {
+                    var f = (function(count, childRatchetId, childRatchet, context) {
+
+                        return function(cb)
+                        {
+                            Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + "), gadget type: " + $(childRatchet.el).attr("gadget"));
+
+                            var subParams = params[childRatchetId];
+
+                            childRatchet.dispatch(context.route, subParams, function(err) {
+
+                                // call back completion
+
+                                count++;
+
+                                Ratchet.logDebug("Heard complete: " + count + " of: " + _this.childRatchetCount() + ", gadget type: " + $(childRatchet.el).attr("gadget"));
+
+                                //Ratchet.nextTick(function() {
+                                cb();
+                                //});
+                            });
+
+                        };
+
+                    })(count, childRatchetId, childRatchet, context);
+
+                    count++;
+
+                    funcs.push(f);
+                });
+
+                Ratchet.parallel(funcs, function(err) {
+                    if (Ratchet.useHandlerCallbacks) {
+                        if (callback) {
+                            callback.call(this);
+                        }
+                    }
+                });
+
+                // fire the callback directly if callbacks not being used
+                if (!Ratchet.useHandlerCallbacks) {
+                    if (callback) {
                         callback.call(this);
                     }
                 }

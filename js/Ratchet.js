@@ -644,7 +644,13 @@
                     funcs.push(f);
                 });
 
-                Ratchet.parallel(funcs, function(err) {
+                var dispatchMethod = "series";
+                if (Ratchet.useParallelDispatch)
+                {
+                    dispatchMethod = "parallel";
+                }
+
+                Ratchet[dispatchMethod](funcs, function(err) {
                     if (Ratchet.useHandlerCallbacks) {
                         if (callback) {
                             callback.call(this);
@@ -1580,6 +1586,9 @@
 
     // this should be false for Cloud CMS console (for now)
     Ratchet.useHandlerCallbacks = false;
+
+    // this can be used to have child ratchets process in parallel
+    Ratchet.useParallelDispatch = false;
 
     // page transition blocker
     Ratchet.pageTransitionBlocker = null;

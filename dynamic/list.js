@@ -1573,8 +1573,8 @@
                     }
 
                     var attrs = {
-                        "iTotalRecords": results.totalRows,
-                        "iTotalDisplayRecords": results.totalRows
+                        "iTotalRecords": (results.totalRows ? results.totalRows : results.total_rows),
+                        "iTotalDisplayRecords": (results.totalRows ? results.totalRows : results.total_rows)
                     };
 
                     // set onto model

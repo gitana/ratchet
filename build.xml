@@ -64,9 +64,6 @@
                 <include name="license.txt"/>
             </fileset>
         </copy>
-        <copy todir="${prep.dir}/plugins">
-            <fileset dir="${project.dir}/plugins"/>
-        </copy>
     </target>
 
     <target name="concat-js" description="Concat all javascript files" depends="prep">
@@ -110,28 +107,12 @@
             </filelist>
         </concat>
 
-        <!-- Standalone: "ratchet-ejs" -->
-        <concat destfile="${package.dir}/js/${appkey}-ejs.js">
-            <filelist dir="${prep.dir}">
-                <file name="license.txt"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/ejs/lib">
-                <file name="ejs.js"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/ejs">
-                <file name="EJSTemplateEngine.js"/>
-            </filelist>
-        </concat>
-
         <!-- Standalone: "ratchet-handlebars" -->
         <concat destfile="${package.dir}/js/${appkey}-handlebars.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/plugins/handlebars/lib">
-                <file name="handlebars.js"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/handlebars">
+            <filelist dir="${prep.dir}/js/engines">
                 <file name="HandlebarsTemplateEngine.js"/>
             </filelist>
         </concat>
@@ -141,10 +122,7 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/plugins/tmpl/lib">
-                <file name="jquery.tmpl.js"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/tmpl">
+            <filelist dir="${prep.dir}/js/engines">
                 <file name="jQueryTemplateEngine.js"/>
             </filelist>
         </concat>
@@ -287,25 +265,12 @@
             </filelist>
         </concat>
 
-        <!-- "ratchet-ejs" -->
-        <concat destfile="${prep.dir}/js/${appkey}-ejs-component.js">
-            <filelist dir="${prep.dir}">
-                <file name="license.txt"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/ejs">
-                <file name="EJSTemplateEngine.js"/>
-            </filelist>
-        </concat>
-
         <!-- "ratchet-tmpl" -->
         <concat destfile="${prep.dir}/js/${appkey}-tmpl-component.js">
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/plugins/tmpl/lib">
-                <file name="jquery.tmpl.js"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/tmpl">
+            <filelist dir="${prep.dir}/js/engines">
                 <file name="jQueryTemplateEngine.js"/>
             </filelist>
         </concat>
@@ -315,10 +280,7 @@
             <filelist dir="${prep.dir}">
                 <file name="license.txt"/>
             </filelist>
-            <filelist dir="${prep.dir}/plugins/handlebars/lib">
-                <file name="handlebars.js"/>
-            </filelist>
-            <filelist dir="${prep.dir}/plugins/handlebars">
+            <filelist dir="${prep.dir}/js/engines">
                 <file name="HandlebarsTemplateEngine.js"/>
             </filelist>
         </concat>
@@ -452,8 +414,8 @@
         </replaceregexp>
 
         <!-- replace source files with built ratchet -->
-        <replaceregexp match="&lt;!-- START_RATCHET_EJS_JAVASCRIPT --&gt;(.*?)&lt;!-- END_RATCHET_EJS_JAVASCRIPT --&gt;"
-                       replace='&lt;script type="text\/javascript" src="../js/ratchet-ejs.min.js"&gt;&lt;/script&gt;' flags="gs">
+        <replaceregexp match="&lt;!-- START_RATCHET_HANDLEBARS_JAVASCRIPT --&gt;(.*?)&lt;!-- END_RATCHET_HANDLEBARS_JAVASCRIPT --&gt;"
+                       replace='&lt;script type="text\/javascript" src="../js/ratchet-handlebars.min.js"&gt;&lt;/script&gt;' flags="gs">
             <fileset dir="${prep.dir}" includes="examples/**/*.html"/>
         </replaceregexp>
 
@@ -535,14 +497,6 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/tmpl.js"/>
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'jquery-tmpl']" />
-        </antcall>
-
-        <!-- "ratchet-ejs" -->
-        <antcall target="umd">
-            <param name="scriptFile" value="${prep.dir}/js/${appkey}-ejs-component.js"/>
-            <param name="outputFile" value="${package.dir}/components/ratchet/ejs.js"/>
-            <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet/ratchet', 'ejs']" />
         </antcall>
 
         <!-- "ratchet-handlebars" -->

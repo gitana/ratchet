@@ -3,13 +3,13 @@
 <div class="appbar">
     <div class="row">
         <div class="col-md-6">
-            {{if logoLink}}
-                <a href="${logoLink}">
-            {{/if}}
-            <img src="${logoUri}" class="logo"/>
-            {{if logoLink}}
+            {{#exists logoLink}}
+                <a href="{{logoLink}}">
+            {{/exists}}
+            <img src="{{logoUri}}" class="logo"/>
+            {{#exists logoLink}}
                 </a>
-            {{/if}}
+            {{/exists}}
         </div>
         <div class="col-md-6" align="right">
 
@@ -17,7 +17,7 @@
 
                 <div class="btn-group pull-right">
 
-                    <button class="btn btn-default">${userTitle}</button>
+                    <button class="btn btn-default">{{userTitle}}</button>
                     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>

@@ -20,7 +20,7 @@
     */
 
     var MODAL_TEMPLATE = ' \
-        <div class="modal fade" tabindex="-1" data-width="760" style="display:none"> \
+        <div class="modal" tabindex="-1" data-width="760" style="display:none"> \
             <div class="modal-header"> \
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> \
                 <h4 class="modal-title"></h4> \
@@ -29,8 +29,6 @@
             <div class="modal-footer"></div> \
         </div> \
     ';
-
-    Ratchet.defaultModalFadeClass = "fade";
 
     Ratchet.blockingModal = null;
     Ratchet.block = function(title, message, configOrAfterShownCallback)
@@ -300,7 +298,7 @@
         Ratchet.showModal({
             "title": title,
             "cancel": true,
-            "modalClass": "fade"
+            "modalClass": Ratchet.defaultModalFadeClass
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
             $(div).find('.modal-footer').append("<button class='btn btn-default pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");

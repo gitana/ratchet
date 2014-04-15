@@ -1,8 +1,8 @@
-<div align="center" class="{{if cssClasses}}${cssClasses}{{/if}}">
-    {{if text}}
-        <p>${text}</p>
-    {{/if}}
-    {{if html}}
-        {{html html}}
-    {{/if}}
+<div align="center" class="{{#exists cssClasses}}{{cssClasses}}{{/exists}}">
+    {{#exists text}}
+        <p>{{{text}}}</p>
+    {{/exists}}
+    {{#exists html}}
+        {{{html}}}
+    {{/exists}}
 </div>

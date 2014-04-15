@@ -44,11 +44,10 @@
     <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
     <!-- END_RATCHET_JAVASCRIPT -->
 
-    <!-- START_RATCHET_TMPL_JAVASCRIPT -->
-    <!-- jQuery Templating Plugin -->
-    <script type="text/javascript" src="../../plugins/tmpl/lib/jquery.tmpl.js"></script>
-    <script type="text/javascript" src="../../plugins/tmpl/jQueryTemplateEngine.js"></script>
-    <!-- END_RATCHET_TMPL_JAVASCRIPT -->
+    <!-- START_RATCHET_HANDLEBARS_JAVASCRIPT -->
+    <script type="text/javascript" src="../../lib/handlebars/handlebars-v1.3.0.js"></script>
+    <script type="text/javascript" src="../../js/engines/HandlebarsTemplateEngine.js"></script>
+    <!-- END_RATCHET_HANDLEBARS_JAVASCRIPT -->
 
     <!-- examples -->
     <script type="text/javascript" src="gadgets/Page.js"></script>
@@ -96,6 +95,8 @@
 
             <h2>Gadget Example #10</h2>
             <div gadget="page"></div>
+            <br/>
+            <br/>
             <pre class="prettyprint linenums">
                 Component = Ratchet.Gadget.extend(
                 {

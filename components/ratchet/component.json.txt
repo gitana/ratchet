@@ -8,11 +8,11 @@
     "version": "/** VERSION **/",
     "dependencies": {
         "jquery": "*",
-        "ejs": "*",
-        "gitana": "*",
-		"alpaca": "*",
         "jquery-tmpl": "*",
+        "handlebars": "*",
         "bootstrap": "*"
+        "gitana": "*",
+		"alpaca": "*"
     },
     "main": ["ratchet.js"]
 }

@@ -1,14 +1,14 @@
-<script id="formTemplate" type="text/x-jquery-tmpl">
+<script id="formTemplate" type="text/x-handlebars-template">
 
     <form method="post" action="#/">
         <table>
             <tr>
                 <td>First Name</td>
-                <td><input type="text" name="firstName" value="${firstName}"></td>
+                <td><input type="text" name="firstName" value="{{firstName}}"></td>
             </tr>
             <tr>
                 <td>Last Name</td>
-                <td><input type="text" name="lastName" value="${lastName}"></td>
+                <td><input type="text" name="lastName" value="{{lastName}}"></td>
             </tr>
         </table>
         <input type="submit" value="SUBMIT IT" />

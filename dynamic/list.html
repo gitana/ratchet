@@ -1,56 +1,57 @@
-{{if chrome}}
+{{#if chrome}}
 <div>
     <div class="chrome chrome-header">
-        <div class="chrome-title">${chrome.title}</div>
+        <div class="chrome-title">{{chrome.title}}</div>
     </div>
     <div class="chrome chrome-body">
 {{/if}}
 
-        <div class="gadget list {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html">
+        <div class="gadget list {{#if cssClasses}}{{cssClasses}}{{/if}}" xmlns="http://www.w3.org/1999/html">
 
-            {{if navbox}}
+            {{#if navbox}}
             <div class="navbox"></div>
             {{/if}}
 
-            {{if buttons && buttons.length > 0}}
+            {{#if buttons}}
+            {{#greaterThan buttons.length 0}}
             <div class="buttonbar">
                 <div class="pull-left">
 
-                    {{each(key, button) buttons}}
-                    {{if button.align == "left"}}
+                    {{#each buttons}}
+                    {{#compare align "left"}}
 
-                    <div class="button-container {{if button.buttons}}dropdown{{/if}}">
+                    <div class="button-container {{#if buttons}}dropdown{{/if}}">
 
-                        {{if !button.select}}
-                        <button id="list-button-${key}" class="btn btn-default list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
-                            {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
-                                ${button.title}&nbsp;
-                            {{if button.buttons}}
+                        {{#ifnot select}}
+                        <button id="list-button-{{key}}" class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
+                            {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                                {{title}}&nbsp;
+                            {{#if buttons}}
                                 <span class="caret"></span>
                             {{/if}}
                         </button>
-                        {{/if}}
+                        {{/ifnot}}
 
-                        {{if button.select}}
+                        {{#if select}}
                         <div class="form-group">
-                            <select id="list-select-${key}" class="list-select-${key} form-control">
-                                {{each(o, option) button.options}}
-                                <option value="${option.value}">${option.label}</option>
+                            <select id="list-select-{{key}}" class="list-select-{{key}} form-control">
+                                {{#each options}}
+                                <option value="{{value}}">{{label}}</option>
                                 {{/each}}
                             </select>
                         </div>
                         {{/if}}
 
-                        {{if button.buttons}}
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-${key}">
-                            {{each(j, childButton) button.buttons}}
-                            {{if childButton.divider}}
+                        {{#if buttons}}
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-{{key}}">
+                            {{#each buttons}}
+                            {{#if divider}}
                                 <li class="divider"></li>
                             {{else}}
                                 <li>
-                                    <a href="#" class="list-button-${childButton.key}">
-                                        {{if childButton.iconClass}}<i class="${childButton.iconClass}"></i>{{/if}}
-                                        &nbsp;${childButton.title}
+                                    <a href="#" class="list-button-{{key}}">
+                                        {{#if iconClass}}<i class="{{iconClass}}"></i>{{/if}}
+                                        &nbsp;{{title}}
                                     </a>
                                 </li>
                             {{/if}}
@@ -60,48 +61,48 @@
 
                     </div>
 
-                    {{/if}}
+                    {{/compare}}
                     {{/each}}
 
                 </div>
 
                 <div class="pull-right">
 
-                    {{each(i, button) buttons}}
-                    {{if button.align == "right" || !button.align}}
+                    {{#each buttons}}
+                    {{#equalOrEmpty align "right"}}
 
-                    <div class="button-container {{if button.buttons}}dropdown{{/if}}">
+                    <div class="button-container {{#if buttons}}dropdown{{/if}}">
 
-                        {{if !button.select}}
-                        <button id="list-button-${key}" class="btn btn-default list-button-${key} {{if button.buttons}}dropdown-toggle{{/if}}" {{if button.buttons}}data-toggle="dropdown"{{/if}}>
-                            {{if button.iconClass}}<i class="${button.iconClass} icon-black"></i>{{/if}}
-                                ${button.title}&nbsp;
-                            {{if button.buttons}}
+                        {{#ifnot select}}
+                        <button id="list-button-{{key}}" class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
+                            {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                                {{title}}&nbsp;
+                            {{#if buttons}}
                                 <span class="caret"></span>
                             {{/if}}
                         </button>
-                        {{/if}}
+                        {{/ifnot}}
 
-                        {{if button.select}}
+                        {{#if select}}
                         <div class="form-group">
-                            <select id="list-select-${key}" class="list-select-${key} form-control">
-                                {{each(o, option) button.options}}
-                                <option value="${option.value}">${option.label}</option>
+                            <select id="list-select-{{key}}" class="list-select-{{key}} form-control">
+                                {{#each options}}
+                                <option value="{{value}}">{{label}}</option>
                                 {{/each}}
                             </select>
                         </div>
                         {{/if}}
 
-                        {{if button.buttons}}
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-${key}">
-                            {{each(j, childButton) button.buttons}}
-                            {{if childButton.divider}}
+                        {{#if buttons}}
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-{{key}}">
+                            {{#each buttons}}
+                            {{#if divider}}
                                 <li class="divider"></li>
                             {{else}}
                                 <li>
-                                    <a href="#" class="list-button-${childButton.key}">
-                                        {{if childButton.iconClass}}<i class="${childButton.iconClass}"></i>{{/if}}
-                                        &nbsp;${childButton.title}
+                                    <a href="#" class="list-button-{{key}}">
+                                        {{#if iconClass}}<i class="{{iconClass}}"></i>{{/if}}
+                                        &nbsp;{{title}}
                                     </a>
                                 </li>
                             {{/if}}
@@ -111,12 +112,13 @@
 
                     </div>
 
-                    {{/if}}
+                    {{/equalOrEmpty}}
                     {{/each}}
 
                 </div>
                 <div style="clear:both"></div>
             </div>
+            {{/greaterThan}}
             {{/if}}
 
             <table width="100%" style="width: 100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover">
@@ -124,21 +126,21 @@
                 <tr>
 
                     <!-- checkbox -->
-                    {{if checkbox}}
+                    {{#if checkbox}}
                     <th></th>
                     {{/if}}
-                    {{if radio}}
+                    {{#if radio}}
                     <th></th>
                     {{/if}}
 
                     <!-- icon -->
-                    {{if icon}}
+                    {{#if icon}}
                     <th></th>
                     {{/if}}
 
                     <!-- columns -->
-                    {{each(i, column) columns}}
-                    <th nowrap>${column.title}</th>
+                    {{#each columns}}
+                    <th nowrap>{{title}}</th>
                     {{/each}}
 
                 </tr>
@@ -151,7 +153,7 @@
             </table>
         </div>
 
-{{if chrome}}
+{{#if chrome}}
     </div>
 </div>
 {{/if}}

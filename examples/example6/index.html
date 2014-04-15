@@ -44,11 +44,10 @@
     <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
     <!-- END_RATCHET_JAVASCRIPT -->
 
-    <!-- START_RATCHET_TMPL_JAVASCRIPT -->
-    <!-- jQuery Templating Plugin -->
-    <script type="text/javascript" src="../../plugins/tmpl/lib/jquery.tmpl.js"></script>
-    <script type="text/javascript" src="../../plugins/tmpl/jQueryTemplateEngine.js"></script>
-    <!-- END_RATCHET_TMPL_JAVASCRIPT -->
+    <!-- START_RATCHET_HANDLEBARS_JAVASCRIPT -->
+    <script type="text/javascript" src="../../lib/handlebars/handlebars-v1.3.0.js"></script>
+    <script type="text/javascript" src="../../js/engines/HandlebarsTemplateEngine.js"></script>
+    <!-- END_RATCHET_HANDLEBARS_JAVASCRIPT -->
 
     <!-- examples -->
     <script type="text/javascript" src="gadgets/Application.js"></script>
@@ -107,135 +106,6 @@
             <div id="app" gadget="application">
                 The application will render here.
             </div>
-
-            <pre class="prettyprint linenums">
-                Application = Ratchet.Gadget.extend(
-                {
-                    constructor: function(id, ratchet)
-                    {
-                        this.base(id, ratchet);
-                    },
-
-                    setup: function()
-                    {
-                        this.get("/", this.index);
-                    },
-
-                    index: function(el)
-                    {
-                        el.transform("templates/application", function(el) {
-                            el.swap();
-                        });
-                    }
-                });
-
-                Ratchet.GadgetRegistry.register("application", Application);
-            </pre>
-
-            <pre class="prettyprint linenums">
-                Form = Ratchet.Gadget.extend(
-                {
-                    constructor: function(ratchet, container)
-                    {
-                        this.base(ratchet, container);
-                    },
-
-                    setup: function()
-                    {
-                        this.get(this.index);
-                        this.post(this.submit);
-
-                        // declare observables
-                        this.observable("firstName");
-                        this.observable("lastName");
-                        this.dependentObservable("fullName", function() {
-                            return this.observable("firstName").get("") + " " + this.observable("lastName").get("");
-                        });
-                    },
-
-                    index: function(el)
-                    {
-                        var _this = this;
-
-                        el.model["firstName"] = this.observable("firstName").get();
-                        el.model["lastName"] = this.observable("lastName").get();
-
-                        // transform
-                        el.transform("templates/form", function(el) {
-
-                            // override the submit handlers
-                            var form = el.find("form");
-                            $(form).find("input[type=submit]").click(function(event)
-                            {
-                                event.preventDefault();
-
-                                // convert form to json
-                                _this.run("POST", "/", form.serializeObject());
-                            });
-
-                            // change the "lastName" field so it updates in real time
-                            $(form).find("input[name=lastName]").keyup(function(event)
-                            {
-                                // convert form to json
-                                _this.run("POST", "/", form.serializeObject());
-                            });
-
-                            el.swap();
-                        });
-                    },
-
-                    submit: function(el, data)
-                    {
-                        this.observable("firstName").set(data.firstName);
-                        this.observable("lastName").set(data.lastName);
-                    }
-                });
-
-                Ratchet.GadgetRegistry.register("form", Form);
-            </pre>
-
-            <pre class="prettyprint linenums">
-                Properties = Ratchet.Gadget.extend(
-                {
-                    constructor: function(ratchet, container)
-                    {
-                        this.base(ratchet, container);
-                    },
-
-                    setup: function()
-                    {
-                        this.get(this.index);
-
-                        // subscribe to observable
-                        this.subscribe("fullName", function() {
-                            this.run("GET", "/");
-                        });
-                    },
-
-                    index: function(el)
-                    {
-                        // setup model
-                        el.model["firstName"] = this.observable("firstName").get("");
-                        el.model["lastName"] = this.observable("lastName").get("");
-                        el.model["fullName"] = this.observable("fullName").get("");
-
-                        el.transform("templates/properties", function(el) {
-                            el.swap();
-                        });
-                    }
-                });
-
-                Ratchet.GadgetRegistry.register("properties", Properties);
-            </pre>
-
-            <pre class="prettyprint linenums">
-                    $(document).ready(function() {
-
-                        $("#app").ratchet().run("/");
-
-                    });
-            </pre>
-
 
         </div>
     </div>

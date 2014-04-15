@@ -1,29 +1,29 @@
-<script id="dashboardTemplate" type="text/x-jquery-tmpl">
+<script id="dashboardTemplate" type="text/x-handlebars-template">
 
     <table>
 
-    {{each(i, row) config.rows}}
+        {{#each config.rows}}
 
         <tr>
 
-        {{each(j, column) row.columns}}
+            {{#each columns}}
 
             <td>
 
-            {{each(k, dashlet) column.dashlets}}
+                {{#each dashlets}}
 
-                <gadget class="dashlet" type="${dashlet.gadgetType}" id="${dashlet.gadgetId}" strategy="replace"></gadget>
+                <gadget class="dashlet" type="{{gadgetType}}" id="{{gadgetId}}" strategy="replace"></gadget>
                 <br/>
 
-            {{/each}}
+                {{/each}}
 
             </td>
 
-        {{/each}}
+            {{/each}}
 
         </tr>
 
-    {{/each}}
+        {{/each}}
 
     </table>
 

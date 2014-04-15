@@ -1,53 +1,56 @@
-{{if chrome}}
+{{#if chrome}}
 <div>
     <div class="chrome chrome-header">
-        <div class="chrome-title">${chrome.title}</div>
+        <div class="chrome-title">{{chrome.title}}</div>
     </div>
     <div class="chrome chrome-body">
-        {{/if}}
+{{/if}}
 
 
 
 
-<div class="sidebar-nav {{if cssClasses}}${cssClasses}{{/if}}">
+<div class="sidebar-nav {{#if cssClasses}}{{cssClasses}}{{/if}}">
 
-    {{if items.length > 0}}
+    {{#greaterThan items.length 0}}
     <ul class="nav nav-list nav-stacked">
-        {{each(i, item) items}}
-        {{if !item.hidden}}
-            {{if item.header}}
-            <li class="nav-header">${item.title}</li>
+        {{#each items}}
+        {{#ifnot hidden}}
+            {{#if header}}
+                <li class="nav-header">{{title}}</li>
             {{else}}
-            <li class="${item.classes}">
-            <a href="javascript:void(0);" class="{{if item.items}}nav-sub-items {{/if}}sidebar-item-${i}">
-                ${item.title}
-            </a>
-            {{if item.items}}
-            <ul class="nav nav-list sub-nav nav-stacked" {{if !item.current}}style="display:none;"{{/if}}>
-                {{each(j, subItem) item.items}}
-                <li class="${subItem.classes}">
-                <a href="javascript:void(0);" class="sidebar-item-${i}-sub-${j}">
-                    &nbsp;
-                    ${subItem.title}
-                </a>
-                </li>
-                {{/each}}
-            </ul>
-            {{/if}}
+                <li class="{{classes}}">
+                    <a href="javascript:void(0);" class="{{#if items}}nav-sub-items {{/if}}sidebar-item-{{@index}}">
+                        {{title}}
+                    </a>
+
+                {{#if items}}
+                    {{setIndex @index}}
+
+                    <ul class="nav nav-list sub-nav nav-stacked" {{#ifnot current}}style="display:none;"{{/ifnot}}>
+                        {{#each items}}
+                        <li class="{{classes}}">
+                        <a href="javascript:void(0);" class="sidebar-item-{{../index}}-sub-{{@index}}">
+                            &nbsp;
+                            {{title}}
+                        </a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
             </li>
             {{/if}}
-        {{/if}}
+        {{/ifnot}}
         {{/each}}
     </ul>
     {{else}}
         There are no items configured.
-    {{/if}}
+    {{/greaterThan}}
 
 </div>
 
 
 
-{{if chrome}}
+{{#if chrome}}
     </div>
 </div>
 {{/if}}

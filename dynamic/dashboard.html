@@ -2,24 +2,24 @@
 
 <div>
 
-    {{if buttons}}
+    {{#exists buttons}}
     <div class="row">
 
         <!-- left -->
         <div class="btn-group pull-left" data-toggle="buttons-checkbox">
-            {{each(i, button) buttons}}
-            {{if !button.align || button.align == 'left'}}
-            <button type="button" class="btn btn-default btn-lg ${button.class}">${button.label}</button>
-            {{/if}}
+            {{#each buttons}}
+            {{#equalOrEmpty align "left"}}
+            <button type="button" class="btn btn-default btn-lg {{class}}">{{label}}</button>
+            {{/equalOrEmpty}}
             {{/each}}
         </div>
 
         <!-- right -->
         <div class="btn-group pull-right" data-toggle="buttons-checkbox">
-            {{each(i, button) buttons}}
-            {{if button.align == 'right'}}
-            <button type="button" class="btn btn-default btn-lg ${button.class}">${button.label}</button>
-            {{/if}}
+            {{#each buttons}}
+            {{#equal align "right"}}
+            <button type="button" class="btn btn-default btn-lg {{class}}">{{label}}</button>
+            {{/equal}}
             {{/each}}
         </div>
 
@@ -27,42 +27,46 @@
 
     <br/>
 
-    {{/if}}
+    {{/exists}}
 
 
 
 
-    {{each(i, row) rows}}
+    {{#each rows}}
 
     <div class="row">
 
-        {{each(j, column) row.columns}}
+        {{#each columns}}
 
-        <div class="{{if column.css}}${column.css}{{/if}}">
+        <div class="{{#if css}}{{css}}{{/if}}">
 
-            {{each(k, dashlet) column.dashlets}}
+            {{#each dashlets}}
 
-                {{if (dashlet.type)}}
-                    {{if (dashlet.chrome)}}
-                        <div class="dashlet dashlet-header">
-                            <div class="dashlet-title">${dashlet.title}</div>
-                            {{if (dashlet.buttons)}}
-                                {{each(i, button) buttons}}
+                {{#exists type}}
+                    <div class="dashlet {{type}}">
+
+                    {{#exists chrome}}
+                        <div class="dashlet-header">
+                            <div class="dashlet-title">{{title}}</div>
+                            {{#exists buttons}}
+                                {{#each buttons}}
                                 <div class="btn-group pull-right">
-                                    <button type="button" class="btn btn-default ${button.class}" data-dashlet-button-key="${button.key}">${button.label}</button>
+                                    <button type="button" class="btn btn-default {{class}}" data-dashlet-button-key="{{key}}">{{label}}</button>
                                 </div>
                                 {{/each}}
-                            {{/if}}
+                            {{/exists}}
                         </div>
-                    {{/if}}
-                    {{if dashlet.chrome}}
-                        <div class="dashlet dashlet-body">
-                    {{/if}}
-                            <gadget type="${dashlet.type}" {{if (dashlet.id)}}id="${dashlet.id}"{{/if}}></gadget>
-                    {{if dashlet.chrome}}
+                    {{/exists}}
+                    {{#exists chrome}}
+                        <div class="dashlet-body">
+                    {{/exists}}
+                            <gadget type="{{type}}" {{#exists id}}id="{{id}}"{{/exists}}></gadget>
+                    {{#exists chrome}}
                         </div>
-                    {{/if}}
-                {{/if}}
+                    {{/exists}}
+
+                    </div>
+                {{/exists}}
 
                 <br/>
 

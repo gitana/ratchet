@@ -1,14 +1,14 @@
-{{if chrome}}
+{{#exists chrome}}
 <div>
     <div class="chrome chrome-header">
-        <div class="chrome-title">${chrome.title}</div>
+        <div class="chrome-title">{{chrome.title}}</div>
     </div>
     <div class="chrome chrome-body">
-{{/if}}
+{{/exists}}
 
-        <div class="gadget doceditor {{if cssClasses}}${cssClasses}{{/if}}" xmlns="http://www.w3.org/1999/html"></div>
+        <div class="gadget doceditor {{#exists cssClasses}}{{cssClasses}}{{/exists}}" xmlns="http://www.w3.org/1999/html"></div>
 
-{{if chrome}}
+{{#exists chrome}}
     </div>
 </div>
-{{/if}}
+{{/exists}}

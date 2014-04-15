@@ -1593,6 +1593,9 @@
     // page transition blocker
     Ratchet.pageTransitionBlocker = null;
 
+    // class for fade ins of modals
+    Ratchet.defaultModalFadeClass = "fade";
+
     Ratchet.executeMatch = function(matcher, text)
     {
         // strip matcher from "/a/b/c" to "a/b/c"

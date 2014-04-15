@@ -362,7 +362,7 @@
             var self = this;
 
             var actionContext = {};
-            actionContext.model = model;
+            actionContext.model = Ratchet.copyOf(model);
             actionContext.ratchet = self.ratchet();
 
             if (button.selectorGroup === "multi-documents-action-selector-group")

@@ -2,11 +2,6 @@
 {
     Form = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
-        {
-            this.base(ratchet, container);
-        },
-
         setup: function()
         {
             this.get(this.index);
@@ -47,14 +42,21 @@
                     _this.run("POST", "/", form.serializeObject());
                 });
 
+                // when firstName changes, update observable
+                $(form).find("input[name=firstName]").keyup(function(event)
+                {
+                    // convert form to json
+                    _this.run("POST", "/", form.serializeObject());
+                });
+
                 el.swap();
             });
         },
 
-        submit: function(el, data)
+        submit: function(el, cb)
         {
-            this.observable("firstName").set(data.firstName);
-            this.observable("lastName").set(data.lastName);
+            this.observable("firstName").set(el.route.data.firstName);
+            this.observable("lastName").set(el.route.data.lastName);
         }
     });
 

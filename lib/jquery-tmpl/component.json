@@ -1,0 +1,9 @@
+{
+  "name": "jquery-tmpl",
+  "version": "0.0.0",
+  "commit": "489cf3ed78d6c3336141c4d1ad0aed126cacea8b",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jquery/jquery-tmpl.git"
+  }
+}

@@ -1,28 +1,28 @@
 <div>
     <div class="dashlet dashlet-header">
-        <div class="dashlet-title">${title}</div>
+        <div class="dashlet-title">{{title}}</div>
     </div>
     <div class="dashlet dashlet-body">
 
         <div class="selectbar-wrapper">
 
-            {{if items.length == 0}}
+            {{#compare items.length 0}}
             No items are configured.
-            {{/if}}
+            {{/compare}}
 
-            {{if items.length > 0}}
+            {{#greaterThan items.length 0}}
             <ul class="nav nav-list nav-pills nav-stacked">
-                {{each(i, item) items}}
+                {{#each items}}
 
-                <li {{if item.selected}}class="active"{{/if}}>
-                <a href="javascript:void(0);" data-selectbar-item-key="${item.key}">
-                    ${item.title}
+                <li {{#if selected}}class="active"{{/if}}>
+                <a href="javascript:void(0);" data-selectbar-item-key="{{key}}">
+                    {{title}}
                 </a>
                 </li>
 
                 {{/each}}
             </ul>
-            {{/if}}
+            {{/greaterThan}}
 
         </div>
 

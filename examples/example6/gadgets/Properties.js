@@ -2,11 +2,6 @@
 {
     Properties = Ratchet.Gadget.extend(
     {
-        constructor: function(ratchet, container)
-        {
-            this.base(ratchet, container);
-        },
-
         setup: function()
         {
             this.get(this.index);

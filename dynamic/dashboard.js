@@ -11,7 +11,7 @@
             var html = require("text!ratchet/dynamic/dashboard.html");
             var Ratchet = require("ratchet/web");
 
-            require("ratchet/tmpl");
+            require("ratchet/handlebars");
             require("bootstrap");
 
             return factory(Ratchet, html);

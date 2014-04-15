@@ -1,38 +1,42 @@
 <div>
     <div class="dashlet dashlet-header">
-        <div class="dashlet-title">${title}</div>
+        <div class="dashlet-title">{{title}}</div>
     </div>
     <div class="dashlet dashlet-body">
 
         <div class="filterbar-wrapper">
 
             <p>
-                {{if items}}
-                {{each(i, item) items}}
+                {{#exists items}}
+                {{#each items}}
 
                 <label style="font-size: 16px">
-                    {{if type == "checkbox"}}
-                <span style="margin-top: 15px;">
-                    <input type="checkbox" {{if item.checked}}checked{{/if}} style="margin: 10px">
-                    ${item.title}
-                </span>
-                    {{/if}}
-                    {{if type == "radio"}}
-                <span style="margin-top: 15px;">
-                    <input type="radio" name="${group}" value="${item.key}">
-                    ${item.title}
-                </span>
-                    {{/if}}
-                    {{if type == "click"}}
-                <span style="margin-top: 15px;" data-filterbar-item-key="${item.key}" class="{{if item.selected}}filterbar-item-selected{{/if}}">
-                    ${item.title}
-                </span>
-                    {{/if}}
+
+                    {{#equal type "checkbox"}}
+                    <span style="margin-top: 15px;">
+                        <input type="checkbox" {{#exists checked}}checked{{/exists}} style="margin: 10px">
+                        {{title}}
+                    </span>
+                    {{/equal}}
+
+                    {{#equal type "radio"}}
+                    <span style="margin-top: 15px;">
+                        <input type="radio" name="{{group}}" value="{{key}}">
+                        {{title}}
+                    </span>
+                    {{/equal}}
+
+                    {{#equal type "click"}}
+                    <span style="margin-top: 15px;" data-filterbar-item-key="{{key}}" class="{{#if selected}}filterbar-item-selected{{/if}}">
+                        {{title}}
+                    </span>
+                    {{/equal}}
+
                 </label>
                 <br/>
 
                 {{/each}}
-                {{/if}}
+                {{/exists}}
             </p>
 
         </div>

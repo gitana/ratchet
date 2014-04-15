@@ -11,7 +11,7 @@
             var html = require("text!ratchet/dynamic/list.html");
             var Ratchet = require("ratchet/web");
 
-            require("ratchet/tmpl");
+            require("ratchet/handlebars");
             require("bootstrap");
             require("datatables");
             require("datatables-bootstrap");

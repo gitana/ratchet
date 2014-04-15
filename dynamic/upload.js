@@ -6,7 +6,7 @@ define(function(require, exports, module) {
     var html = require("text!ratchet/dynamic/upload.html");
     var Ratchet = require("ratchet/web");
 
-    require("ratchet/tmpl");
+    require("ratchet/handlebars");
     require("bootstrap");
 
     require("jquery.ui.widget");

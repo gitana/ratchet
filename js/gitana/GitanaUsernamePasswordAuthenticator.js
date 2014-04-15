@@ -110,7 +110,8 @@
                     "password": {
                         "type": "password"
                     }
-                }
+                },
+                "focus": true
             };
 
             if (retry) {
@@ -122,7 +123,7 @@
             var div = $(this.getTemplate());
 
             $('.modal-body', div).find('.login-body').alpaca({
-                //"view": "VIEW_WEB_CREATE",
+                "type": "create",
                 "data": data,
                 "schema": schema,
                 "options": options,
@@ -247,7 +248,7 @@
     });
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE = ' \
-        <div class="modal fade" style="overflow: visible !important"> \
+        <div class="modal "' + Ratchet.defaultModalFadeClass + ' style="overflow: visible !important"> \
             <div class="modal-header"> \
                 <h4>Log In</h4> \
             </div> \

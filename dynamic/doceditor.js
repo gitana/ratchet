@@ -67,14 +67,6 @@
         {
         },
 
-        /**
-         * @extension_point
-         */
-        loadResource: function(el, model, callback)
-        {
-            callback();
-        },
-
         beforeSwap: function(el, model, callback)
         {
             var self = this;
@@ -88,6 +80,14 @@
                 });
 
             });
+        },
+
+        /**
+         * @extension_point
+         */
+        loadResource: function(el, model, callback)
+        {
+            callback();
         },
 
         container: function(el)

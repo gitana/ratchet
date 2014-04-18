@@ -79,3 +79,9 @@ TD.list-checkbox-column
 {
     color: #4F94C9;
 }
+
+.gadget.list .list-select.form-control
+{
+    width: auto;
+    display: inline-block;
+}

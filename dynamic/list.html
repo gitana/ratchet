@@ -34,9 +34,10 @@
 
                         {{#if select}}
                         <div class="form-group">
-                            <select id="list-select-{{key}}" class="list-select-{{key}} form-control">
+                            <label class="list-select-label">{{title}}</label>
+                            <select class="list-select-{{key}} list-select form-control">
                                 {{#each options}}
-                                <option value="{{value}}">{{label}}</option>
+                                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -85,9 +86,10 @@
 
                         {{#if select}}
                         <div class="form-group">
-                            <select id="list-select-{{key}}" class="list-select-{{key}} form-control">
+                            <label class="list-select-label">{{title}}</label>
+                            <select class="list-select-{{key}} list-select form-control">
                                 {{#each options}}
-                                <option value="{{value}}">{{label}}</option>
+                                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
                                 {{/each}}
                             </select>
                         </div>

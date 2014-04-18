@@ -118,6 +118,7 @@
         }
     };
 
+    /*
     Ratchet.startModalGadget = function(options, overrides, beforeRatchetCallback, afterRatchetCallback)
     {
         var self = this;
@@ -151,7 +152,12 @@
 
             // create an instance of the gadget
             var dynamicGadget = null;
-            if (Ratchet.DynamicGadgets) {
+
+            var matches = Ratchet.GadgetRegistry.list(gadgetType);
+            if (matches && matches.length > 0) {
+                dynamicGadget = matches[0];
+            }
+            if (!dynamicGadget && Ratchet.DynamicGadgets) {
                 dynamicGadget = Ratchet.DynamicGadgets[gadgetType];
             }
             if (dynamicGadget)
@@ -226,8 +232,8 @@
             cb();
 
         });
-
     };
+    */
 
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {
@@ -448,6 +454,166 @@
         };
 
         $(el).spin(opts);
-    }
+    };
+
+    /**
+     * Pops up a modal dialog with a picker in it.
+     *
+     * Config:
+     *
+     *      {
+     *          "title": "",
+     *          "pickTitle": "",
+     *
+     *          "picker": {
+     *              "type": "<pickerType>",
+     *              ... config
+     *          }
+     *      }
+     *
+     * @param config
+     */
+    Ratchet.showPicker = function(config, onPickFn)
+    {
+        if (!config) {
+            config = {};
+        }
+        if (!config.title) {
+            config.title = "Pick Something";
+        }
+        if (!config.pickTitle) {
+            config.pickTitle = "Pick";
+        }
+
+        // required: config.type (gadget type)
+        if (!config.type) {
+            throw new Error("You must supply config.type");
+        }
+
+        // generate a new picker gadget to handle this picker
+        var pickerType = config.type;
+        var pickerId = "picker-" + new Date().getTime();
+        var pickerConfig = {};
+        if (config.picker) {
+            pickerConfig = config.picker;
+        }
+        var gadget = Ratchet.instantiateGadget(pickerType, pickerId, pickerConfig);
+
+        // pickers rely on "context" method to provide environment variables used for looking things up
+        if (config.context) {
+            gadget.prototype.context = function() {
+                return config.context;
+            };
+        }
+
+
+
+        var picker = $('<div gadget="' + pickerType + '" id="' + pickerId + '"></div>');
+        picker.css("display", "none");
+        $(document.body).append(picker);
+
+        // ratchet it up
+        var currentHash = window.location.hash;
+        $(picker).ratchet(function() {}).run(currentHash);
+
+        // override the "onPickItems" method so that we can listen to when things are selected
+        // and store the ids back here
+        var pickedItems = [];
+        gadget.prototype.onPickItems = function(items)
+        {
+            pickedItems = items;
+        };
+
+
+
+
+
+        window.setTimeout(function() {
+
+            // modal dialog
+            Ratchet.fadeModal({
+                "title": config.title,
+                "cancel": true
+            }, function(div, renderCallback) {
+
+                // append the "Pick" button
+                $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right pick'>" + config.pickTitle + "</button>");
+
+                // body
+                $(div).find(".modal-body").html("");
+                var b = $(div).find(".modal-body");
+                b.addClass("picker");
+                picker.css("display", "block");
+                b.append(picker);
+
+
+                // pick button
+                $(div).find('.pick').click(function() {
+
+                    $(div).modal('hide');
+                    $(div).on('hidden.bs.modal', function() {
+
+                        if (onPickFn)
+                        {
+                            onPickFn(pickedItems);
+                        }
+                    });
+
+                });
+
+                renderCallback(function() {
+                });
+            });
+
+        }, 500);
+    };
+
+    Ratchet.instantiateGadget = function(gadgetTypeId, gadgetId, gadgetConfig)
+    {
+        if (!gadgetConfig) {
+            gadgetConfig = {};
+        }
+
+        // create an instance of the gadget
+        var dynamicGadget = null;
+
+        var matches = Ratchet.GadgetRegistry.list(gadgetTypeId);
+        if (matches && matches.length > 0) {
+            dynamicGadget = matches[0];
+        }
+        if (!dynamicGadget && Ratchet.DynamicGadgets) {
+            dynamicGadget = Ratchet.DynamicGadgets[gadgetTypeId];
+        }
+
+        if (!dynamicGadget)
+        {
+            throw new Error("Cannot find dynamic gadget type: " + gadgetTypeId);
+        }
+
+        // factory function for our new gadget
+        var newGadgetType = (function(gadgetConfig, dynamicGadget) {
+
+            // using meta-programming, create instances of gadget controllers
+            // config is loaded by gadget on configure()
+            return dynamicGadget.extend({
+
+                setup: function() {
+                    this.get(this.index);
+                },
+
+                configureDefault: function() {
+
+                    this.base();
+
+                    // push page configuration into config service
+                    this.config(gadgetConfig);
+                }
+
+            });
+
+        }(gadgetConfig, dynamicGadget));
+
+        return Ratchet.GadgetRegistry.register(gadgetTypeId, gadgetId, newGadgetType);
+    };
 
 })();

@@ -36,6 +36,26 @@
             return classObject;
         },
 
+        deregister: function(type, id)
+        {
+            var types = gadgetRegistry[type];
+            if (types)
+            {
+                for (var i = 0; i < types.length; i++)
+                {
+                    var registration = types[i];
+                    if (registration)
+                    {
+                        if (registration.id == id)
+                        {
+                            types.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        },
+
         list: function(type)
         {
             var list = [];

@@ -43,3 +43,11 @@
     width:80%;
     margin-left:-40%;
 }
+
+.modal.fade {
+    top: -100%;
+    -webkit-transition: opacity 0.1s linear;
+    -moz-transition: opacity 0.1s linear;
+    -o-transition: opacity 0.1s linear;
+    transition: opacity 0.1s linear;
+}

@@ -780,12 +780,8 @@
                 // RENDER THE TABLE
                 self.oTable = $(el).find("table").dataTable(tableConfig);
 
-                if (el.uniform) {
-                    $("select, input:checkbox, input:text, input:password, input:radio, input:file, textarea",$(el)).uniform();
-                }
-
                 // select/unselect-all checkbox
-                $(el).find(".list-check-box-all").click(function() {
+                $(el).find(".list-check-box-all").click(function(e) {
 
                     if ($(this).prop("checked")) {
                         $(el).find(".list-check-box").each(function() {
@@ -822,6 +818,8 @@
                         });
                         self.clearSelectedItems(model);
                     }
+
+                    //e.preventDefault();
                 });
 
                 // handle any other dom element bindings for the list
@@ -1027,11 +1025,11 @@
                         {
                             var button2 = button.buttons[j];
 
-                            $(el).find(".list-button-" + button2.key).off();
-
-                            $(el).find(".list-button-" + button2.key).click(function(b) {
+                            $(el).find(".list-button-" + button2.key).off().click(function(b) {
                                 return function(event) {
                                     self.handleButtonBarButtonClick.call(self, event, model, b);
+
+                                    event.preventDefault();
                                 };
                             }(button2));
 
@@ -1042,22 +1040,23 @@
                         if (button.select)
                         {
                             // select changes
-                            $(el).find(".list-select-" + button.key).off();
-                            $(el).find(".list-select-" + button.key).change(function(b) {
+                            $(el).find(".list-select-" + button.key).off().change(function(b) {
                                 return function(event) {
                                     var v = $(event.target).val();
                                     self.handleButtonBarSelectChange.call(self, event, model, b, v);
+
+                                    event.preventDefault();
                                 };
                             }(button));
                         }
                         else
                         {
                             // single click button
-                            $(el).find(".list-button-" + button.key).off();
-
-                            $(el).find(".list-button-" + button.key).click(function(b) {
+                            $(el).find(".list-button-" + button.key).off().click(function(b) {
                                 return function(event) {
                                     self.handleButtonBarButtonClick.call(self, event, model, b);
+
+                                    event.preventDefault();
                                 };
                             }(button));
                         }
@@ -1150,6 +1149,8 @@
 
                     // set the selected items
                     self.selectedItems(model, currentSelectedItems);
+
+                    //event.preventDefault();
                 };
             }(el, model, table, nRow, aData, iDisplayIndex));
 
@@ -1180,6 +1181,8 @@
 
                     // set the selected items
                     self.selectedItems(model, currentSelectedItems);
+
+                    //event.preventDefault();
                 };
             }(el, model, table, nRow, aData, iDisplayIndex));
 
@@ -1239,33 +1242,25 @@
 
         handleButtonBarButtonClick: function(event, model, button)
         {
-            // prevent the event from propagating (so as to prevent following href attributes on anchor)
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            event.stopPropagation();
-
             // custom handler
             this.clickButtonBarButton(event, model, button);
         },
 
         handleButtonBarSelectChange: function(event, model, button, value)
         {
-            // prevent the event from propagating (so as to prevent following href attributes on anchor)
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            event.stopPropagation();
-
             // custom handler
             this.changeButtonBarSelect(event, model, button, value);
         },
 
         handleChangeSelectedItems: function(model)
         {
+            // custom handler
             this.changeSelectedItems(model);
         },
 
         handleConfigureColumn: function(column, config)
         {
+            // custom handler
             this.configureColumn(column, config);
         },
 

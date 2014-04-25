@@ -1,6 +1,8 @@
 /*jshint -W004 */ // duplicate variables
 (function($)
 {
+    var HASH_CHANGE_APPLIED = false;
+
     Ratchet = Base.extend(
     {
         /**
@@ -93,9 +95,6 @@
 
             // subscriptions
             this.subscriptions = {};
-
-            // claim the element by marking it with the ratchet id
-            $(this.el).attr("ratchet", this.id);
 
             if (!this.parent)
             {
@@ -235,27 +234,27 @@
         {
             var _this = this;
 
-            // history support
+            // detect changes to hash
             // NOTE: only for the top-most dispatcher
             if (!this.parent)
             {
+                console.log("AP1");
+
                 // defines the function that handles changes to the hash
-                // whenever hashlink changes, this function gets called
-                $.history.init(function(hash) {
+                // whenever hash changes, this function gets called
+                if (!HASH_CHANGE_APPLIED)
+                {
+                    console.log("AP2");
+                    $(window).hashchange(function() {
 
-                    if (hash === "")
-                    {
-                        // TODO: assume any default dispatching?
-                        // i.e.
-                        // hash = "/";
-                    }
+                        console.log("Top Level HashChange being handled");
 
-                    if (hash !== "")
-                    {
+                        var hash = location.hash; // i.e. #/
+
                         // restore the state from hash
                         _this.dispatch({
                             "method": "GET",
-                            "uri": "#" + hash
+                            "uri": hash
                         }, {
                             "primary": true
                         }, function() {
@@ -269,10 +268,11 @@
 
                             Ratchet.tempCallback = null;
                         });
-                    }
-                },{
-                    unescape: ",/#"
-                });
+                    });
+
+                    // only allow the hash change handler to be applied once
+                    HASH_CHANGE_APPLIED = true;
+                }
             }
         },
 
@@ -282,6 +282,9 @@
          */
         setup: function()
         {
+            // claim the element by marking it with the ratchet id
+            $(this.el).attr("ratchet", this.id);
+
             // invoke setup function
             if (this.setupFunction)
             {
@@ -319,6 +322,8 @@
                     y.setup.call(y);
                 });
             }
+
+            Ratchet.Instances[this.id] = this;
         },
 
         /**
@@ -344,20 +349,19 @@
             }
             this.childRatchets = {};
 
-            // remove the ratchet id from our dom element
-            //$(this.el).removeAttr("ratchet");
-
             // releases any subscribed observables
+            var a1 = this.subscriptions.length;
             $.each(this.subscriptions, function(callbackKey, observable) {
                 observable.unsubscribe(callbackKey);
             });
+            //Ratchet.logDebug("Ratchet.teardown() - Released " + a1 + " callback subscribers");
 
             // tear down any gadget instances
             var l1 = this.gadgetInstances.length;
             $.each(this.gadgetInstances, function(i, gadgetInstance) {
                 gadgetInstance.teardown();
             });
-            Ratchet.logDebug("Ratchet.teardown() - Removed " + l1 + " gadget instances");
+            //Ratchet.logDebug("Ratchet.teardown() - Removed " + l1 + " gadget instances");
             this.gadgetInstances = [];
 
             // releases any routes
@@ -365,6 +369,12 @@
                 delete _this.routes[i];
             });
             this.routes = {};
+
+            // remove the ratchet id from our dom element
+            $(this.el).removeAttr("ratchet");
+
+            // remove from cached instances
+            delete Ratchet.Instances[this.id];
         },
 
         /**
@@ -573,42 +583,6 @@
             // don't fire until all are complete
             if (_this.hasChildRatchets())
             {
-                /*
-                var count = 0;
-                $.each(_this.childRatchets, function(childRatchetId, childRatchet) {
-
-                    Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + "), gadget type: " + $(childRatchet.el).attr("gadget"));
-                    //console.log("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + "), gadget type: " + $(childRatchet.el).attr("gadget"));
-
-                    var subParams = params[childRatchetId];
-
-                    childRatchet.dispatch(context.route, subParams, function(err) {
-
-                        // call back completion
-
-                        count++;
-                        Ratchet.logDebug("Heard complete: " + count + " of: " + _this.childRatchetCount() + ", gadget type: " + $(childRatchet.el).attr("gadget"));
-                        //console.log("Heard complete: " + count + " of: " + _this.childRatchetCount() + ", gadget type: " + $(childRatchet.el).attr("gadget"));
-                        if (count === _this.childRatchetCount() && Ratchet.useHandlerCallbacks)
-                        {
-                            if (callback)
-                            {
-                                callback.call(this);
-                            }
-                        }
-                    });
-                });
-
-                // fire the callback directly if callbacks not being used
-                if (!Ratchet.useHandlerCallbacks)
-                {
-                    if (callback)
-                    {
-                        callback.call(this);
-                    }
-                }
-                */
-
                 // do these in parallel
                 var funcs = [];
                 var count = 0;
@@ -984,6 +958,8 @@
 
             var callback = null;
 
+            var forceTriggerHashChange = false;
+
             var args = Ratchet.makeArray(arguments);
             if (args.length === 1)
             {
@@ -1008,6 +984,8 @@
                     if (uri.indexOf("#") > -1)
                     {
                         uri = uri.substring(uri.indexOf("#") + 1);
+
+                        forceTriggerHashChange = true;
                     }
                     else
                     {
@@ -1062,17 +1040,36 @@
             // this lets the history callback make the dispatch for us
             if (config.method == "GET" && !this.parent)
             {
-                // if we have a callback, store it in a temp place so that the hashlink listener can pick it up
+                // if we have a callback, store it in a temp place so that the hashchange listener can pick it up
                 if (callback)
                 {
                     Ratchet.tempCallback = callback;
                 }
 
-                $.history.load(config.uri);
+                // clean up URI
+                if (Ratchet.startsWith(config.uri, "#"))
+                {
+                    config.uri = config.uri.substring(1);
+                }
+
+                // set window hash and trigger hash change event
+                if (!this.parent)
+                {
+                    console.log("top.run() updating hash");
+                }
+
+                window.location.hash = "#" + config.uri;
+
+                if (forceTriggerHashChange)
+                {
+                    console.log("top.run() force hashchange");
+                    $(window).hashchange();
+                }
             }
             else
             {
                 this.dispatch(config, {
+                    //"primary": !this.parent
                     "primary": true
                 }, function() {
 
@@ -1407,7 +1404,6 @@
             return instance;
         }
 
-
     });
 
     /**
@@ -1686,6 +1682,11 @@
                 {
                     // token, assume match, pull into token map
                     var key = pattern.substring(1, pattern.length - 1);
+
+                    // URL decode the value
+                    value = decodeURIComponent(value);
+
+                    // assign to token collection
                     tokens[key] = value;
                 }
                 else
@@ -1717,4 +1718,35 @@
         printDebug();
         return tokens;
     };
+
+    Ratchet.Instances = {};
+
+    Ratchet.findInstance = function(ratchetId)
+    {
+        return Ratchet.Instances[ratchetId];
+    };
+
+    Ratchet.findClosestBoundRatchet = function(el)
+    {
+        var ratchetId = $(el).attr("ratchet");
+        if (ratchetId)
+        {
+            var ratchetInstance = Ratchet.Instances[ratchetId];
+            if (ratchetInstance)
+            {
+                return ratchetInstance;
+            }
+        }
+        else
+        {
+            var parent = $(el).parent();
+            if (parent && parent.length > 0)
+            {
+                return Ratchet.findClosestBoundRatchet(parent);
+            }
+        }
+
+        return null;
+    };
+
 })(jQuery);

@@ -4,6 +4,18 @@
 
     $.fn.ratchet = function(func) {
 
+        // does "this" element have a "ratchet" attribute?
+        // if so, it is the ratchet ID and we can return a previously mounted ratchet
+        var ratchetId = $(this[0]).attr("ratchet");
+        if (ratchetId)
+        {
+            var ratchetInstance = Ratchet.Instances[ratchetId];
+            if (ratchetInstance)
+            {
+                return ratchetInstance;
+            }
+        }
+
         // instantate the console on top of the "this" jQuery element
         return new Ratchet(this[0], func);
     };

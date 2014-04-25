@@ -161,7 +161,7 @@
         {
             var template = null;
 
-            console.log("HTML: " + html);
+            //console.log("HTML: " + html);
 
             // compile
             try

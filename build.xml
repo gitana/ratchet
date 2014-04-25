@@ -78,7 +78,7 @@
                 <!-- Required Base Classes -->
                 <file name="base.js"/>
                 <file name="json2.js"/>
-                <file name="jquery.history.js"/>
+                <file name="jquery.hashchange.js"/>
                 <file name="form2object.js"/>
 
             </filelist>
@@ -236,7 +236,7 @@
                 <!-- Required Base Classes -->
                 <file name="base.js"/>
                 <file name="json2.js"/>
-                <file name="jquery.history.js"/>
+                <file name="jquery.hashchange.js"/>
                 <file name="form2object.js"/>
 
             </filelist>

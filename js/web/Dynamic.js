@@ -100,9 +100,11 @@
 
         if (Ratchet.blockingModal)
         {
-            $(Ratchet.blockingModal).on('hidden.bs.modal', function(config) {
+            var rb = Ratchet.blockingModal;
+            Ratchet.blockingModal = null;
+
+            $(rb).on('hidden.bs.modal', function(config) {
                 return function() {
-                    Ratchet.blockingModal = null;
 
                     if (config.afterHiddenCallback)
                     {
@@ -110,11 +112,14 @@
                     }
                 };
             }(config));
-            $(Ratchet.blockingModal).modal('hide');
+            $(rb).modal('hide');
         }
         else
         {
-            config.afterHiddenCallback();
+            if (config.afterHiddenCallback)
+            {
+                config.afterHiddenCallback();
+            }
         }
     };
 
@@ -356,6 +361,10 @@
             title = config.title;
         }
 
+        if (typeof(config.close) == "undefined") {
+            config.close = true;
+        }
+
         // set up title
         $(div).find('.modal-title').html(title);
 
@@ -365,7 +374,8 @@
         // auto-add cancel button
         if (config.cancel)
         {
-            $(div).find('.modal-footer').append("<button class='btn btn-default pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
+            var cancelButton = $("<button class='btn btn-default pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
+            $(div).find('.modal-footer').append(cancelButton);
         }
 
         if (typeof(config.footer) === "undefined") {
@@ -380,27 +390,25 @@
         // set up modal
         setupFunction.call(self, div, function(afterShownCallback) {
 
-            if (afterShownCallback) {
+            if (afterShownCallback)
+            {
                 $(div).on("shown.bs.modal", function() {
                     afterShownCallback();
                 });
             }
 
+            if (!config.close)
+            {
+                $(div).find(".close").css("display", "none");
+            }
+
             // launch modal
             var t = $(div).modal({
-                "keyboard": true
+                "keyboard": (config.cancel ? true : false)
             });
 
-            /*
-            // vertical center
-            $(div).on("shown.bs.modal", function() {
-                $(div).css({
-                    "margin-top": ($(div).outerHeight() / 2)
-                });
-            });
-            */
-
-            if (config.modalClass) {
+            if (config.modalClass)
+            {
                 t.addClass(config.modalClass);
             }
 
@@ -506,27 +514,19 @@
             };
         }
 
-
-
         var picker = $('<div gadget="' + pickerType + '" id="' + pickerId + '"></div>');
         picker.css("display", "none");
         $(document.body).append(picker);
 
         // ratchet it up
         var currentHash = window.location.hash;
-        $(picker).ratchet(function() {}).run(currentHash);
-
-        // override the "onPickItems" method so that we can listen to when things are selected
-        // and store the ids back here
-        var pickedItems = [];
-        gadget.prototype.onPickItems = function(items)
+        var parentRatchet = null;
+        if (config.el)
         {
-            pickedItems = items;
-        };
-
-
-
-
+            parentRatchet = Ratchet.findClosestBoundRatchet(config.el);
+        }
+        var ratchet = new Ratchet(picker, parentRatchet, function() {});
+        ratchet.run(currentHash);
 
         window.setTimeout(function() {
 
@@ -537,7 +537,7 @@
             }, function(div, renderCallback) {
 
                 // append the "Pick" button
-                $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right pick'>" + config.pickTitle + "</button>");
+                $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right pick' disabled='disabled'>" + config.pickTitle + "</button>");
 
                 // body
                 $(div).find(".modal-body").html("");
@@ -546,6 +546,25 @@
                 picker.css("display", "block");
                 b.append(picker);
 
+
+                // override the "onPickItems" method so that we can listen to when things are selected
+                // and store the ids back here
+                var pickedItems = [];
+                gadget.prototype.onPickItems = function(items)
+                {
+                    pickedItems = items;
+
+                    if (pickedItems && pickedItems.length > 0)
+                    {
+                        // enable
+                        $(div).find('.pick').prop("disabled", false);
+                    }
+                    else
+                    {
+                        // disable
+                        $(div).find('.pick').prop("disabled", true);
+                    }
+                };
 
                 // pick button
                 $(div).find('.pick').click(function() {
@@ -558,8 +577,18 @@
                             onPickFn(pickedItems);
                         }
                     });
-
                 });
+
+                // if closed for any other reason
+                $(div).on("hide.bs.modal", function() {
+
+                    // destroy ratchet
+                    ratchet.teardown();
+
+                    // unregister the gadget that we dynamically instantiated
+                    Ratchet.GadgetRegistry.deregister(pickerType, pickerId);
+                });
+
 
                 renderCallback(function() {
                 });
@@ -591,7 +620,7 @@
         }
 
         // factory function for our new gadget
-        var newGadgetType = (function(gadgetConfig, dynamicGadget) {
+        var newGadgetType = (function(gadgetTypeId, gadgetId, gadgetConfig, dynamicGadget) {
 
             // using meta-programming, create instances of gadget controllers
             // config is loaded by gadget on configure()
@@ -611,7 +640,7 @@
 
             });
 
-        }(gadgetConfig, dynamicGadget));
+        }(gadgetTypeId, gadgetId, gadgetConfig, dynamicGadget));
 
         return Ratchet.GadgetRegistry.register(gadgetTypeId, gadgetId, newGadgetType);
     };

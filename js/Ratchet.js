@@ -238,13 +238,10 @@
             // NOTE: only for the top-most dispatcher
             if (!this.parent)
             {
-                console.log("AP1");
-
                 // defines the function that handles changes to the hash
                 // whenever hash changes, this function gets called
                 if (!HASH_CHANGE_APPLIED)
                 {
-                    console.log("AP2");
                     $(window).hashchange(function() {
 
                         console.log("Top Level HashChange being handled");

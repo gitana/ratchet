@@ -244,7 +244,7 @@
                 {
                     $(window).hashchange(function() {
 
-                        console.log("Top Level HashChange being handled");
+                        //console.log("Top Level HashChange being handled");
 
                         var hash = location.hash; // i.e. #/
 
@@ -1052,14 +1052,14 @@
                 // set window hash and trigger hash change event
                 if (!this.parent)
                 {
-                    console.log("top.run() updating hash");
+                    //console.log("top.run() updating hash");
                 }
 
                 window.location.hash = "#" + config.uri;
 
                 if (forceTriggerHashChange)
                 {
-                    console.log("top.run() force hashchange");
+                    //console.log("top.run() force hashchange");
                     $(window).hashchange();
                 }
             }

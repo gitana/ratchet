@@ -26,7 +26,7 @@
         doConfigure: function()
         {
             this.config({
-                "mode": "ace/mode/json",
+                "mode": "ace/mode/markdown",
                 "mimetypes": ["text/x-markdown"]
             });
         }

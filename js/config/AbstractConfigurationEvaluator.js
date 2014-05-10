@@ -32,6 +32,19 @@
          */
         hasMatch: function(text, patternString)
         {
+            if (text == patternString)
+            {
+                return true;
+            }
+
+            if (patternString == "*")
+            {
+                return true;
+            }
+
+            return false;
+
+            /*
             if (!text) {
                 return false;
             }
@@ -45,6 +58,7 @@
 
             var arr = text.match(regex);
             return (arr && arr.length > 0);
+            */
         }
 
     });

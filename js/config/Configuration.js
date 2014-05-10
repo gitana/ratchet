@@ -100,15 +100,29 @@
 
             // keys are generated at runtime
             this.blocks = {};
+
+            // instances and classes for evaluators
             this.evaluatorInstances = {};
             this.evaluatorTypes = {};
 
+            // subscription listeners
             this.subscriptions = {};
 
             this.generateBindingKey = function()
             {
                 return Ratchet.toLinearForm.apply(this,arguments);
             };
+
+            this.uniqueCount = function()
+            {
+                var x = 0;
+
+                return function()
+                {
+                    return x++;
+                };
+            }();
+
 
             /**
              * Internal method for merging JSON.  Elements from the source are merged into the target.
@@ -301,7 +315,7 @@
             }
 
             // generate a key for this block and register
-            var count = Ratchet.uniqueCount();
+            var count = this.uniqueCount();
             if (block.end) {
                 count = count + 50000;
             }
@@ -571,7 +585,7 @@
             if (!empty)
             {
                 for (var blockKey in this.blocks) {
-                    x[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
+                    x.blocks[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
                 }
             }
 

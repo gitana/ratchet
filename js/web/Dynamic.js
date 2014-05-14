@@ -275,7 +275,13 @@
 
         Ratchet.showModal(config, function(div, cb) {
 
-            $(div).find('.modal-body').html("<p align='center'><br/>" + body + "<br/><br/></p>");
+            var bodyHtml = "<p align='center'><br/>" + body + "<br/><br/></p>";
+            if (body && body.toLowerCase().indexOf("<p") == 0)
+            {
+                bodyHtml = body;
+            }
+
+            $(div).find('.modal-body').html(bodyHtml);
             $(div).find('.modal-footer').append("<button class='btn pull-right confirm-button " + confirmButtonClass + "'>" + confirmButtonTitle + "</button>");
 
             $(div).find('.confirm-button').click(function() {

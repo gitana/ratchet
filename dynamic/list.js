@@ -840,6 +840,17 @@
         },
 
         /**
+         * Default method for converting a result map object to a data list row.
+         *
+         * @param _doc
+         * @param obj
+         */
+        handleRowObject: function(_doc, obj)
+        {
+            obj["id"] = _doc;
+        },
+
+        /**
          * Converts a single row of JSON data to a DataTables format.
          *
          * The incoming JSON row looks like:
@@ -1525,7 +1536,7 @@
                     var rows = [];
 
                     Chain(resultMap).each(function(_doc, obj) {
-                        obj["id"] = _doc;
+                        self.handleRowObject(_doc, obj);
                         rows.push(obj);
                         aaData.push(self.toDataTableRow(model, obj, context));
                     }).then(function() {

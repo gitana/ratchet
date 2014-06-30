@@ -118,6 +118,10 @@
 
                 // find the container
                 var container = $(el).find(".docviewer");
+                if (container.length == 0)
+                {
+                    container = $(el);
+                }
 
                 // load the resource
                 var resource = {};

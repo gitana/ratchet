@@ -52,7 +52,7 @@
             // id for the iframe id
             var id = "pdf-" + new Date().getTime();
 
-            var html = "<iframe id='" + id + "' class='pdf-iframe' scrolling='no' width='100%' height='600px' src='" + viewerUrl + "'/>";
+            var html = "<iframe id='" + id + "' class='pdf-iframe' scrolling='no' width='100%' height='800px' src='" + viewerUrl + "'/>";
 
             $(container).addClass("pdf");
             $(container).append(html);

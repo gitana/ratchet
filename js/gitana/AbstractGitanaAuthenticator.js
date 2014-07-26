@@ -133,7 +133,9 @@
             var username = authInfo.getPrincipalName();
             var userDomainQualifiedId = authInfo.getPrincipalDomainId() + "/" + authInfo.getPrincipalId();
 
+            Gitana.deleteCookie("RATCHET_AUTH_USER_NAME");
             Gitana.writeCookie("RATCHET_AUTH_USER_NAME", username);
+            Gitana.deleteCookie("RATCHET_AUTH_USER_ID");
             Gitana.writeCookie("RATCHET_AUTH_USER_ID", userDomainQualifiedId);
 
             /*

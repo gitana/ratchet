@@ -78,7 +78,7 @@
                 }],
                 "loader": "remote",
                 "lengthMenu": {
-                    "values": [10, 25, 50, 100, -1],
+                    "values": [10, 25, 50, 100, 999999],
                     "labels": [10, 25, 50, 100, "All"]
                 },
                 "selectorGroups": {

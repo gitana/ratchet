@@ -14,6 +14,7 @@
 {
     font-size: 18px;
     background-color: #f5f5f5;
+    background-image: linear-gradient(#fff, #f5f5f5);
     font-weight: bold;
     padding: 9px;
     -webkit-border-radius: 4px 4px 0px 0px;

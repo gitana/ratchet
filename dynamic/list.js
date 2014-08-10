@@ -1140,6 +1140,12 @@
                         }
                     }
 
+                    if (!item)
+                    {
+                        console.warn("Unable to find list item for id: " + targetObjectId);
+                        return;
+                    }
+
                     // add or remove ourselves
                     var currentSelectedItems = self.selectedItems(model);
                     if ($(this).prop("checked"))

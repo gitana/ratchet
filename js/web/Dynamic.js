@@ -377,6 +377,12 @@
         // set up footer
         $(div).find('.modal-footer').html("");
 
+        if (config.body)
+        {
+            $(div).find(".modal-body").empty();
+            $(div).find(".modal-body").append(config.body);
+        }
+
         // auto-add cancel button
         if (config.cancel)
         {

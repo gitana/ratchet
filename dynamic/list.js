@@ -81,6 +81,7 @@
                 "columnHeaders": true,
                 "buttons": [],
                 "navbox": false,
+                "defaultFirstColumnAsId": true,
                 "options": {
                     "filter": true,
                     "paginate": true,
@@ -988,7 +989,10 @@
                         data["" + counter] = "";
                         if (i == 0)
                         {
-                            data["" + counter] = id;
+                            if (model.defaultFirstColumnAsId)
+                            {
+                                data["" + counter] = id;
+                            }
                         }
                     }
 

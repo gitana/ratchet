@@ -68,7 +68,8 @@
                         if (uri.indexOf("#") === 0) {
                             uri = uri.substring(1);
                         }
-                        if (pageUri.indexOf(uri) === 0 && uri.length > maxLen)
+                        //if (pageUri.indexOf(uri) === 0 && uri.length > maxLen)
+                        if (pageUri == uri)
                         {
                             maxLen = uri.length;
                             maxItem = item;

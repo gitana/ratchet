@@ -164,6 +164,8 @@
 
                         if (handler.canOperate())
                         {
+                            resource.observableHolder = self;
+
                             handler.render(resource, container, function(err) {
 
                                 if (!err) {

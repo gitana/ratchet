@@ -44,6 +44,11 @@
                 }
             }
 
+            // sort matches by priority
+            matches.sort(function(a, b) {
+                return (b.priority() - a.priority());
+            });
+
             return matches;
         }
 

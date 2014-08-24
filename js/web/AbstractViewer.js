@@ -154,6 +154,17 @@
         },
 
         /**
+         * The priority indicates the order in which handlers should be considered.
+         * A higher number indicates a higher priority.  Generally, these are 0-10.
+         *
+         * @returns {number}
+         */
+        priority: function()
+        {
+            return 5;
+        },
+
+        /**
          * Validates whether this viewer can operate in the current device or browser.  This method should check
          * whether all required libraries or browser capabilities exist.  If not, then the method can indicate to the
          * framework that it is not able to proceed.

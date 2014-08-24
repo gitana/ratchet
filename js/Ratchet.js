@@ -457,7 +457,16 @@
                         $(context.closestDescendants("[region=" + regionId + "]")[0]).each(function() {
                             $.each($(this)[0].attributes, function(index, attr) {
                                 var name = attr.nodeName;
-                                var value = attr.nodeValue;
+                                var value = null;
+                                if (attr.value)
+                                {
+                                    value = attr.value;
+                                }
+                                else
+                                {
+                                    // legacy browser support
+                                    value = attr.nodeValue;
+                                }
 
                                 originalAttributes[name] = value;
                             });
@@ -1432,7 +1441,16 @@
         // copy attributes
         $.each($(domEl)[0].attributes, function(index, attr) {
             var name = attr.nodeName;
-            var value = attr.nodeValue;
+            var value = null;
+            if (attr.value)
+            {
+                value = attr.value;
+            }
+            else
+            {
+                // legacy browser support
+                value = attr.nodeValue;
+            }
 
             if (name == "strategy") {
                 name = "gadget-strategy";
@@ -1488,7 +1506,16 @@
 
         $.each($(domEl)[0].attributes, function(index, attr) {
             var name = attr.nodeName;
-            var value = attr.nodeValue;
+            var value = null;
+            if (attr.value)
+            {
+                value = attr.value;
+            }
+            else
+            {
+                // legacy browser support
+                value = attr.nodeValue;
+            }
 
             if (name == "tag" || name == "region")
             {

@@ -152,21 +152,29 @@
                 var handler = null;
 
                 // walk through the routes and find one that matches this URI and method
-                var tokens = null;
-                var discoveredHandler = null;
-
+                var discoveredTokensArray = [];
+                var discoveredHandlers = [];
                 for (var routeId in _this.routes)
                 {
                     var route = _this.routes[routeId];
                     if (route.method == context.route.method)
                     {
-                        tokens = _this.executeMatch(route.uri, context.route.uri);
-                        if (tokens)
+                        var matchedTokens = _this.executeMatch(route.uri, context.route.uri);
+                        if (matchedTokens)
                         {
-                            discoveredHandler = route.handler;
-                            break;
+                            discoveredHandlers.push(route.handler);
+                            discoveredTokensArray.push(matchedTokens);
                         }
                     }
+                }
+
+                // pick the closest handler (overrides are sorted first)
+                var discoveredHandler = null;
+                var discoveredTokens = null;
+                if (discoveredHandlers.length > 0)
+                {
+                    discoveredHandler = discoveredHandlers[0];
+                    discoveredTokens = discoveredTokensArray[0];
                 }
 
                 // find a matching handler method
@@ -177,7 +185,7 @@
                     //var invocationContext = new Ratchet.RenderContext(this, context.route, null, context.params);
                     var invocationContext = new Ratchet.RenderContext(this, context.route, null, context.params);
                     Ratchet.copyInto(invocationContext.model, context.model);
-                    invocationContext.tokens = tokens;
+                    invocationContext.tokens = discoveredTokens;
 
                     // wrap the handler into a closure (convenience function)
                     handler = function(invocationContext)
@@ -784,13 +792,15 @@
                 };
             }(that, handler);
 
-            var routeId = method + "-" + uri;
+            var routeId = method + "-" + uri + Ratchet.uniqueCount();
 
             this.routes[routeId] = {
                 "uri": uri,
                 "method": method,
                 "handler": func
             };
+
+            func.ratchetRouteId = routeId;
 
             //Ratchet.debug("Mapped gadget handler: " + method + " " + uri);
         },

@@ -59,6 +59,34 @@
 
                         resolutions[regionName] = array;
                     }
+
+                    // allow for overrides via configuration
+                    if (Ratchet.Configuration)
+                    {
+                        var config = null;
+
+                        var ctx = {};
+                        ctx.observable = context.observable;
+
+                        var baseConfig = Ratchet.Configuration.evaluate(ctx);
+                        if (baseConfig)
+                        {
+                            config = Ratchet.resolveDotNotation(baseConfig, "regions." + regionName);
+                        }
+                        if (config)
+                        {
+                            var array = [];
+
+                            var resolution = {
+                                "type": config.type,
+                                "attrs": {}
+                            };
+
+                            array.push(resolution);
+
+                            resolutions[regionName] = array;
+                        }
+                    }
                 }
             }
 

@@ -13,3 +13,10 @@
     padding-top: 15px;
     padding-bottom: 5px;
 }
+
+.nav.nav-list .divider
+{
+    border-top: 1px #eee solid;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

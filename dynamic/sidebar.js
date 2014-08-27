@@ -91,7 +91,7 @@
 	        for (var i = 0; i < model.items.length; i++)
 	        {
 	            var item = model.items[i];
-	            if (!item.header)
+	            if (!item.header && !item.divider)
 	            {
 	                var classname = "sidebar-item-" + i;
 

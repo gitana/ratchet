@@ -180,12 +180,22 @@
         {
             var tableConfig = this.base();
 
-            tableConfig.oLanguage.sLengthMenu = "Display _MENU_ documents per page";
-            tableConfig.oLanguage.sInfo = "Showing _START_ to _END_ of _TOTAL_ documents";
-            tableConfig.oLanguage.sInfoEmpty = "Showing 0 to 0 of 0 documents";
-            tableConfig.oLanguage.sInfoFiltered = "(filtered from _MAX_ total documents)";
+            var entityTypes = this.entityTypes();
+
+            tableConfig.oLanguage.sLengthMenu = "Display _MENU_ " + entityTypes.plural + " per page";
+            tableConfig.oLanguage.sInfo = "Showing _START_ to _END_ of _TOTAL_ " + entityTypes.plural;
+            tableConfig.oLanguage.sInfoEmpty = "Showing 0 to 0 of 0 " + entityTypes.plural;
+            tableConfig.oLanguage.sInfoFiltered = "(filtered from _MAX_ total " + entityTypes.plural + ")";
 
             return tableConfig;
+        },
+
+        entityTypes: function()
+        {
+            return {
+                "plural": "documents",
+                "singular": "document"
+            }
         },
 
         /**

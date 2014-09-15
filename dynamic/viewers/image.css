@@ -10,3 +10,8 @@
     max-width: 100%;
     overflow: auto;
 }
+
+.docviewer.image div.image-error p
+{
+
+}

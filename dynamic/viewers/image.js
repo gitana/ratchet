@@ -25,7 +25,7 @@
         doConfigure: function()
         {
             this.config({
-                "maxSize": 1000000
+                "maxSize": 4000000
             });
         },
 
@@ -55,7 +55,7 @@
             // CHECK: max file size
             var maxSize = this.config().maxSize;
             if (maxSize > -1 && resource.size && resource.size > maxSize) {
-                html = this.messageFrame("The image cannot render as it is too large");
+                html = "<div class='image-error'><p>The image cannot render as it is too large</p></div>";
             }
             else {
                 html = "<img src='" + attachment.url + "' alt='" + title + "' title='" + title + "'/>";

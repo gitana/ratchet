@@ -1097,6 +1097,20 @@
             }
         },
 
+        /**
+         * Refreshes the current route.
+         */
+        refresh: function(callback)
+        {
+            this.run(function() {
+
+                if (callback)
+                {
+                    callback();
+                }
+            });
+        },
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         //

@@ -167,11 +167,13 @@
 
                     callback(null, text);
                 },
-                "failure": function(http)
+                "error": function(xhr, textStatus, errorThrown)
                 {
                     // fire back error
                     callback({
-                        "message": "Unable to load resource: " + resource.url + " with message: " + http.message
+                        "message": "Unable to load resource: " + resource.url + " with message: " + textStatus,
+                        "xhr": xhr,
+                        "errorThrown": errorThrown
                     });
                 }
             });
@@ -193,11 +195,13 @@
                 {
                     callback(null, text);
                 },
-                "failure": function(http)
+                "error": function(xhr, textStatus, errorThrown)
                 {
                     // fire back error
                     callback({
-                        "message": "Unable to save resource: " + resource.url + " with message: " + http.message
+                        "message": "Unable to save resource: " + resource.url + " with message: " + textStatus,
+                        "xhr": xhr,
+                        "errorThrown": errorThrown
                     });
                 }
             });

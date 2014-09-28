@@ -48,6 +48,7 @@
 
             // append the url
             var viewerUrl = VIEWER_URL + "?file=" + Ratchet.urlEncode(attachment.url);
+            viewerUrl += "#disableFontFace=true";
 
             // id for the iframe id
             var id = "pdf-" + new Date().getTime();

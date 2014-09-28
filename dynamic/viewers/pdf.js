@@ -10,14 +10,14 @@
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
-            var VIEWER_URL = module.uri + "/../pdfjs/viewer.html";
+            var VIEWER_URL = module.uri + "/../pdfjs/web/viewer.html";
 
             return factory(Ratchet, $, VIEWER_URL);
         });
     }
     else
     {
-        return factory(root.Ratchet, root.$, "./pdfjs/viewer.html");
+        return factory(root.Ratchet, root.$, "./pdfjs/web/viewer.html");
     }
 
 }(this, function(Ratchet, $, VIEWER_URL) {

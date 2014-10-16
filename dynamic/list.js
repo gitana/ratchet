@@ -981,7 +981,7 @@
                 {
                     var item = model.columns[i];
 
-                    var value = this.handleColumnValue(row, item, model, context);
+                    var value = this.handleColumnValue(row, item, model, context, i);
                     data["" + counter] = value;
 
                     if (!data["" + counter])
@@ -1211,7 +1211,7 @@
             this.rowCallback(el, model, table, nRow, aData, iDisplayIndex)
         },
 
-        handleColumnValue: function(row, item, model, context)
+        handleColumnValue: function(row, item, model, context, index)
         {
             var value = null;
 
@@ -1255,7 +1255,7 @@
             }
             else
             {
-                value = this.columnValue(row, item, model, context);
+                value = this.columnValue(row, item, model, context, index);
             }
 
             return value;
@@ -1406,7 +1406,7 @@
          *
          * Determines the value to map into a column for a given row/item.
          **/
-        columnValue: function(row, item, model, context)
+        columnValue: function(row, item, model, context, index)
         {
             return null;
         },

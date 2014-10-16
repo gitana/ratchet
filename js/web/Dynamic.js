@@ -301,7 +301,7 @@
     {
         Ratchet.showModal({
             "title": title,
-            "cancel": true
+            "cancel": false
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
             $(div).find('.modal-footer').append("<button class='btn btn-default pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
@@ -314,7 +314,7 @@
     {
         Ratchet.showModal({
             "title": title,
-            "cancel": true,
+            "cancel": false,
             "modalClass": Ratchet.defaultModalFadeClass
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");

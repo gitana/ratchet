@@ -258,15 +258,24 @@
         tableConfig: function()
         {
             return {
-                "bSort": true,
-                //"bAutoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ records per page",
-                    "sZeroRecords": "No items were found",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-                    "sInfoEmpty": "Showing 0 to 0 of 0 records",
-                    "sInfoFiltered": "(filtered from _MAX_ total records)",
-                    "sSearch": "Filter:"
+                "autoWidth": true,
+                "jQueryUI": false,
+                "ordering": true,
+                "searching": true,
+                "filter": true,
+                "paging": true,
+                "processing": true,
+                "info": true,
+                "lengthChange": true,
+                "serverSide": true,
+                "columns": [],
+                "language": {
+                    "lengthMenu": "Display _MENU_ records per page",
+                    "zeroRecords": "No items were found",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ records",
+                    "infoEmpty": "Showing 0 to 0 of 0 records",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search": "Filter:"
                 }
             };
         },
@@ -284,21 +293,42 @@
             // default table config
             var tableConfig = self.tableConfig();
 
-            if (model.options && model.options.filter) {
-                tableConfig.bFilter = true;
-            }
-            if (model.options && model.options.paginate) {
-                tableConfig.bPaginate = true;
-            }
-            if (model.options && model.options.processing) {
-                tableConfig.bProcessing = true;
-            }
-            if (model.options && model.options.info) {
-                tableConfig.bInfo = true;
-            }
-            var showSizing = false;
-            if (model.options && model.options.sizing) {
-                showSizing = model.options.sizing;
+            if (model.options)
+            {
+                if (typeof(model.options.ordering) != "undefined")
+                {
+                    tableConfig.ordering = model.options.ordering;
+                }
+                if (typeof(model.options.searching) != "undefined")
+                {
+                    tableConfig.searching = model.options.searching;
+                }
+                if (typeof(model.options.filter) != "undefined")        // legacy
+                {
+                    tableConfig.searching = model.options.filter;
+                }
+                if (typeof(model.options.paging) != "undefined")
+                {
+                    tableConfig.paging = model.options.paging;
+                }
+                if (typeof(model.options.paginate) != "undefined")      // legacy
+                {
+                    tableConfig.paging = model.options.paginate;
+                }
+                if (typeof(model.options.processing) != "undefined") {
+                    tableConfig.processing = model.options.processing;
+                }
+                if (typeof(model.options.info) != "undefined") {
+                    tableConfig.info = model.options.info;
+                }
+                if (typeof(model.options.lengthChange) != "undefined")
+                {
+                    tableConfig.lengthChange = model.options.lengthChange;
+                }
+                if (typeof(model.options.sizing) != "undefined")        // legacy
+                {
+                    tableConfig.lengthChange = model.options.sizing;
+                }
             }
 
             // bootstrap
@@ -316,15 +346,15 @@
              'r' - pRocessing
              */
 
-            if (tableConfig.bFilter)
+            if (tableConfig.searching)
             {
-                if (tableConfig.bPaginate)
+                if (tableConfig.paging)
                 {
-                    if (tableConfig.bInfo)
+                    if (tableConfig.info)
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'p>>";
                             }
@@ -335,7 +365,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'p>>";
                             }
@@ -347,9 +377,9 @@
                     }
                     else
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'><'col-md-6'p>>";
                             }
@@ -360,7 +390,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'><'col-md-6'p>>";
                             }
@@ -373,11 +403,11 @@
                 }
                 else
                 {
-                    if (tableConfig.bInfo)
+                    if (tableConfig.info)
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'>>";
                             }
@@ -388,7 +418,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'>>";
                             }
@@ -400,9 +430,9 @@
                     }
                     else
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlft>>";
                             }
@@ -413,7 +443,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rft>>";
                             }
@@ -427,13 +457,13 @@
             }
             else
             {
-                if (tableConfig.bPaginate)
+                if (tableConfig.paging)
                 {
-                    if (tableConfig.bInfo)
+                    if (tableConfig.info)
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'p>>";
                             }
@@ -444,7 +474,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'p>>";
                             }
@@ -456,9 +486,9 @@
                     }
                     else
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'><'col-md-6'p>>";
                             }
@@ -469,7 +499,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'><'col-md-6'p>>";
                             }
@@ -482,11 +512,11 @@
                 }
                 else
                 {
-                    if (tableConfig.bInfo)
+                    if (tableConfig.info)
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'>>";
                             }
@@ -497,7 +527,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'>>";
                             }
@@ -509,9 +539,9 @@
                     }
                     else
                     {
-                        if (showSizing)
+                        if (tableConfig.lengthChange)
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rlt>>";
                             }
@@ -522,7 +552,7 @@
                         }
                         else
                         {
-                            if (tableConfig.bProcessing)
+                            if (tableConfig.processing)
                             {
                                 tableConfig["sDom"] = "<'row'<'col-md-12'rt>>";
                             }
@@ -537,9 +567,9 @@
 
             if (model.lengthMenu)
             {
-                tableConfig["aLengthMenu"] = [];
-                tableConfig["aLengthMenu"].push(model.lengthMenu.values);
-                tableConfig["aLengthMenu"].push(model.lengthMenu.labels);
+                tableConfig["lengthMenu"] = [];
+                tableConfig["lengthMenu"].push(model.lengthMenu.values);
+                tableConfig["lengthMenu"].push(model.lengthMenu.labels);
                 //[[10, 25, 50, -1], [10, 25, 50, "All"]]
             }
 
@@ -547,43 +577,67 @@
             if (tableExists) {
                 tableConfig.bDestroy = tableExists;
             }
-            tableConfig["bServerSide"] = true;
-            tableConfig["aoColumns"] = [];
+            //tableConfig["serverSide"] = true;
+            //tableConfig["columns"] = [];
             if (model.checkbox)
             {
-                tableConfig["aoColumns"].push({
-                    "bVisible": true,
-                    "bSearchable": false,
-                    "bSortable": false,
-                    "sWidth": "10px",
-                    "sTitle": "<input type='checkbox' class='list-check-box-all'/>",
-                    "sClass": "list-checkbox-column"
+                tableConfig["columns"].push({
+                    "visible": true,
+                    "searchable": false,
+                    "orderable": false,
+                    "width": "10px",
+                    "title": "<input type='checkbox' class='list-check-box-all'/>",
+                    "className": "list-checkbox-column"
                 });
-            } else if (model.radio)
+            }
+            else if (model.radio)
             {
-                tableConfig["aoColumns"].push({
-                    "bVisible": true,
-                    "bSearchable": false,
-                    "bSortable": false,
-                    "sWidth": "10px",
-                    "sTitle": "",
-                    "sClass": "list-radio-column"
+                tableConfig["columns"].push({
+                    "visible": true,
+                    "searchable": false,
+                    "orderable": false,
+                    "width": "10px",
+                    "title": "",
+                    "className": "list-radio-column"
                 });
             }
             if (model.icon)
             {
-                tableConfig["aoColumns"].push({
-                    "bVisible": true,
-                    "bSearchable": false,
-                    "bSortable": false,
-                    "sTitle": "",
-                    "sWidth": "70px",
-                    "sClass": "list-icon-column"
+                tableConfig["columns"].push({
+                    "visible": true,
+                    "searchable": false,
+                    "orderable": false,
+                    "title": "",
+                    /*"width": "70px",*/
+                    "className": "list-icon-column"
                 });
             }
 
+            // initial sort order
+            tableConfig.order = [];
+
+            this.sort(model);
+
+            tableConfig.order = [];
+
+            /*
+            // apply sort from observable
+            var sortField = self.sort(model);
+            if (sortField)
+            {
+                var sortDirection = self.sortDirection(model);
+                if (1 == sortDirection) {
+                    sortDirection = "asc";
+                } else if (-1 == sortDirection) {
+                    sortDirection = "desc";
+                }
+
+                tableConfig.order = [sortField, sortDirection];
+            }
+            */
+
             // custom hook for specifying settings-driven overrides
-            self.applyDynamicConfig(model, tableConfig, function(tableConfig) {
+            self.applyDynamicTableConfig(model, tableConfig, function(tableConfig) {
 
                 // push for each column
                 if (model.columns)
@@ -595,26 +649,32 @@
                         if (!Ratchet.isEmpty(column.sort)) {
                             columnSortable = column.sort;
                         }
+                        if (!Ratchet.isEmpty(column.sortable)) {
+                            columnSortable = column.sortable;
+                        }
+                        if (!Ratchet.isEmpty(column.orderable)) {
+                            columnSortable = column.orderable;
+                        }
 
                         var config = {
-                            "bVisible": true,
-                            "bSearchable": true,
-                            "bSortable": columnSortable
+                            "visible": true,
+                            "searchable": true,
+                            "orderable": columnSortable
                         };
 
                         if (column.hidden) {
-                            config["bVisible"] = false;
+                            config["visible"] = false;
                         }
 
                         if (column.cssClasses)
                         {
-                            config.sClass = column.cssClasses;
+                            config.className = column.cssClasses;
                         }
 
                         // custom column configuration hook
                         self.handleConfigureColumn(column, config);
 
-                        tableConfig["aoColumns"].push(config);
+                        tableConfig["columns"].push(config);
                     }
                 }
                 else
@@ -629,18 +689,12 @@
                 //////////////////////////////////////////////////////////////////////////////
 
                 // load
-                tableConfig["fnServerData"] = function(sSource, aoData, fnCallback)
+                tableConfig["ajax"] = function(data, fnCallback, settings)
                 {
-                    // create key value map for facility of looking up DataTables values
-                    var keyValues = {};
-                    for (var i = 0; i < aoData.length; i++) {
-                        keyValues[aoData[i].name] = aoData[i].value;
-                    }
-
                     // build json that we'll pass into data tables
                     var json = {};
-                    json["sEcho"] = keyValues["sEcho"];
-                    json["aaData"] = [];
+                    json["draw"] = data["draw"];
+                    json["data"] = [];
 
 
                     //////////////////////////////////////////////////////////////////////////////
@@ -648,7 +702,11 @@
                     //////////////////////////////////////////////////////////////////////////////
 
                     // allow search term from data tables default control
-                    var searchTerm = keyValues["sSearch"];
+                    var searchTerm = null;
+                    if (data.search && data.search.value)
+                    {
+                        searchTerm = data.search.value;
+                    }
                     if (!searchTerm) {
 
                         // if not specified, allow lookup from an observable
@@ -670,23 +728,26 @@
                     //////////////////////////////////////////////////////////////////////////////
 
                     var pagination = {
-                        "skip": keyValues["iDisplayStart"],
-                        "limit": keyValues["iDisplayLength"]
+                        "skip": data["start"],
+                        "limit": data["length"]
                     };
 
                     // apply sort to pagination
-                    var sortColIndex = keyValues["iSortCol_0"];
-                    if (sortColIndex > 1) {
-                        var sortColProperty = model.columns[sortColIndex - 2].property;
-                        if (sortColProperty)
-                        {
-                            pagination["sort"] = {};
-                            var direction = keyValues["sSortDir_0"] == 'asc' ? 1 : -1;
-                            if (Ratchet.isString((sortColProperty))) {
-                                pagination["sort"][sortColProperty] = direction;
-                            }
-                            if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
-                                pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
+                    if (data.order && data.order.length > 0)
+                    {
+                        var sortColIndex = data.order[0].column;
+                        if (sortColIndex > 1) {
+                            var sortColProperty = model.columns[sortColIndex - 2].property;
+                            if (sortColProperty)
+                            {
+                                pagination["sort"] = {};
+                                var direction = data.order[0].dir == 'asc' ? 1 : -1;
+                                if (Ratchet.isString((sortColProperty))) {
+                                    pagination["sort"][sortColProperty] = direction;
+                                }
+                                if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
+                                    pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
+                                }
                             }
                         }
                     }
@@ -724,23 +785,23 @@
 
                     self.startProcessing.call(self, context, model);
 
-                    loader.call(self, context, model, keyValues, sSource, aoData, searchTerm, query, pagination, function(aaData, attrs) {
+                    loader.call(self, context, model, data, settings, searchTerm, query, pagination, function(array, attrs) {
 
-                        for (var i = 0; i < aaData.length; i++)
+                        for (var i = 0; i < array.length; i++)
                         {
-                            json["aaData"].push(aaData[i]);
+                            json["data"].push(array[i]);
                         }
 
                         if (attrs)
                         {
-                            if (attrs.iTotalRecords || attrs.iTotalRecords == 0)
+                            if (attrs.recordsTotal || attrs.recordsTotal == 0)
                             {
-                                json["iTotalRecords"] = attrs.iTotalRecords;
+                                json["recordsTotal"] = attrs.recordsTotal;
                             }
 
-                            if (attrs.iTotalDisplayRecords || attrs.iTotalDisplayRecords == 0)
+                            if (attrs.recordsFiltered || attrs.recordsFiltered == 0)
                             {
-                                json["iTotalDisplayRecords"] = attrs.iTotalDisplayRecords;
+                                json["recordsFiltered"] = attrs.recordsFiltered;
                             }
                         }
 
@@ -752,13 +813,13 @@
 
 
                 // register callbacks
-                tableConfig["fnCreatedRow"] = function( nRow, aData, iDataIndex ) {
+                tableConfig["createdRow"] = function( nRow, aData, iDataIndex ) {
                     self.handleCreatedRow.call(self, el, model, this, nRow, aData, iDataIndex);
                 };
-                tableConfig["fnRowCallback"] = function(nRow, aData, iDisplayIndex) {
+                tableConfig["rowCallback"] = function(nRow, aData, iDisplayIndex) {
                     self.handleRowCallback.call(self, el, model, this, nRow, aData, iDisplayIndex);
                 };
-                tableConfig["fnInitComplete"] = function(oSettings, json) {
+                tableConfig["initComplete"] = function(oSettings, json) {
                     self.handleInitComplete.call(self, el, model, this, oSettings, json, callback);
                 };
 
@@ -769,13 +830,13 @@
                 }
 
                 if (model.hideCheckbox) {
-                    tableConfig["aoColumns"][0]["bVisible"] = false;
+                    tableConfig["columns"][0]["visible"] = false;
                 } else if (model.hideRadio) {
-                    tableConfig["aoColumns"][0]["bVisible"] = false;
+                    tableConfig["columns"][0]["visible"] = false;
                 }
 
                 if (model.hideIcon) {
-                    tableConfig["aoColumns"][1]["bVisible"] = false;
+                    tableConfig["columns"][1]["visible"] = false;
                 }
 
                 // RENDER THE TABLE
@@ -908,10 +969,17 @@
             //////////////////////////////////////////////////////////////////////////////
 
             var id = row["id"];
-            var data = {
-                "DT_RowId": id,
-                "DT_RowClass": "row_" + id
-            };
+            if (!id)
+            {
+                id = row["_doc"]
+            }
+            var data = {};
+            if (id)
+            {
+                data["DT_RowId"] = id;
+                data["DT_RowClass"] = "row_" + id;
+            }
+
             var counter = 0;
 
             // COLUMN: checkbox?
@@ -1111,6 +1179,20 @@
                 $(el).find(".buttonbar").css({
                     "padding-bottom": "20px"
                 });
+            }
+
+            /*
+            // hide the paginators if we don't need them
+            if (json.recordsFiltered < oSettings.length)
+            {
+                $(el).find(".dataTables_paginate").css("display", "none");
+            }
+            */
+
+            // if no headers, remove top border
+            if (!model.columnHeaders)
+            {
+                $(el).find("table.dataTable").css("border-top", "0px");
             }
 
             this.initComplete(el, model, table, oSettings, json);
@@ -1325,7 +1407,7 @@
         /**
          * EXTENSION POINT
          */
-        applyDynamicConfig: function(model, config, callback)
+        applyDynamicTableConfig: function(model, config, callback)
         {
             callback(config);
         },
@@ -1450,7 +1532,7 @@
          */
         loaders: {
 
-            "default": function(context, model, keyValues, sSource, aoData, searchTerm, query, pagination, callback) {
+            "default": function(context, model, data, settings, searchTerm, query, pagination, callback) {
 
                 var self = this;
 
@@ -1458,11 +1540,11 @@
                 // it does not deal with searchTerm or query
 
                 var attrs = {
-                    "iTotalRecords": 0,
-                    "iTotalDisplayRecords": 0
+                    "recordsTotal": 0,
+                    "recordsFiltered": 0
                 };
 
-                var aaData = [];
+                var array = [];
                 if (model.rows)
                 {
                     for (var i = 0; i < model.rows.length; i++)
@@ -1476,18 +1558,18 @@
 
                             rowData.push(cell.value);
 
-                            attrs.iTotalRecords++;
-                            attrs.iTotalDisplayRecords++;
+                            attrs.recordsTotal++;
+                            attrs.recordsFiltered++;
                         }
 
-                        aaData.push(self.toDataTableRow(model, rowData, context));
+                        array.push(self.toDataTableRow(model, rowData, context));
                     }
                 }
 
-                callback.call(self, aaData, attrs);
+                callback.call(self, array, attrs);
             },
 
-            "gitana": function(context, model, keyValues, sSource, aoData, searchTerm, query, pagination, callback) {
+            "gitana": function(context, model, data, settings, searchTerm, query, pagination, callback) {
 
                 var self = this;
 
@@ -1542,30 +1624,30 @@
                         offset = 0;
                     }
 
-                    var aaData = [];
+                    var array = [];
                     var rows = [];
 
                     Chain(resultMap).each(function(_doc, obj) {
                         self.handleRowObject(_doc, obj);
                         rows.push(obj);
-                        aaData.push(self.toDataTableRow(model, obj, context));
+                        array.push(self.toDataTableRow(model, obj, context));
                     }).then(function() {
 
                         var attrs = {
-                            "iTotalRecords": totalRows,
-                            "iTotalDisplayRecords": totalRows
+                            "recordsTotal": totalRows,
+                            "recordsFiltered": totalRows
                         };
 
                         // set onto model
                         model.rows = rows;
 
-                        callback.call(self, aaData, attrs);
+                        callback.call(self, array, attrs);
 
                     });
 
                 });
             },
-            "remote": function(context, model, keyValues, sSource, aoData, searchTerm, query, pagination, callback) {
+            "remote": function(context, model, data, settings, searchTerm, query, pagination, callback) {
 
                 var self = this;
 
@@ -1580,23 +1662,23 @@
                  */
                 self.doRemoteQuery.call(self, context, model, searchTerm, query, pagination, function(results) {
 
-                    var aaData = [];
+                    var array = [];
 
                     for (var i = 0; i < results.rows.length; i++) {
 
                         var obj = results.rows[i];
-                        aaData.push(self.toDataTableRow(model, obj, context));
+                        array.push(self.toDataTableRow(model, obj, context));
                     }
 
                     var attrs = {
-                        "iTotalRecords": (results.totalRows ? results.totalRows : results.total_rows),
-                        "iTotalDisplayRecords": (results.totalRows ? results.totalRows : results.total_rows)
+                        "recordsTotal": (results.totalRows ? results.totalRows : results.total_rows),
+                        "recordsFiltered": (results.totalRows ? results.totalRows : results.total_rows)
                     };
 
                     // set onto model
                     model.rows = results.rows;
 
-                    callback.call(self, aaData, attrs);
+                    callback.call(self, array, attrs);
                 });
 
             }

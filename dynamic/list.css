@@ -5,7 +5,8 @@
 
 .gadget.list .buttonbar
 {
-
+    padding-bottom: 20px;
+    padding-top: 0px;
 }
 
 .gadget.list .buttonbar .button-container
@@ -22,13 +23,14 @@
 TD.list-icon-column
 {
     vertical-align: middle !important;
-    width: 70px;
     text-align: center;
+    white-space: nowrap;
+    width: 1%;
 }
 
 TD.list-icon-column DIV
 {
-    margin-left: 4px;
+    /*margin-left: 4px;*/
 }
 
 TD.list-icon-column IMG
@@ -40,8 +42,9 @@ TD.list-icon-column IMG
 TD.list-checkbox-column
 {
     vertical-align: middle !important;
-    width: 10px;
     text-align: center;
+    white-space: nowrap;
+    width: 1%;
 }
 
 .list-checkbox-column input[type="checkbox"]
@@ -52,7 +55,8 @@ TD.list-checkbox-column
 .list-radio-column
 {
     vertical-align: middle !important;
-    width: 10px;
+    white-space: nowrap;
+    width: 1%;
 }
 .list-radio-column input[type="radio"]
 {
@@ -84,4 +88,9 @@ TD.list-checkbox-column
 {
     width: auto;
     display: inline-block;
+}
+
+table.dataTable tbody tr td.dataTables_empty
+{
+    background-color: inherit;
 }

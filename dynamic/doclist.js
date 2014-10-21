@@ -182,10 +182,10 @@
 
             var entityTypes = this.entityTypes();
 
-            tableConfig.oLanguage.sLengthMenu = "Display _MENU_ " + entityTypes.plural + " per page";
-            tableConfig.oLanguage.sInfo = "Showing _START_ to _END_ of _TOTAL_ " + entityTypes.plural;
-            tableConfig.oLanguage.sInfoEmpty = "Showing 0 to 0 of 0 " + entityTypes.plural;
-            tableConfig.oLanguage.sInfoFiltered = "(filtered from _MAX_ total " + entityTypes.plural + ")";
+            tableConfig.language.lengthMenu = "Display _MENU_ " + entityTypes.plural + " per page";
+            tableConfig.language.info = "Showing _START_ to _END_ of _TOTAL_ " + entityTypes.plural;
+            tableConfig.language.infoEmpty = "Showing 0 to 0 of 0 " + entityTypes.plural;
+            tableConfig.language.infoFiltered = "(filtered from _MAX_ total " + entityTypes.plural + ")";
 
             return tableConfig;
         },
@@ -540,7 +540,6 @@
             });
         },
 
-
         configureColumn: function(column, config)
         {
             this.base(column, config);
@@ -548,8 +547,8 @@
             // if this is the actions column, set button to render in middle and align right
             if (column.key == "actions")
             {
-                config["sClass"] = "actions";
-                config["sWidth"] = "150px";
+                config["className"] = "actions";
+                config["width"] = "150px";
             }
         },
 

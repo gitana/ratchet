@@ -46,3 +46,8 @@ button.btn-lg.list-button-sort-direction-selector
 {
     text-align: left;
 }
+
+.documents-list .buttonbar .pull-right
+{
+    margin-right: -5px;
+}

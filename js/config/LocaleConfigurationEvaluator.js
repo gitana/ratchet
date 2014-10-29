@@ -13,18 +13,14 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
+            var val = false;
+
+            if (context && context.locale)
+            {
+                val = this.hasMatch(condition, context.locale);
             }
 
-            var locale = context.locale;
-
-            // if locale is a function, then evaluate it
-            if (typeof(context.locale) === "function") {
-                locale = context.locale();
-            }
-
-            return this.hasMatch(condition, locale);
+            return val;
         }
 
     }));

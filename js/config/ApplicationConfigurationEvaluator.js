@@ -13,21 +13,14 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
+            var val = false;
+
+            if (context && context.application)
+            {
+                val = this.hasMatch(condition, context.application);
             }
 
-            var application = context.application;
-            if (!application) {
-                return false;
-            }
-
-            // if application is a function, then evaluate it
-            if (typeof(context.application) === "function") {
-                application = context.application();
-            }
-
-            return this.hasMatch(condition, application);
+            return val;
         }
 
     }));

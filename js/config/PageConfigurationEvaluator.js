@@ -13,18 +13,14 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
+            var val = false;
+
+            if (context && context.page)
+            {
+                val = this.hasMatch(condition, context.page);
             }
 
-            var page = context.page;
-
-            // if page is a function, then evaluate it
-            if (typeof(context.page) === "function") {
-                page = context.page();
-            }
-
-            return this.hasMatch(condition, page);
+            return val;
         }
 
     }));

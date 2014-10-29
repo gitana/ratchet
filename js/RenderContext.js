@@ -47,19 +47,25 @@
         {
             var self = this;
 
+            /*
             Ratchet.logDebug("swap() calling into processRegions()");
+            */
 
             // process any regions
             self.ratchet().processRegions.call(self.ratchet(), self, function() {
 
                 // process any gadgets
+                /*
                 Ratchet.logDebug("swap() processRegions complete");
                 Ratchet.logDebug("swap() calling into processGadgets()");
+                */
 
                 // dispatcher post-render
                 self.ratchet().processGadgets.call(self.ratchet(), self, function () {
 
+                    /*
                     Ratchet.logDebug("swap() processGadgets complete");
+                    */
 
                     var postSwap = function(onComplete)
                     {

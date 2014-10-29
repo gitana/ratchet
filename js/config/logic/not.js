@@ -3,7 +3,7 @@
     return Ratchet.Configuration.register("not", Ratchet.AbstractConfigurationEvaluator.extend({
 
         /**
-         * Performs an NOT for a condition.
+         * Performs a NOT for a condition.
          *
          * @param engine
          * @param context
@@ -13,24 +13,32 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
+            var val = false;
+
+            if (context && condition)
+            {
+                var childEvaluator = condition.evaluator;
+                var childCondition = condition.condition;
+
+                var evaluatorInstance = engine.evaluatorInstances[childEvaluator];
+                if (!evaluatorInstance)
+                {
+                    Ratchet.logWarn("Missing configuration evaluator: " + childEvaluator);
+
+                    val = false;
+                }
+                else
+                {
+                    // evaluate
+                    var valid = evaluatorInstance.evaluate(engine, context, childCondition);
+                    if (!valid)
+                    {
+                        val = true;
+                    }
+                }
             }
 
-            // child engine
-            var childEngine = engine.clone(true);
-            var block = {
-                "evaluator": condition.evaluator,
-                "condition": condition.condition,
-                "config": [true]
-            };
-            childEngine.add(block);
-
-            // evaluate
-            var result = childEngine.evaluate(context);
-
-            // valid if size of array == 0
-            return (result.length == 0);
+            return val;
         }
 
     }));

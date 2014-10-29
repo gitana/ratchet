@@ -13,18 +13,14 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
+            var val = false;
+
+            if (context && context["action-group"])
+            {
+                val = this.hasMatch(condition, context["action-group"]);
             }
 
-            var actionGroup = context["action-group"];
-
-            // if actionGroup is a function, then evaluate it
-            if (typeof(actionGroup) === "function") {
-                actionGroup = actionGroup();
-            }
-
-            return this.hasMatch(condition, actionGroup);
+            return val;
         }
 
 

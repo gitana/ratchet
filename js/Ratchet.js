@@ -322,7 +322,9 @@
             {
                 // if we don't have a gadget id, one will be generated inside of the gadgetRegistry.instantiate() call
                 this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this.gadgetId, this);
+                /*
                 Ratchet.logDebug("Ratchet.setup() - Instantiated " + this.gadgetInstances.length + " gadget instances for type: " + this.gadgetType + " and id: " + this.gadgetId);
+                */
                 $.each(this.gadgetInstances, function(x, y) {
                     y.setup.call(y);
                 });
@@ -412,7 +414,9 @@
             //
             $(context.closestDescendants('region')).each(function() {
                 Ratchet.convertRegionTag(this);
+                /*
                 Ratchet.logDebug("Converted region tag: " + $(this).html());
+                */
             });
 
 
@@ -433,13 +437,17 @@
                 regions[regionId] = this;
                 _rarray.push(regionId);
 
+                /*
                 Ratchet.logDebug("Found region: " + regionId);
+                */
             });
 
             // resolve all of these regions
             resolver.resolve.call(resolver, this, regions, function(resolutions) {
 
+                /*
                 Ratchet.logDebug("Resolved regions: " + JSON.stringify(_rarray) + " to: " + JSON.stringify(resolutions));
+                */
 
                 for (var regionId in resolutions)
                 {
@@ -525,7 +533,9 @@
             //
             $(context.closestDescendants('gadget')).each(function() {
                 Ratchet.convertGadgetTag(this);
+                /*
                 Ratchet.logDebug("Converted gadget tag: " + $(this).html());
+                */
             });
 
 
@@ -544,7 +554,9 @@
                 var subGadgetId = $(this).attr("id");
                 var subGadgetStrategy = $(this).attr("gadget-strategy");
 
+                /*
                 Ratchet.logDebug("Processing sub-gadget [type=" + subGadgetType + ", id=" + subGadgetId + "]");
+                */
 
                 // check if we already have a child ratchet for this gadget
                 var ratcheted = false;
@@ -566,7 +578,9 @@
 
                 if (!ratcheted)
                 {
+                    /*
                     Ratchet.logDebug("Ratcheting sub-gadget [type=" + subGadgetType + ", id=" + subGadgetId + "]");
+                    */
 
                     // instantiate a child ratchet on top of this element
                     var childRatchet = new Ratchet($(this), _this, function() {
@@ -606,7 +620,9 @@
 
                         return function(cb)
                         {
+                            /*
                             Ratchet.logDebug("Dispatching child ratchet [id=" + childRatchetId + "] (" + context.route.method + " " + context.route.uri + "), gadget type: " + $(childRatchet.el).attr("gadget"));
+                            */
 
                             var subParams = params[childRatchetId];
 
@@ -616,7 +632,9 @@
 
                                 count++;
 
+                                /*
                                 Ratchet.logDebug("Heard complete: " + count + " of: " + _this.childRatchetCount() + ", gadget type: " + $(childRatchet.el).attr("gadget"));
+                                */
 
                                 //Ratchet.nextTick(function() {
                                 cb();
@@ -1583,14 +1601,15 @@
     //
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    // by default, logging only shows errors
-    // to debug, set Ratchet.logLevel = Ratchet.DEBUG
-    Ratchet.logLevel = 3;
-
+    // log levels
     Ratchet.DEBUG = 0;
     Ratchet.INFO = 1;
     Ratchet.WARN = 2;
     Ratchet.ERROR = 3;
+
+    // by default, logging only shows errors
+    // to debug, set Ratchet.logLevel = Ratchet.DEBUG
+    Ratchet.logLevel = Ratchet.ERROR;
 
     Ratchet.logDebug = function(obj) {
         Ratchet.log(Ratchet.DEBUG, obj);
@@ -1607,6 +1626,10 @@
         {
             console.log(Ratchet.ERROR, new Error().stack);
         }
+    };
+
+    Ratchet.isDebug = function() {
+        return Ratchet.logLevel === Ratchet.DEBUG;
     };
 
     Ratchet.log = function(level, obj) {

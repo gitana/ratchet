@@ -107,6 +107,7 @@
 
             // subscription listeners
             this.subscriptions = {};
+            this.subscriptionsCount = 0;
 
             this.generateBindingKey = function()
             {
@@ -323,14 +324,17 @@
             this.blocks[blockKey] = block;
 
             // fire any listeners
-            var listenerConfig = {};
-            if (block.evaluator) {
-                listenerConfig.evaluator = block.evaluator;
+            if (this.subscriptionsCount > 0)
+            {
+                var listenerConfig = {};
+                if (block.evaluator) {
+                    listenerConfig.evaluator = block.evaluator;
+                }
+                if (block.condition) {
+                    listenerConfig.condition = block.condition;
+                }
+                this.triggerListeners(listenerConfig);
             }
-            if (block.condition) {
-                listenerConfig.condition = block.condition;
-            }
-            this.triggerListeners(listenerConfig);
 
             return blockKey;
         },
@@ -376,9 +380,6 @@
             {
                 var block = this.blocks[blockKey];
 
-                // condition is optional
-                var condition = block.condition;
-
                 if (!block.evaluator)
                 {
                     // nothing to evaluate, so keep
@@ -396,7 +397,7 @@
                     else
                     {
                         // evaluate
-                        var valid = evaluatorInstance.evaluate(self, context, condition);
+                        var valid = evaluatorInstance.evaluate(self, context, block.condition);
                         if (valid)
                         {
                             // valid, so keep it
@@ -410,15 +411,19 @@
             // sort the ordered block keys
             orderedBlockKeys.sort();
 
+            /*
             // debugging
             Ratchet.logDebug("Configuration evaluate() for context: " + (context ? JSON.stringify(context) : "null"));
             for (var blockKey in keepers)
             {
                 Ratchet.logDebug(" - keeper[" + blockKey + "]: " + JSON.stringify(keepers[blockKey]));
             }
+            */
 
             // now apply
+            /*
             Ratchet.logDebug("Applying Configuration");
+            */
             var result = {};
             for (var i = 0; i < orderedBlockKeys.length; i++)
             {
@@ -438,11 +443,15 @@
                     replace = true;
                 }
 
+                /*
                 Ratchet.logDebug("Applying block: " + blockKey + ": " + JSON.stringify(config));
+                */
 
                 self.merge(config, result, replace);
             }
+            /*
             Ratchet.logDebug("Applied Configuration: " + JSON.stringify(result));
+            */
 
             return result;
         },
@@ -455,6 +464,8 @@
          */
         addListener: function(config, listenerFunction)
         {
+            var self = this;
+
             var evaluator = config.evaluator;
             var condition = config.condition;
 
@@ -481,6 +492,8 @@
                 }
 
                 subs[listenerId] = listenerFunction;
+
+                self.subscriptionsCount++;
             }
         },
 
@@ -492,9 +505,10 @@
          */
         removeListener: function(config, listenerFunctionOrId)
         {
+            var self = this;
+
             var evaluator = config.evaluator;
             var condition = config.condition;
-
 
             var bindingKey = this.generateBindingKey(evaluator, condition);
 
@@ -513,6 +527,8 @@
                 if (subs && subs[listenerId])
                 {
                     delete subs[listenerId];
+
+                    self.subscriptionsCount--;
                 }
 
                 if (Ratchet.isEmptyObject(subs))
@@ -529,6 +545,8 @@
          */
         removeAllListeners: function(config)
         {
+            var self = this;
+
             var evaluator = config.evaluator;
             var condition = config.condition;
 
@@ -540,6 +558,8 @@
                 for (var listenerId in subs)
                 {
                     delete subs[listenerId];
+
+                    self.subscribersCount--;
                 }
             }
 
@@ -556,6 +576,14 @@
          */
         triggerListeners: function(config)
         {
+            var self = this;
+
+            // bail out if no subscribers
+            if (self.subscriptionsCount === 0)
+            {
+                return;
+            }
+
             var evaluator = config.evaluator;
             var condition = config.condition;
 
@@ -581,13 +609,8 @@
         clone: function(empty)
         {
             var x = new configClass();
-
-            if (!empty)
-            {
-                for (var blockKey in this.blocks) {
-                    x.blocks[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
-                }
-            }
+            //x.evaluatorInstances = this.evaluatorInstances;
+            //x.evaluatorTypes = this.evaluatorTypes;
 
             for (var instanceId in this.evaluatorInstances) {
                 x.evaluatorInstances[instanceId] = this.evaluatorInstances[instanceId];
@@ -597,8 +620,15 @@
                 x.evaluatorTypes[typeId] = this.evaluatorTypes[typeId];
             }
 
+            x.subscriptions = [];
+            x.subscriptionCount = 0;
+
             if (!empty)
             {
+                for (var blockKey in this.blocks) {
+                    x.blocks[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
+                }
+
                 for (var subscriptionId in this.subscriptions) {
                     x.subscriptions[subscriptionId] = this.subscriptions[subscriptionId];
                 }

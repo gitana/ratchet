@@ -13,48 +13,51 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
-            }
+            var val = false;
 
-            if (!condition) {
-                return false;
-            }
-
-            // copy into an array
-            var conditions = [];
-            if (Ratchet.isArray(condition))
+            if (context && condition)
             {
-                for (var i = 0; i < condition.length; i++)
+                // copy into an array
+                var conditions = [];
+                if (Ratchet.isArray(condition))
                 {
-                    conditions.push(condition[i]);
+                    conditions = condition;
+                }
+                else
+                {
+                    conditions.push(condition);
+                }
+
+                // assume true
+                val = true;
+
+                // child engine
+                // add sub-conditions as new blocks
+                for (var i = 0; i < conditions.length; i++)
+                {
+                    var childEvaluator = conditions[i].evaluator;
+                    var childCondition = conditions[i].condition;
+
+                    var evaluatorInstance = engine.evaluatorInstances[childEvaluator];
+                    if (!evaluatorInstance)
+                    {
+                        Ratchet.logWarn("Missing configuration evaluator: " + childEvaluator);
+
+                        val = false;
+                        break;
+                    }
+
+                    // evaluate
+                    var valid = evaluatorInstance.evaluate(engine, context, childCondition);
+                    if (!valid)
+                    {
+                        val = false;
+                        break;
+                    }
                 }
             }
-            else
-            {
-                conditions.push(condition);
-            }
 
-            // child engine
-            // add sub-conditions as new blocks
-            var childEngine = engine.clone(true);
-            for (var i = 0; i < conditions.length; i++)
-            {
-                var block = {
-                    "evaluator": conditions[i].evaluator,
-                    "condition": conditions[i].condition,
-                    "config": {
-                        "results": ["true"]
-                    }
-                };
-                childEngine.add(block);
-            }
-
-            // evaluate
-            var childConfig = childEngine.evaluate(context);
-
-            // valid if size of array == size of conditions
-            return (childConfig && childConfig.results && childConfig.results.length == conditions.length);
+            return val;
         }
 
     }));

@@ -952,9 +952,26 @@
         return new RegExp(p, opts ? opts.replace(/[^gim]/g, "") : "");
     };
 
+    /*
     Ratchet.padLeft = function(nr, n, str)
     {
         return Array(n-String(nr).length+1).join(str||'0')+nr;
+    };
+    */
+
+    var __PAD = "0000000000000000000000000000000000000000000";
+
+    Ratchet.padLeft = function(str, desiredLength)
+    {
+        // ensure string
+        str = "" + str;
+
+        if (str.length >= desiredLength)
+        {
+            return str;
+        }
+
+        return __PAD.substring(0, desiredLength - str.length) + str;
     };
 
     Ratchet.each = function(objectOrArray, f)

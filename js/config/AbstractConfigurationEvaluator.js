@@ -32,17 +32,24 @@
          */
         hasMatch: function(text, patternString)
         {
-            if (text == patternString)
+            // eval function if pattern string is func
+            if (typeof(patternString) === "function")
             {
-                return true;
+                patternString = patternString();
             }
 
-            if (patternString == "*")
+            var val = false;
+
+            if (text === patternString)
             {
-                return true;
+                val = true;
+            }
+            else if (patternString === "*")
+            {
+                val = true;
             }
 
-            return false;
+            return val;
 
             /*
             if (!text) {

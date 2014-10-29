@@ -13,21 +13,14 @@
          */
         evaluate: function(engine, context, condition)
         {
-            if (!context) {
-                return false;
+            var val = false;
+
+            if (context && context.editor)
+            {
+                val = this.hasMatch(condition, context.editor);
             }
 
-            var editor = context.editor;
-            if (!editor) {
-                return false;
-            }
-
-            // if editor is a function, then evaluate it
-            if (typeof(context.editor) === "function") {
-                editor = context.editor();
-            }
-
-            return this.hasMatch(condition, editor);
+            return val;
         }
 
     }));

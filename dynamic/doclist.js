@@ -362,8 +362,8 @@
                 // fire the action
                 var actionContext = self.buildActionContext(model, button);
 
-                return this._clickAction(button.action, actionContext, function(err) {
-                    self.afterActionComplete(button.action, actionContext, err);
+                return this._clickAction(actionContext.id, actionContext, function(err) {
+                    self.afterActionComplete(actionContext.id, actionContext, err);
                 });
             }
         },
@@ -373,6 +373,7 @@
             var self = this;
 
             var actionContext = {};
+            actionContext.id = button.action;
             actionContext.model = Ratchet.copyOf(model);
             actionContext.ratchet = self.ratchet();
 

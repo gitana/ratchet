@@ -22,25 +22,31 @@
 
                     <div class="button-container {{#if buttons}}dropdown{{/if}}">
 
-                        {{#ifnot select}}
-                        <button id="list-button-{{key}}" class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
-                            {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
-                                {{title}}&nbsp;
-                            {{#if buttons}}
-                                <span class="caret"></span>
-                            {{/if}}
-                        </button>
-                        {{/ifnot}}
-
                         {{#if select}}
-                        <div class="form-group">
-                            <label class="list-select-label">{{title}}</label>
-                            <select class="list-select-{{key}} list-select form-control">
-                                {{#each options}}
-                                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
+                            <div class="form-group">
+                                <label class="list-select-label">{{title}}</label>
+                                <select class="list-select-{{key}} list-select form-control">
+                                    {{#each options}}
+                                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        {{else}}
+                            {{#if checkbox}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="list-checkbox-{{key}} list-checkbox" {{#if checked}}checked{{/if}}> {{title}}
+                                </label>
+                            </div>
+                            {{else}}
+                                <button class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
+                                {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                                {{title}}&nbsp;
+                                {{#if buttons}}
+                                <span class="caret"></span>
+                                {{/if}}
+                                </button>
+                            {{/if}}
                         {{/if}}
 
                         {{#if buttons}}
@@ -74,25 +80,31 @@
 
                     <div class="button-container {{#if buttons}}dropdown{{/if}}">
 
-                        {{#ifnot select}}
-                        <button id="list-button-{{key}}" class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
-                            {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
-                                {{title}}&nbsp;
-                            {{#if buttons}}
-                                <span class="caret"></span>
-                            {{/if}}
-                        </button>
-                        {{/ifnot}}
-
                         {{#if select}}
-                        <div class="form-group">
-                            <label class="list-select-label">{{title}}</label>
-                            <select class="list-select-{{key}} list-select form-control">
-                                {{#each options}}
-                                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
+                            <div class="form-group">
+                                <label class="list-select-label">{{title}}</label>
+                                <select class="list-select-{{key}} list-select form-control">
+                                    {{#each options}}
+                                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        {{else}}
+                            {{#if checkbox}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" class="list-checkbox-{{key}} list-checkbox" {{#if checked}}checked{{/if}}> {{title}}
+                                    </label>
+                                </div>
+                            {{else}}
+                                <button class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
+                                {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                                {{title}}&nbsp;
+                                {{#if buttons}}
+                                <span class="caret"></span>
+                                {{/if}}
+                                </button>
+                            {{/if}}
                         {{/if}}
 
                         {{#if buttons}}

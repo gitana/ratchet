@@ -94,7 +94,8 @@
                     "sort": "sort",
                     "sortDirection": "sortDirection",
                     "searchTerm": "searchTerm",
-                    "selectedItems": "selectedItems"
+                    "selectedItems": "selectedItems",
+                    "length": "length"
                 }
             });
         },
@@ -199,6 +200,12 @@
                 if (!model.items)
                 {
                     model.items = [];
+                }
+
+                var length = self.observable(model.observables.length).get();
+                if (length)
+                {
+                    model.length = length;
                 }
 
                 callback();
@@ -573,6 +580,11 @@
                 //[[10, 25, 50, -1], [10, 25, 50, "All"]]
             }
 
+            if (model.length)
+            {
+                tableConfig["pageLength"] = model.length;
+            }
+
             var tableExists = ($(el).find(".display").length > 0);
             if (tableExists) {
                 tableConfig.bDestroy = tableExists;
@@ -825,6 +837,8 @@
 
 
 
+
+
                 if (model.tableConfig) {
                     $.extend(true, tableConfig, model.tableConfig);
                 }
@@ -841,6 +855,11 @@
 
                 // RENDER THE TABLE
                 self.oTable = $(el).find("table").dataTable(tableConfig);
+                $(self.oTable).on("length.dt", function(e, settings, len) {
+                    self.handleLengthChange.call(self, el, model, self.oTable, len);
+                });
+
+
 
                 // select/unselect-all checkbox
                 $(el).find(".list-check-box-all").click(function(e) {
@@ -1132,6 +1151,18 @@
                                 };
                             }(button));
                         }
+                        else if (button.checkbox)
+                        {
+                            // checkbox changes
+                            $(el).find(".list-checkbox-" + button.key).off().change(function(b) {
+                                return function(event) {
+                                    var v = $(event.target).val();
+                                    self.handleButtonBarCheckboxChange.call(self, event, model, b, v);
+
+                                    event.preventDefault();
+                                };
+                            }(button));
+                        }
                         else
                         {
                             // single click button
@@ -1146,6 +1177,10 @@
                     }
                 }
             }
+        },
+
+        handleLengthChange: function(el, model, table, len) {
+            this.observable(model.observables.length).set(len);
         },
 
         handleCreatedRow: function(el, model, table, nRow, aData, iDataIndex) {
@@ -1369,6 +1404,12 @@
             this.changeButtonBarSelect(event, model, button, value);
         },
 
+        handleButtonBarCheckboxChange: function(event, model, button, value)
+        {
+            // custom handler
+            this.changeButtonBarCheckbox(event, model, button, value);
+        },
+
         handleChangeSelectedItems: function(model)
         {
             // custom handler
@@ -1493,6 +1534,14 @@
          * EXTENSION POINT
          */
         changeButtonBarSelect: function(event, model, button, value)
+        {
+
+        },
+
+        /**
+         * EXTENSION POINT
+         */
+        changeButtonBarCheckbox: function(event, model, button, value)
         {
 
         },

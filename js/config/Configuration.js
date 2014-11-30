@@ -152,20 +152,36 @@
 
                 var isArray = function(thing)
                 {
-                    if (!thing) {
+                    if (thing === true || thing === false || isUndefined(thing) || thing === null) {
                         return false;
                     }
 
-                    return (typeof(thing) === "object") && (typeof(thing.length) !== "undefined");
+                    if (typeof(thing) === "object")
+                    {
+                        if (thing.push && thing.slice) {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 };
 
                 var isObject = function(thing)
                 {
-                    if (!thing) {
+                    if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing === null) {
                         return false;
                     }
 
-                    return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
+                    if (isArray(thing)) {
+                        return false;
+                    }
+
+                    if (typeof(thing) === "object")
+                    {
+                        return true;
+                    }
+
+                    return false;
                 };
 
                 var copyOf = function(thing)

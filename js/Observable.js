@@ -111,7 +111,7 @@
         get: function(_default)
         {
             var v = this.value;
-            if (!v)
+            if (typeof(v) === "undefined")
             {
                 v = _default;
             }

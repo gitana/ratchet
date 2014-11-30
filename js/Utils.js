@@ -103,7 +103,11 @@
             return false;
         }
 
-        return thing.push && thing.slice;
+        if (thing.push && thing.slice) {
+            return true;
+        }
+
+        return false;
     };
 
     Ratchet.isUndefined = function(thing)

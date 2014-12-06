@@ -1232,14 +1232,14 @@
 
             // if we're showing the max number of records, then don't show pagination
             $(el).find(".dataTables_paginate").show();
-            if (json.data.length === json.recordsFiltered)
+            if (json.data.length === json.recordsFiltered || !json.recordsFiltered)
             {
                 $(el).find(".dataTables_paginate").hide();
             }
 
             // hide 0 to 0 of 0
             $(el).find(".dataTables_info").show();
-            if (json.recordsFiltered === 0)
+            if (json.recordsFiltered === 0 || !json.recordsFiltered)
             {
                 $(el).find(".dataTables_info").hide();
             }

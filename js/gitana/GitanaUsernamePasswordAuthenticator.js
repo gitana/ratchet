@@ -188,12 +188,12 @@
                     });
 
 
-                    $(div).modal('show');
                     $(div).on('shown.bs.modal', function() {
 
                         control.getControlByPath("username").focus();
 
                     });
+                    $(div).modal('show');
                 }
             });
         },
@@ -248,7 +248,7 @@
     });
 
     Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE = ' \
-        <div class="modal "' + Ratchet.defaultModalFadeClass + ' style="overflow: visible !important"> \
+        <div class="modal "' + Ratchet.defaultModalFadeClass + ' style="overflow: visible !important" data-keyboard="false" data-backdrop="static"> \
             <div class="modal-header"> \
                 <h4>Log In</h4> \
             </div> \
@@ -258,7 +258,7 @@
                 <div class="login-footer"></div> \
             </div> \
             <div class="modal-footer"> \
-                <a href="javascript:void(0);" class="btn btn-default login_button_cancel">Cancel</a> \
+                <!--<a href="javascript:void(0);" class="btn btn-default login_button_cancel">Cancel</a>--> \
                 <a href="javascript:void(0);" class="btn btn-primary login_button_login">Log In</a> \
             </div> \
         </div> \

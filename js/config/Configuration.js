@@ -343,10 +343,10 @@
             if (this.subscriptionsCount > 0)
             {
                 var listenerConfig = {};
-                if (block.evaluator) {
+                if (typeof(block.evaluator) !== "undefined") {
                     listenerConfig.evaluator = block.evaluator;
                 }
-                if (block.condition) {
+                if (typeof(block.condition) !== "undefined") {
                     listenerConfig.condition = block.condition;
                 }
                 this.triggerListeners(listenerConfig);
@@ -369,10 +369,10 @@
 
                 // fire any listeners
                 var listenerConfig = {};
-                if (block.evaluator) {
+                if (typeof(block.evaluator) !== "undefined") {
                     listenerConfig.evaluator = block.evaluator;
                 }
-                if (block.condition) {
+                if (typeof(block.condition) !== "undefined") {
                     listenerConfig.condition = block.condition;
                 }
                 this.triggerListeners(listenerConfig);

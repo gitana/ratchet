@@ -264,6 +264,10 @@
                 }
             }
 
+            model.route = el.route;
+            model.uri = el.route.uri;
+            model.method = el.route.method;
+
             callback();
         },
 

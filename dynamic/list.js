@@ -278,7 +278,7 @@
                 "columns": [],
                 "language": {
                     "lengthMenu": "Display _MENU_ records per page",
-                    "zeroRecords": "No items were found",
+                    "zeroRecords": "No items were found.",
                     "info": "Showing _START_ to _END_ of _TOTAL_ records",
                     "infoEmpty": "Showing 0 to 0 of 0 records",
                     "infoFiltered": "(filtered from _MAX_ total records)",
@@ -336,6 +336,15 @@
                 {
                     tableConfig.lengthChange = model.options.sizing;
                 }
+
+                if (typeof(model.options.zeroRecords) != "undefined")
+                {
+                    if (!tableConfig.language) {
+                        tableConfig.language = {};
+                    }
+                    tableConfig.language.zeroRecords = model.options.zeroRecords;
+                }
+
             }
 
             // bootstrap

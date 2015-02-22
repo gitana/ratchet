@@ -165,7 +165,7 @@
 
                     usernameField.on("keypress", function(e) {
 
-                        if (e.charCode === 13)
+                        if (e.keyCode === 13)
                         {
                             $(div).find(".login_button_login").click();
                         }
@@ -173,7 +173,7 @@
 
                     passwordField.on("keypress", function(e) {
 
-                        if (e.charCode === 13)
+                        if (e.keyCode === 13)
                         {
                             $(div).find(".login_button_login").click();
                         }

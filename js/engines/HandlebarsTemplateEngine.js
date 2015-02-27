@@ -1,8 +1,5 @@
 (function($)
 {
-    Handlebars.registerHelper("ifnot", function(obj) {
-        return !obj;
-    });
     Handlebars.registerHelper('times', function(n, block)
     {
         var accum = '';

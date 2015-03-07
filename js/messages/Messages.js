@@ -1,5 +1,8 @@
 (function($) {
 
+    // date.js butchers this, so we reset here
+    Date.now = function() { return new Date().getTime(); };
+
     /**
      * Helper class for retrieving messages from Configuration for a given locale.
      *

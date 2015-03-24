@@ -22,7 +22,7 @@
                     <li class="divider"></li>
                 {{else}}
                     <li class="{{classes}}">
-                        <a href="javascript:void(0);" class="{{#if items}}nav-sub-items {{/if}}sidebar-item-{{@index}}">
+                        <a href="javascript:void(0);" class="{{#if items}}nav-sub-items {{/if}}sidebar-item-{{@index}}" title="{{title}}">
                             {{title}}
                         </a>
 
@@ -32,7 +32,7 @@
                         <ul class="nav nav-list sub-nav nav-stacked" {{#ifnot current}}style="display:none;"{{/ifnot}}>
                             {{#each items}}
                             <li class="{{classes}}">
-                            <a href="javascript:void(0);" class="sidebar-item-{{../index}}-sub-{{@index}}">
+                            <a href="javascript:void(0);" class="sidebar-item-{{../index}}-sub-{{@index}}" title="{{title}}">
                                 &nbsp;
                                 {{title}}
                             </a>

@@ -254,7 +254,7 @@
         });
     };
 
-    Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm, config)
+    Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm, config, configCallback)
     {
         if (!confirmButtonClass) {
             confirmButtonClass = "btn-default";
@@ -292,6 +292,11 @@
                 $(div).modal('hide');
 
             });
+
+            if (configCallback)
+            {
+                configCallback(div);
+            }
 
             cb();
         });

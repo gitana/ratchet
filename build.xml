@@ -491,6 +491,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['jquery']" />
             <param name="arguments" value="$" />
+            <param name="argumentValues" value="root.jQuery" />
         </antcall>
 
         <!-- "ratchet-tmpl" -->
@@ -500,6 +501,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'jquery-tmpl']" />
             <param name="arguments" value="Ratchet, Tmpl" />
+            <param name="argumentValues" value="root.Ratchet" />
         </antcall>
 
         <!-- "ratchet-handlebars" -->
@@ -509,6 +511,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'handlebars']" />
             <param name="arguments" value="Ratchet, Handlebars" />
+            <param name="argumentValues" value="root.Ratchet, root.Handlebars" />
         </antcall>
 
         <!-- "ratchet-web" -->
@@ -518,6 +521,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config', 'ratchet/messages', 'ratchet/actions']" />
             <param name="arguments" value="Ratchet, Config, Messages, Actions" />
+            <param name="argumentValues" value="root.Ratchet" />
         </antcall>
 
         <!-- "ratchet-gitana" -->
@@ -527,6 +531,7 @@
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'gitana', 'alpaca']" />
             <param name="arguments" value="Ratchet, Gitana, Alpaca" />
+            <param name="argumentValues" value="root.Ratchet, root.Gitana, root.Alpaca" />
         </antcall>
 
         <!-- "ratchet-dynamic" -->
@@ -544,6 +549,7 @@
             <param name="variableName" value="Ratchet.Actions" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
             <param name="arguments" value="Ratchet, Config" />
+            <param name="argumentValues" value="root.Ratchet" />
         </antcall>
 
         <!-- "ratchet-config" -->
@@ -553,6 +559,7 @@
             <param name="variableName" value="Ratchet.Configuration" />
             <param name="dependencies" value="['jquery', 'ratchet/ratchet']" />
             <param name="arguments" value="$, Ratchet" />
+            <param name="argumentValues" value="root.jQuery, root.Ratchet" />
         </antcall>
 
         <!-- "ratchet-messages" -->
@@ -562,6 +569,7 @@
             <param name="variableName" value="Ratchet.Messages" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
             <param name="arguments" value="Ratchet, Config" />
+            <param name="argumentValues" value="root.Ratchet" />
         </antcall>
 
 
@@ -635,6 +643,7 @@
                     <replacestring from="/** BUILD_INSERT_DEPENDENCIES **/" to="${dependencies}"/>
                     <replacestring from="/** BUILD_INSERT_VARIABLE_NAME **/" to="${variableName}"/>
                     <replacestring from="/** BUILD_INSERT_ARGUMENTS **/" to="${arguments}"/>
+                    <replacestring from="/** BUILD_INSERT_ARGUMENT_VALUES **/" to="${argumentValues}"/>
                 </tokenfilter>
             </filterchain>
         </copy>

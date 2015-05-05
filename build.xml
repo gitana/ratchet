@@ -490,6 +490,7 @@
             <!--<param name="name" value="ratchet" />-->
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['jquery']" />
+            <param name="arguments" value="$" />
         </antcall>
 
         <!-- "ratchet-tmpl" -->
@@ -498,6 +499,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/tmpl.js"/>
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'jquery-tmpl']" />
+            <param name="arguments" value="Ratchet, Tmpl" />
         </antcall>
 
         <!-- "ratchet-handlebars" -->
@@ -505,7 +507,8 @@
             <param name="scriptFile" value="${prep.dir}/js/${appkey}-handlebars-component.js"/>
             <param name="outputFile" value="${package.dir}/components/ratchet/handlebars.js"/>
             <param name="variableName" value="Ratchet" />
-            <param name="dependencies" value="['ratchet/ratchet']" />
+            <param name="dependencies" value="['ratchet/ratchet', 'handlebars']" />
+            <param name="arguments" value="Ratchet, Handlebars" />
         </antcall>
 
         <!-- "ratchet-web" -->
@@ -514,6 +517,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/web.js"/>
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config', 'ratchet/messages', 'ratchet/actions']" />
+            <param name="arguments" value="Ratchet, Config, Messages, Actions" />
         </antcall>
 
         <!-- "ratchet-gitana" -->
@@ -522,6 +526,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/gitana.js"/>
             <param name="variableName" value="Ratchet" />
             <param name="dependencies" value="['ratchet/ratchet', 'gitana', 'alpaca']" />
+            <param name="arguments" value="Ratchet, Gitana, Alpaca" />
         </antcall>
 
         <!-- "ratchet-dynamic" -->
@@ -538,6 +543,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/actions.js"/>
             <param name="variableName" value="Ratchet.Actions" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
+            <param name="arguments" value="Ratchet, Config" />
         </antcall>
 
         <!-- "ratchet-config" -->
@@ -546,6 +552,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/config.js"/>
             <param name="variableName" value="Ratchet.Configuration" />
             <param name="dependencies" value="['jquery', 'ratchet/ratchet']" />
+            <param name="arguments" value="$, Ratchet" />
         </antcall>
 
         <!-- "ratchet-messages" -->
@@ -554,6 +561,7 @@
             <param name="outputFile" value="${package.dir}/components/ratchet/messages.js"/>
             <param name="variableName" value="Ratchet.Messages" />
             <param name="dependencies" value="['ratchet/ratchet', 'ratchet/config']" />
+            <param name="arguments" value="Ratchet, Config" />
         </antcall>
 
 
@@ -626,6 +634,7 @@
                     <replacestring from="/** BUILD_INSERT_NAME **/" to="${insertName}"/>
                     <replacestring from="/** BUILD_INSERT_DEPENDENCIES **/" to="${dependencies}"/>
                     <replacestring from="/** BUILD_INSERT_VARIABLE_NAME **/" to="${variableName}"/>
+                    <replacestring from="/** BUILD_INSERT_ARGUMENTS **/" to="${arguments}"/>
                 </tokenfilter>
             </filterchain>
         </copy>

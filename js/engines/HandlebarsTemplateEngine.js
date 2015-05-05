@@ -158,12 +158,14 @@
         {
             var template = null;
 
-            //console.log("HTML: " + html);
-
             // compile
             try
             {
-                template = Handlebars.compile(html);
+                var functionString = Handlebars.precompile(html);
+                template = eval("(" + functionString + ")"); // jshint ignore:line
+
+                // convert to function - fn(model)
+                template = Handlebars.template(template);
             }
             catch (e)
             {

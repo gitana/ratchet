@@ -215,7 +215,7 @@
             var self = this;
 
             var platform = Gitana.Authentication.platform();
-            platform.logout().then(function()
+            platform.logout(true).then(function()
             {
                 // clean out any cookies
                 self.cleanCookies();

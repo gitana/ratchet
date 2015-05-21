@@ -1392,12 +1392,31 @@
                         value = row[property];
                     }
                 }
+
+                // allows for XSS encoding of auto-acquired column values
+                value = this.encodeColumnValue(value, row, item, model, context, index);
             }
             else
             {
                 value = this.columnValue(row, item, model, context, index);
             }
 
+            return value;
+        },
+
+        /**
+         * Extension Point.
+         *
+         * @param value
+         * @param row
+         * @param item
+         * @param model
+         * @param context
+         * @param index
+         * @returns {*}
+         */
+        encodeColumnValue: function(value, row, item, model, context, index)
+        {
             return value;
         },
 

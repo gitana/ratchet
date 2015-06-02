@@ -68,6 +68,9 @@
             $.ajax({
                 "url": attachment.url,
                 "dataType": "text",
+                "headers": {
+                    "X-CSRF-TOKEN": Ratchet.getCsrfToken()
+                },
                 "success": function(text)
                 {
                     text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

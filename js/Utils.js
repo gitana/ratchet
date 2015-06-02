@@ -1346,6 +1346,10 @@
         return value;
     };
 
+    Ratchet.getCsrfToken = function()
+    {
+        return Ratchet.readCookie("CSRF-TOKEN");
+    };
 
 
     // browser detection

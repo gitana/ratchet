@@ -191,6 +191,9 @@
                 "contentType": resource.mimetype,
                 "type": "POST",
                 "data": value,
+                "headers": {
+                    "X-CSRF-TOKEN": Ratchet.getCsrfToken()
+                },
                 "success": function(text)
                 {
                     callback(null, text);

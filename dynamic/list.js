@@ -1034,7 +1034,6 @@
                 counter++;
             }
 
-
             // COLUMN: icon?
             if (model.icon)
             {
@@ -1043,7 +1042,11 @@
                     var iconUri = self.iconUri.call(self, row, model, context);
                     if (iconUri) {
                         if (linkUri){
-                            markup = "<a href='" + linkUri + "'>";
+                            markup = "<a href='" + linkUri + "'";
+                            if (model.linkNewWindow) {
+                                markup += " target='_blank'"
+                            }
+                            markup += ">";
                         }
                         markup += "<img align='center' src='" + iconUri + "'>";
                         if (linkUri) {
@@ -1056,7 +1059,11 @@
                     var iconClass = self.iconClass.call(self, row, model, context);
                     if (iconClass) {
                         if (linkUri){
-                            markup = "<a href='" + linkUri + "'>";
+                            markup = "<a href='" + linkUri + "'";
+                            if (model.linkNewWindow) {
+                                markup += " target='_blank'"
+                            }
+                            markup += ">";
                         }
                         markup += "<div class='" + iconClass + "'></div>";
                         if (linkUri) {

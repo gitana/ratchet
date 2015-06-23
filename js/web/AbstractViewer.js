@@ -59,27 +59,36 @@
                 {
                     for (var k in resource.attachments)
                     {
-                        var arr = resource.attachments[k].mimetype.match(regex);
-                        if (arr && arr.length > 0)
+                        var url = resource.attachments[k].url;
+                        var mimetype = resource.attachments[k].mimetype;
+
+                        if (mimetype)
                         {
-                            match = {
-                                "url": resource.attachments[k].url,
-                                "mimetype": resource.attachments[k].mimetype
-                            };
-                            break;
+                            var arr = mimetype.match(regex);
+                            if (arr && arr.length > 0)
+                            {
+                                match = {
+                                    "url": url,
+                                    "mimetype": mimetype
+                                };
+                                break;
+                            }
                         }
                     }
                 }
 
                 if (!match)
                 {
-                    var arr = resource.mimetype.match(regex);
-                    if (arr && arr.length > 0)
+                    if (resource.mimetype)
                     {
-                        match = {
-                            "url": resource.url,
-                            "mimetype": resource.mimetype
-                        };
+                        var arr = resource.mimetype.match(regex);
+                        if (arr && arr.length > 0)
+                        {
+                            match = {
+                                "url": resource.url,
+                                "mimetype": resource.mimetype
+                            };
+                        }
                     }
                 }
 

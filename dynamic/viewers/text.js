@@ -73,19 +73,28 @@
                 },
                 "success": function(text)
                 {
-                    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-                    var classes = 'prettyprint ' + (lang ? 'lang-' + lang : '');
-                    if (linenums) {
-                        classes += " linenums:4";
+                    if (!text)
+                    {
+                        var html = "<p class='empty-text'>Text is empty</p>";
+                        $(container).append(html);
                     }
+                    else
+                    {
+                        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-                    var html = "<pre class='" + classes + "'>" + text + "</pre>";
-                    $(container).addClass("text");
-                    $(container).append(html);
+                        var classes = 'prettyprint ' + (lang ? 'lang-' + lang : '');
+                        if (linenums)
+                        {
+                            classes += " linenums:4";
+                        }
 
-                    // now run pretty print
-                    prettyPrint();
+                        var html = "<pre class='text-viewer " + classes + "'>" + text + "</pre>";
+                        $(container).addClass("text");
+                        $(container).append(html);
+
+                        // now run pretty print
+                        prettyPrint();
+                    }
 
                     // success
                     callback();

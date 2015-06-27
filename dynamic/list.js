@@ -1022,7 +1022,8 @@
                     data["" + counter] = "<input type='checkbox' class='list-check-box' list-target-object-id='" + id + "'>";
                 }
                 counter++;
-            } else if (model.radio)
+            }
+            else if (model.radio)
             {
                 if (readOnly) {
                     data["" + counter] = "";
@@ -1356,6 +1357,19 @@
                     //event.preventDefault();
                 };
             }(el, model, table, nRow, aData, iDisplayIndex));
+
+            // if any of our selected items are on the page, select them
+            var selectedItems = this.selectedItems(model);
+            if (selectedItems && selectedItems.length > 0)
+            {
+                for (var i = 0; i < selectedItems.length; i++)
+                {
+                    var selectedId = selectedItems[i].id;
+
+                    $(nRow).find(".list-radio[list-target-object-id='" + selectedId + "']").prop("checked", true);
+                    $(nRow).find(".list-check-box[list-target-object-id='" + selectedId + "']").prop("checked", true);
+                }
+            }
 
             // callout to extension point
             this.rowCallback(el, model, table, nRow, aData, iDisplayIndex)

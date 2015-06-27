@@ -543,9 +543,16 @@
             parentRatchet = Ratchet.findClosestBoundRatchet(config.el);
         }
         var ratchet = new Ratchet(picker, parentRatchet, function() {});
-        ratchet.run(currentHash);
 
-        window.setTimeout(function() {
+        // ensure we're in handler callbacks mode
+        var previousUseHandlerCallbacks = Ratchet.useHandlerCallbacks;
+        Ratchet.useHandlerCallbacks = true;
+
+        // render
+        ratchet.run("GET", currentHash, {}, function() {
+
+            // revert back to previous setting
+            Ratchet.useHandlerCallbacks = previousUseHandlerCallbacks;
 
             // modal dialog
             Ratchet.fadeModal({
@@ -611,7 +618,7 @@
                 });
             });
 
-        }, 500);
+        });
     };
 
     Ratchet.instantiateGadget = function(gadgetTypeId, gadgetId, gadgetConfig)

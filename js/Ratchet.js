@@ -36,7 +36,7 @@
             do
             {
                 arg = args.shift();
-                if (arg)
+                if (typeof(arg) !== "undefined")
                 {
                     if (Ratchet.isArray(arg) && (Ratchet.isNode(arg[0]) || Ratchet.isElement(arg[0])))
                     {
@@ -49,6 +49,13 @@
                     else if (Ratchet.isFunction(arg))
                     {
                         this.setupFunction = arg;
+                    }
+                    else if (typeof(arg) === "boolean")
+                    {
+                        if (arg)
+                        {
+                            this.detached = true;
+                        }
                     }
                     else
                     {
@@ -96,6 +103,10 @@
             // subscriptions
             this.subscriptions = {};
 
+            // whether to use handler callbacks
+            // default to the global setting
+            this.useHandlerCallbacks = Ratchet.useHandlerCallbacks;
+
             if (!this.parent)
             {
                 this.dispatchCount = 0;
@@ -111,7 +122,9 @@
             this.isDispatchCompleted = function() {
                 return (_this.topRatchet().dispatchCompletionCount == _this.topRatchet().dispatchCount);
             };
-
+            this.isUsingHandlerCallbacks = function() {
+                return (_this.topRatchet().useHandlerCallbacks);
+            };
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
             //
@@ -231,6 +244,41 @@
                 return ratchet;
             };
 
+            /**
+             * @return whether the current ratchet is detached
+             */
+            this.isDetached = function()
+            {
+                return this.topRatchet().detached;
+            };
+
+            /**
+             * Changes the hash bring routed.
+             *
+             * @param uri
+             */
+            this.dispatchUri = function(uri, cb) {
+
+                // restore the state from hash
+                _this.dispatch({
+                    "method": "GET",
+                    "uri": uri
+                }, {
+                    "primary": true
+                }, function(err, primary) {
+
+                    if (cb) {
+                        cb(err, primary);
+                    }
+
+                });
+            };
+
+            this.isBoundToWindowLocation = function()
+            {
+                return !this.parent && !this.isDetached();
+            };
+
             // init
             this.init();
         },
@@ -240,39 +288,33 @@
          */
         init: function()
         {
-            var _this = this;
+            var self = this;
 
-            // detect changes to hash
-            // NOTE: only for the top-most dispatcher
-            if (!this.parent)
+            // for the top-most dispatcher (handling the page), we bind a hashchange listener that
+            // auto-updates the URI being dispatched from the hash
+            if (self.isBoundToWindowLocation())
             {
-                // defines the function that handles changes to the hash
-                // whenever hash changes, this function gets called
+                // make sure this only gets applied once
                 if (!HASH_CHANGE_APPLIED)
                 {
                     $(window).hashchange(function() {
 
                         //console.log("Top Level HashChange being handled");
 
-                        var hash = location.hash; // i.e. #/
-
-                        // restore the state from hash
-                        _this.dispatch({
-                            "method": "GET",
-                            "uri": hash
-                        }, {
-                            "primary": true
-                        }, function() {
+                        self.dispatchUri(location.hash, function(err, primary) {
+                            // completed
 
                             // allows for callback to be stored temporarily when a run() is called and the hashlink
                             // is toggled as a means of dispatching (see run method)
                             if (Ratchet.tempCallback)
                             {
-                                Ratchet.tempCallback();
+                                Ratchet.tempCallback(err, primary);
                             }
 
                             Ratchet.tempCallback = null;
+
                         });
+
                     });
 
                     // only allow the hash change handler to be applied once
@@ -657,7 +699,8 @@
                 }
 
                 Ratchet[dispatchMethod](funcs, function(err) {
-                    if (Ratchet.useHandlerCallbacks) {
+                    //if (Ratchet.useHandlerCallbacks) {
+                    if (_this.isUsingHandlerCallbacks()) {
                         if (callback) {
                             callback.call(this);
                         }
@@ -665,7 +708,8 @@
                 });
 
                 // fire the callback directly if callbacks not being used
-                if (!Ratchet.useHandlerCallbacks) {
+                //if (!Ratchet.useHandlerCallbacks) {
+                if (!_this.isUsingHandlerCallbacks()) {
                     if (callback) {
                         callback.call(this);
                     }
@@ -925,7 +969,7 @@
 
                     if (callback)
                     {
-                        callback();
+                        callback(err, isPrimary);
                     }
                 };
 
@@ -945,16 +989,20 @@
                     // invoke the handler
                     wrappedHandler(function(err) {
 
-                        if (Ratchet.useHandlerCallbacks)
+                        if (_this.isUsingHandlerCallbacks())
+                        //if (Ratchet.useHandlerCallbacks)
                         {
                             handlerCompletionCallback(err);
                         }
 
                     });
+
+                    return;
                 }
 
                 // if we're not using completion callbacks, then callback right away
-                if (!Ratchet.useHandlerCallbacks || !wrappedHandler)
+                //if (!Ratchet.useHandlerCallbacks || !wrappedHandler)
+                if (!_this.isUsingHandlerCallbacks() || !wrappedHandler)
                 {
                     handlerCompletionCallback();
                 }
@@ -1072,7 +1120,7 @@
 
             // if we're the top dispatcher (app scope) and we're doing a get, store onto history
             // this lets the history callback make the dispatch for us
-            if (config.method == "GET" && !this.parent)
+            if (config.method === "GET" && this.isBoundToWindowLocation())
             {
                 // if we have a callback, store it in a temp place so that the hashchange listener can pick it up
                 if (callback)
@@ -1086,14 +1134,10 @@
                     config.uri = config.uri.substring(1);
                 }
 
-                // set window hash and trigger hash change event
-                if (!this.parent)
-                {
-                    //console.log("top.run() updating hash");
-                }
-
+                // change hash which triggers the hashchange handler
                 window.location.hash = "#" + config.uri;
 
+                // or if we are meant to force change it, we do that here
                 if (forceTriggerHashChange)
                 {
                     //console.log("top.run() force hashchange");
@@ -1102,14 +1146,16 @@
             }
             else
             {
+                // we're either running a non-GET method or we're not bound to the window
+                // dispatch directly
+
                 this.dispatch(config, {
-                    //"primary": !this.parent
                     "primary": true
-                }, function() {
+                }, function(err, primary) {
 
                     if (callback)
                     {
-                        callback();
+                        callback(err, primary);
                     }
                 });
             }

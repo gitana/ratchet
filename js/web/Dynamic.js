@@ -542,17 +542,19 @@
         {
             parentRatchet = Ratchet.findClosestBoundRatchet(config.el);
         }
-        var ratchet = new Ratchet(picker, parentRatchet, function() {});
+        //var ratchet = new Ratchet(picker, parentRatchet, function() {});
+        var ratchet = new Ratchet(picker, true, function() {});
 
         // ensure we're in handler callbacks mode
-        var previousUseHandlerCallbacks = Ratchet.useHandlerCallbacks;
-        Ratchet.useHandlerCallbacks = true;
+        //var previousUseHandlerCallbacks = Ratchet.useHandlerCallbacks;
+        //Ratchet.useHandlerCallbacks = true;
+        ratchet.useHandlerCallbacks = true;
 
         // render
         ratchet.run("GET", currentHash, {}, function() {
 
             // revert back to previous setting
-            Ratchet.useHandlerCallbacks = previousUseHandlerCallbacks;
+            //Ratchet.useHandlerCallbacks = previousUseHandlerCallbacks;
 
             // modal dialog
             Ratchet.fadeModal({

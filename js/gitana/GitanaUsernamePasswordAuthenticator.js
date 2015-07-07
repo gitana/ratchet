@@ -20,7 +20,7 @@
                     self.authenticateWithCookie(context, successCallback, function() {
 
                         // didn't work, pop up dialog
-                        self.loginDialog(context, null, null, successCallback, failureCallback, false);
+                        self.loginDialog(context, null, null, successCallback, failureCallback, null);
                     });
 
                     handled = true;
@@ -33,7 +33,7 @@
                 // self.cleanCookies();
 
                 // pop up dialog
-                self.loginDialog(context, null, null, successCallback, failureCallback, false);
+                self.loginDialog(context, null, null, successCallback, failureCallback, null);
             }
         },
 
@@ -79,7 +79,7 @@
             return Ratchet.Authenticators.GitanaUsernamePasswordAuthenticator.LOGIN_TEMPLATE.trim();
         },
 
-        loginDialog : function(context, username, password, successCallback, failureCallback, retry)
+        loginDialog : function(context, username, password, successCallback, failureCallback, err)
         {
             var self = this;
 
@@ -105,7 +105,9 @@
             var options = {
                 "fields": {
                     "username": {
-                        "type": "text"
+                        "type": "lowercase",
+                        "disallowEmptySpaces": true,
+                        "disallowOnlyEmptySpaces": true
                     },
                     "password": {
                         "type": "password"
@@ -114,9 +116,13 @@
                 "focus": true
             };
 
-            if (retry) {
-                //options.fields.password['helper'] = "Login Failed. Try Again!";
-                options.fields.password['helper'] = "Unable to log in.  Please try again.";
+            var errorMessage = null;
+            if (err) {
+                errorMessage = "Unable to log in.  Please try again.";
+
+                if (err.message) {
+                    errorMessage = err.message;
+                }
             }
 
             // load the template
@@ -129,7 +135,13 @@
                 "options": options,
                 "postRender": function(control)
                 {
-                    $(div).find(".login_button_login").click(function(e) {
+                    if (errorMessage) {
+                        $(".modal-body", div).find(".login-body").prepend("<div class='login-error-message'>" + errorMessage + "</div>");
+                    }
+
+                    $(div).find(".login_button_login").off().click(function(e) {
+
+                        e.preventDefault();
 
                         var username = control.getValue()["username"];
                         var password = control.getValue()["password"];
@@ -137,13 +149,19 @@
                         self._authenticate(context, username, password, successCallback, failureCallback);
 
                         $(div).modal('hide');
+
+                        return false;
                     });
 
-                    $(div).find(".login_button_cancel").click(function() {
+                    $(div).find(".login_button_cancel").off().click(function() {
+
+                        e.preventDefault();
 
                         $(div).modal('hide');
 
                         failureCallback();
+
+                        return false;
                     });
 
                     var usernameField = control.childrenByPropertyId["username"];
@@ -234,7 +252,7 @@
                 // if err, then something went wrong
                 if (err)
                 {
-                    self.loginDialog(context, username, password, successCallback, failureCallback, true);
+                    self.loginDialog(context, username, password, successCallback, failureCallback, err);
                     return;
                 }
 

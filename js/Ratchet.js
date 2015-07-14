@@ -301,7 +301,14 @@
 
                         //console.log("Top Level HashChange being handled");
 
-                        self.dispatchUri(location.hash, function(err, primary) {
+                        var hash = self.autoAdjustHash.call(self, location.hash);
+                        if (hash !== location.hash)
+                        {
+                            window.location.href = hash;
+                            return;
+                        }
+
+                        self.dispatchUri(hash, function(err, primary) {
                             // completed
 
                             // allows for callback to be stored temporarily when a run() is called and the hashlink
@@ -321,6 +328,17 @@
                     HASH_CHANGE_APPLIED = true;
                 }
             }
+        },
+
+        /**
+         * Extension Point
+         *
+         * @param hash
+         * @returns {*}
+         */
+        autoAdjustHash: function(hash)
+        {
+            return hash;
         },
 
         /**

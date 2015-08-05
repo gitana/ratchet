@@ -1447,15 +1447,15 @@
 
     Ratchet.series = function(funcs, callback)
     {
-        async.series(funcs, function() {
-            callback();
+        async.series(funcs, function(err) {
+            callback(err);
         });
     };
 
     Ratchet.parallel = function(funcs, callback)
     {
-        async.parallel(funcs, function() {
-            callback();
+        async.parallel(funcs, function(err) {
+            callback(err);
         });
     };
 

@@ -143,7 +143,7 @@
             }
 
             // assume sort descending
-            sortDirection = -1;
+            sortDirection = 1;
             // if the model specifies a default sort direction, we use that
             if (model.options && model.options.defaultSortDirection)
             {
@@ -776,12 +776,22 @@
                         }
                     }
 
+                    // uses default or -1 if not supplied
+                    var sortDirection = self.sortDirection(model);
+
                     // apply sort from observable?
                     var sortField = self.sort(model);
+                    if (!sortField) {
+                        sortField = model.options.defaultSort;
+                    }
+                    if (!sortField) {
+                        sortField = self.getDefaultSortField(model);
+                    }
+
                     if (sortField)
                     {
                         pagination["sort"] = {};
-                        pagination["sort"][sortField] = self.sortDirection(model);
+                        pagination["sort"][sortField] = sortDirection;
                     }
 
                     // if sort to provided, allow for a default sort
@@ -930,6 +940,10 @@
                 // all done - fire callback
                 //callback();
             });
+        },
+
+        getDefaultSortField: function(model) {
+            return null;
         },
 
         /**

@@ -221,7 +221,6 @@
                     }
                     Ratchet.clearArray(sortButton.buttons);
 
-
                     // load actions from the "sort-selector" dropdown configuration
                     var selectorGroup = model["selectorGroups"]["sort-selector-group"];
                     $.each(selectorGroup.fields, function(index, selectorGroupItem) {
@@ -245,6 +244,31 @@
                         }
                         sortButton.buttons.push(button);
                     });
+
+                    var currentSortField = self.sort(model);
+                    if (currentSortField)
+                    {
+                        var newSortButtonTitle = null;
+
+                        if (model.selectorGroups) {
+                            if (model.selectorGroups["sort-selector-group"]) {
+                                var fields = model.selectorGroups["sort-selector-group"].fields;
+                                if (fields) {
+                                    for (var i = 0; i < fields.length; i++) {
+                                        if (fields[i].field === currentSortField) {
+                                            newSortButtonTitle = fields[i].title ? fields[i].title : fields[i].field;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        sortButton.title = "Sort...";
+                        if (newSortButtonTitle) {
+                            sortButton.title = newSortButtonTitle + "...";
+                        }
+                    }
                 }
 
                 // if there is a "multi-documents-selector" button (dropdown)

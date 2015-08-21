@@ -90,6 +90,9 @@
                     },
                     "sort-selector-group": {
                         "fields": []
+                    },
+                    "options-filter": {
+                        "options": []
                     }
                 }
             };
@@ -174,6 +177,34 @@
                     }
                 }
             }
+
+            // options filter
+            if (model["selectorGroups"]) {
+                if (model["selectorGroups"]["options-filter"]) {
+                    if (model["selectorGroups"]["options-filter"]["options"]) {
+                        if (model["selectorGroups"]["options-filter"]["options"].length > 0) {
+
+                            var button = {
+                                "key": "options-filter",
+                                "align": "left",
+                                "select": true,
+                                "options": []
+                            };
+                            var x = model["selectorGroups"]["options-filter"]["options"];
+                            for (var i = 0; i < x.length; i++) {
+                                button.options.push({
+                                    "label": x[i].title,
+                                    "value": x[i].key,
+                                    "selected": x[i].selected
+                                });
+                            }
+
+                            model.buttons.push(button);
+                        }
+                    }
+                }
+            }
+
         },
 
         tableConfig: function()
@@ -285,7 +316,7 @@
                     $.each(selectorGroup.actions, function(index, selectorGroupItem) {
 
                         var actionId = selectorGroupItem.action;
-                        var order = selectorGroupItem.order;
+                        //var order = selectorGroupItem.order;
 
                         // retrieve the action configuration
                         var actionConfig = null;
@@ -331,6 +362,23 @@
                             selectButton.buttons.push(button);
                         }
                     });
+                }
+
+                // if there is an "options-filter", update with value of currently selected value
+                // update "selected"
+                var optionsFilterButton = self._findButton(model, "options-filter");
+                if (optionsFilterButton)
+                {
+                    var currentOptionsFilter = self.optionsFilter(model);
+                    if (currentOptionsFilter)
+                    {
+                        var options = optionsFilterButton.options;
+                        if (options) {
+                            for (var i = 0; i < options.length; i++) {
+                                options[i].selected = (options[i].value === currentOptionsFilter);
+                            }
+                        }
+                    }
                 }
 
                 callback();
@@ -389,6 +437,16 @@
                 return this._clickAction(actionContext.id, actionContext, function(err) {
                     self.afterActionComplete(actionContext.id, actionContext, err);
                 });
+            }
+        },
+
+        changeButtonBarSelect: function(event, model, button, value)
+        {
+            var self = this;
+
+            if (button.key === "options-filter")
+            {
+                self.optionsFilter(model, value);
             }
         },
 

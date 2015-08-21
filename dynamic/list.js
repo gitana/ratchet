@@ -95,7 +95,8 @@
                     "sortDirection": "sortDirection",
                     "searchTerm": "searchTerm",
                     "selectedItems": "selectedItems",
-                    "length": "length"
+                    "length": "length",
+                    "optionsFilter": "optionsFilter"
                 }
             });
         },
@@ -145,7 +146,7 @@
             // assume sort descending
             sortDirection = 1;
             // if the model specifies a default sort direction, we use that
-            if (model.options && model.options.defaultSortDirection)
+            if (model.options && typeof(model.options.defaultSortDirection) !== "undefined")
             {
                 sortDirection = model.options.defaultSortDirection;
             }
@@ -182,6 +183,31 @@
             }
 
             return sort;
+        },
+
+        /**
+         * Options filter (get or set)
+         *
+         * @param model
+         * @param option
+         * @return {*}
+         */
+        optionsFilter: function(model, option)
+        {
+            var observable = this.observable(model.observables.optionsFilter);
+            if (!Ratchet.isUndefined(option))
+            {
+                observable.set(option);
+            }
+
+            var optionsFilter = null;
+
+            if (observable && observable.get())
+            {
+                optionsFilter = observable.get();
+            }
+
+            return optionsFilter;
         },
 
 
@@ -248,6 +274,8 @@
                 self.subscribe(model.observables.sort, refreshHandler);
                 // when the "sort direction" observable changes, update the list
                 self.subscribe(model.observables.sortDirection, refreshHandler);
+                // when the "options filter" observable changes, update the list
+                self.subscribe(model.observables.optionsFilter, refreshHandler);
 
                 // clear selected items
                 self.clearSelectedItems(model);
@@ -744,6 +772,9 @@
 
                     // allow query to be set from an external observable
                     var query = self.observable(model.observables.query).get();
+                    if (!query) {
+                        query = {};
+                    }
 
 
 
@@ -816,6 +847,9 @@
                     if (!loader) {
                         throw new Error("Cannot find loader: " + loaderId);
                     }
+
+                    // allow query to be modified based on observable context ahead of call to loader
+                    self.preconfigureBeforeLoader.call(self, context, model, data, searchTerm, query, pagination);
 
                     self.startProcessing.call(self, context, model);
 
@@ -942,8 +976,29 @@
             });
         },
 
-        getDefaultSortField: function(model) {
+        /**
+         * Extension point
+         * 
+         * @returns {null}
+         */
+        getDefaultSortField: function()
+        {
             return null;
+        },
+
+        /**
+         * Extension point.
+         *
+         * @param context
+         * @param model
+         * @param data
+         * @param searchTerm
+         * @param query
+         * @param pagination
+         */
+        preconfigureBeforeLoader: function(context, model, data, searchTerm, query, pagination)
+        {
+
         },
 
         /**

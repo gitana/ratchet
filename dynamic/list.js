@@ -978,7 +978,7 @@
 
         /**
          * Extension point
-         * 
+         *
          * @returns {null}
          */
         getDefaultSortField: function()

@@ -196,17 +196,16 @@
                     return copy;
                 };
 
-                var merge = function(source, target, level, replaceFirstLevel)
+                var _doMerge = function(source, target, level, replaceFirstLevel)
                 {
                     if (isArray(source))
                     {
                         if (isArray(target))
                         {
-                            if (replaceFirstLevel && level == 1)
+                            if (replaceFirstLevel && level === 1)
                             {
                                 // remove everything from target array
                                 target.splice(0, target.length);
-                                //target.length = 0;
                             }
 
                             // merge array elements
@@ -230,9 +229,9 @@
                                         {
                                             if (Ratchet.isObject(target[x]))
                                             {
-                                                if (target[x].key == source[index].key)
+                                                if (target[x].key === source[index].key)
                                                 {
-                                                    target[x] = merge(source[index], target[x]);
+                                                    target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel);
                                                     added = true;
                                                 }
                                             }
@@ -260,7 +259,7 @@
                     {
                         if (isObject(target))
                         {
-                            if (replaceFirstLevel && level == 1)
+                            if (replaceFirstLevel && level === 1)
                             {
                                 // remove everything from target
                                 $.each(target, function(key) {
@@ -274,7 +273,7 @@
                                 if (isUndefined(target[key])) {
                                     target[key] = copyOf(source[key]);
                                 } else {
-                                    target[key] = merge(source[key], target[key], level+1, replaceFirstLevel);
+                                    target[key] = _doMerge(source[key], target[key], level + 1, replaceFirstLevel);
                                 }
 
                             });
@@ -297,7 +296,7 @@
                     return target;
                 };
 
-                merge(source, target, 0, replaceFirstLevel);
+                _doMerge(source, target, 0, replaceFirstLevel);
             };
         },
 
@@ -424,8 +423,21 @@
                 }
             }
 
-            // sort the ordered block keys
-            orderedBlockKeys.sort();
+            // sort the order of the block keys according to the "order" property
+            orderedBlockKeys.sort(function(a, b) {
+
+                var block_a = keepers[a];
+                var block_b = keepers[b];
+
+                if (!block_a.order) {
+                    block_a.order = 0;
+                }
+                if (!block_b.order) {
+                    block_b.order = 0;
+                }
+
+                return parseFloat(block_a.order) - parseFloat(block_b.order);
+            });
 
             /*
             // debugging

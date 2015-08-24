@@ -1299,10 +1299,12 @@
             {
                 $(el).find(".dataTables_processing").css("display", "none");
 
+                /*
                 // add in some spacing between table and button bar
                 $(el).find(".buttonbar").css({
                     "padding-bottom": "20px"
                 });
+                */
             }
 
             /*

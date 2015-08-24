@@ -423,6 +423,8 @@
                 }
             }
 
+            //orderedBlockKeys.sort();
+
             // sort the order of the block keys according to the "order" property
             orderedBlockKeys.sort(function(a, b) {
 
@@ -430,13 +432,20 @@
                 var block_b = keepers[b];
 
                 if (!block_a.order) {
-                    block_a.order = 0;
-                }
-                if (!block_b.order) {
-                    block_b.order = 0;
+                    block_a.order = 9999;
                 }
 
-                return parseFloat(block_a.order) - parseFloat(block_b.order);
+                if (!block_b.order) {
+                    block_b.order = 9999;
+                }
+
+                var x = block_a.order - block_b.order;
+                if (x === 0)
+                {
+                    return -1; // keep original order (a comes before b in resulting array)
+                }
+
+                return x;
             });
 
             /*

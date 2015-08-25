@@ -1,6 +1,12 @@
 /*jshint -W004 */ // duplicate variables
 (function($) {
 
+    var defaultCompare = function(a, b) {
+        if (a<b) return -1;
+        if (a>b) return 1;
+        return 0;
+    };
+
     /**
      * CONFIGURATION SERVICE
      *
@@ -431,22 +437,32 @@
                 var block_a = keepers[a];
                 var block_b = keepers[b];
 
-                if (!block_a.order) {
-                    block_a.order = 9999;
+                if (!block_a.order && !block_b.order) {
+                    // fall back to key compare
+                    return defaultCompare(a, b);
                 }
 
-                if (!block_b.order) {
-                    block_b.order = 9999;
+                if (!block_a.order && block_b.order) {
+                    // prefer block b
+                    return 1;
                 }
 
-                var x = block_a.order - block_b.order;
-                if (x === 0)
-                {
-                    return -1; // keep original order (a comes before b in resulting array)
+                if (block_a.order && !block_b.order) {
+                    // prefer block a
+                    return -1;
                 }
 
-                return x;
+                return defaultCompare(block_a.order, block_b.order);
             });
+
+            /*
+            var _blocks = [];
+            for (var i = 0; i < orderedBlockKeys.length; i++) {
+                _blocks.push(keepers[orderedBlockKeys[i]]);
+            }
+            console.log("ORDERED BLOCKS: " + JSON.stringify(_blocks, null, "  "));
+            */
+
 
             /*
             // debugging

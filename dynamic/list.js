@@ -35,6 +35,26 @@
 
             var self = this;
 
+            this._removeButton = function(model, buttonKey)
+            {
+                if (model.buttons)
+                {
+                    var index = -1;
+                    for (var i = 0; i < model.buttons.length; i++) {
+                        var x = model.buttons[i];
+                        if (x.key === buttonKey) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index > -1)
+                    {
+                        model.buttons.splice(index, 1);
+                    }
+                }
+            };
+
             this._findButton = function(model, buttonKey)
             {
                 var button = null;

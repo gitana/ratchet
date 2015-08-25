@@ -26,10 +26,8 @@
                             "gadgetType": type
                         },
                         "config": {
-                            "gadgets": {
-                            }
-                        },
-                        "order": 10 // assume low index
+                            "gadgets": {}
+                        }
                     };
                     block.config.gadgets[type] = {};
                     block.config.gadgets[type][id] = {};

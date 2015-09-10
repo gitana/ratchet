@@ -96,7 +96,7 @@
             }
         },
 
-        set: function(value)
+        set: function(value, silent)
         {
             var prior = this.value;
             this.value = value;
@@ -105,7 +105,9 @@
             this.notifyDependents(prior);
 
             // notify all subscribers of the updated value
-            this.notifySubscribers(prior);
+            if (!silent) {
+                this.notifySubscribers(prior);
+            }
         },
 
         get: function(_default)
@@ -118,7 +120,7 @@
             return v;
         },
 
-        clear: function()
+        clear: function(silent)
         {
             var prior = this.value;
             delete this.value;
@@ -127,7 +129,9 @@
             this.notifyDependents(prior);
 
             // notify all subscribers of the updated value
-            this.notifySubscribers(prior);
+            if (!silent) {
+                this.notifySubscribers(prior);
+            }
         }
 
     });

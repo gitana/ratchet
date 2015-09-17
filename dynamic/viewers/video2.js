@@ -10,8 +10,8 @@
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
-            require("css!ratchet/dynamic/viewers/videojs/video-js.css");
-            require("ratchet/dynamic/viewers/videojs/video");
+            require("css!ratchet/dynamic/viewers/video-js/video-js.css");
+            require("ratchet/dynamic/viewers/video-js/video");
 
             return factory(Ratchet, $);
         });
@@ -62,8 +62,10 @@
             // markup
             //var width = "100%";
             //var height = "100%";
-            var width = 640;
-            var height = 320;
+            //var width = 640;
+            //var height = 320;
+            var width = "auto";
+            var height = "auto";
             var poster = null;
             var html = "";
             html += "<video";
@@ -92,9 +94,23 @@
             $(container).addClass("video");
             $(container).append(html);
 
-            var myPlayer = _V_(id);
+            /*
+             // set a timeout so that the DOM has time to render
+             window.setTimeout(function() {
+
+             _V_(id, {}, function() {
+
+             debugger;
+
+             // start playing the video
+             this.play();
+             });
+
+             }, 2000);
+             */
 
             callback();
+
         }
 
     }));

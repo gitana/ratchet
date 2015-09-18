@@ -64,7 +64,7 @@
             //var height = "100%";
             //var width = 640;
             //var height = 320;
-            var width = "auto";
+            var width = "100%";
             var height = "auto";
             var poster = null;
             var html = "";

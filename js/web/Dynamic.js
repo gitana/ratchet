@@ -531,6 +531,23 @@
             };
         }
 
+        // override the "onAfterSwap" method so that we can set the "pick" button initial
+        // state on first render
+        gadget.prototype.onAfterSwap = function(el, model, context)
+        {
+            var self = this;
+
+            // wait a little for modal to render (if there is one, a
+            setTimeout(function() {
+
+                var selectedItems = self.selectedItems(model);
+                if (selectedItems)
+                {
+                    self.onPickItems(selectedItems);
+                }
+            }, 500);
+        };
+
         var picker = $('<div gadget="' + pickerType + '" id="' + pickerId + '"></div>');
         picker.css("display", "none");
         $(document.body).append(picker);

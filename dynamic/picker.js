@@ -93,6 +93,23 @@
         onPickItems: function(items)
         {
 
+        },
+
+        afterSwap: function(el, model, context, callback)
+        {
+            var self = this;
+
+            this.base(el, model, context, function() {
+
+                self.onAfterSwap(el, model, context);
+
+                callback();
+            });
+        },
+
+        onAfterSwap: function(el, model, context)
+        {
+
         }
 
     }));

@@ -117,10 +117,18 @@
                 configService = Ratchet.Configuration;
             }
 
-            return configService.evaluate({
+            var config = configService.evaluate({
                 "evaluator": "action",
                 "condition": actionId
             });
+
+            var actionConfig = null;
+            if (config)
+            {
+                actionConfig = config["actions"][actionId];
+            }
+
+            return actionConfig;
         }
 
     });

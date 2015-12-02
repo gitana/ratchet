@@ -142,7 +142,7 @@
         return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
     };
 
-    Ratchet.copyOf = function(thing)
+    Ratchet.copyOf = function(thing, includeFunctions)
     {
         var copy = thing;
 
@@ -152,7 +152,7 @@
 
             for (var i = 0; i < thing.length; i++)
             {
-                copy.push(Ratchet.copyOf(thing[i]));
+                copy.push(Ratchet.copyOf(thing[i], includeFunctions));
             }
         }
         else if (Ratchet.isObject(thing))
@@ -180,7 +180,7 @@
                 {
                     if (thing.hasOwnProperty(k))
                     {
-                        copy[k] = Ratchet.copyOf(thing[k]);
+                        copy[k] = Ratchet.copyOf(thing[k], includeFunctions);
                     }
                 }
             }
@@ -189,6 +189,10 @@
                 // otherwise, it's some other kind of object so we just do a referential copy
                 // in other words, not a copy
             }
+        }
+        else if (Ratchet.isFunction(thing) && includeFunctions)
+        {
+            copy = thing;
         }
 
         return copy;

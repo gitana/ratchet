@@ -79,6 +79,10 @@
                         self.ratchet().incrementDispatchCompletionCount();
 
                         // fire post-dispatch custom event
+                        // console.log("Dispatch Completion Count: " + self.topRatchet().dispatchCompletionCount);
+                        // console.log("Dispatch Count: " + self.topRatchet().dispatchCount);
+
+                        // fire post-dispatch custom event
                         $('body').trigger('dispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
 
                         if (onComplete) {

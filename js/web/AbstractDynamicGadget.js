@@ -289,12 +289,21 @@
         {
             var self = this;
 
-            // set up observables
-            var refreshHandler = self.refreshHandler(el);
+            // refresh observable name
+            if (!model.observables.refresh)
+            {
+                model.observables.refresh = "refresh_" + self.getGadgetType() + "_" + self.getGadgetId();
+            }
 
-            // refresh handler
-            model.observables.refresh = "refresh_" + self.getGadgetType() + "_" + self.getGadgetId();// + new Date().getTime();
-            self.on(model.observables.refresh, refreshHandler);
+            // if there is a previous refresh handler, unbind it
+            if (self._refreshHandler)
+            {
+                self.off(model.observables.refresh, self._refreshHandler);
+            }
+
+            // bind a new one
+            self._refreshHandler = self.refreshHandler(el);
+            self.on(model.observables.refresh, self._refreshHandler);
 
             if (callback)
             {

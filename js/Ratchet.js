@@ -259,6 +259,11 @@
              */
             this.dispatchUri = function(uri, cb) {
 
+                var self = this;
+
+                self.topRatchet().dispatchCompletionCount = 0;
+                self.topRatchet().dispatchCount = 0;
+
                 // restore the state from hash
                 _this.dispatch({
                     "method": "GET",

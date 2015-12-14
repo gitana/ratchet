@@ -13,15 +13,20 @@
          * Retrieves the messages for a given locale key.
          *
          * @param locale
+         * @param configurationService (optional)
          */
-        messages: function(locale)
+        messages: function(locale, configurationService)
         {
+            if (!configurationService) {
+                configurationService = Ratchet.Configuration;
+            }
+
             var config = {};
 
             if (locale)
             {
                 // see if we have an exact locale match
-                var exactMatches = Ratchet.Configuration.evaluate({"locale": locale});
+                var exactMatches = configurationService.evaluate({"locale": locale});
                 if (exactMatches && exactMatches.messages)
                 {
                     Ratchet.merge(exactMatches, config);
@@ -33,7 +38,7 @@
                 if (x > -1)
                 {
                     var language = locale.substring(0,x);
-                    var languageMatches = Ratchet.Configuration.evaluate({"locale": language});
+                    var languageMatches = configurationService.evaluate({"locale": language});
                     if (languageMatches && languageMatches.messages)
                     {
                         Ratchet.merge(languageMatches, config);
@@ -45,7 +50,7 @@
             // otherwise either a locale wasn't specified or we couldn't find a match
             // either way, hand back the default locale matches
 
-            var defaultMatches = Ratchet.Configuration.evaluate({"locale": this.DEFAULT_LOCALE});
+            var defaultMatches = configurationService.evaluate({"locale": this.DEFAULT_LOCALE});
             if (defaultMatches && defaultMatches.messages)
             {
                 Ratchet.merge(defaultMatches, config);
@@ -58,12 +63,14 @@
          * Retrieves the helper accessor into the messages service using the given locale.
          *
          * @param locale
+         * @param configurationService (optional)
+         *
          * @return {Object}
          */
-        using: function(locale)
+        using: function(locale, configurationService)
         {
             // all of the messages for this locale
-            var messages = this.messages(locale);
+            var messages = this.messages(locale, configurationService);
 
             return {
 

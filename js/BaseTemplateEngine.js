@@ -70,6 +70,45 @@
                     return;
                 }
 
+                // allow for template rules
+                // these run over the HTML output and allow for late substitutions
+                if (typeof(Ratchet.TemplateRules) !== "undefined")
+                {
+                    for (var i = 0; i < Ratchet.TemplateRules.length; i++)
+                    {
+                        var rule = Ratchet.TemplateRules[i];
+
+                        if (rule.type === "text-replace")
+                        {
+                            var text = rule.text;
+                            if (text)
+                            {
+                                var replacement = rule.replacement;
+                                if (!replacement) {
+                                    replacement = "";
+                                }
+
+                                var re = new RegExp(text, 'g');
+                                html = html.replace(re, replacement);
+                            }
+                        }
+                        else if (rule.type == "regex-replace")
+                        {
+                            var regex = rule.regex;
+                            if (regex)
+                            {
+                                var replacement = rule.replacement;
+                                if (!replacement) {
+                                    replacement = "";
+                                }
+
+                                var re = new RegExp(regex);
+                                html = html.replace(re, replacement);
+                            }
+                        }
+                    }
+                }
+
                 $(el).html("");
                 $(el).append(html);
 

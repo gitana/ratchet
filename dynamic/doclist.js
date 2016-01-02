@@ -315,52 +315,74 @@
                     var selectorGroup = model["selectorGroups"]["multi-documents-action-selector-group"];
                     $.each(selectorGroup.actions, function(index, selectorGroupItem) {
 
-                        var actionId = selectorGroupItem.action;
-                        //var order = selectorGroupItem.order;
+                        var button = null;
 
-                        // retrieve the action configuration
-                        var actionConfig = null;
-                        var globalConfig = Configuration.evaluate();
-                        if (globalConfig["actions"] && globalConfig["actions"][actionId])
+                        if (selectorGroupItem.divider)
                         {
-                            actionConfig = globalConfig["actions"][actionId];
-                        }
-                        if (!actionConfig)
-                        {
-                            // skip this one
-                            Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: multi-documents-action-selector-group");
+                            button = {
+                                "key": "multi-documents-action-separator" + index,
+                                "divider": true,
+                                "selectorGroup": "multi-documents-action-selector-group"
+                            };
                         }
                         else
                         {
-                            var title = actionConfig.title;
-                            if (!title) {
-                                title = "Unknown Action Title";
-                            }
+                            var actionId = selectorGroupItem.action;
+                            //var order = selectorGroupItem.order;
 
-                            // replace the "selected" button
-                            var button = {
-                                "key": "multi-documents-action-" + actionId,
-                                "title": title,
-                                "action": actionId,
-                                "selectorGroup": "multi-documents-action-selector-group"
-                            };
-                            if (actionConfig.iconClass) {
-                                button.iconClass = actionConfig.iconClass;
+                            // retrieve the action configuration
+                            var actionConfig = null;
+                            var globalConfig = Configuration.evaluate();
+                            if (globalConfig["actions"] && globalConfig["actions"][actionId])
+                            {
+                                actionConfig = globalConfig["actions"][actionId];
                             }
-                            if (selectorGroupItem.allowPermission) {
-                                button.allowPermission = selectorGroupItem.allowPermission;
+                            if (!actionConfig)
+                            {
+                                // skip this one
+                                Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: multi-documents-action-selector-group");
                             }
-                            if (selectorGroupItem.rejectPermission) {
-                                button.rejectPermission = selectorGroupItem.rejectPermission;
+                            else
+                            {
+                                var title = actionConfig.title;
+                                if (!title)
+                                {
+                                    title = "Unknown Action Title";
+                                }
+
+                                var button = {
+                                    "key": "multi-documents-action-" + actionId,
+                                    "title": title,
+                                    "action": actionId,
+                                    "selectorGroup": "multi-documents-action-selector-group"
+                                };
+
+                                if (actionConfig.iconClass)
+                                {
+                                    button.iconClass = actionConfig.iconClass;
+                                }
                             }
-                            if (selectorGroupItem.allowAuthority) {
-                                button.allowAuthority = selectorGroupItem.allowAuthority;
-                            }
-                            if (selectorGroupItem.rejectAuthority) {
-                                button.rejectAuthority = selectorGroupItem.rejectAuthority;
-                            }
-                            selectButton.buttons.push(button);
                         }
+
+                        if (selectorGroupItem.allowPermission)
+                        {
+                            button.allowPermission = selectorGroupItem.allowPermission;
+                        }
+                        if (selectorGroupItem.rejectPermission)
+                        {
+                            button.rejectPermission = selectorGroupItem.rejectPermission;
+                        }
+                        if (selectorGroupItem.allowAuthority)
+                        {
+                            button.allowAuthority = selectorGroupItem.allowAuthority;
+                        }
+                        if (selectorGroupItem.rejectAuthority)
+                        {
+                            button.rejectAuthority = selectorGroupItem.rejectAuthority;
+                        }
+
+                        selectButton.buttons.push(button);
+
                     });
                 }
 

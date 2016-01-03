@@ -1013,18 +1013,16 @@
                     wrappedHandler(function(err) {
 
                         if (_this.isUsingHandlerCallbacks())
-                        //if (Ratchet.useHandlerCallbacks)
                         {
                             handlerCompletionCallback(err);
                         }
 
                     });
 
-                    return;
+                    //return;
                 }
 
                 // if we're not using completion callbacks, then callback right away
-                //if (!Ratchet.useHandlerCallbacks || !wrappedHandler)
                 if (!_this.isUsingHandlerCallbacks() || !wrappedHandler)
                 {
                     handlerCompletionCallback();
@@ -1163,7 +1161,6 @@
                 // or if we are meant to force change it, we do that here
                 if (forceTriggerHashChange)
                 {
-                    //console.log("top.run() force hashchange");
                     $(window).hashchange();
                 }
             }

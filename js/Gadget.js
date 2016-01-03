@@ -238,16 +238,16 @@
          * @param gadget
          * @param route
          */
-        refreshHandler: function(el)
+        refreshHandler: function(el, callback)
         {
-            return function(el)
+            return function(el, callback)
             {
                 return function(newValue, oldValue)
                 {
-                    el.run(el.route.method, el.route.uri, el.route.data);
+                    el.run(el.route.method, el.route.uri, el.route.data, callback);
                 };
 
-            }(el);
+            }(el, callback);
         },
 
 

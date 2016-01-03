@@ -91,6 +91,19 @@
 
                                                         // push page configuration into config service
                                                         this.config(gadgetConfiguration);
+                                                    },
+
+                                                    afterSwap: function(el, model, context, callback)
+                                                    {
+                                                        var self = this;
+
+                                                        this.base(el, model, context, function() {
+
+                                                            // trigger resize event
+                                                            $(window).trigger("resize");
+
+                                                            callback();
+                                                        });
                                                     }
 
                                                 });

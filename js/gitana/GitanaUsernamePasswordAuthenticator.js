@@ -175,7 +175,7 @@
                         // if a username and password is provided, show the login button
                         if (usernameField.getValue() && passwordField.getValue())
                         {
-                            // disable the login button
+                            // enable the login button
                             $(div).find(".login_button_login").attr("disabled", false);
                         }
                     };
@@ -209,6 +209,29 @@
                     $(div).on('shown.bs.modal', function() {
 
                         control.getControlByPath("username").focus();
+
+                        // chrome: detect autofill - if so, enable submit button
+                        // this make attempts for 10 seconds to see if the autofill happens by checking CSS
+                        var t1 = new Date().getTime();
+                        var fx = function() {
+                            setTimeout(function() {
+                                var x = control.field.find(":-webkit-autofill");
+                                if (x.length > 0)
+                                {
+                                    // enable the login button
+                                    $(div).find(".login_button_login").attr("disabled", false);
+                                }
+                                else
+                                {
+                                    var t2 = new Date().getTime();
+                                    if (t2 - t1 < 10000)
+                                    {
+                                        fx();
+                                    }
+                                }
+                            }, 250)
+                        };
+                        fx();
 
                     });
                     $(div).modal('show');

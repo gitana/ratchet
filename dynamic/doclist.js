@@ -489,6 +489,8 @@
                 actionContext.data = self.selectedItems(model);
             }
 
+            actionContext.selectedItems = self.selectedItems(model);
+
             // reference to the current gadget
             actionContext.gadget = self;
 

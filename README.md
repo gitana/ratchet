@@ -1,17 +1,9 @@
 ## Ratchet JS ##
-The handy framework for building JavaScript MVC applications
+The handy framework for building JavaScript MVC applications.
 
 Git: http://github.com/gitana/ratchet
 
-Home: http://www.ratchetjs.org
+This framework is used by [Cloud CMS](https://www.cloudcms.com) (https://www.cloudcms.com) to deliver its user interface.
+It supports an AMD module pattern that allows customers to extend our user interface without any server-side or database-level changes.
 
-### Questions and Bug Reports
- * jira: https://gitana.atlassian.net/browse/RATCHET
-
-### Change Log ##
-
-https://gitana.atlassian.net/browse/RATCHET
-
-### Maintainers
-* Michael Uzquiano     uzi@cloudcms.com
-* Yong Qu     drq@cloudcms.com
+For more information, please visit [Cloud CMS](https://www.cloudcms.com)

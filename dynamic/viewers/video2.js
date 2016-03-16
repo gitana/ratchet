@@ -28,7 +28,7 @@
         doConfigure: function()
         {
             this.config({
-                "autoplay": true,
+                "autoplay": false,
                 "controls": true
             });
         },

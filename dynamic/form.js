@@ -81,8 +81,13 @@
 	        };
 	        */
 
-	        $(el).find("#" + model.formId).alpaca(alpacaConfig);
+			self.doForm(el, model, alpacaConfig);
 	    },
+
+		doForm: function(el, model, alpacaConfig)
+		{
+			$(el).find("#" + model.formId).alpaca(alpacaConfig);
+		},
 
 	    postRender: function(control, model, callback)
 	    {

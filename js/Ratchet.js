@@ -996,37 +996,42 @@
                     }
                 };
 
-                // find the controller handler method that matches this uri
-                var wrappedHandler = _this.findHandler(context);
-                if (wrappedHandler)
-                {
-                    // if primary + we have a page transition block function
-                    if (isPrimary && Ratchet.pageTransitionBlocker)
+                // allow for before dispatch
+                _this.beforeDispatch(config, params, context, function() {
+
+                    // find the controller handler method that matches this uri
+                    var wrappedHandler = _this.findHandler(context);
+                    if (wrappedHandler)
                     {
-                        Ratchet.pageTransitionBlocker(true);
-                    }
-
-                    // remove the ratchet-completed class
-                    $(_this.el).removeClass("ratchet-completed");
-
-                    // invoke the handler
-                    wrappedHandler(function(err) {
-
-                        if (_this.isUsingHandlerCallbacks())
+                        // if primary + we have a page transition block function
+                        if (isPrimary && Ratchet.pageTransitionBlocker)
                         {
-                            handlerCompletionCallback(err);
+                            Ratchet.pageTransitionBlocker(true);
                         }
 
-                    });
+                        // remove the ratchet-completed class
+                        $(_this.el).removeClass("ratchet-completed");
 
-                    //return;
-                }
+                        // invoke the handler
+                        wrappedHandler(function(err) {
 
-                // if we're not using completion callbacks, then callback right away
-                if (!_this.isUsingHandlerCallbacks() || !wrappedHandler)
-                {
-                    handlerCompletionCallback();
-                }
+                            if (_this.isUsingHandlerCallbacks())
+                            {
+                                handlerCompletionCallback(err);
+                            }
+
+                        });
+
+                        //return;
+                    }
+
+                    // if we're not using completion callbacks, then callback right away
+                    if (!_this.isUsingHandlerCallbacks() || !wrappedHandler)
+                    {
+                        handlerCompletionCallback();
+                    }
+
+                });
 
             }, function() {
 
@@ -1040,6 +1045,19 @@
                 }
 
             });
+        },
+
+        /**
+         * Allows for custom logic to be hooked in ahead of dispatching to a URL.
+         *
+         * @param config
+         * @param params
+         * @param context
+         * @param callback
+         */
+        beforeDispatch: function(config, params, context, callback)
+        {
+            callback();
         },
 
         /**

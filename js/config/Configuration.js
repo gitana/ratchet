@@ -385,6 +385,31 @@
         },
 
         /**
+         * Reads a block of configuration by it's block key.
+         *
+         * @param blockKey
+         * @returns {*}
+         */
+        read: function(blockKey)
+        {
+            return this.blocks[blockKey];
+        },
+
+        /**
+         * Retrieves a list of block keys.
+         */
+        listKeys: function()
+        {
+            var keys = [];
+            for (var key in this.blocks)
+            {
+                keys.push(key);
+            }
+
+            return keys;
+        },
+
+        /**
          * Evaluates the current set of configuration blocks for the given context and hands back the
          * resulting JSON.
          *
@@ -688,12 +713,50 @@
             }
 
             return x;
+        },
+
+        /**
+         * Reloads this configuration instance with a copy of the contents of another.
+         *
+         * @param configuration the configuration instance to import from
+         */
+        reload: function(configuration)
+        {
+            // keys are generated at runtime
+            this.blocks = {};
+
+            // instances and classes for evaluators
+            this.evaluatorInstances = {};
+            this.evaluatorTypes = {};
+
+            // subscription listeners
+            this.subscriptions = {};
+            this.subscriptionsCount = 0;
+
+            for (var instanceId in configuration.evaluatorInstances) {
+                this.evaluatorInstances[instanceId] = configuration.evaluatorInstances[instanceId];
+            }
+
+            for (var typeId in configuration.evaluatorTypes) {
+                this.evaluatorTypes[typeId] = configuration.evaluatorTypes[typeId];
+            }
+
+            for (var blockKey in configuration.blocks) {
+                this.blocks[blockKey] = JSON.parse(JSON.stringify(configuration.blocks[blockKey]));
+            }
+
+            for (var subscriptionId in configuration.subscriptions) {
+                this.subscriptions[subscriptionId] = configuration.subscriptions[subscriptionId];
+            }
+
         }
 
     });
 
     Ratchet.Configuration = new configClass();
 
+    // commenting out because this isn't used by OneTeam
+    /*
     // if we're running in a browser, we support specifying a config file via the "data-config" attribute on the
     // SCRIPT tag...
     var isBrowser = !!(typeof window !== 'undefined' && navigator && document);
@@ -748,6 +811,7 @@
 
         });
     }
+    */
 
     return Ratchet.Configuration;
 

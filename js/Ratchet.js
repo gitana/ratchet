@@ -302,9 +302,7 @@
                 // make sure this only gets applied once
                 if (!HASH_CHANGE_APPLIED)
                 {
-                    $(window).hashchange(function() {
-
-                        //console.log("Top Level HashChange being handled");
+                    $(window).hashchange(function(e) {
 
                         var hash = self.autoAdjustHash.call(self, location.hash);
                         if (hash !== location.hash)
@@ -326,7 +324,6 @@
                             Ratchet.tempCallback = null;
 
                         });
-
                     });
 
                     // only allow the hash change handler to be applied once

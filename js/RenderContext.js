@@ -227,6 +227,18 @@
                             }
                         });
 
+                        // if no child nodes rendered, then nothing to swap
+                        if ($(self)[0].childNodes.length === 0)
+                        {
+                            if (callback)
+                            {
+                                return callback.call(self, $(self.ratchet().el));
+                            }
+
+                            return;
+                        }
+
+
                         // we'll use these to replace the current el
                         var replacements = $($(self)[0].childNodes);
 

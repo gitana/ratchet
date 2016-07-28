@@ -875,6 +875,17 @@
 
                     loader.call(self, context, model, data, settings, searchTerm, query, pagination, function(array, attrs) {
 
+                        // ensure "id" field in place
+                        if (model.rows && model.rows.length > 0)
+                        {
+                            for (var i = 0; i < model.rows.length; i++)
+                            {
+                                if (!model.rows[i].id) {
+                                    model.rows[i].id = model.rows[i]._doc;
+                                }
+                            }
+                        }
+
                         for (var i = 0; i < array.length; i++)
                         {
                             json["data"].push(array[i]);
@@ -1873,6 +1884,7 @@
                     for (var i = 0; i < results.rows.length; i++) {
 
                         var obj = results.rows[i];
+
                         array.push(self.toDataTableRow(model, obj, context));
                     }
 

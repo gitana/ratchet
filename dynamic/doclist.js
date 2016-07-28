@@ -164,6 +164,9 @@
                 if (model["selectorGroups"]["single-document-action-selector-group"]) {
                     if (model["selectorGroups"]["single-document-action-selector-group"]["actions"]) {
                         if (model["selectorGroups"]["single-document-action-selector-group"]["actions"].length > 0) {
+
+                            /*
+                            // actions button
                             model.buttons.push({
                                 "columns": [{
                                     "key": "actions",
@@ -173,6 +176,35 @@
                                     }
                                 }]
                             });
+                            */
+
+                            // ensure actions column
+                            var actionColumn = null;
+                            if (model.columns && model.columns.length > 0)
+                            {
+                                for (var z = 0; z < model.columns.length; z++)
+                                {
+                                    if (model.columns[z].key === "actions")
+                                    {
+                                        actionColumn = model.columns[z];
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!actionColumn)
+                            {
+                                actionColumn = {
+                                    "key": "actions",
+                                    "title": "Actions"
+                                };
+                                model.columns.push(actionColumn);
+                            }
+                            if (!actionColumn.selector) {
+                                actionColumn.selector = {
+                                    "title": "Actions..."
+                                };
+                            }
                         }
                     }
                 }
@@ -573,15 +605,13 @@
 
                     // retrieve the action configuration
                     var actionConfig = Actions.config(actionId);
-                    if (!actionConfig || !actionConfig.actions[actionId])
+                    if (!actionConfig)
                     {
                         // skip this one
                         Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: single-document-action-selector-group");
                     }
                     else
                     {
-                        actionConfig = actionConfig.actions[actionId];
-
                         var title = actionConfig.title;
                         if (!title) {
                             title = "Unknown Action Title";
@@ -590,7 +620,15 @@
                             title = selectorGroupItem.title;
                         }
 
-                        var html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + row.id + "'>";
+                        var id = row.id;
+                        if (!id && row._doc) {
+                            id = row._doc;
+                        }
+                        if (!id && row.getId) {
+                            id = row.getId();
+                        }
+
+                        var html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
                         if (actionConfig.iconClass) {
                             html += "<i class='" + actionConfig.iconClass + "'></i>";
                         }
@@ -638,6 +676,24 @@
                 actionContext.ratchet = self.ratchet();
                 actionContext.model = model;
                 actionContext.data = item;
+
+                // reference to the current gadget
+                actionContext.gadget = self;
+
+                // useful methods
+                actionContext.observable = self.observable;
+                actionContext.trigger = self.trigger;
+                actionContext.on = self.on;
+                actionContext.substituteVariables = function(obj, callback) {
+                    self.substituteVariables(null, model, obj);
+
+                    if (callback) {
+                        callback();
+                    }
+
+                };
+
+                self.customizeActionContext(actionContext, model);
 
                 // prevent the event from propagating (so as to prevent following href attributes on anchor)
                 event.preventDefault();

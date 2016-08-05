@@ -236,6 +236,18 @@
         render: function(resource, container, callback)
         {
             callback();
+        },
+
+        /**
+         * This method gets called after the render has completed.
+         *
+         * @param resource
+         * @param container dom element
+         * @param callback callback function
+         */
+        afterRender: function(resource, container, callback)
+        {
+            callback();
         }
 
     });

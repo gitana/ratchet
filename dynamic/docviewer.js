@@ -168,14 +168,20 @@
 
                             handler.render(resource, container, function(err) {
 
-                                if (!err) {
+                                if (!err)
+                                {
+                                    handler.afterRender(resource, container, function() {
 
-                                    // success
-                                    callback();
+                                        self.afterRender(handler, resource, container, function() {
 
-                                    return;
+                                            // success
+                                            return callback();
+                                        });
+
+                                    });
                                 }
-                                else {
+                                else
+                                {
 
                                     // cleanup
                                     $(container).empty();
@@ -199,7 +205,13 @@
                     callback();
                 }
             });
+        },
+
+        afterRender: function(handler, resource, container, callback)
+        {
+            callback();
         }
+
 
     }));
 

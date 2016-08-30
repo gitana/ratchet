@@ -1237,6 +1237,11 @@
 
                                         b = y + 1;
                                     }
+                                    else
+                                    {
+                                        // if we didn't find a closure, set x to -1 to escape loop
+                                        x = -1;
+                                    }
                                 }
                             }
                             while(x > -1);

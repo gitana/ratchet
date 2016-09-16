@@ -959,6 +959,9 @@
                 context = new Ratchet.RenderContext(this, config, null, params);
             }
 
+            // fire beforeDispatch event for ratchet
+            $('body').trigger('beforeDispatch', [this]);
+
             // increment dispatch count
             this.incrementDispatchCount();
 

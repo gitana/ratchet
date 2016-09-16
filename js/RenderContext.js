@@ -85,6 +85,9 @@
                         // fire post-dispatch custom event
                         $('body').trigger('dispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
 
+                        // fire afterDispatch event for ratchet
+                        $('body').trigger('afterDispatch', [self.ratchet(), self.ratchet().isDispatchCompleted()]);
+
                         if (onComplete) {
                             onComplete.call(self);
                         }
@@ -230,10 +233,12 @@
                         // if no child nodes rendered, then nothing to swap
                         if ($(self)[0].childNodes.length === 0)
                         {
-                            if (callback)
-                            {
-                                return callback.call(self, $(self.ratchet().el));
-                            }
+                            postSwap(function() {
+                                if (callback)
+                                {
+                                    return callback.call(self, $(self.ratchet().el));
+                                }
+                            });
 
                             return;
                         }

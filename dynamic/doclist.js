@@ -754,6 +754,10 @@
             if (selectedItems.length > 0) {
                 $(".list-button-multi-documents-action-selector").removeClass("disabled");
             }
+
+            // TODO: update the "selected..." options based on what is selected
+            // some might work on multiple, some might only work on 1 at a time
+            // should also take into account what capabilities you have against each item
         }
 
     }));

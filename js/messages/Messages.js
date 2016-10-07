@@ -116,66 +116,78 @@
                 {
                     var self = this;
 
+                    var ago = false;
                     if (Ratchet.isUndefined(to))
                     {
                         to = new Date();
+                        ago = true;
                     }
 
-                    var seconds_ago = ((to - from) / 1000);
-                    var minutes_ago = Math.floor(seconds_ago / 60);
-                    var hours_ago  = Math.round(minutes_ago / 60);
-                    var days_ago  = Math.round(minutes_ago / 1440);
-                    var months_ago  = Math.round(minutes_ago / 43200);
-                    var years_ago  = Math.round(minutes_ago / 525960);
+                    var seconds_duration = ((to - from) / 1000);
+                    var minutes_duration = Math.floor(seconds_duration / 60);
+                    var hours_duration  = Math.round(minutes_duration / 60);
+                    var days_duration  = Math.round(minutes_duration / 1440);
+                    var months_duration  = Math.round(minutes_duration / 43200);
+                    var years_duration  = Math.round(minutes_duration / 525960);
 
                     var f = function(key, amount)
                     {
                         return self.message(key, [amount]);
                     };
 
-                    if (minutes_ago <= 0)
+                    var text = "";
+
+                    if (minutes_duration <= 0)
                     {
-                        return f("relative.seconds", seconds_ago);
+                        text = f("relative.seconds", seconds_duration);
                     }
-                    if (minutes_ago == 1)
+                    else if (minutes_duration == 1)
                     {
-                        return f("relative.minute");
+                        text = f("relative.minute", 1);
                     }
-                    if (minutes_ago < 45)
+                    else if (minutes_duration < 45)
                     {
-                        return f("relative.minutes", minutes_ago);
+                        text = f("relative.minutes", minutes_duration);
                     }
-                    if (minutes_ago < 90)
+                    else if (minutes_duration < 90)
                     {
-                        return f("relative.hour");
+                        text = f("relative.hour", 1);
                     }
-                    if (minutes_ago < 1440)
+                    else if (minutes_duration < 1440)
                     {
-                        return f("relative.hours", hours_ago);
+                        text = f("relative.hours", hours_duration);
                     }
-                    if (minutes_ago < 2880)
+                    else if (minutes_duration < 2880)
                     {
-                        return f("relative.day");
+                        text = f("relative.day", 1);
                     }
-                    if (minutes_ago < 43200)
+                    else if (minutes_duration < 43200)
                     {
-                        return f("relative.days", days_ago);
+                        text = f("relative.days", days_duration);
                     }
-                    if (minutes_ago < 86400)
+                    else if (minutes_duration < 86400)
                     {
-                        return f("relative.month");
+                        text = f("relative.month", 1);
+                    }
+                    else if (minutes_duration < 525960)
+                    {
+                        text = f("relative.months", months_duration);
+                    }
+                    else if (minutes_duration < 1051920)
+                    {
+                        text = f("relative.year", 1);
+                    }
+                    else
+                    {
+                        text = f("relative.years", years_duration);
                     }
 
-                    if (minutes_ago < 525960)
+                    if (ago)
                     {
-                        return f("relative.months", months_ago);
-                    }
-                    if (minutes_ago < 1051920)
-                    {
-                        return f("relative.year");
+                        text += " " + f("ago");
                     }
 
-                    return f("relative.years", years_ago);
+                    return text;
                 },
 
                 /**
@@ -466,24 +478,25 @@
                     "monthNames":       ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
                 },
                 "relative": {
-                    "seconds":          "{0} seconds ago",
-                    "minute":           "{0} minute ago",
-                    "minutes":          "{0} minutes ago",
-                    "hour":             "{0} hour ago",
-                    "hours":            "{0} hours ago",
-                    "day":              "{0} day ago",
-                    "days":             "{0} days ago",
-                    "month":            "{0} month ago",
-                    "months":           "{0} months ago",
-                    "year":             "{0} year ago",
-                    "years":            "{0} years ago",
+                    "seconds":          "{0} seconds",
+                    "minute":           "{0} minute",
+                    "minutes":          "{0} minutes",
+                    "hour":             "{0} hour",
+                    "hours":            "{0} hours",
+                    "day":              "{0} day",
+                    "days":             "{0} days",
+                    "month":            "{0} month",
+                    "months":           "{0} months",
+                    "year":             "{0} year",
+                    "years":            "{0} years",
                     "today":            "today",
                     "tomorrow":         "tomorrow",
                     "yesterday":        "yesterday",
                     "earlierThisWeek":  "earlier this week",
                     "lastWeek":         "last week",
                     "laterThisWeek":    "later this week",
-                    "nextWeek":         "next week"
+                    "nextWeek":         "next week",
+                    "ago":              "ago"
                 }
             }
         }

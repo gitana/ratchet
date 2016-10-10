@@ -67,7 +67,7 @@
         {
         },
 
-        beforeSwap: function(el, model, callback)
+        prepareModel: function(el, model, callback)
         {
             var self = this;
 

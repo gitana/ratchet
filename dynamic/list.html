@@ -23,14 +23,31 @@
                     <div class="button-container {{#if buttons}}dropdown{{/if}}">
 
                         {{#if select}}
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-menu-{{key}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                                    <span class="dropdown-title">{{title}}</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdown-menu-{{key}}">
+                                    {{#each options}}
+                                    <li><a href="#" class="list-select list-select-{{../key}}" {{#if selected}}data-selected="true"{{/if}} data-select-key="{{../key}}" data-select-value="{{value}}" data-select-label="{{label}}">{{label}}</a></li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+
+                            <!--
                             <div class="form-group">
-                                <label class="list-select-label">{{title}}</label>
+                                {{#if title}}
+                                    <label class="list-select-label">{{title}}</label>
+                                {{/if}}
                                 <select class="list-select-{{key}} list-select form-control">
                                     {{#each options}}
                                     <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
                                     {{/each}}
                                 </select>
                             </div>
+                            -->
                         {{else}}
                             {{#if checkbox}}
                             <div class="checkbox">

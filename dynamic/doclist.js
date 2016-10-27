@@ -393,6 +393,11 @@
                                 {
                                     button.iconClass = actionConfig.iconClass;
                                 }
+
+                                if (selectorGroupItem.selectionMode) {
+                                    button.selectionMode = selectorGroupItem.selectionMode;
+                                }
+
                             }
                         }
 
@@ -741,9 +746,11 @@
             }
         },
 
-        changeSelectedItems: function(model) {
+        changeSelectedItems: function(model, el)
+        {
+            var self = this;
 
-            this.base(model);
+            this.base(model, el);
 
             var selectedItems = this.selectedItems(model);
 
@@ -758,6 +765,50 @@
             // TODO: update the "selected..." options based on what is selected
             // some might work on multiple, some might only work on 1 at a time
             // should also take into account what capabilities you have against each item
+            var multiSelectButton = self._findButton(model, "multi-documents-action-selector");
+            if (multiSelectButton)
+            {
+                for (var i = 0; i < multiSelectButton.buttons.length; i++)
+                {
+                    var disable = false;
+
+                    if (multiSelectButton.buttons[i].selectionMode === "none")
+                    {
+                        disable = (selectedItems.length !== 0);
+                    }
+                    else if (multiSelectButton.buttons[i].selectionMode === "one")
+                    {
+                        disable = (selectedItems.length !== 1);
+                    }
+                    else if (multiSelectButton.buttons[i].selectionMode === "two")
+                    {
+                        disable = (selectedItems.length !== 2);
+                    }
+                    /*
+                    else if (multiSelectButton.buttons[i].selectionMode === "any")
+                    {
+                        disable = (selectedItems.length > 1);
+                    }
+                    */
+
+                    var ul = $("[role='menu'][aria-labelledby='list-button-multi-documents-action-selector']");
+                    var a = $(ul).find(".list-button-multi-documents-action-" + multiSelectButton.buttons[i].action);
+
+                    $(a).parent().prop("disabled", false);
+                    $(a).parent().removeClass("disabled");
+                    $(a).prop("disabled", false);
+                    $(a).removeClass("disabled");
+
+                    if (disable)
+                    {
+                        $(a).parent().prop("disabled", true);
+                        $(a).parent().addClass("disabled");
+                        $(a).prop("disabled", true);
+                        $(a).addClass("disabled");
+                    }
+
+                }
+            }
         }
 
     }));

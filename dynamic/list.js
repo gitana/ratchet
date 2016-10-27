@@ -302,7 +302,7 @@
 
                 // when the selected items change
                 self.subscribe(model.observables.selectedItems, function() {
-                    self.handleChangeSelectedItems(model);
+                    self.handleChangeSelectedItems(model, el);
                 });
 
                 callback();
@@ -990,6 +990,13 @@
                     //e.preventDefault();
                 });
 
+                $(el).find("[data-selected='true']").each(function() {
+                    var key = $(this).attr("data-select-key");
+                    var label = $(this).attr("data-select-label");
+                    $(el).find("#dropdown-menu-" + key + " .dropdown-title").html(label);
+
+                });
+
                 // handle any other dom element bindings for the list
                 self.handleBindEvents(el, model);
 
@@ -1249,9 +1256,16 @@
 
                             $(el).find(".list-button-" + button2.key).off().click(function(b) {
                                 return function(event) {
-                                    self.handleButtonBarButtonClick.call(self, event, model, b);
 
                                     event.preventDefault();
+
+                                    if ($(this).prop("disabled"))
+                                    {
+                                        return false;
+                                    }
+
+                                    self.handleButtonBarButtonClick.call(self, event, model, b);
+
                                 };
                             }(button2));
 
@@ -1262,12 +1276,13 @@
                         if (button.select)
                         {
                             // select changes
-                            $(el).find(".list-select-" + button.key).off().change(function(b) {
+                            $(el).find(".list-select-" + button.key).off().click(function(b) {
                                 return function(event) {
-                                    var v = $(event.target).val();
-                                    self.handleButtonBarSelectChange.call(self, event, model, b, v);
-
                                     event.preventDefault();
+
+                                    var v = $(this).attr("data-select-value");
+
+                                    self.handleButtonBarSelectChange.call(self, event, model, b, v);
                                 };
                             }(button));
                         }
@@ -1564,10 +1579,10 @@
             this.changeButtonBarCheckbox(event, model, button, value);
         },
 
-        handleChangeSelectedItems: function(model)
+        handleChangeSelectedItems: function(model, el)
         {
             // custom handler
-            this.changeSelectedItems(model);
+            this.changeSelectedItems(model, el);
         },
 
         handleConfigureColumn: function(column, config)
@@ -1713,7 +1728,7 @@
         /**
          * EXTENSION POINT
          */
-        changeSelectedItems: function(model)
+        changeSelectedItems: function(model, el)
         {
 
         },

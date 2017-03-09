@@ -217,7 +217,7 @@
                             // merge array elements
                             $.each(source, function(index) {
 
-                                var added = false;
+                                var handled = false;
 
                                 // if the thing we're copying into the array is an object and has a "key" field
                                 // then perform a merge
@@ -237,15 +237,25 @@
                                             {
                                                 if (target[x].key === source[index].key)
                                                 {
-                                                    target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel);
-                                                    added = true;
+                                                    if (source[index].remove)
+                                                    {
+                                                        target.splice(x, 1);
+                                                        handled = true;
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel);
+                                                        handled = true;
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
 
-                                if (!added)
+                                if (!handled)
                                 {
                                     target.push(copyOf(source[index]));
                                 }

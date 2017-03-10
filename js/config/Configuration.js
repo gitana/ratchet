@@ -255,7 +255,7 @@
                                     }
                                 }
 
-                                if (!handled)
+                                if (!handled && !source[index].remove)
                                 {
                                     target.push(copyOf(source[index]));
                                 }

@@ -482,7 +482,8 @@
                 var block_b = keepers[b];
 
                 if (!block_a.order && !block_b.order) {
-                    return 0;
+                    // fall back to key compare
+                    return defaultCompare(a, b);
                 }
 
                 if (!block_a.order && block_b.order) {

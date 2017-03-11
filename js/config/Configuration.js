@@ -1,9 +1,18 @@
 /*jshint -W004 */ // duplicate variables
 (function($) {
 
-    var defaultCompare = function(a, b) {
-        if (a<b) return -1;
-        if (a>b) return 1;
+    var defaultCompare = function(a, b)
+    {
+        if (a < b)
+        {
+            return -1;
+        }
+
+        if (a > b)
+        {
+            return 1;
+        }
+
         return 0;
     };
 
@@ -473,18 +482,17 @@
                 var block_b = keepers[b];
 
                 if (!block_a.order && !block_b.order) {
-                    // fall back to key compare
-                    return defaultCompare(a, b);
+                    return 0;
                 }
 
                 if (!block_a.order && block_b.order) {
                     // prefer block b
-                    return 1;
+                    return -1;
                 }
 
                 if (block_a.order && !block_b.order) {
                     // prefer block a
-                    return -1;
+                    return 1;
                 }
 
                 return defaultCompare(block_a.order, block_b.order);

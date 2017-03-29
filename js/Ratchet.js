@@ -1020,6 +1020,9 @@
                                 handlerCompletionCallback(err);
                             }
 
+                            // first afterHandle custom event
+                            $('body').trigger('afterHandle', [_this, _this.isDispatchCompleted()]);
+
                         });
 
                         //return;

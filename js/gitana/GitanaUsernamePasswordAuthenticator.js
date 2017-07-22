@@ -243,10 +243,10 @@
         {
             var self = this;
 
-            self._authenticate(context, null, null, successCallback, failureCallback);
+            self._authenticate(context, null, null, successCallback, failureCallback, self.onConnectionFailure);
         },
 
-        _authenticate: function(context, username, password, successCallback, failureCallback)
+        _authenticate: function(context, username, password, successCallback, failureCallback, connectFailureCallback)
         {
             var self = this;
 
@@ -275,8 +275,12 @@
                 // if err, then something went wrong
                 if (err)
                 {
-                    self.loginDialog(context, username, password, successCallback, failureCallback, err);
-                    return;
+                    if (connectFailureCallback)
+                    {
+                        return connectFailureCallback(err, context, username, password, successCallback, failureCallback);
+                    }
+
+                    return self.loginDialog(context, username, password, successCallback, failureCallback, err);
                 }
 
                 // no error
@@ -284,6 +288,13 @@
                 // if an "application" was specified in the config...
                 self.handlePostAuthenticate((this.platform ? this.platform() : this), context, successCallback, failureCallback);
             });
+        },
+
+        onConnectionFailure: function(err, context, username, password, successCallback, failureCallback)
+        {
+            var self = this;
+
+            return self.loginDialog(context, username, password, successCallback, failureCallback, err);
         }
 
     });

@@ -243,7 +243,9 @@
         {
             var self = this;
 
-            self._authenticate(context, null, null, successCallback, failureCallback, self.onConnectionFailure);
+            self._authenticate(context, null, null, successCallback, failureCallback, function(err, context, username, password, successCallback, failureCallback) {
+                self.onConnectionFailure(err, context, username, password, successCallback, failureCallback);
+            });
         },
 
         _authenticate: function(context, username, password, successCallback, failureCallback, connectFailureCallback)

@@ -561,8 +561,9 @@
          * @param actionId
          * @param actionContext
          * @param err
+         * @param data
          */
-        afterActionComplete: function(actionId, actionContext, err)
+        afterActionComplete: function(actionId, actionContext, err, data)
         {
         },
 
@@ -706,7 +707,7 @@
                 event.stopPropagation();
 
                 return self._clickAction(actionId, actionContext, function(err, data) {
-                    self.afterActionComplete(actionId, actionContext);
+                    self.afterActionComplete(actionId, actionContext, err, data);
                 });
 
             });

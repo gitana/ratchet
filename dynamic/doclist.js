@@ -496,8 +496,8 @@
                 // fire the action
                 var actionContext = self.buildActionContext(model, button);
 
-                return this._clickAction(actionContext.id, actionContext, function(err) {
-                    self.afterActionComplete(actionContext.id, actionContext, err);
+                return this._clickAction(actionContext.id, actionContext, function(err, data) {
+                    self.afterActionComplete(actionContext.id, actionContext, err, data);
                 });
             }
         },

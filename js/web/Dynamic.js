@@ -630,6 +630,11 @@
 
                     // unregister the gadget that we dynamically instantiated
                     Ratchet.GadgetRegistry.deregister(pickerType, pickerId);
+
+                    if (onPickFn)
+                    {
+                        onPickFn(null);
+                    }
                 });
 
 

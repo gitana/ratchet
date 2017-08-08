@@ -531,6 +531,8 @@
             };
         }
 
+        var picked = false;
+
         // override the "onAfterSwap" method so that we can set the "pick" button initial
         // state on first render
         gadget.prototype.onAfterSwap = function(el, model, context)
@@ -589,7 +591,6 @@
                 picker.css("display", "block");
                 b.append(picker);
 
-
                 // override the "onPickItems" method so that we can listen to when things are selected
                 // and store the ids back here
                 var pickedItems = [];
@@ -612,6 +613,8 @@
                 // pick button
                 $(div).find('.pick').click(function() {
 
+                    picked = true;
+
                     $(div).modal('hide');
                     $(div).on('hidden.bs.modal', function() {
 
@@ -631,7 +634,7 @@
                     // unregister the gadget that we dynamically instantiated
                     Ratchet.GadgetRegistry.deregister(pickerType, pickerId);
 
-                    if (onPickFn)
+                    if (!picked && onPickFn)
                     {
                         onPickFn(null);
                     }

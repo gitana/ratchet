@@ -827,22 +827,28 @@
                         }
                     }
 
-                    // uses default or -1 if not supplied
-                    var sortDirection = self.sortDirection(model);
-
-                    // apply sort from observable?
-                    var sortField = self.sort(model);
-                    if (!sortField) {
-                        sortField = model.options.defaultSort;
-                    }
-                    if (!sortField) {
-                        sortField = self.getDefaultSortField(model);
-                    }
-
-                    if (sortField)
+                    // if sort not defined, see we can derive from sort direction buttons
+                    if (!pagination.sort)
                     {
-                        pagination["sort"] = {};
-                        pagination["sort"][sortField] = sortDirection;
+                        // uses default or -1 if not supplied
+                        var sortDirection = self.sortDirection(model);
+
+                        // apply sort from observable?
+                        var sortField = self.sort(model);
+                        if (!sortField)
+                        {
+                            sortField = model.options.defaultSort;
+                        }
+                        if (!sortField)
+                        {
+                            sortField = self.getDefaultSortField(model);
+                        }
+
+                        if (sortField)
+                        {
+                            pagination["sort"] = {};
+                            pagination["sort"][sortField] = sortDirection;
+                        }
                     }
 
                     // if sort to provided, allow for a default sort
@@ -1008,6 +1014,21 @@
 
                 // if we have a filter box, adjust it for bootstrap 3 manually
                 $(".dataTables_filter label input", el).addClass("form-control").css("width", "initial");
+
+                // for any sorting columns, it seems we need to manually trigger a resize in order for the
+                // columns not to lose their responsiveness
+                $(el).find("th.sorting,th.sorting_asc,th.sorting_desc").click(function(e) {
+                    setTimeout(function() {
+                        $(window).trigger("resize");
+                    }, 250);
+                });
+
+                // if the display length changes, we need to trigger a window resize for the same reason as above
+                $(".dataTables_length label select", el).click(function(e) {
+                    setTimeout(function() {
+                        $(window).trigger("resize");
+                    }, 250);
+                });
 
                 // all done - fire callback
                 //callback();

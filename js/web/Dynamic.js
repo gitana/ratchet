@@ -429,6 +429,11 @@
                 t.addClass(config.modalClass);
             }
 
+            if (config.big)
+            {
+                t.addClass("bigmodal");
+            }
+
         });
 
         return $(div);
@@ -578,7 +583,8 @@
             // modal dialog
             Ratchet.fadeModal({
                 "title": config.title,
-                "cancel": true
+                "cancel": true,
+                "big": config.big ? true : false
             }, function(div, renderCallback) {
 
                 // append the "Pick" button

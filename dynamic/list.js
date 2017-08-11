@@ -816,7 +816,7 @@
                             if (sortColProperty)
                             {
                                 pagination["sort"] = {};
-                                var direction = data.order[0].dir == 'asc' ? 1 : -1;
+                                var direction = data.order[0].dir == 'asc' ? -1 : 1;
                                 if (Ratchet.isString((sortColProperty))) {
                                     pagination["sort"][sortColProperty] = direction;
                                 }

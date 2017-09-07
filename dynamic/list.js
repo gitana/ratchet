@@ -1068,6 +1068,11 @@
          */
         handleRowObject: function(_doc, obj)
         {
+            if (obj["id"])
+            {
+                obj["_original_id"] = obj["id"];
+            }
+
             obj["id"] = _doc;
         },
 

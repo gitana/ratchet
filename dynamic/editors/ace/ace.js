@@ -45,7 +45,7 @@
             return text;
         },
 
-        render: function(resource, container, callback)
+        render: function(resource, container, model, callback)
         {
             var self = this;
 

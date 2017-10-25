@@ -28,17 +28,6 @@
 
 		TEMPLATE: html,
 
-        prepareModel: function(el, model, callback)
-        {
-            var self = this;
-
-            this.base(el, model, function() {
-
-                callback();
-
-            });
-        },
-
         /**
          * @override
          */
@@ -123,38 +112,35 @@
                     {
                         console.log("No resource editor could be found for condition: " + JSON.stringify(condition));
 
-                        $(container).append("An editor handler could not be found.");
+                        $(container).append("An editor has not been configured for this type of attachment.<br/>Please contact your administrator and ask them to configure a compatible editor.");
 
-                        callback();
-                        return;
+                        model.noEditor = true;
+
+                        return callback();
                     }
 
                     // walk handlers and try to execute each until one works
-                    var exec = function(handlers, index)
+                    var exec = function(self, handlers, index, model)
                     {
-                        if (index == handlers.length)
+                        if (index === handlers.length)
                         {
                             // ran off the end, didn't work
                             alert("Doceditor failed to render");
 
-                            callback();
-
-                            return;
+                            return callback();
                         }
 
                         var handler = handlers[index];
                         if (handler.canOperate())
                         {
-                            handler.render(resource, container, function(err) {
+                            handler.render.call(self, resource, container, model, function(err) {
 
                                 if (!err) {
 
                                     self.handler = handler;
 
                                     // success
-                                    callback();
-
-                                    return;
+                                    return callback();
                                 }
                                 else {
 
@@ -162,17 +148,17 @@
                                     $(container).empty();
 
                                     // try next one
-                                    exec(handlers, index + 1);
+                                    exec.call(this, self, handlers, index + 1, model);
                                 }
                             });
                         }
                         else
                         {
                             // try next one
-                            exec(handlers, index + 1);
+                            exec.call(this, self, handlers, index + 1, model);
                         }
                     };
-                    exec(handlers, 0);
+                    exec.call(this, self, handlers, 0, model);
                 }
                 else
                 {

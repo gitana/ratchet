@@ -670,7 +670,7 @@
             });
 
             // if there are child ratchets, dispatch them
-            // don't fire until all are complete
+            // don't fire callback until all are complete
             if (_this.hasChildRatchets())
             {
                 // do these in parallel

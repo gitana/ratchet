@@ -133,7 +133,7 @@
                         var handler = handlers[index];
                         if (handler.canOperate())
                         {
-                            handler.render.call(self, resource, container, model, function(err) {
+                            handler.render(resource, container, model, self, function(err) {
 
                                 if (!err) {
 

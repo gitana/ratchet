@@ -45,7 +45,7 @@
             return text;
         },
 
-        render: function(resource, container, model, callback)
+        render: function(resource, container, model, gadget, callback)
         {
             var self = this;
 
@@ -59,8 +59,7 @@
                 if (err)
                 {
                     // resource does exist but it failed to load
-                    callback(err);
-                    return;
+                    return callback(err);
                 }
 
                 if (!text)

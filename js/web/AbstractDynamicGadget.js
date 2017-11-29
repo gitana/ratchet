@@ -60,6 +60,33 @@
                     Ratchet.Configuration.release(blockKeys[i]);
                 }
             };
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+            //
+            // DYNAMIC STORAGE
+            //
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+
+            this.store = function(key, value)
+            {
+                if (!self.storage && self.storageKey()) {
+                    self.storage = new Ratchet.Storage(self.storageKey());
+                }
+
+                return self.storage.poke(key, value);
+            };
+        },
+
+        storageKey: function()
+        {
+            var self = this;
+
+            var storageKey = self.config().storageKey;
+            if (!storageKey) {
+                storageKey = self.type;
+            }
+
+            return storageKey;
         },
 
         /**

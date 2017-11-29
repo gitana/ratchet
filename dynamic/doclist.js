@@ -472,8 +472,60 @@
 
                 self.formatSortDirectionSelector(model, el);
 
+                // support for toggle buttons
+                $(el).find(".list-toggler").off().click(function(e) {
+                    e.preventDefault();
+
+                    var isActive = $(this).attr("data-list-toggler-state") === "on";
+                    var togglerId = $(this).attr("data-list-toggler-id");
+
+                    var togglerMap = self.store("togglerMap") || {};
+                    if (isActive)
+                    {
+                        // deactivate
+                        delete togglerMap[togglerId];
+                    }
+                    else
+                    {
+                        // activate
+                        togglerMap[togglerId] = true;
+                    }
+
+                    // store back
+                    self.store("togglerMap", togglerMap);
+
+                    // fire events
+                    if (isActive)
+                    {
+                        // now deactivated
+                        self.onDeactivateToggler.call(self, this, togglerId);
+                    }
+                    else
+                    {
+                        // now activated
+                        self.onActivateToggler.call(self, this, togglerId);
+                    }
+                });
+
                 callback();
             });
+        },
+
+        onActivateToggler: function(element, id)
+        {
+        },
+
+        onDeactivateToggler: function(element, id)
+        {
+        },
+
+        isTogglerActive: function(id)
+        {
+            var self = this;
+
+            var togglerMap = self.store("togglerMap") || {};
+
+            return togglerMap[id];
         },
 
         clickButtonBarButton: function(event, model, button)

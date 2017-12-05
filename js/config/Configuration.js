@@ -246,7 +246,7 @@
                                             {
                                                 if (target[x].key === source[index].key)
                                                 {
-                                                    if (source[index].remove)
+                                                    if (source[index].remove || target[x].remove)
                                                     {
                                                         target.splice(x, 1);
                                                         handled = true;

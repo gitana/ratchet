@@ -989,6 +989,25 @@
         }
     };
 
+    Ratchet.map = function(array, fn)
+    {
+        var result = [];
+
+        if (array && array.length > 0)
+        {
+            for (var i = 0; i < array.length; i++)
+            {
+                if (fn) {
+                    result.push(fn(array[i]));
+                } else {
+                    result.push(array[i]);
+                }
+            }
+        }
+
+        return result;
+    };
+
     /**
      * Strips any excess whitespace characters from the given text.
      * Returns the trimmed string.

@@ -204,41 +204,45 @@
 
             self.beforePrepareModel(context, model, function() {
 
-                //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call prepareModel()");
-                self.prepareModel(context, model, function () {
-                    //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call substituteModelVariables()");
+                // allows dynamic configuration to be loaded from a remote location
+                self.loadDynamicConfiguration(context, model, function() {
 
-                    self.substituteModelVariables(context, model);
+                    //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call prepareModel()");
+                    self.prepareModel(context, model, function () {
+                        //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call substituteModelVariables()");
 
-                    //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call filterModel()");
-                    self.filterModel(model, function () {
+                        self.substituteModelVariables(context, model);
 
-                        //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call postFilterModel()");
-                        self.postFilterModel(model, function () {
+                        //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call filterModel()");
+                        self.filterModel(model, function () {
 
-                            //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
-                            self.render(context, model, function (el) {
-                                //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
-                                self.beforeSwap(context, model, function () {
-                                    //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
-                                    context.swap(function () {
-                                        //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
-                                        self.afterSwap($(self.ratchet().el)[0], model, context, function () {
-                                            //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
+                            //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call postFilterModel()");
+                            self.postFilterModel(model, function () {
 
-                                            // nothing more to do
+                                //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call render()");
+                                self.render(context, model, function (el) {
+                                    //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call beforeSwap()");
+                                    self.beforeSwap(context, model, function () {
+                                        //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call swap()");
+                                        context.swap(function () {
+                                            //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] call afterSwap()");
+                                            self.afterSwap($(self.ratchet().el)[0], model, context, function () {
+                                                //Ratchet.logDebug("Gadget [" + self.getGadgetType() + ", " + self.getGadgetId() + "] complete render chain");
 
-                                            if (callback)
-                                            {
-                                                callback();
-                                            }
+                                                // nothing more to do
 
+                                                if (callback)
+                                                {
+                                                    callback();
+                                                }
+
+                                            });
                                         });
                                     });
                                 });
                             });
-                        });
 
+                        });
                     });
                 });
             });
@@ -269,6 +273,11 @@
         },
 
         beforePrepareModel: function(el, model, callback)
+        {
+            callback();
+        },
+
+        loadDynamicConfiguration: function(el, model, callback)
         {
             callback();
         },

@@ -144,16 +144,6 @@
              * Internal method for merging JSON.  Elements from the source are merged into the target.
              * The target is modified as the method runs.
              *
-             * {
-             *   "a": "a1",
-             *   "b": "b1"
-             * }
-             *
-             * {
-             *   "a": "a2",
-             *   "c": "c2"
-             * }
-             *
              * @param source
              * @param target
              * @param replaceFirstLevel
@@ -252,6 +242,12 @@
                                                         handled = true;
                                                         break;
                                                     }
+                                                    else if (target[index].lock)
+                                                    {
+                                                        // target is locked, do not merge
+                                                        handled = true;
+                                                        break;
+                                                    }
                                                     else
                                                     {
                                                         target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel);
@@ -292,12 +288,19 @@
                                 });
                             }
 
-                            // merge object properties
+                            // walk object properties and merge
                             $.each(source, function(key) {
 
-                                if (isUndefined(target[key])) {
+                                if (isUndefined(target[key]))
+                                {
                                     target[key] = copyOf(source[key]);
-                                } else {
+                                }
+                                else if (isObject(target[key]) && target[key].lock)
+                                {
+                                    // skip since target is locked
+                                }
+                                else
+                                {
                                     target[key] = _doMerge(source[key], target[key], level + 1, replaceFirstLevel);
                                 }
 

@@ -543,6 +543,14 @@
 
                 self.formatSortDirectionSelector(model);
             }
+            else if (button.url)
+            {
+                var x = {
+                    "url": button.url
+                };
+                Ratchet.substituteVariables(x, model);
+                window.location.href = x.url;
+            }
             else if (button.action)
             {
                 // fire the action

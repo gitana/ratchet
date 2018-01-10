@@ -242,7 +242,7 @@
                                                         handled = true;
                                                         break;
                                                     }
-                                                    else if (target[index].lock)
+                                                    else if (target[x].lock)
                                                     {
                                                         // target is locked, do not merge
                                                         handled = true;

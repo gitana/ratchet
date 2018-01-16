@@ -359,6 +359,9 @@
             self._refreshHandler = self.refreshHandler(el);
             self.on(model.observables.refresh, self._refreshHandler);
 
+            // global refresh handler
+            self.on("global_refresh", self._refreshHandler);
+
             if (callback)
             {
                 callback();

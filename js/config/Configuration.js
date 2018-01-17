@@ -147,8 +147,9 @@
              * @param source
              * @param target
              * @param replaceFirstLevel
+             * @param noRemove
              */
-            this.merge = function(source, target, replaceFirstLevel)
+            this.merge = function(source, target, replaceFirstLevel, noRemove)
             {
                 var isUndefined = function(thing)
                 {
@@ -201,7 +202,7 @@
                     return copy;
                 };
 
-                var _doMerge = function(source, target, level, replaceFirstLevel)
+                var _doMerge = function(source, target, level, replaceFirstLevel, noRemove)
                 {
                     if (isArray(source))
                     {
@@ -238,9 +239,21 @@
                                                 {
                                                     if (source[index].remove || target[x].remove)
                                                     {
-                                                        target.splice(x, 1);
-                                                        handled = true;
-                                                        break;
+                                                        if (noRemove)
+                                                        {
+                                                            // skip
+
+                                                            // just make sure target is marked
+                                                            target[x].remove = true;
+                                                            handled = true;
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            target.splice(x, 1);
+                                                            handled = true;
+                                                            break;
+                                                        }
                                                     }
                                                     else if (target[x].lock)
                                                     {
@@ -250,7 +263,7 @@
                                                     }
                                                     else
                                                     {
-                                                        target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel);
+                                                        target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel, noRemove);
                                                         handled = true;
                                                         break;
                                                     }
@@ -260,7 +273,7 @@
                                     }
                                 }
 
-                                if (!handled && !source[index].remove)
+                                if (!handled && (!source[index].remove || source[index].remove && noRemove))
                                 {
                                     target.push(copyOf(source[index]));
                                 }
@@ -301,7 +314,7 @@
                                 }
                                 else
                                 {
-                                    target[key] = _doMerge(source[key], target[key], level + 1, replaceFirstLevel);
+                                    target[key] = _doMerge(source[key], target[key], level + 1, replaceFirstLevel, noRemove);
                                 }
 
                             });
@@ -324,7 +337,7 @@
                     return target;
                 };
 
-                _doMerge(source, target, 0, replaceFirstLevel);
+                _doMerge(source, target, 0, replaceFirstLevel, noRemove);
             };
         },
 

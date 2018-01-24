@@ -163,8 +163,8 @@
                 observable.set(sortDirection);
             }
 
-            // assume sort descending
-            sortDirection = -1;
+            // assume sort ascending
+            sortDirection = 1;
 
             // if the model specifies a default sort direction, we use that
             if (model.options && typeof(model.options.defaultSortDirection) !== "undefined")

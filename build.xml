@@ -151,6 +151,10 @@
                 <file name="web/AbstractEditor.js" />
                 <file name="web/EditorRegistry.js" />
 
+                <!-- Error Handling -->
+                <file name="error/ErrorHandlerRegistry.js" />
+                <file name="error/AbstractErrorHandler.js" />
+
             </filelist>
         </concat>
 
@@ -307,6 +311,10 @@
                 <file name="web/ViewerRegistry.js" />
                 <file name="web/AbstractEditor.js" />
                 <file name="web/EditorRegistry.js" />
+
+                <!-- Error Handling -->
+                <file name="error/ErrorHandlerRegistry.js" />
+                <file name="error/AbstractErrorHandler.js" />
 
             </filelist>
         </concat>

@@ -472,41 +472,6 @@
 
                 self.formatSortDirectionSelector(model, el);
 
-                // support for toggle buttons
-                $(el).find(".list-toggler").off().click(function(e) {
-                    e.preventDefault();
-
-                    var isActive = $(this).attr("data-list-toggler-state") === "on";
-                    var togglerId = $(this).attr("data-list-toggler-id");
-
-                    var togglerMap = self.store("togglerMap") || {};
-                    if (isActive)
-                    {
-                        // deactivate
-                        delete togglerMap[togglerId];
-                    }
-                    else
-                    {
-                        // activate
-                        togglerMap[togglerId] = true;
-                    }
-
-                    // store back
-                    self.store("togglerMap", togglerMap);
-
-                    // fire events
-                    if (isActive)
-                    {
-                        // now deactivated
-                        self.onDeactivateToggler.call(self, this, togglerId);
-                    }
-                    else
-                    {
-                        // now activated
-                        self.onActivateToggler.call(self, this, togglerId);
-                    }
-                });
-
                 callback();
             });
         },
@@ -770,6 +735,41 @@
                     self.afterActionComplete(actionId, actionContext, err, data);
                 });
 
+            });
+
+            // support for toggle buttons
+            $(nRow).find(".list-toggler").off().click(function(e) {
+                e.preventDefault();
+
+                var isActive = $(this).attr("data-list-toggler-state") === "on";
+                var togglerId = $(this).attr("data-list-toggler-id");
+
+                var togglerMap = self.store("togglerMap") || {};
+                if (isActive)
+                {
+                    // deactivate
+                    delete togglerMap[togglerId];
+                }
+                else
+                {
+                    // activate
+                    togglerMap[togglerId] = true;
+                }
+
+                // store back
+                self.store("togglerMap", togglerMap);
+
+                // fire events
+                if (isActive)
+                {
+                    // now deactivated
+                    self.onDeactivateToggler.call(self, this, togglerId);
+                }
+                else
+                {
+                    // now activated
+                    self.onActivateToggler.call(self, this, togglerId);
+                }
             });
         },
 

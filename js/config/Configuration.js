@@ -672,7 +672,7 @@
                 {
                     delete subs[listenerId];
 
-                    self.subscribersCount--;
+                    self.subscriptionsCount--;
                 }
             }
 
@@ -733,8 +733,8 @@
                 x.evaluatorTypes[typeId] = this.evaluatorTypes[typeId];
             }
 
-            x.subscriptions = [];
-            x.subscriptionCount = 0;
+            x.subscriptions = {};
+            x.subscriptionsCount = 0;
 
             if (!empty)
             {
@@ -744,6 +744,11 @@
 
                 for (var subscriptionId in this.subscriptions) {
                     x.subscriptions[subscriptionId] = this.subscriptions[subscriptionId];
+
+                    // increase subscriptions count
+                    for (var listenerId in x.subscriptions[subscriptionId]) {
+                        x.subscriptionsCount++;
+                    }
                 }
             }
 
@@ -757,8 +762,8 @@
         {
             this.blocks = {};
 
-            this.subscriptionCount = 0;
-            this.subscriptions = [];
+            this.subscriptions = {};
+            this.subscriptionsCount = 0;
         },
 
         /**
@@ -793,6 +798,11 @@
 
             for (var subscriptionId in configuration.subscriptions) {
                 this.subscriptions[subscriptionId] = configuration.subscriptions[subscriptionId];
+
+                // increase subscriptions count
+                for (var listenerId in this.subscriptions[subscriptionId]) {
+                    this.subscriptionsCount++;
+                }
             }
 
         },
@@ -813,6 +823,11 @@
 
             for (var subscriptionId in configuration.subscriptions) {
                 this.subscriptions[subscriptionId] = configuration.subscriptions[subscriptionId];
+
+                // increase subscriptions count
+                for (var listenerId in this.subscriptions[subscriptionId]) {
+                    this.subscriptionsCount++;
+                }
             }
         }
 

@@ -751,6 +751,17 @@
         },
 
         /**
+         * Empties all the blocks and subscriptions for this configuration.
+         */
+        empty: function()
+        {
+            this.blocks = {};
+
+            this.subscriptionCount = 0;
+            this.subscriptions = [];
+        },
+
+        /**
          * Reloads this configuration instance with a copy of the contents of another.
          *
          * @param configuration the configuration instance to import from
@@ -784,69 +795,30 @@
                 this.subscriptions[subscriptionId] = configuration.subscriptions[subscriptionId];
             }
 
+        },
+
+        accumulate: function(configuration)
+        {
+            for (var instanceId in configuration.evaluatorInstances) {
+                this.evaluatorInstances[instanceId] = configuration.evaluatorInstances[instanceId];
+            }
+
+            for (var typeId in configuration.evaluatorTypes) {
+                this.evaluatorTypes[typeId] = configuration.evaluatorTypes[typeId];
+            }
+
+            for (var blockKey in configuration.blocks) {
+                this.blocks[blockKey] = JSON.parse(JSON.stringify(configuration.blocks[blockKey]));
+            }
+
+            for (var subscriptionId in configuration.subscriptions) {
+                this.subscriptions[subscriptionId] = configuration.subscriptions[subscriptionId];
+            }
         }
 
     });
 
     Ratchet.Configuration = new configClass();
-
-    // commenting out because this isn't used by OneTeam
-    /*
-    // if we're running in a browser, we support specifying a config file via the "data-config" attribute on the
-    // SCRIPT tag...
-    var isBrowser = !!(typeof window !== 'undefined' && navigator && document);
-    if (isBrowser)
-    {
-        var scripts = function()
-        {
-            var scripts = null;
-
-            if (document)
-            {
-                scripts = document.getElementsByTagName('script');
-            }
-
-            return scripts;
-        };
-
-        var eachReverse = function(ary, func)
-        {
-            if (ary) {
-                var i;
-                for (i = ary.length - 1; i > -1; i -= 1) {
-                    if (ary[i] && func(ary[i], i, ary)) {
-                        break;
-                    }
-                }
-            }
-        };
-
-        // we're in a browser, so we support specifying "data-config" attributes on the script tag
-        eachReverse(scripts(), function (script) {
-
-            // look for a data-config attribute
-            var dataConfig = script.getAttribute("data-config");
-            if (dataConfig)
-            {
-                console.log("Found data-config attribute on script tag, loading config");
-
-                // found it, load config
-                $.ajax({
-                    type: "GET",
-                    dataType: "json",
-                    url: dataConfig,
-                    success: function(config) {
-                        Ratchet.Configuration.apply(config);
-                    },
-                    error: function(err) {
-                        alert(err.responseText);
-                    }
-                });
-            }
-
-        });
-    }
-    */
 
     return Ratchet.Configuration;
 

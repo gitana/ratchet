@@ -117,7 +117,7 @@
                         var mergePoint = null;
 
                         // we must have some DOM children in order for there to be a merge point
-                        if (self.children().size() > 0)
+                        if (self.children().length > 0)
                         {
                             // get rid of any white space nodes
                             var index = 0;
@@ -146,7 +146,7 @@
                             // AND if there is only one child
                             if (self[0].childNodes[0].nodeName.toLowerCase() == self.children()[0].nodeName.toLowerCase())
                             {
-                                if (self.children().size() == 1)
+                                if (self.children().length == 1)
                                 {
                                     // just one child node (which is a dom node), so use it as a merge point
                                     mergePoint = self.children()[0];

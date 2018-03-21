@@ -424,6 +424,9 @@
                         }
 
                     });
+
+                    // allow for custom sort of select
+                    self.sortFilterButtons(selectButton.buttons);
                 }
 
                 // if there is an "options-filter", update with value of currently selected value
@@ -870,6 +873,16 @@
 
                 }
             }
+        },
+
+        /**
+         * Extension point.
+         *
+         * @param buttons
+         */
+        sortFilterButtons: function(buttons)
+        {
+
         }
 
     }));

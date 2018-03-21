@@ -151,6 +151,8 @@
              */
             this.merge = function(source, target, replaceFirstLevel, noRemove)
             {
+                var self = this;
+
                 var isUndefined = function(thing)
                 {
                     return (typeof(thing) === "undefined");
@@ -225,6 +227,9 @@
 
                                 if (Ratchet.isObject(source[index]))
                                 {
+                                    // prep source object
+                                    self.prepObject(source[index]);
+
                                     if (!Ratchet.isUndefined(source[index].key))
                                     {
                                         // the source has a "key" field
@@ -235,6 +240,9 @@
                                         {
                                             if (Ratchet.isObject(target[x]))
                                             {
+                                                // prep target object
+                                                self.prepObject(target[x]);
+
                                                 if (target[x].key === source[index].key)
                                                 {
                                                     if (source[index].remove || target[x].remove)
@@ -291,8 +299,14 @@
                     }
                     else if (isObject(source))
                     {
+                        // prep source object
+                        self.prepObject(source);
+
                         if (isObject(target))
                         {
+                            // prep target object
+                            self.prepObject(target);
+
                             if (replaceFirstLevel && level === 1)
                             {
                                 // remove everything from target
@@ -828,6 +842,19 @@
                 for (var listenerId in this.subscriptions[subscriptionId]) {
                     this.subscriptionsCount++;
                 }
+            }
+        },
+
+        /**
+         * Extension point to allow for custom preparation of block objects.
+         *
+         * @param obj
+         */
+        prepObject: function(obj)
+        {
+            // support "action" as primary key into the thing
+            if (!obj.key && obj.action) {
+                obj.key = obj.action;
             }
         }
 

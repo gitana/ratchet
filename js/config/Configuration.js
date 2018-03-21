@@ -463,8 +463,9 @@
          * resulting JSON.
          *
          * @param context
+         * @param noRemove
          */
-        evaluate: function(context)
+        evaluate: function(context, noRemove)
         {
             var self = this;
 
@@ -574,7 +575,7 @@
                 Ratchet.logDebug("Applying block: " + blockKey + ": " + JSON.stringify(config));
                 */
 
-                self.merge(config, result, replace);
+                self.merge(config, result, replace, noRemove);
             }
             /*
             Ratchet.logDebug("Applied Configuration: " + JSON.stringify(result));

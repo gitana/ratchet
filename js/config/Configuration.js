@@ -153,55 +153,60 @@
             {
                 var self = this;
 
-                var isUndefined = function(thing)
-                {
-                    return (typeof(thing) === "undefined");
-                };
+                var isUndefined = Ratchet.isUndefined;
 
-                var isArray = function(thing)
-                {
-                    if (thing === true || thing === false || isUndefined(thing) || thing === null) {
-                        return false;
-                    }
+                var isArray = Ratchet.isArray;
 
-                    if (typeof(thing) === "object")
-                    {
-                        if (thing.push && thing.slice) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                };
-
-                var isObject = function(thing)
-                {
-                    if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing === null) {
-                        return false;
-                    }
-
-                    if (isArray(thing)) {
-                        return false;
-                    }
-
-                    if (typeof(thing) === "object")
-                    {
-                        return true;
-                    }
-
-                    return false;
-                };
+                var isObject = Ratchet.isObject;
 
                 var copyOf = function(thing)
                 {
-                    var copy = thing;
+                    var copy = null;
 
                     if (isArray(thing) || isObject(thing))
                     {
                         copy = JSON.parse(JSON.stringify(thing));
                     }
+                    else
+                    {
+                        copy = Ratchet.copyOf(thing);
+                    }
 
                     return copy;
+                };
+
+                var indexInArray = function(array, object) {
+
+                    for (var i = 0; i < array.length; i++) {
+
+                        if (Ratchet.isString(object)) {
+
+                            if (Ratchet.isString(array[i]) && array[i] == object)
+                            {
+                                return i;
+                            }
+
+                        } else if (Ratchet.isObject(object)) {
+
+                            if (object._key && array[i]._key) {
+                                if (array[i]._key == object._key) {
+                                    return i;
+                                }
+                            }
+                            if (object.key && array[i].key) {
+                                if (array[i].key == object.key) {
+                                    return i;
+                                }
+                            }
+                            if (object.action && array[i].action) {
+                                if (array[i].action == object.action) {
+                                    return i;
+                                }
+                            }
+                        }
+                    }
+
+                    return -1;
                 };
 
                 var _doMerge = function(source, target, level, replaceFirstLevel, noRemove)
@@ -219,73 +224,40 @@
                             // merge array elements
                             $.each(source, function(index) {
 
-                                var handled = false;
-
-                                // if the thing we're copying into the array is an object and has a "key" field
-                                // then perform a merge
-                                // otherwise, simply push into the array
-
-                                if (Ratchet.isObject(source[index]))
+                                var x = indexInArray(target, source[index]);
+                                if (x === -1)
                                 {
-                                    // prep source object
-                                    self.prepObject(source[index]);
-
-                                    if (!Ratchet.isUndefined(source[index].key))
-                                    {
-                                        // the source has a "key" field
-
-                                        // now walk the target array elements and find a "key"
-                                        // if the keys match, then merge
-                                        for (var x = 0; x < target.length; x++)
-                                        {
-                                            if (Ratchet.isObject(target[x]))
-                                            {
-                                                // prep target object
-                                                self.prepObject(target[x]);
-
-                                                if (target[x].key === source[index].key)
-                                                {
-                                                    if (source[index].remove || target[x].remove)
-                                                    {
-                                                        if (noRemove)
-                                                        {
-                                                            // skip
-
-                                                            // just make sure target is marked
-                                                            target[x].remove = true;
-                                                            handled = true;
-                                                            break;
-                                                        }
-                                                        else
-                                                        {
-                                                            target.splice(x, 1);
-                                                            handled = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                    else if (target[x].lock)
-                                                    {
-                                                        // target is locked, do not merge
-                                                        handled = true;
-                                                        break;
-                                                    }
-                                                    else
-                                                    {
-                                                        target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel, noRemove);
-                                                        handled = true;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    if (!source[index].remove || source[index].remove && noRemove) {
+                                        target.push(copyOf(source[index]));
                                     }
                                 }
-
-                                if (!handled && (!source[index].remove || source[index].remove && noRemove))
+                                else
                                 {
-                                    target.push(copyOf(source[index]));
-                                }
+                                    // we found a possible match
 
+                                    if (source[index].remove || target[x].remove)
+                                    {
+                                        if (noRemove)
+                                        {
+                                            // skip
+
+                                            // just make sure target is marked
+                                            target[x].remove = true;
+                                        }
+                                        else
+                                        {
+                                            target.splice(x, 1);
+                                        }
+                                    }
+                                    else if (target[x].lock)
+                                    {
+                                        // target is locked, do not merge
+                                    }
+                                    else
+                                    {
+                                        target[x] = _doMerge(source[index], target[x], level+1, replaceFirstLevel, noRemove);
+                                    }
+                                }
                             });
                         }
                         else
@@ -299,14 +271,8 @@
                     }
                     else if (isObject(source))
                     {
-                        // prep source object
-                        self.prepObject(source);
-
                         if (isObject(target))
                         {
-                            // prep target object
-                            self.prepObject(target);
-
                             if (replaceFirstLevel && level === 1)
                             {
                                 // remove everything from target
@@ -843,19 +809,6 @@
                 for (var listenerId in this.subscriptions[subscriptionId]) {
                     this.subscriptionsCount++;
                 }
-            }
-        },
-
-        /**
-         * Extension point to allow for custom preparation of block objects.
-         *
-         * @param obj
-         */
-        prepObject: function(obj)
-        {
-            // support "action" as primary key into the thing
-            if (!obj.key && obj.action) {
-                obj.key = obj.action;
             }
         }
 

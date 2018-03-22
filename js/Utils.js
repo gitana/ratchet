@@ -139,7 +139,17 @@
             return false;
         }
 
-        return (typeof(thing) === "object") && (typeof(thing.length) === "undefined");
+        /*
+        if (Ratchet.isArray(thing)) {
+            return false;
+        }
+
+        if (typeof(thing) === "object") {
+            return true;
+        }
+        */
+
+        return thing != null && typeof thing === 'object' && Ratchet.isArray(thing) === false;
     };
 
     Ratchet.copyOf = function(thing, includeFunctions)
@@ -352,15 +362,15 @@
         return text;
     };
 
-    Ratchet.merge = function(source, target, fns)
+    Ratchet.merge = function(source, target, fns, markModified, retainOriginal)
     {
         if (!fns) {
             fns = {};
         }
 
-        // by default, for arrays, we compare on key "_key"
-        if (!fns.existsInArray) {
-            fns.existsInArray = function(array, object) {
+        // by default, for arrays, we compare on key - "_key", "key" or "action"
+        if (!fns.indexInArray) {
+            fns.indexInArray = function(array, object) {
 
                 for (var i = 0; i < array.length; i++) {
 
@@ -368,21 +378,30 @@
 
                         if (Ratchet.isString(array[i]) && array[i] == object)
                         {
-                            return true;
+                            return i;
                         }
 
                     } else if (Ratchet.isObject(object)) {
 
                         if (object._key && array[i]._key) {
                             if (array[i]._key == object._key) {
-                                return true;
+                                return i;
                             }
                         }
-
+                        if (object.key && array[i].key) {
+                            if (array[i].key == object.key) {
+                                return i;
+                            }
+                        }
+                        if (object.action && array[i].action) {
+                            if (array[i].action == object.action) {
+                                return i;
+                            }
+                        }
                     }
                 }
 
-                return false;
+                return -1;
             };
         }
 
@@ -404,11 +423,15 @@
                     // merge array elements
                     $.each(source, function(index) {
 
-                        var existsInArray = fns.existsInArray(target, source[index]);
-                        if (!existsInArray)
+                        var indexInArray = fns.indexInArray(target, source[index]);
+                        if (indexInArray === -1)
                         {
                             var theCopy = copyOf(source[index]);
                             target.push(theCopy);
+                        }
+                        else
+                        {
+                            target[indexInArray] = merge(source[index], target[indexInArray]);
                         }
                     });
                 }
@@ -422,16 +445,40 @@
             {
                 if (isObject(target))
                 {
+                    var modified = false;
+
                     // merge object properties
                     $.each(source, function(key) {
 
                         if (isUndefined(target[key])) {
                             target[key] = copyOf(source[key]);
+                            modified = true;
                         } else {
+                            var originalTargetKey = target[key];
                             target[key] = merge(source[key], target[key]);
+
+                            if (originalTargetKey !== target[key]) {
+                                modified = true;
+
+                                if (retainOriginal)
+                                {
+                                    if (isArray(originalTargetKey) || isObject(originalTargetKey))
+                                    {
+                                        // skip, we only want to do this for scalar values
+                                    }
+                                    else
+                                    {
+                                        target[key + "_original"] = originalTargetKey;
+                                    }
+                                }
+                            }
                         }
 
                     });
+
+                    if (markModified && modified) {
+                        target._modified = true;
+                    }
                 }
                 else
                 {

@@ -348,7 +348,7 @@
             if (block.evaluator && !this.evaluatorTypes[block.evaluator])
             {
                 Ratchet.logError("Block added with evaluator type: " + block.evaluator + ", but this evaluator does not exist");
-                throw new Error("Unknown configuration block evaluator: " + block.evaluator);
+                return;
             }
 
             // generate a key for this block and register

@@ -57,3 +57,24 @@ button.btn-lg.list-button-sort-direction-selector
 {
     margin-right: -5px;
 }
+
+.single-document-action-holder > ul
+{
+    list-style-type: none;
+}
+
+.single-document-action-holder .action-icon
+{
+    font-size: 20px;
+    color: #000;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.single-document-action-holder
+{
+    text-align: right;
+    padding-right: 8px;
+}

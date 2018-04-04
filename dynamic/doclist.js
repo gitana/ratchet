@@ -601,6 +601,9 @@
 
             var value = this.base();
 
+            var project = self.observable("project").get();
+            var user = self.observable("user").get();
+
             if (item.key == "actions") {
 
                 var id = "list-button-single-document-select-" + row.id;
@@ -611,20 +614,9 @@
 
                 // action drop down
                 var MODAL_TEMPLATE = ' \
-                    <div> \
-                        <div class="dropdown single-document-action-dropdown">\
-                            <button id="' + id + '" class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
-
-                    if (item.selector && item.selector.iconClass) {
-                        MODAL_TEMPLATE += '<i class="' + item.selector.iconClass + ' icon-black"></i>';
-                    }
-                    MODAL_TEMPLATE += title;
-                    MODAL_TEMPLATE += ' \
-                                <span class="caret"></span> \
-                            </button> \
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="' + id + '"> \
-                            </ul> \
-                        </div> \
+                    <div class="single-document-action-holder">\
+                        <ul role="menu" aria-labelledby="' + id + '"> \
+                        </ul> \
                     </div> \
                 ';
 
@@ -634,53 +626,63 @@
                 var selectorGroup = model["selectorGroups"]["single-document-action-selector-group"];
                 $.each(selectorGroup.actions, function(index, selectorGroupItem) {
 
+                    var link = selectorGroupItem.link;
                     var actionId = selectorGroupItem.action;
-                    var order = selectorGroupItem.order;
+                    var iconClass = selectorGroupItem.iconClass;
+                    //var order = selectorGroupItem.order;
 
-                    // retrieve the action configuration
-                    var actionConfig = Actions.config(actionId);
-                    if (!actionConfig)
-                    {
-                        // skip this one
-                        Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: single-document-action-selector-group");
+                    var id = row.id;
+                    if (!id && row._doc) {
+                        id = row._doc;
                     }
-                    else
+                    if (!id && row.getId) {
+                        id = row.getId();
+                    }
+
+                    var html = null;
+
+                    if (link)
                     {
-                        var title = actionConfig.title;
-                        if (!title) {
-                            title = "Unknown Action Title";
-                        }
-                        if (selectorGroupItem.title) {
-                            title = selectorGroupItem.title;
-                        }
-
-                        var id = row.id;
-                        if (!id && row._doc) {
-                            id = row._doc;
-                        }
-                        if (!id && row.getId) {
-                            id = row.getId();
-                        }
-
-                        var html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
-                        if (actionConfig.iconClass) {
-                            html += "<i class='" + actionConfig.iconClass + "'></i>";
-                        }
-                        html += "&nbsp;";
-                        html += title;
-                        html += "</a>";
-
-                        if (selectorGroupItem.dropdown || Ratchet.isUndefined(selectorGroupItem.dropdown))
+                        if (window.Handlebars)
                         {
-                            $(template).find(".dropdown-menu").append("<li>" + html + "</li>");
+                            var linkModel = {
+                                "document": row,
+                                "project": project,
+                                "user": user
+                            };
+
+                            var templateFunction = Handlebars.compile(link);
+                            link = templateFunction(linkModel);
+                        }
+
+                        html = "<a href='" + link + "' list-row-id='" + id + "'>";
+                        html += "<i class='action-icon btn btn-default " + iconClass + "'></i>";
+                        html += "</a>";
+                    }
+                    else if (actionId)
+                    {
+                        // retrieve the action configuration
+                        var actionConfig = Actions.config(actionId);
+                        if (!actionConfig)
+                        {
+                            // skip this one
+                            Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: single-document-action-selector-group");
                         }
                         else
                         {
-                            $(template).append(html);
+                            html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
+                            if (actionConfig.iconClass) {
+                                html += "<i class='" + actionConfig.iconClass + "'></i>";
+                            }
+                            html += "</a>";
                         }
-
-
                     }
+
+                    if (html)
+                    {
+                        $(template).find("ul").append("<li>" + html + "</li>");
+                    }
+
                 });
 
                 return $(template).outerHTML();

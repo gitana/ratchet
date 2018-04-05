@@ -353,6 +353,7 @@
             if (self._refreshHandler)
             {
                 self.off(model.observables.refresh, self._refreshHandler);
+                self.off("global_refresh", self._refreshHandler);
             }
 
             // bind a new one

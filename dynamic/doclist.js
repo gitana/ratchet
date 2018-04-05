@@ -656,7 +656,7 @@
                         }
 
                         html = "<a href='" + link + "' list-row-id='" + id + "'>";
-                        html += "<i class='action-icon btn btn-default " + iconClass + "'></i>";
+                        html += "<i class='action-icon " + iconClass + "'></i>";
                         html += "</a>";
                     }
                     else if (actionId)

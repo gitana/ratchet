@@ -470,8 +470,6 @@
                 }
             }
 
-            //orderedBlockKeys.sort();
-
             // sort the order of the block keys according to the "order" property
             orderedBlockKeys.sort(function(a, b) {
 

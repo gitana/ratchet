@@ -15,10 +15,11 @@
          * @param engine
          * @param context
          * @param condition (optional)
+         * @param observableHolder (optional)
          *
          * @return {Boolean}
          */
-        evaluate: function(engine, context, condition)
+        evaluate: function(engine, context, condition, observableHolder)
         {
             return true;
         },

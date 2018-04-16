@@ -430,10 +430,15 @@
          *
          * @param context
          * @param noRemove
+         * @param observableHolder
          */
-        evaluate: function(context, noRemove)
+        evaluate: function(context, noRemove, observableHolder)
         {
             var self = this;
+
+            if (!observableHolder && window.Ratchet) {
+                observableHolder = window.Ratchet;
+            }
 
             // figure out which blocks to apply
             var orderedBlockKeys = [];
@@ -459,7 +464,7 @@
                     else
                     {
                         // evaluate
-                        var valid = evaluatorInstance.evaluate(self, context, block.condition);
+                        var valid = evaluatorInstance.evaluate(self, context, block.condition, observableHolder);
                         if (valid)
                         {
                             // valid, so keep it

@@ -129,14 +129,14 @@
                     if (model["selectorGroups"]["sort-selector-group"]["fields"]) {
                         if (model["selectorGroups"]["sort-selector-group"]["fields"].length > 0) {
                             model.buttons.push({
-                                    "key": "sort-direction-selector",
-                                    "align": "right"
-                                },{
-                                    "key": "sort-selector",
-                                    "title": "Sort...",
-                                    "align": "right",
-                                    //"iconClass": "icon-pencil",
-                                    "buttons": []
+                                "key": "sort-direction-selector",
+                                "align": "right"
+                            },{
+                                "key": "sort-selector",
+                                "title": "Sort...",
+                                "align": "right",
+                                //"iconClass": "icon-pencil",
+                                "buttons": []
                             });
                         }
                     }
@@ -154,57 +154,6 @@
                                 "align": "right"//,
                                 //"iconClass": "icon-pencil"
                             });
-                        }
-                    }
-                }
-            }
-
-            // add a column to the table for ACTIONS if configured
-            if (model["selectorGroups"]) {
-                if (model["selectorGroups"]["single-document-action-selector-group"]) {
-                    if (model["selectorGroups"]["single-document-action-selector-group"]["actions"]) {
-                        if (model["selectorGroups"]["single-document-action-selector-group"]["actions"].length > 0) {
-
-                            /*
-                            // actions button
-                            model.buttons.push({
-                                "columns": [{
-                                    "key": "actions",
-                                    "title": "Actions",
-                                    "selector": {
-                                        "title": "Actions..."
-                                    }
-                                }]
-                            });
-                            */
-
-                            // ensure actions column
-                            var actionColumn = null;
-                            if (model.columns && model.columns.length > 0)
-                            {
-                                for (var z = 0; z < model.columns.length; z++)
-                                {
-                                    if (model.columns[z].key === "actions")
-                                    {
-                                        actionColumn = model.columns[z];
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!actionColumn)
-                            {
-                                actionColumn = {
-                                    "key": "actions",
-                                    "title": "Actions"
-                                };
-                                model.columns.push(actionColumn);
-                            }
-                            if (!actionColumn.selector) {
-                                actionColumn.selector = {
-                                    "title": "Actions..."
-                                };
-                            }
                         }
                     }
                 }
@@ -234,6 +183,48 @@
                             model.buttons.push(button);
                         }
                     }
+                }
+            }
+
+            // add a column to the table for ACTIONS if configured?
+            if (model.actions)
+            {
+                if (!model["selectorGroups"]) {
+                    model["selectorGroups"] = {};
+                }
+                if (!model["selectorGroups"]["single-document-action-selector-group"]) {
+                    model["selectorGroups"]["single-document-action-selector-group"] = {};
+                }
+                if (!model["selectorGroups"]["single-document-action-selector-group"]["actions"]) {
+                    model["selectorGroups"]["single-document-action-selector-group"]["actions"] = [];
+                }
+
+                // ensure actions column
+                var actionColumn = null;
+                if (model.columns && model.columns.length > 0)
+                {
+                    for (var z = 0; z < model.columns.length; z++)
+                    {
+                        if (model.columns[z].key === "actions")
+                        {
+                            actionColumn = model.columns[z];
+                            break;
+                        }
+                    }
+                }
+
+                if (!actionColumn)
+                {
+                    actionColumn = {
+                        "key": "actions",
+                        "title": "Actions"
+                    };
+                    model.columns.push(actionColumn);
+                }
+                if (!actionColumn.selector) {
+                    actionColumn.selector = {
+                        "title": "Actions..."
+                    };
                 }
             }
 
@@ -607,10 +598,6 @@
             if (item.key == "actions") {
 
                 var id = "list-button-single-document-select-" + row.id;
-                var title = "Actions...";
-                if (item.selector && item.selector.title) {
-                    title = item.selector.title;
-                }
 
                 // action drop down
                 var MODAL_TEMPLATE = ' \
@@ -624,6 +611,15 @@
 
                 // load actions from the "single-document-action-selector-group" configuration
                 var selectorGroup = model["selectorGroups"]["single-document-action-selector-group"];
+                if (!selectorGroup) {
+                    selectorGroup = {};
+                }
+                if (!selectorGroup.actions) {
+                    selectorGroup.actions = [];
+                }
+                selectorGroup = JSON.parse(JSON.stringify(selectorGroup));
+                self.populateSingleDocumentActions(row, item, model, context, selectorGroup);
+
                 $.each(selectorGroup.actions, function(index, selectorGroupItem) {
 
                     var link = selectorGroupItem.link;
@@ -883,6 +879,20 @@
          * @param buttons
          */
         sortFilterButtons: function(buttons)
+        {
+
+        },
+
+        /**
+         * Extension point.
+         *
+         * @param row
+         * @param item
+         * @param model
+         * @param context
+         * @param selectorGroup
+         */
+        populateSingleDocumentActions: function(row, item, model, context, selectorGroup)
         {
 
         }

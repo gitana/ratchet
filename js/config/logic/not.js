@@ -8,10 +8,11 @@
          * @param engine
          * @param context
          * @param condition
+         * @param observableHolder
          *
          * @return {Boolean}
          */
-        evaluate: function(engine, context, condition)
+        evaluate: function(engine, context, condition, observableHolder)
         {
             var val = false;
 
@@ -30,7 +31,7 @@
                 else
                 {
                     // evaluate
-                    var valid = evaluatorInstance.evaluate(engine, context, childCondition);
+                    var valid = evaluatorInstance.evaluate(engine, context, childCondition, observableHolder);
                     if (!valid)
                     {
                         val = true;

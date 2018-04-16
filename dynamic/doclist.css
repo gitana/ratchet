@@ -63,6 +63,11 @@ button.btn-lg.list-button-sort-direction-selector
     list-style-type: none;
 }
 
+.single-document-action-holder > ul > li
+{
+    display: inline-block;
+}
+
 .single-document-action-holder .action-icon
 {
     font-size: 20px;

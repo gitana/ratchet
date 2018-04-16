@@ -947,6 +947,10 @@
                     tableConfig["columns"][1]["visible"] = false;
                 }
 
+                tableConfig.drawCallback = function(settings) {
+                    self.handleDrawCallback.call(self, el, model, this, settings);
+                };
+
                 // RENDER THE TABLE
                 self.oTable = $(el).find("table").dataTable(tableConfig);
                 $(self.oTable).on("length.dt", function(e, settings, len) {
@@ -1339,6 +1343,10 @@
                     }
                 }
             }
+        },
+
+        handleDrawCallback: function(el, model, table, settings) {
+
         },
 
         handleLengthChange: function(el, model, table, len) {

@@ -217,7 +217,7 @@
                 {
                     actionColumn = {
                         "key": "actions",
-                        "title": "Actions"
+                        "title": ""
                     };
                     model.columns.push(actionColumn);
                 }

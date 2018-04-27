@@ -16,7 +16,7 @@
         {
             var val = false;
 
-            if (context && condition)
+            if (condition)
             {
                 var childEvaluator = condition.evaluator;
                 var childCondition = condition.condition;

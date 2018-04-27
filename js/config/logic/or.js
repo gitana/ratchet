@@ -16,7 +16,7 @@
         {
             var val = false;
 
-            if (context && condition)
+            if (condition)
             {
                 // copy into an array
                 var conditions = [];

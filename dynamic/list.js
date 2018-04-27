@@ -811,9 +811,23 @@
                     // apply sort to pagination
                     if (data.order && data.order.length > 0)
                     {
+                        var offset = 0;
+                        if (model.icon) {
+                            offset++;
+                        }
+                        if (model.checkbox) {
+                            offset++;
+                        }
+
                         var sortColIndex = data.order[0].column;
-                        if (sortColIndex > 1) {
-                            var sortColProperty = model.columns[sortColIndex - 2].property;
+                        if (sortColIndex > -1) {
+                            sortColIndex = sortColIndex - offset;
+                        }
+                        if (sortColIndex > -1) {
+                            var sortColProperty = model.columns[sortColIndex].sortProperty;
+                            if (!sortColProperty) {
+                                sortColProperty = model.columns[sortColIndex].property;
+                            }
                             if (sortColProperty)
                             {
                                 pagination["sort"] = {};
@@ -821,8 +835,8 @@
                                 if (Ratchet.isString((sortColProperty))) {
                                     pagination["sort"][sortColProperty] = direction;
                                 }
-                                if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex - 2].sortingExpression) {
-                                    pagination["sort"][model.columns[sortColIndex - 2].sortingExpression] = direction;
+                                if (Ratchet.isFunction(sortColProperty) && model.columns[sortColIndex].sortingExpression) {
+                                    pagination["sort"][model.columns[sortColIndex].sortingExpression] = direction;
                                 }
                             }
                         }

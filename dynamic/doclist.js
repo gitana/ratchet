@@ -667,9 +667,7 @@
                         else
                         {
                             html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
-                            if (actionConfig.iconClass) {
-                                html += "<i class='" + actionConfig.iconClass + "'></i>";
-                            }
+                            html += "<i class='action-icon " + iconClass + "'></i>";
                             html += "</a>";
                         }
                     }
@@ -707,7 +705,7 @@
                 var actionContext = {};
                 actionContext.ratchet = self.ratchet();
                 actionContext.model = model;
-                actionContext.data = item;
+                actionContext.data = [item];
 
                 // reference to the current gadget
                 actionContext.gadget = self;

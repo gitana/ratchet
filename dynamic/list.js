@@ -255,6 +255,22 @@
                     model.length = length;
                 }
 
+                if (self.config().removeSelectedButton)
+                {
+                    model.checkbox = false;
+                    model.radio = false;
+                }
+
+                if (self.config().hideCheckbox)
+                {
+                    model.checkbox = false;
+                }
+
+                if (self.config().hideRadio)
+                {
+                    model.radio = false;
+                }
+
                 callback();
             });
         },
@@ -393,7 +409,6 @@
                     }
                     tableConfig.language.zeroRecords = model.options.zeroRecords;
                 }
-
             }
 
             // bootstrap
@@ -817,6 +832,8 @@
                         }
                         if (model.checkbox) {
                             offset++;
+                        } else if (model.radio) {
+                            offset++;
                         }
 
                         var sortColIndex = data.order[0].column;
@@ -951,16 +968,6 @@
                     $.extend(true, tableConfig, model.tableConfig);
                 }
 
-                if (model.hideCheckbox) {
-                    tableConfig["columns"][0]["visible"] = false;
-                } else if (model.hideRadio) {
-                    tableConfig["columns"][0]["visible"] = false;
-                }
-
-                if (model.hideIcon) {
-                    tableConfig["columns"][1]["visible"] = false;
-                }
-
                 tableConfig.drawCallback = function(settings) {
                     self.handleDrawCallback.call(self, el, model, this, settings);
                 };
@@ -970,8 +977,6 @@
                 $(self.oTable).on("length.dt", function(e, settings, len) {
                     self.handleLengthChange.call(self, el, model, self.oTable, len);
                 });
-
-
 
                 // select/unselect-all checkbox
                 $(el).find(".list-check-box-all").click(function(e) {
@@ -1052,6 +1057,16 @@
                 // all done - fire callback
                 //callback();
             });
+
+            if (this.config().removeSelectedButton)
+            {
+                $(".list-button-multi-documents-action-selector", el).hide();
+            }
+            if (this.config().removeSortButtons)
+            {
+                $(".list-button-sort-direction-selector", el).hide();
+                $(".list-button-sort-selector", el).hide();
+            }
         },
 
         /**

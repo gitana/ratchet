@@ -1445,6 +1445,9 @@
                 $(el).find(".dataTables_info").hide();
             }
 
+            // let columns resize one last time
+            $(table).DataTable().columns.adjust().draw();
+
             this.initComplete(el, model, table, oSettings, json);
 
             callback();

@@ -969,6 +969,11 @@
                 }
 
                 tableConfig.drawCallback = function(settings) {
+
+                    setTimeout(function() {
+                        $(window).trigger("resize");
+                    }, 250);
+
                     self.handleDrawCallback.call(self, el, model, this, settings);
                 };
 

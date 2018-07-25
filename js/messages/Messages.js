@@ -69,8 +69,7 @@
          */
         using: function(locale, configurationService)
         {
-            // all of the messages for this locale
-            var messages = this.messages(locale, configurationService);
+            var other = this;
 
             return {
 
@@ -83,7 +82,15 @@
                  */
                 message: function(key, values)
                 {
-                    var message = messages;
+                    var self = this;
+
+                    // all of the messages for this locale
+                    var messageMap = other.messages(locale, configurationService);
+                    if (!messageMap) {
+                        messageMap = {};
+                    }
+
+                    var message = messageMap;
 
                     // allow for dot-delimited (.) separators in string
                     var ids = key.split(".");

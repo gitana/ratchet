@@ -77,6 +77,27 @@
             };
         },
 
+        browserLocale: function()
+        {
+            return "en_US";
+        },
+
+        msg: function(key)
+        {
+            var self = this;
+
+            if (!self._messages) {
+                self._messages = Ratchet.Messages.using(self.browserLocale(), Ratchet.Configuration);
+            }
+
+            var value = self._messages.message(key);
+            if (!value) {
+                value = self._messages.message("tokens." + key);
+            }
+
+            return value;
+        },
+
         storageKey: function()
         {
             var self = this;

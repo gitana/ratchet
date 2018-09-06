@@ -10,7 +10,7 @@
         "jquery": "*",
         "jquery-tmpl": "*",
         "handlebars": "*",
-        "bootstrap": "*"
+        "bootstrap": "*",
         "gitana": "*",
 		"alpaca": "*"
     },

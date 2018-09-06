@@ -13,7 +13,7 @@
     <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
 
     <!-- jquery -->
-    <script type="text/javascript" src="../lib/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="../../../lib/jquery-latest.min.js"></script>
 
     <!-- samples -->
     <script type="text/javascript" src="../js/example.js"></script>
@@ -24,25 +24,10 @@
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap-theme.css"/>
 
     <!-- START_RATCHET_JAVASCRIPT -->
-    <!-- third party -->
-    <script type="text/javascript" src="../../thirdparty/base.js"></script>
-    <script type="text/javascript" src="../../thirdparty/json2.js"></script>
-    <!--<script type="text/javascript" src="../../thirdparty/jquery.hashchange.js"></script>-->
-    <script type="text/javascript" src="../../thirdparty/jquery.hashchange.js"></script>
-    <script type="text/javascript" src="../../thirdparty/form2object.js"></script>
     <!-- ratchet -->
-    <script type="text/javascript" src="../../js/Ratchet.js"></script>
-    <script type="text/javascript" src="../../js/Utils.js"></script>
-    <script type="text/javascript" src="../../js/Observable.js"></script>
-    <script type="text/javascript" src="../../js/Observables.js"></script>
-    <script type="text/javascript" src="../../js/ScopedObservables.js"></script>
-    <script type="text/javascript" src="../../js/RenderContext.js"></script>
-    <script type="text/javascript" src="../../js/Gadget.js"></script>
-    <script type="text/javascript" src="../../js/GadgetRegistry.js"></script>
-    <script type="text/javascript" src="../../js/TemplateEngineRegistry.js"></script>
-    <script type="text/javascript" src="../../js/BaseTemplateEngine.js"></script>
-    <script type="text/javascript" src="../../js/jQueryAdapter.js"></script>
-    <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
+    <script type="text/javascript" src="../../components/ratchet/ratchet.js"></script>
+    <!-- <script type="text/javascript" src="../../build/package/js/ratchet.js"></script> -->
+
     <!-- END_RATCHET_JAVASCRIPT -->
 
     <script type="text/javascript" id="sample-code">
@@ -51,10 +36,10 @@
 
             $('#sample').ratchet(
                     function() {
-
+                        console.log('hi')
                         this.get("/", function(el) {
 
-                            el.html("Here is some <span>text</span>").swap();
+                            el.html("Here is some <span>text</span>");
 
                         });
 
@@ -111,4 +96,3 @@
 </body>
 
 </html>
-

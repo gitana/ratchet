@@ -1,0 +1,15 @@
+{
+    "name": "ratchet",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "webpack --colors --progress --config webpack.config.js"
+    },
+    "devDependencies": {
+        "clean-webpack-plugin": "^0.1.19",
+        "copy-webpack-plugin": "^4.5.2",
+        "uglifyjs-webpack-plugin": "^1.3.0",
+        "webpack": "^4.17.2",
+        "webpack-cli": "^3.1.0"
+    },
+    "dependencies": {}
+}

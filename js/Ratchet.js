@@ -302,8 +302,8 @@
                 // make sure this only gets applied once
                 if (!HASH_CHANGE_APPLIED)
                 {
-                    $(window).hashchange(function(e) {
-
+                    $(window).on("hashchange", function(e) {
+                        debugger;
                         var hash = self.autoAdjustHash.call(self, location.hash);
                         if (hash !== location.hash)
                         {

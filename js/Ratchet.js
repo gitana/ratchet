@@ -1,8 +1,6 @@
 /*jshint -W004 */ // duplicate variables
 (function($)
 {
-    var HASH_CHANGE_APPLIED = false;
-
     Ratchet = Base.extend(
     {
         /**
@@ -299,36 +297,29 @@
             // auto-updates the URI being dispatched from the hash
             if (self.isBoundToWindowLocation())
             {
-                // make sure this only gets applied once
-                if (!HASH_CHANGE_APPLIED)
-                {
-                    $(window).on("hashchange", function(e) {
-                        debugger;
-                        var hash = self.autoAdjustHash.call(self, location.hash);
-                        if (hash !== location.hash)
+                Ratchet.Hash.register(function(e) {
+
+                    var hash = self.autoAdjustHash.call(self, window.location.hash);
+                    if (hash !== window.location.hash)
+                    {
+                        Ratchet.Hash.setHash(hash);
+                        return;
+                    }
+
+                    self.dispatchUri(hash, function(err, primary) {
+                        // completed
+
+                        // allows for callback to be stored temporarily when a run() is called and the hashlink
+                        // is toggled as a means of dispatching (see run method)
+                        if (Ratchet.tempCallback)
                         {
-                            window.location.href = hash;
-                            return;
+                            Ratchet.tempCallback(err, primary);
                         }
 
-                        self.dispatchUri(hash, function(err, primary) {
-                            // completed
+                        Ratchet.tempCallback = null;
 
-                            // allows for callback to be stored temporarily when a run() is called and the hashlink
-                            // is toggled as a means of dispatching (see run method)
-                            if (Ratchet.tempCallback)
-                            {
-                                Ratchet.tempCallback(err, primary);
-                            }
-
-                            Ratchet.tempCallback = null;
-
-                        });
                     });
-
-                    // only allow the hash change handler to be applied once
-                    HASH_CHANGE_APPLIED = true;
-                }
+                });
             }
         },
 
@@ -1177,12 +1168,12 @@
                 }
 
                 // change hash which triggers the hashchange handler
-                window.location.hash = "#" + config.uri;
+                Ratchet.Hash.setHash("#" + config.uri);
 
                 // or if we are meant to force change it, we do that here
                 if (forceTriggerHashChange)
                 {
-                    $(window).hashchange();
+                    Ratchet.Hash.trigger();
                 }
             }
             else

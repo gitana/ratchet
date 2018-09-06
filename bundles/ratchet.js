@@ -1,14 +1,12 @@
 (function() {
-    // require("imports-loader?Base=../thirdparty/base.js!../js/Ratchet.js");
-    // require("../thirdparty/base");
-    require('jQuery');
 
+    require("../thirdparty/base");
     require("../thirdparty/json2");
-    // require("../thirdparty/jquery.hashchange");
     require("../thirdparty/form2object");
 
     require("../js/Ratchet");
     require("../js/Utils");
+    require("../js/Hash");
     require("../js/Observable");
     require("../js/Observables");
     require("../js/ScopedObservables");
@@ -22,4 +20,5 @@
     require("../js/Events");
     require("../js/jQueryAdapter");
     require("../js/DefaultRegionResolver");
+
 })();

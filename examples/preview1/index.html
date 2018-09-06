@@ -5,101 +5,62 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Gitana Ratchet MVC - Preview #1</title>
 
-    <!-- code prettifier -->
+    <!-- example dependencies -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
     <link href="../css/example.css" rel="stylesheet">
-
-    <!-- prettifier -->
     <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
-
-    <!-- jquery -->
     <script type="text/javascript" src="../lib/jquery-latest.min.js"></script>
-
-    <!-- samples -->
-    <script type="text/javascript" src="../js/example.js"></script>
-
-    <!-- bootstrap -->
     <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.js"></script>
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap-theme.css"/>
+    <script type="text/javascript" src="../js/example.js"></script>
 
-    <!-- START_RATCHET_JAVASCRIPT -->
-    <!-- third party -->
-    <script type="text/javascript" src="../../js/thirdparty/base.js"></script>
-    <script type="text/javascript" src="../../js/thirdparty/json2.js"></script>
-    <script type="text/javascript" src="../../js/thirdparty/jquery.hashchange.js"></script>
-    <script type="text/javascript" src="../../js/thirdparty/form2object.js"></script>
-    <!-- ratchet -->
-    <script type="text/javascript" src="../../js/Ratchet.js"></script>
-    <script type="text/javascript" src="../../js/Utils.js"></script>
-    <script type="text/javascript" src="../../js/Observable.js"></script>
-    <script type="text/javascript" src="../../js/Observables.js"></script>
-    <script type="text/javascript" src="../../js/ScopedObservables.js"></script>
-    <script type="text/javascript" src="../../js/RenderContext.js"></script>
-    <script type="text/javascript" src="../../js/Gadget.js"></script>
-    <script type="text/javascript" src="../../js/GadgetRegistry.js"></script>
-    <script type="text/javascript" src="../../js/TemplateEngineRegistry.js"></script>
-    <script type="text/javascript" src="../../js/BaseTemplateEngine.js"></script>
-    <script type="text/javascript" src="../../js/jQueryAdapter.js"></script>
-    <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
-    <!-- END_RATCHET_JAVASCRIPT -->
+    <!-- ratchet core -->
+    <script type="text/javascript" src="../../ratchet/ratchet.js"></script>
 
-    <!-- START_RATCHET_HANDLEBARS_JAVASCRIPT -->
-    <script type="text/javascript" src="../../lib/handlebars/handlebars-v1.3.0.js"></script>
-    <script type="text/javascript" src="../../js/engines/HandlebarsTemplateEngine.js"></script>
-    <!-- END_RATCHET_HANDLEBARS_JAVASCRIPT -->
+    <!-- ratchet/handlebars -->
+    <script type="text/javascript" src="../../../lib/handlebars/handlebars.js"></script>
+    <script type="text/javascript" src="../../ratchet/handlebars.js"></script>
 
-    <!-- configuration -->
-    <script type="text/javascript" src="../../js/config/Configuration.js"></script>
-    <script type="text/javascript" src="../../js/config/AbstractConfigurationEvaluator.js"></script>
-    <script type="text/javascript" src="../../js/config/GadgetConfigurationEvaluator.js"></script>
-    <script type="text/javascript" src="../../js/config/ViewerConfigurationEvaluator.js"></script>
+    <!-- ratchet/config -->
+    <script type="text/javascript" src="../../ratchet/config.js"></script>
 
-    <!-- dynamics -->
-    <script type="text/javascript" src="../../js/web/AbstractDynamicGadget.js"></script>
-    <script type="text/javascript" src="../../js/web/Dynamic.js"></script>
-
-    <!-- viewer -->
-    <script type="text/javascript" src="../../js/viewer/AbstractViewer.js"></script>
-    <script type="text/javascript" src="../../js/viewer/ViewerRegistry.js"></script>
+    <!-- ratchet/web -->
+    <script type="text/javascript" src="../../ratchet/web.js"></script>
 
     <!-- doc viewer gadget -->
-    <script type="text/javascript" src="../../dynamic/docviewer.js"></script>
-    <link rel="stylesheet" href="../../dynamic/docviewer.css">
+    <script type="text/javascript" src="../../ratchet/dynamic/docviewer.js"></script>
+    <link rel="stylesheet" href="../../ratchet/dynamic/docviewer.css">
 
     <!-- image viewer -->
-    <script type="text/javascript" src="../../dynamic/viewers/image.js"></script>
-    <link rel="stylesheet" href="../../dynamic/viewers/image.css">
+    <script type="text/javascript" src="../../ratchet/dynamic/viewers/image.js"></script>
+    <link rel="stylesheet" href="../../ratchet/dynamic/viewers/image.css">
 
     <!-- audio viewer -->
-    <script type="text/javascript" src="../../dynamic/viewers/audio.js"></script>
-    <link rel="stylesheet" href="../../dynamic/viewers/audio.css">
+    <script type="text/javascript" src="../../ratchet/dynamic/viewers/audio.js"></script>
+    <link rel="stylesheet" href="../../ratchet/dynamic/viewers/audio.css">
+
+    <!-- video viewer -->
+    <script type="text/javascript" src="../../ratchet/dynamic/viewers/video2.js"></script>
+    <link rel="stylesheet" href="../../ratchet/dynamic/viewers/video2.css">
+
+    <!-- flash viewer -->
+    <script type="text/javascript" src="../../ratchet/dynamic/viewers/flash.js"></script>
+    <link rel="stylesheet" href="../../ratchet/dynamic/viewers/flash.css">
 
     <!-- video viewer -->
     <!--
-    <script type="text/javascript" src="../../dynamic/viewers/video.js"></script>
-    <link rel="stylesheet" href="../../dynamic/viewers/video.css">
+    <link href="../../ratchet/dynamic/viewers/video-js/video-js.css" rel="stylesheet">
+    <script src="../../ratchet/dynamic/viewers/video-js/video.js"></script>
+    <script type="text/javascript" src="../../ratchet/dynamic/viewers/video-js/video2.js"></script>
     -->
-    <script type="text/javascript" src="../../dynamic/viewers/video2.js"></script>
-    <link rel="stylesheet" href="../../dynamic/viewers/video2.css">
-
-    <!-- flash viewer -->
-    <script type="text/javascript" src="../../dynamic/viewers/flash.js"></script>
-    <link rel="stylesheet" href="../../dynamic/viewers/flash.css">
-
-    <!-- video viewer -->
-    <link href="../../lib/videojs/video-js.css" rel="stylesheet">
-    <script src="../../lib/videojs/video.js"></script>
-    <script type="text/javascript" src="../../dynamic/viewers/video2.js"></script>
 
     <!-- text viewer -->
-    <script type="text/javascript" src="../../dynamic/viewers/text.js"></script>
-    <link rel="stylesheet" href="../../dynamic/viewers/text.css">
+    <script type="text/javascript" src="../../ratchet/dynamic/viewers/text.js"></script>
+    <link rel="stylesheet" href="../../ratchet/dynamic/viewers/text.css">
 
-    <!-- EXAMPLE GADGET -->
+    <!-- sample code -->
     <script type="text/javascript" src="gadget.js"></script>
-
-    <!-- work it -->
     <script type="text/javascript">
 
         $(document).ready(function() {

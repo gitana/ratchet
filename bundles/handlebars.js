@@ -1,1 +1,6 @@
-require("../js/engines/HandlebarsTemplateEngine");
+(function() {
+
+    require("../js/engines/HandlebarsTemplateEngine");
+
+})();
+

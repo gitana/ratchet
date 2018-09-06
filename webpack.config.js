@@ -9,21 +9,19 @@ module.exports = {
     "context": process.cwd(),
     "mode": "development",
     "entry": {
-        "ratchet": "./bundles/ratchet.js"
-        // "handlebars": "./bundles/handlebars.js",
-        // "tmpl": "./bundles/tmpl.js",
-        // "web": "./bundles/web.js",
-        // "gitana": "./bundles/gitana.js",
-        // "actions": "./bundles/actions.js",
-        // "config": "./bundles/config.js",
-        // "messages": "./bundles/messages.js",
+        "ratchet": "./bundles/ratchet.js",
+        "handlebars": "./bundles/handlebars.js",
+        "web": "./bundles/web.js",
+        "gitana": "./bundles/gitana.js",
+        "actions": "./bundles/actions.js",
+        "config": "./bundles/config.js",
+        "messages": "./bundles/messages.js"
     },
     "output": {
         "path": __dirname + "/dist",
-        "filename": "components/ratchet/[name].js",
+        "filename": "ratchet/[name].js",
         "libraryTarget": "umd"
     },
-
     "externals": {
         "jQuery": {
             "commonjs": "jQuery",
@@ -33,7 +31,6 @@ module.exports = {
         },
         "Ratchet": "ratchet/ratchet",
         "Handlebars": "Handlebars",
-        "Tmpl": "jquery-tmpl",
         "Messages": "ratchet/messages",
         "Config": "ratchet/config",
         "Actions": "ratchet/actions",
@@ -61,16 +58,12 @@ module.exports = {
             "ignore": ["**/.DS_Store/*", "**/.idea/*"]
         }, {
             "from": "./dynamic",
-            "to": "components/ratchet/dynamic",
-            "ignore": ["**/.DS_Store/*", "**/.idea/*"]
-        }, {
-            "from": "./components/ratchet/web",
-            "to": "components/ratchet/web",
+            "to": "ratchet/dynamic",
             "ignore": ["**/.DS_Store/*", "**/.idea/*"]
         }]),
         new webpack.ProvidePlugin({
             "Base": "base",
-            "Handlebars": "Handlebars",
+            "Handlebars": "Handlebars"
         }),
         new webpack.BannerPlugin(fs.readFileSync("license.txt", "utf8"))
     ]

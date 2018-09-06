@@ -5,66 +5,38 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Ratchet - Basic Example #3</title>
 
-    <!-- code prettifier -->
+    <!-- example dependencies -->
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
     <link href="../css/example.css" rel="stylesheet">
-
-    <!-- prettifier -->
     <script type="text/javascript" src="../lib/google-code-prettify/prettify.min.js"></script>
-
-    <!-- jquery -->
     <script type="text/javascript" src="../lib/jquery-latest.min.js"></script>
-
-    <!-- samples -->
-    <script type="text/javascript" src="../js/example.js"></script>
-
-    <!-- bootstrap -->
     <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.js"></script>
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap-theme.css"/>
+    <script type="text/javascript" src="../js/example.js"></script>
 
-    <!-- START_RATCHET_JAVASCRIPT -->
-    <!-- third party -->
-    <script type="text/javascript" src="../../thirdparty/base.js"></script>
-    <script type="text/javascript" src="../../thirdparty/json2.js"></script>
-    <script type="text/javascript" src="../../thirdparty/jquery.hashchange.js"></script>
-    <script type="text/javascript" src="../../thirdparty/form2object.js"></script>
-    <!-- ratchet -->
-    <script type="text/javascript" src="../../js/Ratchet.js"></script>
-    <script type="text/javascript" src="../../js/Utils.js"></script>
-    <script type="text/javascript" src="../../js/Observable.js"></script>
-    <script type="text/javascript" src="../../js/Observables.js"></script>
-    <script type="text/javascript" src="../../js/ScopedObservables.js"></script>
-    <script type="text/javascript" src="../../js/RenderContext.js"></script>
-    <script type="text/javascript" src="../../js/Gadget.js"></script>
-    <script type="text/javascript" src="../../js/GadgetRegistry.js"></script>
-    <script type="text/javascript" src="../../js/TemplateEngineRegistry.js"></script>
-    <script type="text/javascript" src="../../js/BaseTemplateEngine.js"></script>
-    <script type="text/javascript" src="../../js/jQueryAdapter.js"></script>
-    <script type="text/javascript" src="../../js/DefaultRegionResolver.js"></script>
-    <!-- END_RATCHET_JAVASCRIPT -->
+    <!-- ratchet core -->
+    <script type="text/javascript" src="../../ratchet/ratchet.js"></script>
 
+    <!-- sample code -->
     <script type="text/javascript">
 
         $(document).ready(function() {
 
-            $('#sample').ratchet(
-                    function() {
+            $('#sample').ratchet(function() {
+                var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
 
-                        var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
+                this.get("/", function(el) {
 
-                        this.get("/", function(el) {
+                    for (var i = 0; i < 10; i++) {
+                        $("<div></div>").html(lorem).appendTo(el);
+                    }
 
-                            for (var i = 0; i < 10; i++) {
-                                $("<div></div>").html(lorem).appendTo(el);
-                            }
+                    // swap our content in
+                    el.swap();
+                });
 
-                            // swap our content in
-                            el.swap();
-                        });
-
-                    }).run("/");
-
+            }).run("/");
         });
 
     </script>
@@ -95,7 +67,6 @@
     <div class="container">
         <div class="row">
 
-
             <h2>Basic Example #3</h2>
             <div id="sample"></div>
             <pre class="prettyprint linenums">
@@ -104,7 +75,7 @@
                     var lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
                     this.get("/", function(el) {
                         for (var i = 0; i < 10; i++) {
-                            $("<div></div>").html(lorem).appendTo(el);
+                            $("&lt;div&gt;&lt;/div&gt;").html(lorem).appendTo(el);
                         }
                         // swap our content in
                         el.swap();
@@ -112,7 +83,6 @@
                 }).run("/");
             });
             </pre>
-
 
         </div>
     </div>

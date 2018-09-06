@@ -1,4 +1,7 @@
 {
+  "version": "4.0.11",
+  "name": "handlebars",
+  "license": "MIT",
   "jspm": {
     "main": "handlebars",
     "shim": { "handlebars": { "exports": "Handlebars" } },

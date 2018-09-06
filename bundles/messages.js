@@ -1,2 +1,6 @@
-require("../thirdparty/date");
-require("../js/messages/Messages");
+(function() {
+
+    require("../thirdparty/date");
+    require("../js/messages/Messages");
+
+})();

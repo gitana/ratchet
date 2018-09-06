@@ -10,7 +10,7 @@
             var ace = require("ace/ace");
             var ace = window.ace;
 
-            require("css!ratchet/dynamic/editors/ace/ace.css");
+            require("ratchet/dynamic/editors/ace/ace.css");
 
             return factory(Ratchet, $, ace);
         });

@@ -12,10 +12,10 @@
             // these pollute the window.prettyPrint namespace
             // however, this seems to be par-for-the-course with prettyPrint
             require("ratchet/dynamic/viewers/prettify/prettify");
-            require("css!ratchet/dynamic/viewers/prettify/prettify.css");
+            require("ratchet/dynamic/viewers/prettify/prettify.css");
             //require("ratchet/dynamic/viewers/prettify/lang-css");
 
-            require("css!ratchet/dynamic/viewers/text.css");
+            require("ratchet/dynamic/viewers/text.css");
 
             return factory(Ratchet, $, window.prettyPrint);
         });

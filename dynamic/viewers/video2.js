@@ -5,12 +5,12 @@
         // AMD
         define(function(require, exports, module) {
 
-            require("css!ratchet/dynamic/viewers/video2.css");
+            require("ratchet/dynamic/viewers/video2.css");
 
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
-            require("css!ratchet/dynamic/viewers/video-js/video-js.css");
+            require("ratchet/dynamic/viewers/video-js/video-js.css");
             require("ratchet/dynamic/viewers/video-js/video");
 
             return factory(Ratchet, $);

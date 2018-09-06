@@ -5,10 +5,10 @@
         // AMD
         define(function(require, exports, module) {
 
-            require("css!ratchet/dynamic/common.css");
-            require("css!ratchet/dynamic/empty.css");
+            require("ratchet/dynamic/common.css");
+            require("ratchet/dynamic/empty.css");
 
-            var html = require("text!ratchet/dynamic/empty.html");
+            var html = require("ratchet/dynamic/empty.html");
             var Ratchet = require("ratchet/web");
 
             return factory(Ratchet, html);

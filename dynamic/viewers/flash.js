@@ -5,7 +5,7 @@
         // AMD
         define(function(require, exports, module) {
 
-            require("css!ratchet/dynamic/viewers/flash.css");
+            require("ratchet/dynamic/viewers/flash.css");
 
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");

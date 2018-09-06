@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
 
-    require("css!ratchet/dynamic/common.css");
+    require("ratchet/dynamic/common.css");
 
-    require("css!ratchet/dynamic/dropzone.css");
-    var html = require("text!ratchet/dynamic/dropzone.html");
+    require("ratchet/dynamic/dropzone.css");
+    var html = require("ratchet/dynamic/dropzone.html");
     var Ratchet = require("ratchet/web");
 
     require("dropzone");

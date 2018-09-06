@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
 
-    require("css!ratchet/dynamic/common.css");
+    require("ratchet/dynamic/common.css");
 
-    require("css!ratchet/dynamic/upload.css");
-    var html = require("text!ratchet/dynamic/upload.html");
+    require("ratchet/dynamic/upload.css");
+    var html = require("ratchet/dynamic/upload.html");
     var Ratchet = require("ratchet/web");
 
     require("ratchet/handlebars");
@@ -14,7 +14,7 @@ define(function(require, exports, module) {
     require("jquery-file-upload/js/jquery.fileupload");
     require("jquery-file-upload/js/jquery.fileupload-fp");
     require("jquery-file-upload/js/jquery.fileupload-ui");
-    require("css!jquery-file-upload/css/jquery.fileupload-ui.css");
+    require("jquery-file-upload/css/jquery.fileupload-ui.css");
 
     var tmpl = require("tmpl");
 

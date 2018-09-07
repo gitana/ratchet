@@ -2,7 +2,7 @@
 {
     Ratchet.GadgetRegistry.register("docviewer", Ratchet.Gadgets.DocViewer.extend({
 
-        TEMPLATE: "../../dynamic/docviewer.html",
+        TEMPLATE: "../../ratchet/dynamic/docviewer.html",
 
         setup: function()
         {

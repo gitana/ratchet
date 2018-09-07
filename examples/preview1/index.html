@@ -19,7 +19,7 @@
     <script type="text/javascript" src="../../ratchet/ratchet.js"></script>
 
     <!-- ratchet/handlebars -->
-    <script type="text/javascript" src="../../../lib/handlebars/handlebars.js"></script>
+    <script type="text/javascript" src="../lib/handlebars/handlebars.js"></script>
     <script type="text/javascript" src="../../ratchet/handlebars.js"></script>
 
     <!-- ratchet/config -->
@@ -65,147 +65,149 @@
 
         $(document).ready(function() {
 
-            $("body").ratchet().run("/");
+            $("body").ratchet().run("/", function() {
+                console.log("DONE");
 
-            $("#resource1").click(function(e) {
+                $("#resource1").click(function(e) {
 
-                Ratchet.observable("viewerResource").set({
-                    "id": "resource1",
-                    "title": "Yoda",
-                    "kind": "file",
-                    "url": "../resources/yoda.jpg",
-                    "size": 10000,
-                    "mimetype": "image/jpeg",
-                    "filename": "yoda.jpg",
-                    "attachments": {
-                        "thumb150": {
-                            "url": "../resources/yoda-150.jpg",
-                            "size": 1000,
-                            "mimetype": "image/jpeg",
-                            "filename": "yoda-150.jpg"
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource1",
+                        "title": "Yoda",
+                        "kind": "file",
+                        "url": "../resources/yoda.jpg",
+                        "size": 10000,
+                        "mimetype": "image/jpeg",
+                        "filename": "yoda.jpg",
+                        "attachments": {
+                            "thumb150": {
+                                "url": "../resources/yoda-150.jpg",
+                                "size": 1000,
+                                "mimetype": "image/jpeg",
+                                "filename": "yoda-150.jpg"
+                            }
                         }
-                    }
+                    });
+
                 });
 
-            });
+                $("#resource2").click(function(e) {
 
-            $("#resource2").click(function(e) {
-
-                Ratchet.observable("viewerResource").set({
-                    "id": "resource2",
-                    "title": "Luke Skywalker",
-                    "kind": "file",
-                    "url": "../resources/luke.jpg",
-                    "size": 10000,
-                    "mimetype": "image/jpeg",
-                    "filename": "luke.jpg",
-                    "attachments": {
-                        "thumb150": {
-                            "url": "../resources/luke-150.jpg",
-                            "size": 1000,
-                            "mimetype": "image/jpeg",
-                            "filename": "luke-150.jpg"
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource2",
+                        "title": "Luke Skywalker",
+                        "kind": "file",
+                        "url": "../resources/luke.jpg",
+                        "size": 10000,
+                        "mimetype": "image/jpeg",
+                        "filename": "luke.jpg",
+                        "attachments": {
+                            "thumb150": {
+                                "url": "../resources/luke-150.jpg",
+                                "size": 1000,
+                                "mimetype": "image/jpeg",
+                                "filename": "luke-150.jpg"
+                            }
                         }
-                    }
+                    });
+
                 });
 
-            });
+                $("#resource3").click(function(e) {
 
-            $("#resource3").click(function(e) {
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource3",
+                        "title": "The Force will be with you Always",
+                        "kind": "file",
+                        "url": "../resources/force.wav",
+                        "size": 10000,
+                        "mimetype": "audio/wav",
+                        "filename": "force.wav"
+                    });
 
-                Ratchet.observable("viewerResource").set({
-                    "id": "resource3",
-                    "title": "The Force will be with you Always",
-                    "kind": "file",
-                    "url": "../resources/force.wav",
-                    "size": 10000,
-                    "mimetype": "audio/wav",
-                    "filename": "force.wav"
                 });
 
-            });
+                $("#resource4").click(function(e) {
 
-            $("#resource4").click(function(e) {
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource4",
+                        "title": "Leaves on the Lake",
+                        "kind": "file",
+                        "url": "../resources/lake.mp4",
+                        "size": 100000,
+                        "mimetype": "video/mp4",
+                        "filename": "lake.mp4"
+                    });
 
-                Ratchet.observable("previewResource").set({
-                    "id": "resource4",
-                    "title": "Leaves on the Lake",
-                    "kind": "file",
-                    "url": "../resources/lake.mp4",
-                    "size": 100000,
-                    "mimetype": "video/mp4",
-                    "filename": "lake.mp4"
                 });
 
-            });
+                $("#resource5").click(function(e) {
 
-            $("#resource5").click(function(e) {
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource5",
+                        "title": "Flash Song",
+                        "kind": "file",
+                        "url": "../resources/song.swf",
+                        "size": 100000,
+                        "mimetype": "application/x-shockwave-flash",
+                        "filename": "song.swf"
+                    });
 
-                Ratchet.observable("previewResource").set({
-                    "id": "resource5",
-                    "title": "Flash Song",
-                    "kind": "file",
-                    "url": "../resources/song.swf",
-                    "size": 100000,
-                    "mimetype": "application/x-shockwave-flash",
-                    "filename": "song.swf"
                 });
 
-            });
+                $("#resource6").click(function(e) {
 
-            $("#resource6").click(function(e) {
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource6",
+                        "title": "Flash Race",
+                        "kind": "file",
+                        "url": "../resources/race.flv",
+                        "size": 100000,
+                        "mimetype": "video/x-flv",
+                        "filename": "race.flv"
+                    });
 
-                Ratchet.observable("previewResource").set({
-                    "id": "resource6",
-                    "title": "Flash Race",
-                    "kind": "file",
-                    "url": "../resources/race.flv",
-                    "size": 100000,
-                    "mimetype": "video/x-flv",
-                    "filename": "race.flv"
                 });
 
-            });
+                /*
+                 $("#resource7").click(function(e) {
 
-            /*
-            $("#resource7").click(function(e) {
+                 Ratchet.observable("viewerResource").set({
+                 "id": "resource7",
+                 "title": "Turbo Broom Dance",
+                 "kind": "youtube",
+                 "url": "http://www.youtube.com/watch?v=BVrWDPi12zE",
+                 "size": 100000,
+                 "mimetype": "video/youtube"
+                 });
 
-                Ratchet.observable("previewResource").set({
-                    "id": "resource7",
-                    "title": "Turbo Broom Dance",
-                    "kind": "youtube",
-                    "url": "http://www.youtube.com/watch?v=BVrWDPi12zE",
-                    "size": 100000,
-                    "mimetype": "video/youtube"
+                 });
+                 */
+
+                $("#resource8").click(function(e) {
+
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource8",
+                        "title": "Many Kinds of Perfect (demo)",
+                        "kind": "file",
+                        "url": "../resources/song.mp3",
+                        "size": 100000,
+                        "mimetype": "audio/mp3"
+                    });
+
                 });
 
-            });
-            */
+                $("#resource9").click(function(e) {
 
-            $("#resource8").click(function(e) {
+                    Ratchet.observable("viewerResource").set({
+                        "id": "resource9",
+                        "title": "Home Page",
+                        "kind": "file",
+                        "url": "../resources/home.html",
+                        "size": 100000,
+                        "mimetype": "text/html"
+                    });
 
-                Ratchet.observable("previewResource").set({
-                    "id": "resource8",
-                    "title": "Many Kinds of Perfect (demo)",
-                    "kind": "file",
-                    "url": "../resources/song.mp3",
-                    "size": 100000,
-                    "mimetype": "audio/mp3"
                 });
-
-            });
-
-            $("#resource9").click(function(e) {
-
-                Ratchet.observable("previewResource").set({
-                    "id": "resource9",
-                    "title": "Home Page",
-                    "kind": "file",
-                    "url": "../resources/home.html",
-                    "size": 100000,
-                    "mimetype": "text/html"
-                });
-
             });
 
         });

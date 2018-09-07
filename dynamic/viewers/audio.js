@@ -41,23 +41,7 @@
         {
             var valid = true;
 
-            // <audio> tag not supported in IE < 9
-            if (Ratchet.Browser.msie && Ratchet.Browser.version < 9)
-            {
-                valid = false;
-            }
-
-            // <audio> tag not supported in Firefox < 3.5
-            if (Ratchet.Browser.firefox && Ratchet.Browser.version < 4)
-            {
-                valid = false;
-            }
-
-            // <audio> tag not supported in Safari < 3 (523)
-            if (Ratchet.Browser.safari && Ratchet.Browser.version < 523)
-            {
-                valid = false;
-            }
+            // TODO: build in browser exceptions?
 
             return valid;
         },

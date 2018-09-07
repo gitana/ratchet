@@ -1,5 +1,14 @@
 (function() {
 
+    // externals
+
+    require("jquery");
+
+
+    ////////////////////////////////////
+    // internals
+    ////////////////////////////////////
+
     require("../thirdparty/base");
     require("../thirdparty/json2");
     require("../thirdparty/form2object");

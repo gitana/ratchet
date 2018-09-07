@@ -1,5 +1,17 @@
 (function() {
 
+    // externals
+
+    require("ratchet/ratchet");
+    require("ratchet/config");
+    require("ratchet/messages");
+    require("ratchet/actions");
+
+
+    ////////////////////////////////////
+    // internals
+    ////////////////////////////////////
+
     require("../js/web/Dynamic");
     require("../js/web/AbstractDynamicGadget");
     require("../js/web/AbstractDynamicPage");

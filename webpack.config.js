@@ -7,16 +7,16 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     "context": process.cwd(),
-    "mode": "development",
-    //"mode": "production",
+    //"mode": "development",
+    "mode": "production",
     "entry": {
-        "ratchet": "./bundles/ratchet.js",
-        "handlebars": "./bundles/handlebars.js",
-        "web": "./bundles/web.js",
-        "gitana": "./bundles/gitana.js",
-        "actions": "./bundles/actions.js",
-        "config": "./bundles/config.js",
-        "messages": "./bundles/messages.js"
+        "actions": "./src/ratchet/actions/actions.js",
+        "config": "./src/ratchet/config/config.js",
+        "ratchet": "./src/ratchet/core/core.js",
+        "gitana": "./src/ratchet/gitana/gitana.js",
+        "handlebars": "./src/ratchet/handlebars/handlebars.js",
+        "messages": "./src/ratchet/messages/messages.js",
+        "web": "./src/ratchet/web/web.js"
     },
     "output": {
         "path": __dirname + "/dist",
@@ -24,49 +24,56 @@ module.exports = {
         "libraryTarget": "umd"
     },
     "externals": {
-
-        "jQuery": {
-            "commonjs": "jQuery",
-            "commonjs2": "jQuery",
+        "jquery": {
+            "commonjs": "jquery",
+            "commonjs2": "jquery",
             "amd": "jquery",
             "root": "jQuery"
         },
-        "Ratchet": "ratchet/ratchet",
-        //"Handlebars": "Handlebars",
-        "Messages": "ratchet/messages",
-        "Config": "ratchet/config",
-        "Actions": "ratchet/actions",
-        "Gitana": "Gitana",
-        "Alpaca": "Alpaca",
-
-        "ratchet/actions": "ratchet/actions",
-        "ratchet/config": "ratchet/config",
-        "ratchet/gitana": "ratchet/gitana",
-        "ratchet/handlebars": "ratchet/handlebars",
-        "ratchet/messages": "ratchet/messages",
-        "ratchet/ratchet": "ratchet/ratchet",
-        "ratchet/web": "ratchet/web",
-
-        "jquery": "jquery",
-        "handlebars": "handlebars",
-        "gitana": "gitana",
-        "alpaca": "alpaca"
+        "handlebars": {
+            "commonjs": "handlebars",
+            "commonjs2": "handlebars",
+            "amd": "handlebars",
+            "root": "Handlebars"
+        },
+        "gitana": {
+            "commonjs": "gitana",
+            "commonjs2": "gitana",
+            "amd": "gitana",
+            "root": "Gitana"
+        },
+        "alpaca": {
+            "commonjs": "alpaca",
+            "commonjs2": "alpaca",
+            "amd": "alpaca",
+            "root": "Alpaca"
+        },
+        "ratchet/ratchet": {
+            "commonjs": "ratchet/ratchet",
+            "commonjs2": "ratchet/ratchet",
+            "amd": "ratchet/ratchet",
+            "root": "Ratchet"
+        },
+        "ratchet/actions": {
+            "commonjs": "ratchet/actions",
+            "commonjs2": "ratchet/actions",
+            "amd": "ratchet/actions",
+            "root": "Ratchet"
+        },
+        "ratchet/config": {
+            "commonjs": "ratchet/config",
+            "commonjs2": "ratchet/config",
+            "amd": "ratchet/config",
+            "root": "Ratchet"
+        }
     },
-
     "resolve": {
-        "extensions": [".js"]//,
-        // "modules": ['node_modules', 'thirdparty']
-        /*
+        "extensions": [".js"],
         "alias": {
+            "thirdparty": path.resolve(__dirname, "./thirdparty"),
             "base": path.resolve(__dirname, "./thirdparty/base.js")
         }
-        */
     },
-
-    "module": {
-
-    },
-
     "plugins": [
         new CleanWebpackPlugin(["./dist"]),
         new CopyWebpackPlugin([{
@@ -78,19 +85,25 @@ module.exports = {
             "to": "ratchet/dynamic",
             "ignore": ["**/.DS_Store/*", "**/.idea/*"]
         }]),
-        new webpack.ProvidePlugin({
-            "Base": "base",
-            "Handlebars": "Handlebars"
-        }),
+        //new webpack.ProvidePlugin({
+        //    "Base": "base",
+        //    "Handlebars": "Handlebars"
+        //}),
         new webpack.BannerPlugin(fs.readFileSync("license.txt", "utf8"))
-    ]/*,
+    ],
 
-     "optimization": {
-         "minimize": true,
-         "minimizer": [new UglifyJSPlugin({
-             //"include": /\.min\.js$/
-             test: /\.js($|\?)/i
-         })]
-     }
-     */
+    /*
+    "optimization": {
+        "minimize": true,
+        "minimizer": [new UglifyJSPlugin({
+            //"include": /\.min\.js$/
+            test: /\.js($|\?)/i
+        })]
+    }*/
+
+    /** We leave optimization OFF so that we have debugging capabilities available in ui-server **/
+    /** This will get uglified laterby ui-server build **/
+    "optimization": {
+        "minimize": false
+    }
 };

@@ -1,8 +1,8 @@
 {
     "name": "ratchet",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "scripts": {
-        "build": "webpack --colors --progress --config webpack.config.js"
+        "build": "webpack --colors --progress --display-modules --config webpack.config.js"
     },
     "devDependencies": {
         "clean-webpack-plugin": "^0.1.19",

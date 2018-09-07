@@ -1,4 +1,3 @@
-/*!
 Ratchet Version 2.0.0
 
 Copyright 2018 Gitana Software, Inc.
@@ -19,5 +18,3 @@ For more information, please contact Gitana Software, Inc. at this
 address:
 
   info@cloudcms.com
-*/
-

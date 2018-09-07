@@ -89,7 +89,7 @@ module.exports = {
         //    "Base": "base",
         //    "Handlebars": "Handlebars"
         //}),
-        new webpack.BannerPlugin(fs.readFileSync("license.txt", "utf8"))
+        new webpack.BannerPlugin(fs.readFileSync("src/license/license.txt", "utf8"))
     ],
 
     /*

@@ -1,6 +1,6 @@
 define(["ratchet/ratchet", "base"], function(Ratchet, Base) {
 
-    Ratchet.AbstractAction = Base.extend({
+    return Ratchet.AbstractAction = Base.extend({
 
         constructor: function(actionId)
         {

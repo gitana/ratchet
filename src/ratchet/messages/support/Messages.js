@@ -139,7 +139,12 @@ define(["ratchet/ratchet", "base"], function(Ratchet, Base) {
 
                     var f = function(key, amount)
                     {
-                        return self.message(key, [amount]);
+                        var x = self.message(key, [amount]);
+                        if (!x) {
+                            x = "";
+                        }
+
+                        return x;
                     };
 
                     var text = "";
@@ -193,6 +198,8 @@ define(["ratchet/ratchet", "base"], function(Ratchet, Base) {
                     {
                         text += " " + f("ago");
                     }
+
+                    text = text.trim();
 
                     return text;
                 },

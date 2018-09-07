@@ -1,4 +1,4 @@
-define(["ratchet/ratchet"], function(Ratchet) {
+define(["ratchet/ratchet", "base"], function(Ratchet, Base) {
 
     var instances = {};
     var types = {};

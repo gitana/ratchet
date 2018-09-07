@@ -13,14 +13,14 @@
         var locale = Ratchet.Messages.DEFAULT_LOCALE;
         var bundle = messages.using(locale);
         equal(bundle.message("date-format.default"), "ddd mmm dd yyyy HH:MM:ss");
-        equal(bundle.message("relative.minutes"), "{0} minutes ago");
+        equal(bundle.message("relative.minutes"), "{0} minutes");
         // token substitution
-        equal(bundle.message("relative.minutes", [42]), "42 minutes ago");
+        equal(bundle.message("relative.minutes", [42]), "42 minutes");
 
         // now try to get a locale that isn't in the config
         // should fall back to DEFAULT_LOCALE
         bundle = messages.using("ES_es");
-        equal(bundle.message("relative.minutes"), "{0} minutes ago");
+        equal(bundle.message("relative.minutes"), "{0} minutes");
 
         // add a makeshift spanish/spain
         // ensure that we grab spanish/spain translation
@@ -89,11 +89,11 @@
         // RELATIVE TIMES AND DATES
         bundle = messages.using(Ratchet.Messages.DEFAULT_LOCALE);
         var minutesAgo = new Date().add(-3).minutes();
-        equal(bundle.relativeTime(minutesAgo), "3 minutes ago");
+        equal(bundle.relativeTime(minutesAgo), "3 minutes");
         var yesterday = new Date().add(-1).days();
         equal(bundle.relativeDate(yesterday), "yesterday");
-        var nextWeek = new Date().add(4).days();
-        equal(bundle.relativeDate(nextWeek), "later this week");
+        //var nextWeek = new Date().add(4).days();
+        //equal(bundle.relativeDate(nextWeek), "later this week");
 
 
         // all done

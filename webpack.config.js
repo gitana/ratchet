@@ -84,6 +84,13 @@ module.exports = {
             "from": "./dynamic",
             "to": "ratchet/dynamic",
             "ignore": ["**/.DS_Store/*", "**/.idea/*"]
+        }, {
+            "from": "./tests",
+            "to": "tests",
+            "ignore": ["**/.DS_Store/*", "**/.idea/*"]
+        }, {
+            "from": "./index.html",
+            "to": "index.html"
         }]),
         //new webpack.ProvidePlugin({
         //    "Base": "base",

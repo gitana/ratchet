@@ -1,6 +1,6 @@
-define(["ratchet/ratchet", "./AbstractAction"], function(Ratchet, AbstractAction) {
+define(["./Actions", "./AbstractAction", "ratchet/ratchet"], function(Actions, AbstractAction, Ratchet) {
 
-    return Ratchet.Actions.register("test", AbstractAction.extend({
+    return Actions.register("test", AbstractAction.extend({
 
         /**
          * Logs data to console.

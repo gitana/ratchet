@@ -13,4 +13,5 @@ define(["./support/Configuration"], function() {
     require("./support/logic/or");
     require("./support/logic/not");
 
+    return require("./support/Configuration");
 });

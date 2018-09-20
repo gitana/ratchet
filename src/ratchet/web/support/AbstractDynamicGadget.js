@@ -422,13 +422,4 @@ define(["ratchet/ratchet"], function(Ratchet) {
 
     });
 
-    Ratchet.AbstractDashlet = Ratchet.AbstractDynamicGadget.extend({
-
-        setup: function()
-        {
-            this.get(this.index);
-        }
-
-    });
-
 });

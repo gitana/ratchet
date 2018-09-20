@@ -1099,7 +1099,7 @@ define(["jquery", "base", "./Hash"], function($, Base, Hash) {
                     {
                         uri = uri.substring(uri.indexOf("#") + 1);
 
-                        forceTriggerHashChange = true;
+                        //forceTriggerHashChange = true;
                     }
                     else
                     {

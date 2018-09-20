@@ -65,6 +65,12 @@ module.exports = {
             "commonjs2": "ratchet/config",
             "amd": "ratchet/config",
             "root": "Ratchet"
+        },
+        "ratchet/messages": {
+            "commonjs": "ratchet/messages",
+            "commonjs2": "ratchet/messages",
+            "amd": "ratchet/messages",
+            "root": "Ratchet"
         }
     },
     "resolve": {

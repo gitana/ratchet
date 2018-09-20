@@ -1,4 +1,4 @@
-define(function() {
+define(["ratchet/config"], function() {
 
     require("./support/Messages");
 

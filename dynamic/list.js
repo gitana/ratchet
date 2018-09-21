@@ -329,7 +329,9 @@
 
         tableConfig: function()
         {
-            return {
+            var self = this;
+
+            var c = {
                 "autoWidth": true,
                 "jQueryUI": false,
                 "ordering": true,
@@ -350,6 +352,19 @@
                     "search": "Filter:"
                 }
             };
+
+            // auto-set search term
+            if (self.config().observables && self.config().observables.searchTerm) {
+                var searchTerm = self.observable(self.config().observables.searchTerm).get();
+                if (searchTerm) {
+                    if (!c.search) {
+                        c.search = {};
+                    }
+                    c.search.search = searchTerm;
+                }
+            }
+
+            return c;
         },
 
         afterSwap: function(el, model, context, callback)
@@ -957,6 +972,13 @@
                     self.handleRowCallback.call(self, el, model, this, nRow, aData, iDisplayIndex);
                 };
                 tableConfig["initComplete"] = function(oSettings, json) {
+
+                    // allow for custom handling of search filter
+                    $(el).find("input[type=search]").unbind();
+                    $(el).find("input[type=search]").bind("keyup", function(e) {
+                        self.handleChangeFilter.call(self, el, model, e.keyCode, this.value);
+                    });
+
                     self.handleInitComplete.call(self, el, model, this, oSettings, json, callback);
                 };
 
@@ -975,6 +997,10 @@
                     }, 250);
 
                     self.handleDrawCallback.call(self, el, model, this, settings);
+                };
+
+                tableConfig.infoCallback = function(settings, start, end, max, total, pre) {
+                    return self.infoCallback.call(self, settings, start, end, max, total, pre);
                 };
 
                 // RENDER THE TABLE
@@ -1456,6 +1482,29 @@
             this.initComplete(el, model, table, oSettings, json);
 
             callback();
+        },
+
+        handleSetFilter: function(el, model, value)
+        {
+            var self = this;
+
+            self.oTable.fnFilter(value);
+
+            // store back onto observable
+            if (model && model.observables && model.observables.searchTerm) {
+                var v = self.observable(model.observables.searchTerm).get();
+                if (v !== value)
+                {
+                    self.observable(model.observables.searchTerm).set(value);
+                }
+            }
+        },
+
+        handleChangeFilter: function(el, model, keyCode, value)
+        {
+            var self = this;
+
+            self.handleSetFilter(el, model, value);
         },
 
         handleRowCallback: function(el, model, table, nRow, aData, iDisplayIndex)
@@ -2015,7 +2064,39 @@
         doRemoteQuery: function(context, model, searchTerm, query, pagination, callback)
         {
 
+        },
+
+        infoCallback: function(settings, start, end, max, total, pre)
+        {
+            var self = this;
+
+            /*
+            var lengthMenu = self.tableConfig().language.lengthMenu;
+            var zeroRecords = self.tableConfig().language.zeroRecords;
+            var info = self.tableConfig().language.info;
+            var infoEmpty = self.tableConfig().language.infoEmpty;
+            var infoFiltered = self.tableConfig().language.infoFiltered;
+            var search = self.tableConfig().language.search;
+
+            return (!isNaN(total))
+                ? "Showing " + start + " to " + end + " of " + total + " entries"
+                + ((total !== max) ? " (filtered from " + max + " total entries)" : "")
+                : "Showing " + start + " to " + (start + this.api().data().length - 1) + " entries";
+            */
+
+            if (pre && pre.indexOf("NaN total") > -1)
+            {
+                var i1 = pre.indexOf("(filtered from");
+                if (i1 > -1)
+                {
+                    pre = "";
+                    //pre = pre.substring(0, i1);
+                }
+            }
+
+            return pre;
         }
+
 
     }));
 

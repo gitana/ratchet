@@ -353,18 +353,12 @@
                 }
             };
 
-            // auto-set search term
-            if (self.config().observables && self.config().observables.searchTerm) {
-                var searchTerm = self.observable(self.config().observables.searchTerm).get();
-                if (searchTerm) {
-                    if (!c.search) {
-                        c.search = {};
-                    }
-                    c.search.search = searchTerm;
-                }
-            }
-
             return c;
+        },
+
+        autoConfigureTableConfig: function(model, tableConfig)
+        {
+
         },
 
         afterSwap: function(el, model, context, callback)
@@ -741,6 +735,8 @@
 
             // custom hook for specifying settings-driven overrides
             self.applyDynamicTableConfig(model, tableConfig, function(tableConfig) {
+
+                self.autoConfigureTableConfig(model, tableConfig);
 
                 // push for each column
                 if (model.columns)
@@ -1495,7 +1491,11 @@
                 var v = self.observable(model.observables.searchTerm).get();
                 if (v !== value)
                 {
-                    self.observable(model.observables.searchTerm).set(value);
+                    if (!value) {
+                        self.observable(model.observables.searchTerm).clear();
+                    } else {
+                        self.observable(model.observables.searchTerm).set(value);
+                    }
                 }
             }
         },
@@ -2095,6 +2095,13 @@
             }
 
             return pre;
+        },
+
+        reloadDataTable: function()
+        {
+            var self = this;
+
+            self.oTable.DataTable().ajax.reload();
         }
 
 

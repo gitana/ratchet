@@ -227,25 +227,22 @@
                     };
                 }
             }
-
         },
 
-        tableConfig: function()
+        autoConfigureTableConfig: function(model, tableConfig)
         {
-            var tableConfig = this.base();
+            var self = this;
 
-            var entityTypes = this.entityTypes();
+            var entityTypes = self.entityTypes(model);
 
             tableConfig.language.lengthMenu = "Display _MENU_ " + entityTypes.plural + " per page";
             tableConfig.language.info = "Showing _START_ to _END_ of _TOTAL_ " + entityTypes.plural;
             tableConfig.language.infoEmpty = "Showing 0 to 0 of 0 " + entityTypes.plural;
             tableConfig.language.infoFiltered = "(filtered from _MAX_ total " + entityTypes.plural + ")";
             tableConfig.language.zeroRecords = "No " + entityTypes.plural + " were found";
-
-            return tableConfig;
         },
 
-        entityTypes: function()
+        entityTypes: function(model)
         {
             return {
                 "plural": "documents",

@@ -38,13 +38,26 @@
                 }
 
                 var c = {};
-                var gadgetConfig = Ratchet.Configuration.evaluate({
+
+                // merge in default settings
+
+                var gadgetDefaultConfig = Ratchet.Configuration.evaluate({
+                    "gadget": "default",
+                    "gadgetType": type
+                });
+                if (gadgetDefaultConfig.gadgets && gadgetDefaultConfig.gadgets[type] && gadgetDefaultConfig.gadgets[type]["default"])
+                {
+                    Ratchet.merge(gadgetDefaultConfig.gadgets[type]["default"], c);
+                }
+
+                // gadget instance config
+                var gadgetInstanceConfig = Ratchet.Configuration.evaluate({
                     "gadget": id,
                     "gadgetType": type
                 });
-                if (gadgetConfig.gadgets && gadgetConfig.gadgets[type] && gadgetConfig.gadgets[type][id])
+                if (gadgetInstanceConfig.gadgets && gadgetInstanceConfig.gadgets[type] && gadgetInstanceConfig.gadgets[type][id])
                 {
-                    Ratchet.merge(gadgetConfig.gadgets[type][id], c);
+                    Ratchet.merge(gadgetInstanceConfig.gadgets[type][id], c);
                 }
                 else
                 {

@@ -37,12 +37,12 @@
                 var b = true;
                 if (gadgetTypeId)
                 {
-                    b = b & m1;
+                    b = b && m1;
                 }
 
                 if (gadgetId)
                 {
-                    b = b & m2;
+                    b = b && m2;
                 }
 
                 // however, if neither are specified, then false

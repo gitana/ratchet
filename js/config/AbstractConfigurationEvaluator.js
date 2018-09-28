@@ -51,22 +51,6 @@
             }
 
             return val;
-
-            /*
-            if (!text) {
-                return false;
-            }
-
-            if (!patternString) {
-                return false;
-            }
-
-            // convert t from wildcard format to regexp
-            var regex = Ratchet.wildcardToRegExp(patternString);
-
-            var arr = text.match(regex);
-            return (arr && arr.length > 0);
-            */
         }
 
     });

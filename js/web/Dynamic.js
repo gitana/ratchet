@@ -702,4 +702,74 @@
         return Ratchet.GadgetRegistry.register(gadgetTypeId, gadgetId, newGadgetType);
     };
 
+    /**
+     * Renders a picker inline.
+     *
+     * Config:
+     *
+     *      {
+     *          "type": "<gadgetType>",
+     *          "config": {
+     *
+     *          },
+     *          "context": {
+     *
+     *          },
+     *          "el": null
+     *      }
+     *
+     * @param config
+     */
+    Ratchet.renderInlineGadget = function(el, config, callback)
+    {
+        if (!config) {
+            config = {};
+        }
+
+        // required: config.type (gadget type)
+        if (!config.type) {
+            throw new Error("You must supply config.type");
+        }
+
+        // generate a new inline gadget
+        var inlineGadgetType = config.type;
+        var inlineGadgetId = "inline-" + new Date().getTime();
+        var inlineGadgetConfig = {};
+        if (config.config) {
+            inlineGadgetConfig = config.config;
+        }
+        var gadget = Ratchet.instantiateGadget(inlineGadgetType, inlineGadgetId, inlineGadgetConfig);
+
+        // pickers rely on "context" method to provide environment variables used for looking things up
+        if (config.context) {
+            gadget.prototype.context = function() {
+                return config.context;
+            };
+        }
+
+        var inlineGadget = $('<div gadget="' + inlineGadgetType + '" id="' + inlineGadgetId + '"></div>');
+        inlineGadget.css("display", "none");
+        $(document.body).append(inlineGadget);
+
+        // ratchet it up
+        var currentHash = window.location.hash;
+        var parentRatchet = Ratchet.findClosestBoundRatchet(config.el);
+
+        //var ratchet = new Ratchet(picker, parentRatchet, function() {});
+        var ratchet = new Ratchet(inlineGadget, true, function() {});
+
+        // ensure we're in handler callbacks mode
+        ratchet.useHandlerCallbacks = true;
+
+        // render
+        ratchet.run("GET", currentHash, {}, function() {
+        });
+
+        inlineGadget.css("display", "block");
+        $(el).append(inlineGadget);
+
+        callback(null, el, inlineGadget);
+
+    };
+
 })();

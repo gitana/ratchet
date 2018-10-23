@@ -384,6 +384,13 @@
             {
                 // if we don't have a gadget id, one will be generated inside of the gadgetRegistry.instantiate() call
                 this.gadgetInstances = Ratchet.GadgetRegistry.instantiate(this.gadgetType, this.gadgetId, this);
+
+                // if we had a gadget ID passed in and gadgetInstances length > 1, we trim back to keep first
+                if (this.gadgetInstances.length > 1 && this.gadgetId)
+                {
+                    this.gadgetInstances.length = 1;
+                }
+
                 /*
                 Ratchet.logDebug("Ratchet.setup() - Instantiated " + this.gadgetInstances.length + " gadget instances for type: " + this.gadgetType + " and id: " + this.gadgetId);
                 */
@@ -428,14 +435,7 @@
             // tear down any gadget instances
             //var l1 = this.gadgetInstances.length;
             $.each(this.gadgetInstances, function(i, gadgetInstance) {
-
-                // track a _destroyed variable so that we don't call teardown() twice
-                // helps safeguard against prototypal inherited classes having base class tore down ahead of them
-                if (!gadgetInstance._destroyed) {
-                    gadgetInstance.teardown();
-                    gadgetInstance._destroyed = true;
-                }
-
+                gadgetInstance.teardown();
             });
             //Ratchet.logDebug("Ratchet.teardown() - Removed " + l1 + " gadget instances");
             this.gadgetInstances = [];

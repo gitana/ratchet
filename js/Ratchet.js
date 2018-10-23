@@ -419,16 +419,23 @@
             this.childRatchets = {};
 
             // releases any subscribed observables
-            var a1 = this.subscriptions.length;
+            //var a1 = this.subscriptions.length;
             $.each(this.subscriptions, function(callbackKey, observable) {
                 observable.unsubscribe(callbackKey);
             });
             //Ratchet.logDebug("Ratchet.teardown() - Released " + a1 + " callback subscribers");
 
             // tear down any gadget instances
-            var l1 = this.gadgetInstances.length;
+            //var l1 = this.gadgetInstances.length;
             $.each(this.gadgetInstances, function(i, gadgetInstance) {
-                gadgetInstance.teardown();
+
+                // track a _destroyed variable so that we don't call teardown() twice
+                // helps safeguard against prototypal inherited classes having base class tore down ahead of them
+                if (!gadgetInstance._destroyed) {
+                    gadgetInstance.teardown();
+                    gadgetInstance._destroyed = true;
+                }
+
             });
             //Ratchet.logDebug("Ratchet.teardown() - Removed " + l1 + " gadget instances");
             this.gadgetInstances = [];

@@ -314,6 +314,11 @@
             callback();
         },
 
+        afterPrepareModel: function(el, model, callback)
+        {
+            callback();
+        },
+
         loadDynamicConfiguration: function(el, model, callback)
         {
             callback();

@@ -42,7 +42,7 @@
             var valid = true;
 
             // <audio> tag not supported in IE < 9
-            if (Ratchet.Browser.msie && Ratchet.Browser.version < 9)
+            if (Ratchet.Browser.ie && Ratchet.Browser.version < 9)
             {
                 valid = false;
             }

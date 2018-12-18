@@ -1430,10 +1430,6 @@
     // browser detection
     Ratchet.Browser = function($) {
 
-        var jQversion = jQuery.fn.jquery.split(".");
-        if(jQversion[1]<8)
-            return;
-
         var browser = {};
         //browser.mozilla = false;
         //browser.webkit = false;

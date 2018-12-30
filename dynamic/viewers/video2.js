@@ -1,6 +1,6 @@
 (function (root, factory)
 {
-    if (typeof define === 'function' && define.amd && !(root && typeof(root.umd) != "undefined") && !root.umd)
+    if (typeof define === 'function' && define.amd && !(root && typeof(root.umd) !== "undefined"))
     {
         // AMD
         define(function(require, exports, module) {
@@ -10,15 +10,16 @@
             var Ratchet = require("ratchet/web");
             var $ = require("jquery");
 
-            require("css!ratchet/dynamic/viewers/video-js/video-js.css");
-            require("ratchet/dynamic/viewers/video-js/video");
+            // https://github.com/videojs/video.js
+            require("css!videojs/video-js.css");
+            var VideoJS = require("videojs/video");
 
-            return factory(Ratchet, $);
+            return factory(Ratchet, $, VideoJS);
         });
     }
     else
     {
-        return factory(root.Ratchet, root.$);
+        return factory(root.Ratchet, root.$, root.videojs);
     }
 
 }(this, function(Ratchet, $) {
@@ -60,10 +61,6 @@
             var controls = this.config().controls;
 
             // markup
-            //var width = "100%";
-            //var height = "100%";
-            //var width = 640;
-            //var height = 320;
             var width = "100%";
             var height = "auto";
             var poster = null;
@@ -87,6 +84,7 @@
                 html += " autoplay";
             }
             html += " preload='auto'";
+            html += " style='width:100%;height:100%;'";
             html += ">";
             html += "<source type='" + attachment.mimetype + "' src='" + attachment.url + "' title='" + title + "'></source>";
             html += "</video>";
@@ -94,23 +92,7 @@
             $(container).addClass("video");
             $(container).append(html);
 
-            /*
-             // set a timeout so that the DOM has time to render
-             window.setTimeout(function() {
-
-             _V_(id, {}, function() {
-
-             debugger;
-
-             // start playing the video
-             this.play();
-             });
-
-             }, 2000);
-             */
-
             callback();
-
         }
 
     }));

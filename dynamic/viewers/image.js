@@ -1,6 +1,6 @@
 (function (root, factory)
 {
-    if (typeof define === 'function' && define.amd && !(root && typeof(root.umd) != "undefined") && !root.umd)
+    if (typeof define === 'function' && define.amd && !(root && typeof(root.umd) !== "undefined"))
     {
         // AMD
         define(function(require, exports, module) {

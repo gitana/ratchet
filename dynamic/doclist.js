@@ -349,6 +349,9 @@
                         {
                             var actionId = selectorGroupItem.action;
                             //var order = selectorGroupItem.order;
+                            var label = selectorGroupItem.label;
+                            var iconClass = selectorGroupItem.iconClass;
+                            var order = selectorGroupItem.order;
 
                             // retrieve the action configuration
                             var actionConfig = null;
@@ -370,6 +373,11 @@
                                     title = "Unknown Action Title";
                                 }
 
+                                if (label)
+                                {
+                                    title = label;
+                                }
+
                                 button = {
                                     "key": "multi-documents-action-" + actionId,
                                     "title": title,
@@ -382,10 +390,19 @@
                                     button.iconClass = actionConfig.iconClass;
                                 }
 
+                                if (iconClass)
+                                {
+                                    button.iconClass = iconClass;
+                                }
+
                                 if (selectorGroupItem.selectionMode) {
                                     button.selectionMode = selectorGroupItem.selectionMode;
                                 }
 
+                                if (typeof(order) !== "undefined")
+                                {
+                                    button.order = order;
+                                }
                             }
                         }
 
@@ -561,6 +578,11 @@
             };
             actionContext.button = button;
 
+            // allow for custom config to be passed through
+            if (button.config) {
+                actionContext.config = button.config;
+            }
+
             self.customizeActionContext(actionContext, model, button);
 
             return actionContext;
@@ -624,6 +646,8 @@
                     var iconClass = selectorGroupItem.iconClass;
                     //var order = selectorGroupItem.order;
 
+                    var label = selectorGroupItem.label;
+
                     var id = row.id;
                     if (!id && row._doc) {
                         id = row._doc;
@@ -644,12 +668,23 @@
                                 "user": user
                             };
 
+                            if (row.getQName) {
+                                linkModel._qname = linkModel.qname = row.getQName();
+                            }
+
+                            if (row.getTypeQName) {
+                                linkModel._type = linkModel.type = row.getTypeQName();
+                            }
+
                             var templateFunction = Handlebars.compile(link);
                             link = templateFunction(linkModel);
                         }
 
                         html = "<a href='" + link + "' list-row-id='" + id + "'>";
                         html += "<i class='action-icon " + iconClass + "'></i>";
+                        if (label) {
+                            html += "&nbsp;" + label;
+                        }
                         html += "</a>";
                     }
                     else if (actionId)
@@ -665,13 +700,20 @@
                         {
                             html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
                             html += "<i class='action-icon " + iconClass + "'></i>";
+                            if (label) {
+                                html += "&nbsp;" + label;
+                            }
                             html += "</a>";
                         }
                     }
 
                     if (html)
                     {
-                        $(template).find("ul").append("<li>" + html + "</li>");
+                        var liClassMarkup = "";
+                        if (label) {
+                            liClassMarkup = "class='label-spaced'";
+                        }
+                        $(template).find("ul").append("<li " + liClassMarkup + ">" + html + "</li>");
                     }
 
                 });
@@ -726,6 +768,21 @@
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 event.stopPropagation();
+
+                var selectedRow = null;
+                for (var i = 0; i < model.rows.length; i++)
+                {
+                    if (model.rows[i]._doc === rowId)
+                    {
+                        selectedRow = model.rows[i];
+                    }
+                }
+                if (selectedRow) {
+                    actionContext.data = [selectedRow];
+                    actionContext.selectedItems = [selectedRow];
+                }
+
+                actionContext.selectedId = rowId;
 
                 return self._clickAction(actionId, actionContext, function(err, data) {
                     self.afterActionComplete(actionId, actionContext, err, data);
@@ -829,24 +886,29 @@
                 {
                     var disable = false;
 
-                    if (multiSelectButton.buttons[i].selectionMode === "none")
+                    if (multiSelectButton.buttons[i].selectionMode)
                     {
-                        disable = (selectedItems.length !== 0);
+                        if (multiSelectButton.buttons[i].selectionMode === "none")
+                        {
+                            disable = (selectedItems.length !== 0);
+                        }
+                        else if (multiSelectButton.buttons[i].selectionMode === "one")
+                        {
+                            disable = (selectedItems.length !== 1);
+                        }
+                        else if (multiSelectButton.buttons[i].selectionMode === "two")
+                        {
+                            disable = (selectedItems.length !== 2);
+                        }
+                        /*
+                        else if (multiSelectButton.buttons[i].selectionMode === "any")
+                        {
+                            disable = (selectedItems.length > 1);
+                        }
+                        */
                     }
-                    else if (multiSelectButton.buttons[i].selectionMode === "one")
-                    {
-                        disable = (selectedItems.length !== 1);
-                    }
-                    else if (multiSelectButton.buttons[i].selectionMode === "two")
-                    {
-                        disable = (selectedItems.length !== 2);
-                    }
-                    /*
-                    else if (multiSelectButton.buttons[i].selectionMode === "any")
-                    {
-                        disable = (selectedItems.length > 1);
-                    }
-                    */
+
+                    disable = self.shouldDisableButton(model, multiSelectButton.buttons[i], selectedItems, disable);
 
                     var ul = $("[role='menu'][aria-labelledby='list-button-multi-documents-action-selector']");
                     var a = $(ul).find(".list-button-multi-documents-action-" + multiSelectButton.buttons[i].action);
@@ -890,6 +952,18 @@
         populateSingleDocumentActions: function(row, item, model, context, selectorGroup)
         {
 
+        },
+
+        /**
+         * Allows for customization of disable state for a "Selected..." button.
+         *
+         * @param model
+         * @param button
+         * @param selectedItems
+         */
+        shouldDisableButton: function(model, button, selectedItems, disable)
+        {
+            return disable;
         }
 
     }));

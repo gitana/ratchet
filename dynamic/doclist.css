@@ -61,11 +61,17 @@ button.btn-lg.list-button-sort-direction-selector
 .single-document-action-holder > ul
 {
     list-style-type: none;
+    margin-bottom: 0px;
 }
 
 .single-document-action-holder > ul > li
 {
     display: inline-block;
+}
+
+.single-document-action-holder > ul > li.label-spaced
+{
+    margin-right: 10px;
 }
 
 .single-document-action-holder .action-icon

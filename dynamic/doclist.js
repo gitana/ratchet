@@ -656,6 +656,11 @@
                         id = row.getId();
                     }
 
+                    var altText = selectorGroupItem.altText;
+                    if (!altText && selectorGroupItem.key) {
+                        altText = selectorGroupItem.key;
+                    }
+
                     var html = null;
 
                     if (link)
@@ -680,7 +685,12 @@
                             link = templateFunction(linkModel);
                         }
 
-                        html = "<a href='" + link + "' list-row-id='" + id + "'>";
+                        html = "<a href='" + link + "'";
+                        if (altText) {
+                            html += " title='" + altText + "'";
+                        }
+                        html += " list-row-id='" + id + "'>";
+
                         html += "<i class='action-icon " + iconClass + "'></i>";
                         if (label) {
                             html += "&nbsp;" + label;
@@ -698,7 +708,11 @@
                         }
                         else
                         {
-                            html = "<a href='#' class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
+                            html = "<a href='#'";
+                            if (altText) {
+                                html += " title='" + altText + "'";
+                            }
+                            html += " class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
                             html += "<i class='action-icon " + iconClass + "'></i>";
                             if (label) {
                                 html += "&nbsp;" + label;

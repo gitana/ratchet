@@ -856,6 +856,9 @@
                             if (!sortColProperty) {
                                 sortColProperty = model.columns[sortColIndex].property;
                             }
+                            if (!sortColProperty) {
+                                sortColProperty = model.columns[sortColIndex].key;
+                            }
                             if (sortColProperty)
                             {
                                 pagination["sort"] = {};

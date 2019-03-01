@@ -570,6 +570,12 @@
                             tag.attr("id", gadgetId);
                         }
 
+                        // store region info
+                        if (regionId)
+                        {
+                            tag.attr("data-region", regionId);
+                        }
+
                         // set strategy
                         tag.attr("gadget-strategy", "replace");
 
@@ -622,6 +628,7 @@
                 var subGadgetType = $(this).attr("gadget");
                 var subGadgetId = $(this).attr("id");
                 var subGadgetStrategy = $(this).attr("gadget-strategy");
+                var subGadgetRegion = $(this).attr("data-region");
 
                 /*
                 Ratchet.logDebug("Processing sub-gadget [type=" + subGadgetType + ", id=" + subGadgetId + "]");
@@ -656,6 +663,10 @@
                         this.gadgetType = subGadgetType;
                         this.gadgetId = subGadgetId;
                         this.gadgetStrategy = subGadgetStrategy;
+
+                        if (subGadgetRegion) {
+                            this.gadgetRegion = subGadgetRegion;
+                        }
                     });
 
                     _this.childRatchets[childRatchet.id] = childRatchet;

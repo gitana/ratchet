@@ -133,6 +133,7 @@
             if (this.getGadgetId())
             {
                 this.configureDefault();
+                this.configureOverride();
                 this.configureAutowire();
             }
         },
@@ -149,9 +150,15 @@
         /**
          * @extension_point
          */
+        configureOverride: function()
+        {
+        },
+
+        /**
+         * @extension_point
+         */
         configureAutowire: function()
         {
-
         },
 
         /**

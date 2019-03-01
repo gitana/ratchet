@@ -73,6 +73,31 @@
         },
 
         /**
+         * Finds a registered gadget classes by type
+         *
+         * @param type
+         * @param id
+         *
+         * @returns gadget class
+         */
+        find: function(type)
+        {
+            var registrants = [];
+
+            // registrations
+            var registrations = gadgetRegistry[type];
+            if (registrations)
+            {
+                for (var i = 0; i < registrations.length; i++)
+                {
+                    registrants.push(registrations[i]);
+                }
+            }
+
+            return registrants;
+        },
+
+        /**
          * Instantiates any gadgets for the given type and optional ID.
          *
          * If an ID is provided, then this method instantiates any gadgets for the given type and instance.

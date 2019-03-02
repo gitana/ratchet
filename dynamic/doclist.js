@@ -899,6 +899,7 @@
                 for (var i = 0; i < multiSelectButton.buttons.length; i++)
                 {
                     var disable = false;
+                    var hidden = false;
 
                     if (multiSelectButton.buttons[i].selectionMode)
                     {
@@ -923,6 +924,7 @@
                     }
 
                     disable = self.shouldDisableButton(model, multiSelectButton.buttons[i], selectedItems, disable);
+                    hidden = self.shouldHideButton(model, multiSelectButton.buttons[i], selectedItems, hidden);
 
                     var ul = $("[role='menu'][aria-labelledby='list-button-multi-documents-action-selector']");
                     var a = $(ul).find(".list-button-multi-documents-action-" + multiSelectButton.buttons[i].action);
@@ -940,6 +942,14 @@
                         $(a).addClass("disabled");
                     }
 
+                    if (hidden)
+                    {
+                        $(a).hide();
+                    }
+                    else
+                    {
+                        $(a).show();
+                    }
                 }
             }
         },
@@ -978,7 +988,20 @@
         shouldDisableButton: function(model, button, selectedItems, disable)
         {
             return disable;
+        },
+
+        /**
+         * Allows for customization of hidden state for a "Selected..." button.
+         *
+         * @param model
+         * @param button
+         * @param selectedItems
+         */
+        shouldHideButton: function(model, button, selectedItems, hidden)
+        {
+            return hidden;
         }
+
 
     }));
 

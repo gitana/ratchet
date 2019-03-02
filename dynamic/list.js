@@ -956,9 +956,13 @@
                             }
                         }
 
-                        self.endProcessing.call(self, context, model, json);
+                        self.afterLoader.call(self, context, model, json, function(json) {
 
-                        fnCallback(json);
+                            self.endProcessing.call(self, context, model, json);
+
+                            fnCallback(json);
+
+                        });
                     });
                 };
 
@@ -1122,6 +1126,19 @@
         preconfigureBeforeLoader: function(context, model, data, searchTerm, query, pagination)
         {
 
+        },
+
+        /**
+         * Extension point.
+         *
+         * @param context
+         * @param model
+         * @param json
+         * @param callback
+         */
+        afterLoader: function(context, model, json, callback)
+        {
+            callback(json);
         },
 
         /**

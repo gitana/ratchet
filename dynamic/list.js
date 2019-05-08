@@ -956,13 +956,7 @@
                             }
                         }
 
-                        self.afterLoader.call(self, context, model, json, function(json) {
-
-                            self.endProcessing.call(self, context, model, json);
-
-                            fnCallback(json);
-
-                        });
+                        fnCallback(json);
                     });
                 };
 
@@ -2003,19 +1997,24 @@
                     Chain(resultMap).each(function(_doc, obj) {
                         self.handleRowObject(_doc, obj);
                         rows.push(obj);
-                        array.push(self.toDataTableRow(model, obj, context));
                     }).then(function() {
-
-                        var attrs = {
-                            "recordsTotal": totalRows,
-                            "recordsFiltered": totalRows
-                        };
-
                         // set onto model
                         model.rows = rows;
 
-                        callback.call(self, array, attrs);
+                        self.afterLoader.call(self, context, model, data, function(json) {
 
+                            self.endProcessing.call(self, context, model, json);
+                            rows.forEach(function(row) {
+                                array.push(self.toDataTableRow(model, row, context));
+                            });
+
+                            var attrs = {
+                                "recordsTotal": totalRows,
+                                "recordsFiltered": totalRows
+                            };
+                            callback.call(self, array, attrs);
+                        });
+                        
                     });
 
                 });

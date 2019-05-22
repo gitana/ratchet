@@ -170,6 +170,17 @@
 
             this.base();
 
+            // Clear related observables
+            var config = this.config();
+            var observables = config.observables;
+            if (observables)
+            {
+                for (var key in observables)
+                {
+                    this.observable(observables[key]).clear(true);
+                }
+            }
+
             if (this.getGadgetId())
             {
                 // remove all config listeners for this gadget

@@ -448,12 +448,12 @@
             }
         },
 
-        checkPermission: function(observableHolder, permissionedId, permissionId, defaultValue)
+        checkPermission: function(observableHolder, permissionedId, permissionId, defaultValue, item)
         {
             return defaultValue;
         },
 
-        checkAuthority: function(observableHolder, permissionedId, authorityId, defaultValue)
+        checkAuthority: function(observableHolder, permissionedId, authorityId, defaultValue, item)
         {
             return defaultValue;
         }

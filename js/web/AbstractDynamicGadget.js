@@ -448,14 +448,14 @@
             }
         },
 
-        checkPermission: function(observableHolder, permissionedId, permissionId)
+        checkPermission: function(observableHolder, permissionedId, permissionId, defaultValue)
         {
-            return false;
+            return defaultValue;
         },
 
-        checkAuthority: function(observableHolder, permissionedId, authorityId)
+        checkAuthority: function(observableHolder, permissionedId, authorityId, defaultValue)
         {
-            return false;
+            return defaultValue;
         }
 
     });

@@ -161,6 +161,24 @@
         {
         },
 
+        teardownObservables: function()
+        {
+            var self = this;
+
+            var config = this.config();
+            if (config)
+            {
+                var observables = config.observables;
+                if (observables)
+                {
+                    for (var key in observables)
+                    {
+                        this.observable(observables[key]).clear(true);
+                    }
+                }
+            }
+        },
+
         /**
          * @override
          */
@@ -169,17 +187,6 @@
             var self = this;
 
             this.base();
-
-            // Clear related observables
-            var config = this.config();
-            var observables = config.observables;
-            if (observables)
-            {
-                for (var key in observables)
-                {
-                    this.observable(observables[key]).clear(true);
-                }
-            }
 
             if (this.getGadgetId())
             {

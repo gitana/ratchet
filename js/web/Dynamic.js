@@ -654,7 +654,6 @@
 
                     picked = true;
 
-                    $(div).modal('hide');
                     $(div).on('hidden.bs.modal', function() {
 
                         if (onPickFn)
@@ -662,6 +661,7 @@
                             onPickFn(pickedItems);
                         }
                     });
+                    $(div).modal('hide');
                 });
 
                 // if closed for any other reason

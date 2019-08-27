@@ -48,9 +48,9 @@
                             callback(err, result);
                         }
                     });
-
-                    return false;
                 }
+
+                return false;
             };
         },
 

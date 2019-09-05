@@ -1,8 +1,10 @@
 {{#exists chrome}}
 <div>
+    {{#if chrome.title}}
     <div class="chrome chrome-header">
         <div class="chrome-title">{{chrome.title}}</div>
     </div>
+    {{/if}}
     <div class="chrome chrome-body">
 {{/exists}}
 

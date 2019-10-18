@@ -236,20 +236,43 @@
          * Produces an observable change handler that reloads this gadget with the last dispatched context.
          *
          * @param gadget
+         * @param options
          * @param route
          */
-        refreshHandler: function(el, callback)
+        refreshHandler: function(el, options, callback)
         {
-            return function(el, callback)
+            return function(el, options, callback)
             {
+                if (typeof(options) === "function") {
+                    callback = options;
+                    options = {};
+                }
+                if (!options) {
+                    options = {};
+                }
+
                 return function(newValue, oldValue)
                 {
-                    el.run(el.route.method, el.route.uri, el.route.data, callback);
+                    var data = {};
+                    if (el.route.data) {
+                        data = JSON.parse(JSON.stringify(el.route.data));
+                    }
+
+                    if (typeof(options.primary) !== "undefined")
+                    {
+                        data.primary = options.primary;
+                    }
+
+                    if (typeof(options.showPageTransition) !== "undefined")
+                    {
+                        data.showPageTransition = options.showPageTransition;
+                    }
+
+                    el.run(el.route.method, el.route.uri, data, callback);
                 };
 
-            }(el, callback);
+            }(el, options, callback);
         },
-
 
 
 

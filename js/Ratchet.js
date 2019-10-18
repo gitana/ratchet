@@ -961,7 +961,21 @@
                 config.uri = config.uri.substring(1);
             }
 
-            var isPrimary = params["primary"];
+            var isPrimary = true;
+            var showPageTransition = true;
+
+            if (params)
+            {
+                if (typeof(params["primary"]) !== "undefined")
+                {
+                    isPrimary = params["primary"];
+                }
+
+                if (typeof(params["showPageTransition"]) !== "undefined")
+                {
+                    showPageTransition = params["showPageTransition"];
+                }
+            }
 
             var context = null;
             if (isPrimary)
@@ -990,7 +1004,7 @@
                 var handlerCompletionCallback = function(err)
                 {
                     // if primary + we have a page transition block function
-                    if (isPrimary && Ratchet.pageTransitionBlocker)
+                    if (isPrimary && Ratchet.pageTransitionBlocker && showPageTransition)
                     {
                         Ratchet.pageTransitionBlocker(false);
                     }
@@ -1022,7 +1036,7 @@
                     if (wrappedHandler)
                     {
                         // if primary + we have a page transition block function
-                        if (isPrimary && Ratchet.pageTransitionBlocker)
+                        if (isPrimary && Ratchet.pageTransitionBlocker && showPageTransition)
                         {
                             Ratchet.pageTransitionBlocker(true);
                         }
@@ -1208,8 +1222,24 @@
                 // we're either running a non-GET method or we're not bound to the window
                 // dispatch directly
 
+                var primary = true;
+                var showPageTransition = true;
+                if (config.data)
+                {
+                    if (typeof(config.data.primary) !== "undefined")
+                    {
+                        primary = config.data.primary;
+                    }
+
+                    if (typeof(config.data.showPageTransition) !== "undefined")
+                    {
+                        showPageTransition = config.data.showPageTransition;
+                    }
+                }
+
                 this.dispatch(config, {
-                    "primary": true
+                    "primary": primary,
+                    "showPageTransition": showPageTransition
                 }, function(err, primary) {
 
                     if (callback)

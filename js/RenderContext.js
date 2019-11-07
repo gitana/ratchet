@@ -184,7 +184,18 @@
                             // copy mergepoint attributes to target
                             attributes = $(mergePoint).prop("attributes");
                             $.each(attributes, function() {
-                                $(newEl).attr(this.name, this.value);
+                                var newValue = "";
+                                if (this.name === "class")
+                                {
+                                    if (newEl.attr("class"))
+                                    {
+                                        newValue = newEl.attr("class") + " ";
+                                    }
+                                }
+
+                                newValue += this.value;
+
+                                $(newEl).attr(this.name, newValue);
                             });
 
                             // copy mergepoint children to target

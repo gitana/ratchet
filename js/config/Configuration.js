@@ -115,6 +115,7 @@
 
             // keys are generated at runtime
             this.blocks = {};
+            this.blockKeys = [];
 
             // instances and classes for evaluators
             this.evaluatorInstances = {};
@@ -133,9 +134,19 @@
             {
                 var x = 0;
 
-                return function()
+                return function(inc, val)
                 {
-                    return x++;
+                    if ((typeof(inc) !== "undefined") && inc !== null)
+                    {
+                        x += inc;
+                    }
+
+                    if ((typeof(val) !== "undefined") && val !== null)
+                    {
+                        x = val;
+                    }
+
+                    return x;
                 };
             }();
 
@@ -352,12 +363,15 @@
             }
 
             // generate a key for this block and register
-            var count = this.uniqueCount();
+
+            // increment block counter by 1
+            var count = this.uniqueCount(1);
             if (block.end) {
                 count = count + 50000;
             }
             var blockKey = "b-" + Ratchet.padLeft(count, 5);
             this.blocks[blockKey] = block;
+            this.blockKeys.push(blockKey);
 
             // fire any listeners
             if (this.subscriptionsCount > 0)
@@ -397,6 +411,12 @@
                 }
                 this.triggerListeners(listenerConfig);
             }
+
+            // remove from block keys
+            var i = this.blockKeys.indexOf(blockKey);
+            if (i > -1) {
+                this.blockKeys.splice(i, 1);
+            }
         },
 
         /**
@@ -415,13 +435,7 @@
          */
         listKeys: function()
         {
-            var keys = [];
-            for (var key in this.blocks)
-            {
-                keys.push(key);
-            }
-
-            return keys;
+            return this.blockKeys;
         },
 
         /**
@@ -443,8 +457,10 @@
             // figure out which blocks to apply
             var orderedBlockKeys = [];
             var keepers = {};
-            for (var blockKey in this.blocks)
+            for (var z = 0; z < this.blockKeys.length; z++)
             {
+                var blockKey = this.blockKeys[z];
+
                 var block = this.blocks[blockKey];
 
                 if (!block.evaluator)
@@ -499,28 +515,7 @@
                 return defaultCompare(block_a.order, block_b.order);
             });
 
-            /*
-            var _blocks = [];
-            for (var i = 0; i < orderedBlockKeys.length; i++) {
-                _blocks.push(keepers[orderedBlockKeys[i]]);
-            }
-            console.log("ORDERED BLOCKS: " + JSON.stringify(_blocks, null, "  "));
-            */
-
-
-            /*
-            // debugging
-            Ratchet.logDebug("Configuration evaluate() for context: " + (context ? JSON.stringify(context) : "null"));
-            for (var blockKey in keepers)
-            {
-                Ratchet.logDebug(" - keeper[" + blockKey + "]: " + JSON.stringify(keepers[blockKey]));
-            }
-            */
-
             // now apply
-            /*
-            Ratchet.logDebug("Applying Configuration");
-            */
             var result = {};
             for (var i = 0; i < orderedBlockKeys.length; i++)
             {
@@ -540,15 +535,8 @@
                     replace = true;
                 }
 
-                /*
-                Ratchet.logDebug("Applying block: " + blockKey + ": " + JSON.stringify(config));
-                */
-
                 self.merge(config, result, replace, noRemove);
             }
-            /*
-            Ratchet.logDebug("Applied Configuration: " + JSON.stringify(result));
-            */
 
             return result;
         },
@@ -706,10 +694,9 @@
         clone: function(empty)
         {
             var x = new configClass();
-            //x.evaluatorInstances = this.evaluatorInstances;
-            //x.evaluatorTypes = this.evaluatorTypes;
 
-            for (var instanceId in this.evaluatorInstances) {
+            for (var instanceId in this.evaluatorInstances)
+            {
                 x.evaluatorInstances[instanceId] = this.evaluatorInstances[instanceId];
             }
 
@@ -722,11 +709,17 @@
 
             if (!empty)
             {
-                for (var blockKey in this.blocks) {
+                for (var z = 0; z < this.blockKeys.length; z++)
+                {
+                    var blockKey = this.blockKeys[z];
+
                     x.blocks[blockKey] = JSON.parse(JSON.stringify(this.blocks[blockKey]));
                 }
 
-                for (var subscriptionId in this.subscriptions) {
+                x.blockKeys = JSON.parse(JSON.stringify(this.blockKeys));
+
+                for (var subscriptionId in this.subscriptions)
+                {
                     x.subscriptions[subscriptionId] = this.subscriptions[subscriptionId];
 
                     // increase subscriptions count
@@ -734,6 +727,9 @@
                         x.subscriptionsCount++;
                     }
                 }
+
+                // copy the block counter
+                x.uniqueCount(null, this.uniqueCount());
             }
 
             return x;
@@ -745,6 +741,10 @@
         empty: function()
         {
             this.blocks = {};
+            this.blockKeys = [];
+
+            // reset block counter
+            this.uniqueCount(null, 0);
 
             this.subscriptions = {};
             this.subscriptionsCount = 0;
@@ -759,6 +759,10 @@
         {
             // keys are generated at runtime
             this.blocks = {};
+            this.blockKeys = [];
+
+            // reset block counter
+            this.uniqueCount(null, 0);
 
             // instances and classes for evaluators
             this.evaluatorInstances = {};
@@ -768,29 +772,14 @@
             this.subscriptions = {};
             this.subscriptionsCount = 0;
 
-            for (var instanceId in configuration.evaluatorInstances) {
-                this.evaluatorInstances[instanceId] = configuration.evaluatorInstances[instanceId];
-            }
-
-            for (var typeId in configuration.evaluatorTypes) {
-                this.evaluatorTypes[typeId] = configuration.evaluatorTypes[typeId];
-            }
-
-            for (var blockKey in configuration.blocks) {
-                this.blocks[blockKey] = JSON.parse(JSON.stringify(configuration.blocks[blockKey]));
-            }
-
-            for (var subscriptionId in configuration.subscriptions) {
-                this.subscriptions[subscriptionId] = configuration.subscriptions[subscriptionId];
-
-                // increase subscriptions count
-                for (var listenerId in this.subscriptions[subscriptionId]) {
-                    this.subscriptionsCount++;
-                }
-            }
-
+            this.accumulate(configuration);
         },
 
+        /**
+         * Takes the contents of the given configuration and adds it into our config.
+         *
+         * @param configuration
+         */
         accumulate: function(configuration)
         {
             for (var instanceId in configuration.evaluatorInstances) {
@@ -801,8 +790,11 @@
                 this.evaluatorTypes[typeId] = configuration.evaluatorTypes[typeId];
             }
 
-            for (var blockKey in configuration.blocks) {
-                this.blocks[blockKey] = JSON.parse(JSON.stringify(configuration.blocks[blockKey]));
+            for (var z = 0; z < configuration.blockKeys.length; z++)
+            {
+                var blockKey = configuration.blockKeys[z];
+
+                this.add(JSON.parse(JSON.stringify(configuration.blocks[blockKey])));
             }
 
             for (var subscriptionId in configuration.subscriptions) {

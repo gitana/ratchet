@@ -992,7 +992,7 @@
             }
 
             // fire beforeDispatch event for ratchet
-            $('body').trigger('beforeDispatch', [this]);
+            $('body').trigger('beforeDispatch', [this, params]);
 
             // increment dispatch count
             this.incrementDispatchCount();

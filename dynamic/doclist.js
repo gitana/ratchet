@@ -896,6 +896,7 @@
             var multiSelectButton = self._findButton(model, "multi-documents-action-selector");
             if (multiSelectButton)
             {
+                multiSelectButton.buttons = multiSelectButton.buttons || [];
                 for (var i = 0; i < multiSelectButton.buttons.length; i++)
                 {
                     var disable = false;
@@ -926,29 +927,66 @@
                     disable = self.shouldDisableButton(model, multiSelectButton.buttons[i], selectedItems, disable);
                     hidden = self.shouldHideButton(model, multiSelectButton.buttons[i], selectedItems, hidden);
 
-                    var ul = $("[role='menu'][aria-labelledby='list-button-multi-documents-action-selector']");
-                    var a = $(ul).find(".list-button-multi-documents-action-" + multiSelectButton.buttons[i].action);
+                    multiSelectButton.buttons[i].disable = disable;
+                    multiSelectButton.buttons[i].hidden = hidden;
+                }
 
-                    $(a).parent().prop("disabled", false);
-                    $(a).parent().removeClass("disabled");
-                    $(a).prop("disabled", false);
-                    $(a).removeClass("disabled");
-
-                    if (disable)
+                // remove anything that is marked as hidden
+                var i = 0;
+                do
+                {
+                    if (i < multiSelectButton.buttons.length)
                     {
-                        $(a).parent().prop("disabled", true);
-                        $(a).parent().addClass("disabled");
-                        $(a).prop("disabled", true);
-                        $(a).addClass("disabled");
+                        if (multiSelectButton.buttons[i].hidden)
+                        {
+                            multiSelectButton.buttons.splice(i, 1);
+                        }
+                        else
+                        {
+                            i++;
+                        }
                     }
+                }
+                while (i < multiSelectButton.buttons.length);
 
-                    if (hidden)
+                // if buttons array empty, disable select button
+                var buttonEl = $(".list-button-multi-documents-action-selector");
+                if (multiSelectButton.buttons.length === 0)
+                {
+                    $(buttonEl).prop("disabled", true);
+                    $(buttonEl).parent().addClass("disabled");
+                }
+                else
+                {
+                    $(buttonEl).prop("disabled", false);
+                    $(buttonEl).parent().removeClass("disabled");
+
+                    for (var i = 0; i < multiSelectButton.buttons.length; i++)
                     {
-                        $(a).hide();
-                    }
-                    else
-                    {
-                        $(a).show();
+                        var ul = $("[role='menu'][aria-labelledby='list-button-multi-documents-action-selector']");
+                        var a = $(ul).find(".list-button-multi-documents-action-" + multiSelectButton.buttons[i].action);
+
+                        $(a).parent().prop("disabled", false);
+                        $(a).parent().removeClass("disabled");
+                        $(a).prop("disabled", false);
+                        $(a).removeClass("disabled");
+
+                        if (disable)
+                        {
+                            $(a).parent().prop("disabled", true);
+                            $(a).parent().addClass("disabled");
+                            $(a).prop("disabled", true);
+                            $(a).addClass("disabled");
+                        }
+
+                        if (hidden)
+                        {
+                            $(a).hide();
+                        }
+                        else
+                        {
+                            $(a).show();
+                        }
                     }
                 }
             }
@@ -1001,7 +1039,6 @@
         {
             return hidden;
         }
-
 
     }));
 

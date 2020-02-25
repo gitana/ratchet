@@ -21,9 +21,7 @@
     return Ratchet.Gadgets.Picker = Ratchet.DynamicRegistry.register("picker", DocList.extend({
 
         // this is typically overridden
-        context: function() {
-            return {};
-        },
+        context: {},
 
         /**
          * @override

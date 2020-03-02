@@ -562,12 +562,11 @@
         }
         var gadget = Ratchet.instantiateGadget(pickerType, pickerId, pickerConfig);
 
-        // pickers rely on "context" method to provide environment variables used for looking things up
-        if (config.context) {
-            gadget.prototype.context = function() {
-                return config.context;
-            };
+        // copy context forward if it is available
+        if (!config.context) {
+            config.context = {};
         }
+        gadget.prototype.context = config.context;
 
         var picked = false;
 
@@ -773,12 +772,11 @@
         }
         var gadget = Ratchet.instantiateGadget(inlineGadgetType, inlineGadgetId, inlineGadgetConfig);
 
-        // pickers rely on "context" method to provide environment variables used for looking things up
-        if (config.context) {
-            gadget.prototype.context = function() {
-                return config.context;
-            };
+        // copy context forward (if available)
+        if (!config.context) {
+            config.context = {};
         }
+        gadget.prototype.context = config.context;
 
         var inlineGadget = $('<div gadget="' + inlineGadgetType + '" id="' + inlineGadgetId + '"></div>');
         inlineGadget.css("display", "none");

@@ -971,7 +971,7 @@
                         $(a).prop("disabled", false);
                         $(a).removeClass("disabled");
 
-                        if (disable)
+                        if (multiSelectButton.buttons[i].disable)
                         {
                             $(a).parent().prop("disabled", true);
                             $(a).parent().addClass("disabled");

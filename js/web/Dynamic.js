@@ -2,31 +2,20 @@
 /*jshint -W004 */ // duplicate variables
 (function() {
 
-    /*
     var MODAL_TEMPLATE = ' \
-        <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="overflow: visible !important"> \
-            <div class="modal-dialog"> \
+        <div class="modal" tabindex="-1" role="dialog"> \
+            <div class="modal-dialog modal-dialog-centered" role="document"> \
                 <div class="modal-content"> \
                     <div class="modal-header"> \
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> \
-                        <h4 class="modal-title"></h4> \
+                        <h5 class="modal-title"></h5> \
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> \
+                            <span aria-hidden="true">&times;</span> \
+                        </button> \
                     </div> \
                     <div class="modal-body"></div> \
                     <div class="modal-footer"></div> \
                 </div> \
             </div> \
-        </div> \
-    ';
-    */
-
-    var MODAL_TEMPLATE = ' \
-        <div class="modal" tabindex="-1" data-width="760" style="display:none"> \
-            <div class="modal-header"> \
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> \
-                <h4 class="modal-title"></h4> \
-            </div> \
-            <div class="modal-body"></div> \
-            <div class="modal-footer"></div> \
         </div> \
     ';
 
@@ -123,123 +112,6 @@
         }
     };
 
-    /*
-    Ratchet.startModalGadget = function(options, overrides, beforeRatchetCallback, afterRatchetCallback)
-    {
-        var self = this;
-
-        if (!options) {
-            options = {};
-        }
-        if (Ratchet.isUndefined(options.cancel)) {
-            options.cancel = true;
-        }
-        if (Ratchet.isUndefined(options.title)) {
-            options.title = "Unknown Title";
-        }
-        if (Ratchet.isUndefined(options.completeButtonTitle)) {
-            options.completeButtonTitle = "Done";
-        }
-
-        Ratchet.showModal(options, function(div, cb) {
-
-            var gadgetType = options.type;
-            var gadgetConfiguration = options.config;
-            if (!gadgetConfiguration) {
-                gadgetConfiguration = {};
-            }
-
-            var tempGadgetId = options.id;
-            if (!tempGadgetId) {
-                tempGadgetId = "gadget-" + new Date().getTime();
-            }
-            var tempGadgetType = "type-" + new Date().getTime();
-
-            // create an instance of the gadget
-            var dynamicGadget = null;
-
-            var matches = Ratchet.GadgetRegistry.list(gadgetType);
-            if (matches && matches.length > 0) {
-                dynamicGadget = matches[0];
-            }
-            if (!dynamicGadget && Ratchet.DynamicGadgets) {
-                dynamicGadget = Ratchet.DynamicGadgets[gadgetType];
-            }
-            if (dynamicGadget)
-            {
-                // instantiate - config is loaded by gadget on configure()
-                (function(tempGadgetType, gadgetConfiguration, dynamicGadget) {
-
-                    // using meta-programming, create instances of page controllers
-                    Ratchet.GadgetRegistry.register(tempGadgetType, dynamicGadget.extend({
-
-                        setup: function() {
-                            this.get("/gadget/" + tempGadgetType, this.index);
-                        },
-
-                        configureDefault: function() {
-                            this.base();
-
-                            // push page configuration into config service
-                            this.config(gadgetConfiguration);
-                        }
-
-                    }));
-
-                }(tempGadgetType, gadgetConfiguration, dynamicGadget));
-            }
-            else
-            {
-                Ratchet.logError("Cannot start modal for unknown gadget type: " + gadgetType);
-                return;
-            }
-
-            // attributes
-            $(div).find(".modal-body").attr("gadget", tempGadgetType);
-            $(div).find(".modal-body").attr("id", tempGadgetId);
-
-            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right complete-button' data-dismiss='modal' aria-hidden='true'>" + options.completeButtonTitle + "</button>");
-
-            // ratchet it up
-            var ratchet = new Ratchet($(div).find(".modal-body")[0], options.parent, function() {
-            });
-
-            // set up ratchet callback
-            if (beforeRatchetCallback)
-            {
-                beforeRatchetCallback.call(self, div, ratchet);
-            }
-
-            // run the ratchet
-            ratchet.run("/gadget/" + tempGadgetType);
-
-            if (overrides)
-            {
-                // get back the gadget bound into the ratchet
-                for (var i = 0; i < ratchet.gadgetInstances.length; i++)
-                {
-                    for (var k in overrides)
-                    {
-                        ratchet.gadgetInstances[i][k] = overrides[k];
-                    }
-                }
-            }
-
-            // call any custom gadget callbacks (after ratchet callback)
-            if (afterRatchetCallback)
-            {
-                for (var i = 0; i < ratchet.gadgetInstances.length; i++)
-                {
-                    afterRatchetCallback(div, ratchet, ratchet.gadgetInstances[i]);
-                }
-            }
-
-            cb();
-
-        });
-    };
-    */
-
     Ratchet.confirmDelete = function(title, body, onConfirm)
     {
         Ratchet.startModalConfirm(title, body, "Delete", "btn-danger", function() {
@@ -257,7 +129,7 @@
     Ratchet.startModalConfirm = function(title, body, confirmButtonTitle, confirmButtonClass, onConfirm, config, configCallback)
     {
         if (!confirmButtonClass) {
-            confirmButtonClass = "btn-default";
+            confirmButtonClass = "btn-primary";
         }
 
         if (!config) {
@@ -309,7 +181,7 @@
             "cancel": false
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
 
             cb();
         });
@@ -323,7 +195,7 @@
             "modalClass": Ratchet.defaultModalFadeClass
         }, function(div, cb) {
             $(div).find('.modal-body').html("<p align='center'><br/>" + message + "<br/><br/></p>");
-            $(div).find('.modal-footer').append("<button class='btn btn-default pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
+            $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right' data-dismiss='modal' aria-hidden='true'>Okay</button>");
 
             cb();
         });
@@ -391,8 +263,9 @@
         // auto-add cancel button
         if (config.cancel)
         {
-            var cancelButton = $("<button class='btn btn-default pull-left' data-dismiss='modal' aria-hidden='true'>Cancel</button>");
+            var cancelButton = $("<button class='btn btn-secondary pull-left' data-dismiss='modal'>Cancel</button>");
             $(div).find('.modal-footer').append(cancelButton);
+            $(div).find(".modal-footer").css("justify-content", "space-between");
         }
 
         if (typeof(config.footer) === "undefined") {

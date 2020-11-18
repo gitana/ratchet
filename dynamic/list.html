@@ -24,7 +24,7 @@
 
                         {{#if select}}
                             <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-menu-{{key}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdown-menu-{{key}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
                                     <span class="dropdown-title">{{title}}</span>
                                     <span class="caret"></span>
@@ -56,7 +56,7 @@
                                 </label>
                             </div>
                             {{else}}
-                                <button class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
+                                <button class="{{#if buttonClass}}{{buttonClass}}{{else}}btn btn-outline-secondary{{/if}} list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
                                 {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
                                 {{title}}&nbsp;
                                 {{#if buttons}}
@@ -114,7 +114,7 @@
                                     </label>
                                 </div>
                             {{else}}
-                                <button class="btn btn-default list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
+                                <button class="btn {{#if buttonClass}}{{buttonClass}}{{else}}btn btn-outline-secondary{{/if}} list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
                                 {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
                                 {{title}}&nbsp;
                                 {{#if buttons}}
@@ -152,7 +152,7 @@
             {{/greaterThan}}
             {{/if}}
 
-            <table style="width: 100%" class="table table-striped table-bordered table-hover">
+            <table style="width: 100%" class="table table-hover">
                 <thead>
                 <tr>
 

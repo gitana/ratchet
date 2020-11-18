@@ -14,7 +14,7 @@
             require("ratchet/handlebars");
             require("bootstrap");
             require("datatables");
-            require("datatables-bootstrap");
+            require("datatables-bootstrap4");
 
             return factory(Ratchet, html);
         });
@@ -423,7 +423,7 @@
             // bootstrap
             //tableConfig["sDom"] = '<"top"i>rt<"bottom"flp><"clear">';
             //tableConfig["sDom"] = '<"top"i>rt<"bottom"flp><"clear">';
-            //tableConfig["sDom"] = "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>";
+            //tableConfig["sDom"] = "<'row'<'col-6'T><'col-6'f>r>t<'row'<'col-6'i><'col-6'p>>";
 
             // @see http://datatables.net/usage/options
             /**
@@ -447,22 +447,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlft>><'row'<'col-6'i><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lft>><'row'<'col-6'i><'col-6'p>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rft>><'row'<'col-6'i><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'ft>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'ft>><'row'<'col-6'i><'col-6'p>>";
                                 }
                             }
                         }
@@ -472,22 +472,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlft>><'row'<'col-6'><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lft>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lft>><'row'<'col-6'><'col-6'p>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rft>><'row'<'col-6'><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'ft>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'ft>><'row'<'col-6'><'col-6'p>>";
                                 }
                             }
                         }
@@ -500,22 +500,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlft>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlft>><'row'<'col-6'i><'col-6'>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lft>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lft>><'row'<'col-6'i><'col-6'>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rft>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rft>><'row'<'col-6'i><'col-6'>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'ft>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'ft>><'row'<'col-6'i><'col-6'>>";
                                 }
                             }
                         }
@@ -525,22 +525,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlft>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlft>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lft>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lft>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rft>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rft>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'ft>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'ft>>";
                                 }
                             }
                         }
@@ -556,22 +556,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlt>><'row'<'col-6'i><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lt>><'row'<'col-6'i><'col-6'p>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rt>><'row'<'col-6'i><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rt>><'row'<'col-6'i><'col-6'p>>";
                                 }
                             }
                         }
@@ -581,22 +581,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlt>><'row'<'col-6'><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lt>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lt>><'row'<'col-6'><'col-6'p>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rt>><'row'<'col-6'><'col-6'p>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'p>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12't>><'row'<'col-6'><'col-6'p>>";
                                 }
                             }
                         }
@@ -609,22 +609,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlt>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlt>><'row'<'col-6'i><'col-6'>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lt>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lt>><'row'<'col-6'i><'col-6'>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rt>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rt>><'row'<'col-6'i><'col-6'>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12't>><'row'<'col-md-6'i><'col-md-6'>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12't>><'row'<'col-6'i><'col-6'>>";
                                 }
                             }
                         }
@@ -634,22 +634,22 @@
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rlt>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rlt>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'lt>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'lt>>";
                                 }
                             }
                             else
                             {
                                 if (tableConfig.processing)
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12'rt>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12'rt>>";
                                 }
                                 else
                                 {
-                                    tableConfig["sDom"] = "<'row'<'col-md-12't>>";
+                                    tableConfig["sDom"] = "<'row'<'col-12't>>";
                                 }
                             }
                         }
@@ -994,6 +994,19 @@
                     }, 250);
 
                     self.handleDrawCallback.call(self, el, model, this, settings);
+
+                    if (!model.rows || model.rows.length === 0)
+                    {
+                        $(el).find("table").removeClass("table-striped");
+                        $(el).find("table").removeClass("table-hover");
+                        $(el).find(".dataTables_length").hide();
+                        $(el).find(".buttonbar").hide();
+                        $(el).find("table").addClass("empty");
+                    }
+                    else
+                    {
+                        $(el).find("table").removeClass("empty");
+                    }
                 };
 
                 tableConfig.infoCallback = function(settings, start, end, max, total, pre) {
@@ -1783,7 +1796,6 @@
          */
         initComplete: function(el, model, table, oSettings, json)
         {
-
         },
 
         /**

@@ -1000,8 +1000,10 @@
                         $(el).find("table").removeClass("table-striped");
                         $(el).find("table").removeClass("table-hover");
                         $(el).find(".dataTables_length").hide();
-                        $(el).find(".buttonbar").hide();
+                        //$(el).find(".buttonbar").hide();
                         $(el).find("table").addClass("empty");
+                        $(el).find(".dataTables_wrapper").addClass("no-rows");
+                        $(el).find(".dataTables_filter").hide();
                     }
                     else
                     {
@@ -1603,7 +1605,7 @@
                     var item = null;
                     for (var i = 0; i < model.rows.length; i++)
                     {
-                        if (model.rows[i].id == targetObjectId)
+                        if (model.rows[i].id === targetObjectId)
                         {
                             item = model.rows[i];
                             break;
@@ -1648,7 +1650,7 @@
             if (!type && item.property) {
                 type = "property";
             }
-            if (type == "property") {
+            if (type === "property") {
                 var property = item.property;
                 if (Ratchet.isFunction(property)) {
                     property.call(self, row, function(value, index) {

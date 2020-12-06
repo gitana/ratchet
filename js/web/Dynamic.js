@@ -263,7 +263,7 @@
         // auto-add cancel button
         if (config.cancel)
         {
-            var cancelButton = $("<button class='btn btn-secondary pull-left' data-dismiss='modal'>Cancel</button>");
+            var cancelButton = $("<button class='btn btn-cancel pull-left' data-dismiss='modal'>Cancel</button>");
             $(div).find('.modal-footer').append(cancelButton);
             $(div).find(".modal-footer").css("justify-content", "space-between");
         }

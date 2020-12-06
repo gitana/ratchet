@@ -1,10 +1,64 @@
+{{#*inline "render_buttons"}}
+
+    {{#if select}}
+        <div class="form-group">
+            <label class="list-select-label">{{title}}</label>
+            <select class="list-select-{{key}} list-select form-control">
+                {{#each options}}
+                <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+                {{/each}}
+            </select>
+        </div>
+    {{else}}
+        {{#if checkbox}}
+            <div class="btn-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="list-checkbox-{{key}} list-checkbox" {{#if checked}}checked{{/if}}> {{title}}
+                    </label>
+                </div>
+            </div>
+        {{else}}
+            {{#if buttons}}
+                <div class="btn-group">
+                    <button type="button" class="{{#if buttonClass}}{{buttonClass}}{{else}}btn btn-outline-secondary{{/if}} dropdown-toggle list-button-{{key}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                        {{title}}
+                        <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu">
+                        {{#each buttons}}
+                            {{#if divider}}
+                                <div class="dropdown-divider"></div>
+                            {{else}}
+                                <a class="dropdown-item list-button-{{key}}" href="#" title="{{title}}">
+                                    {{#if iconClass}}<i class="{{iconClass}}"></i>{{/if}}
+                                    {{title}}
+                                </a>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+            {{else}}
+                <div class="btn-group">
+                    <button class="btn {{#if buttonClass}}{{buttonClass}}{{else}}btn btn-outline-secondary{{/if}} list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}">
+                        {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
+                        {{title}}&nbsp;
+                    </button>
+                </div>
+            {{/if}}
+        {{/if}}
+    {{/if}}
+{{/inline}}
+
+
 {{#if chrome}}
 <div>
     <div class="chrome chrome-header">
         <div class="chrome-title">{{chrome.title}}</div>
     </div>
     <div class="chrome chrome-body">
-{{/if}}
+        {{/if}}
 
         <div class="gadget list {{#if cssClasses}}{{cssClasses}}{{/if}}" xmlns="http://www.w3.org/1999/html">
 
@@ -19,72 +73,7 @@
 
                     {{#each buttons}}
                     {{#compare align "left"}}
-
-                    <div class="button-container {{#if buttons}}dropdown{{/if}}">
-
-                        {{#if select}}
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdown-menu-{{key}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
-                                    <span class="dropdown-title">{{title}}</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdown-menu-{{key}}">
-                                    {{#each options}}
-                                    <li><a href="#" class="list-select list-select-{{../key}}" {{#if selected}}data-selected="true"{{/if}} data-select-key="{{../key}}" data-select-value="{{value}}" data-select-label="{{label}}">{{label}}</a></li>
-                                    {{/each}}
-                                </ul>
-                            </div>
-
-                            <!--
-                            <div class="form-group">
-                                {{#if title}}
-                                    <label class="list-select-label">{{title}}</label>
-                                {{/if}}
-                                <select class="list-select-{{key}} list-select form-control">
-                                    {{#each options}}
-                                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-                            -->
-                        {{else}}
-                            {{#if checkbox}}
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" class="list-checkbox-{{key}} list-checkbox" {{#if checked}}checked{{/if}}> {{title}}
-                                </label>
-                            </div>
-                            {{else}}
-                                <button class="{{#if buttonClass}}{{buttonClass}}{{else}}btn btn-outline-secondary{{/if}} list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
-                                {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
-                                {{title}}&nbsp;
-                                {{#if buttons}}
-                                <span class="caret"></span>
-                                {{/if}}
-                                </button>
-                            {{/if}}
-                        {{/if}}
-
-                        {{#if buttons}}
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-{{key}}">
-                            {{#each buttons}}
-                            {{#if divider}}
-                                <li class="divider"></li>
-                            {{else}}
-                                <li>
-                                    <a href="#" class="list-button-{{key}}" title="{{title}}">
-                                        {{#if iconClass}}<i class="{{iconClass}}"></i>{{/if}}
-                                        &nbsp;{{title}}
-                                    </a>
-                                </li>
-                            {{/if}}
-                            {{/each}}
-                        </ul>
-                        {{/if}}
-
-                    </div>
-
+                    {{> render_buttons}}
                     {{/compare}}
                     {{/each}}
 
@@ -94,55 +83,7 @@
 
                     {{#each buttons}}
                     {{#equalOrEmpty align "right"}}
-
-                    <div class="button-container {{#if buttons}}dropdown{{/if}}">
-
-                        {{#if select}}
-                            <div class="form-group">
-                                <label class="list-select-label">{{title}}</label>
-                                <select class="list-select-{{key}} list-select form-control">
-                                    {{#each options}}
-                                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
-                                    {{/each}}
-                                </select>
-                            </div>
-                        {{else}}
-                            {{#if checkbox}}
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" class="list-checkbox-{{key}} list-checkbox" {{#if checked}}checked{{/if}}> {{title}}
-                                    </label>
-                                </div>
-                            {{else}}
-                                <button class="btn {{#if buttonClass}}{{buttonClass}}{{else}}btn btn-outline-secondary{{/if}} list-button-{{key}} {{#if buttons}}dropdown-toggle{{/if}}" {{#if buttons}}data-toggle="dropdown"{{/if}}>
-                                {{#if iconClass}}<i class="{{iconClass}} icon-black"></i>{{/if}}
-                                {{title}}&nbsp;
-                                {{#if buttons}}
-                                <span class="caret"></span>
-                                {{/if}}
-                                </button>
-                            {{/if}}
-                        {{/if}}
-
-                        {{#if buttons}}
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="list-button-{{key}}">
-                            {{#each buttons}}
-                            {{#if divider}}
-                                <li class="divider"></li>
-                            {{else}}
-                                <li>
-                                    <a href="#" class="list-button-{{key}}" title="{{title}}">
-                                        {{#if iconClass}}<i class="{{iconClass}}"></i>{{/if}}
-                                        &nbsp;{{title}}
-                                    </a>
-                                </li>
-                            {{/if}}
-                            {{/each}}
-                        </ul>
-                        {{/if}}
-
-                    </div>
-
+                    {{> render_buttons}}
                     {{/equalOrEmpty}}
                     {{/each}}
 
@@ -184,7 +125,7 @@
             </table>
         </div>
 
-{{#if chrome}}
+        {{#if chrome}}
     </div>
 </div>
 {{/if}}

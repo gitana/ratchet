@@ -424,6 +424,24 @@
                             {
                                 button.rejectAuthority = selectorGroupItem.rejectAuthority;
                             }
+                            if (selectorGroupItem.allowTeam)
+                            {
+                                button.allowTeam = selectorGroupItem.allowTeam;
+                            }
+                            if (selectorGroupItem.rejectTeam)
+                            {
+                                button.rejectTeam = selectorGroupItem.rejectTeam;
+                            }
+
+                            if (selectorGroupItem.hideConditions)
+                            {
+                                button.hideConditions = selectorGroupItem.hideConditions;
+                            }
+
+                            if (selectorGroupItem.disableConditions)
+                            {
+                                button.disableConditions = selectorGroupItem.disableConditions;
+                            }
 
                             selectButton.buttons.push(button);
                         }

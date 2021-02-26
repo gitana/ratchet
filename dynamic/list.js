@@ -665,6 +665,11 @@
                 //[[10, 25, 50, -1], [10, 25, 50, "All"]]
             }
 
+            if ("bLengthChange" in model)
+            {
+                tableConfig["bLengthChange"] = model.bLengthChange;
+            }
+
             if (model.length)
             {
                 tableConfig["pageLength"] = model.length;

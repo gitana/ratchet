@@ -352,6 +352,7 @@
                             var label = selectorGroupItem.label;
                             var iconClass = selectorGroupItem.iconClass;
                             var order = selectorGroupItem.order;
+                            var permissionedObservable = selectorGroupItem.permissionedObservable;
 
                             // retrieve the action configuration
                             var actionConfig = null;
@@ -402,6 +403,11 @@
                                 if (typeof(order) !== "undefined")
                                 {
                                     button.order = order;
+                                }
+
+                                if (typeof(permissionedObservable) !== "undefined")
+                                {
+                                    button.permissionedObservable = permissionedObservable;
                                 }
                             }
                         }

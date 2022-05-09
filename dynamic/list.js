@@ -1499,6 +1499,15 @@
             callback();
         },
 
+        teardown: function() {
+            this.base();
+
+            // Ensure that list data and event listeners get cleaned up
+            if (this.oTable) {
+                this.oTable.fnDestroy();
+            }
+        },
+
         handleSetFilter: function(el, model, value)
         {
             var self = this;

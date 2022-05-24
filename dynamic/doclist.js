@@ -653,6 +653,7 @@
                     //var order = selectorGroupItem.order;
 
                     var label = selectorGroupItem.label;
+                    var newWindow = selectorGroupItem.newWindow;
 
                     var id = row.id;
                     if (!id && row._doc) {
@@ -695,6 +696,9 @@
                         if (altText) {
                             html += " title='" + altText + "'";
                         }
+                        if (newWindow) {
+                            html += " target='_blank'";
+                        }
                         html += " list-row-id='" + id + "'>";
 
                         html += "<i class='action-icon " + iconClass + "'></i>";
@@ -717,6 +721,9 @@
                             html = "<a href='#'";
                             if (altText) {
                                 html += " title='" + altText + "'";
+                            }
+                            if (newWindow) {
+                                html += " target='_blank'";
                             }
                             html += " class='list-button-action list-button-action-" + actionId + "' list-action-id='" + actionId + "' list-row-id='" + id + "'>";
                             html += "<i class='action-icon " + iconClass + "'></i>";

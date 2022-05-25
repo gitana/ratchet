@@ -861,7 +861,7 @@
             if (column.key == "actions")
             {
                 config["className"] = "actions";
-                config["width"] = "150px";
+                //config["width"] = "150px";
             }
         },
 

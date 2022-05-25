@@ -994,9 +994,9 @@
 
                 tableConfig.drawCallback = function(settings) {
 
-                    setTimeout(function() {
-                        $(window).trigger("resize");
-                    }, 250);
+                    // setTimeout(function() {
+                    //     $(window).trigger("resize");
+                    // }, 250);
 
                     self.handleDrawCallback.call(self, el, model, this, settings);
                 };
@@ -1074,18 +1074,18 @@
 
                 // for any sorting columns, it seems we need to manually trigger a resize in order for the
                 // columns not to lose their responsiveness
-                $(el).find("th.sorting,th.sorting_asc,th.sorting_desc").click(function(e) {
-                    setTimeout(function() {
-                        $(window).trigger("resize");
-                    }, 250);
-                });
+                // $(el).find("th.sorting,th.sorting_asc,th.sorting_desc").click(function(e) {
+                //     setTimeout(function() {
+                //         $(window).trigger("resize");
+                //     }, 250);
+                // });
 
                 // if the display length changes, we need to trigger a window resize for the same reason as above
-                $(".dataTables_length label select", el).click(function(e) {
-                    setTimeout(function() {
-                        $(window).trigger("resize");
-                    }, 250);
-                });
+                // $(".dataTables_length label select", el).click(function(e) {
+                //     setTimeout(function() {
+                //         $(window).trigger("resize");
+                //     }, 250);
+                // });
 
                 // all done - fire callback
                 //callback();
@@ -1434,8 +1434,8 @@
 
         handleInitComplete: function(el, model, table, oSettings, json, callback)
         {
-            table.fnAdjustColumnSizing();
-            table.fnDraw();
+            //$(table).dataTable().fnAdjustColumnSizing();
+            //$(table).dataTable().fnDraw();
 
             $(el).find('.dataTables_scrollBody').css('overflow','hidden');
 
@@ -1492,7 +1492,7 @@
             }
 
             // let columns resize one last time
-            $(table).DataTable().columns.adjust().draw();
+            //$(table).dataTable().columns.adjust().draw();
 
             this.initComplete(el, model, table, oSettings, json);
 
@@ -2134,7 +2134,9 @@
         {
             var self = this;
 
-            self.oTable.DataTable().ajax.reload();
+            debugger;
+            
+            self.oTable.dataTable().ajax.reload();
         }
 
 

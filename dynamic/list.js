@@ -2060,14 +2060,16 @@
                         array.push(self.toDataTableRow(model, obj, context));
                     }
 
+                    var totalRows = (results.totalRows ? results.totalRows : results.total_rows)
+
                     var attrs = {
-                        "recordsTotal": (results.totalRows ? results.totalRows : results.total_rows),
-                        "recordsFiltered": (results.totalRows ? results.totalRows : results.total_rows)
+                        "recordsTotal": totalRows,
+                        "recordsFiltered": totalRows
                     };
 
                     // set onto model
                     model.rows = results.rows;
-                    model.totalRows = results.totalRows;
+                    model.totalRows = totalRows;
 
                     callback.call(self, array, attrs);
                 });

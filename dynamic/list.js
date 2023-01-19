@@ -1461,7 +1461,23 @@
         },
 
         handleDrawCallback: function(el, model, table, settings) {
-
+            // Update list Pagination display
+            if (model.rows)
+            {
+                // if we're showing the max number of records, then don't show pagination
+                $(el).find(".dataTables_paginate").show();
+                if (model.rows.length === model.totalRows || !model.totalRows)
+                {
+                    $(el).find(".dataTables_paginate").hide();
+                }
+    
+                // hide 0 to 0 of 0
+                $(el).find(".dataTables_info").show();
+                if (model.totalRows === 0 || !model.totalRows)
+                {
+                    $(el).find(".dataTables_info").hide();
+                }
+            }
         },
 
         handleLengthChange: function(el, model, table, len) {
@@ -1515,20 +1531,6 @@
             if (!model.columnHeaders)
             {
                 $(el).find("table.dataTable").css("border-top", "0px");
-            }
-
-            // if we're showing the max number of records, then don't show pagination
-            $(el).find(".dataTables_paginate").show();
-            if (json.data.length === json.recordsFiltered || !json.recordsFiltered)
-            {
-                $(el).find(".dataTables_paginate").hide();
-            }
-
-            // hide 0 to 0 of 0
-            $(el).find(".dataTables_info").show();
-            if (json.recordsFiltered === 0 || !json.recordsFiltered)
-            {
-                $(el).find(".dataTables_info").hide();
             }
 
             // let columns resize one last time
@@ -2070,6 +2072,7 @@
                     }).then(function() {
                         // set onto model
                         model.rows = rows;
+                        model.totalRows = totalRows;
 
                         self.afterLoader.call(self, context, model, data, function(json) {
 
@@ -2113,13 +2116,16 @@
                         array.push(self.toDataTableRow(model, obj, context));
                     }
 
+                    var totalRows = (results.totalRows ? results.totalRows : results.total_rows)
+
                     var attrs = {
-                        "recordsTotal": (results.totalRows ? results.totalRows : results.total_rows),
-                        "recordsFiltered": (results.totalRows ? results.totalRows : results.total_rows)
+                        "recordsTotal": totalRows,
+                        "recordsFiltered": totalRows
                     };
 
                     // set onto model
                     model.rows = results.rows;
+                    model.totalRows = totalRows;
 
                     callback.call(self, array, attrs);
                 });

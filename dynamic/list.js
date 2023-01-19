@@ -999,6 +999,46 @@
                     // }, 250);
 
                     self.handleDrawCallback.call(self, el, model, this, settings);
+    
+                    if (!model.rows || model.rows.length === 0)
+                    {
+                        $(el).find("table").removeClass("table-striped");
+                        $(el).find("table").removeClass("table-bordered");
+                        $(el).find("table").removeClass("table-hover");
+                        //$(el).find("table").removeClass("table-sm");
+        
+                        $(el).find(".dataTables_length").hide();
+                        //$(el).find(".buttonbar").hide();
+                        $(el).find("table").addClass("empty");
+                        $(el).find(".dataTables_wrapper").addClass("no-rows");
+                        //$(el).find(".dataTables_filter").hide();
+        
+                        $(el).find("table").removeClass("not-empty");
+                        $(el).find(".dataTables_wrapper").removeClass("has-rows");
+                    }
+                    else
+                    {
+                        if (model.table)
+                        {
+                            if (model.table.striped) {
+                                $(el).find("table").addClass("table-striped");
+                            }
+            
+                            if (model.table.bordered) {
+                                $(el).find("table").addClass("table-bordered");
+                            }
+                        }
+        
+                        $(el).find("table").addClass("table-hover");
+                        //$(el).find("table").addClass("table-sm");
+        
+                        $(el).find(".dataTables_length").show();
+                        $(el).find("table").removeClass("empty");
+                        $(el).find(".dataTables_wrapper").removeClass("no-rows");
+        
+                        $(el).find("table").addClass("not-empty");
+                        $(el).find(".dataTables_wrapper").addClass("has-rows");
+                    }
                 };
 
                 tableConfig.infoCallback = function(settings, start, end, max, total, pre) {
@@ -1495,16 +1535,25 @@
             //$(table).dataTable().columns.adjust().draw();
 
             this.initComplete(el, model, table, oSettings, json);
+            this.afterInitComplete(el, model, table, oSettings, json);
 
             callback();
         },
-
+    
         teardown: function() {
             this.base();
-
+        
             // Ensure that list data and event listeners get cleaned up
-            if (this.oTable) {
-                this.oTable.fnDestroy();
+            // we do this on a timeout so as to prevent UI flickering as the visual DOM element is being cleaned up
+            if (this.oTable)
+            {
+                setTimeout(function(_this) {
+                    return function() {
+                        if (_this.oTable && _this.oTable.fnDestroy) {
+                            _this.oTable.fnDestroy();
+                        }
+                    }
+                }(this), 10000);
             }
         },
 
@@ -1798,6 +1847,13 @@
         initComplete: function(el, model, table, oSettings, json)
         {
 
+        },
+    
+        /**
+         * EXTENSION POINT
+         */
+        afterInitComplete: function(el, model, table, oSettings, json)
+        {
         },
 
         /**

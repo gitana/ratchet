@@ -94,3 +94,30 @@ table.dataTable tbody tr td.dataTables_empty
 {
     background-color: inherit;
 }
+
+.dataTables_length
+{
+    display: none;
+}
+
+.dataTables_wrapper table.table.dataTable thead,
+.dataTables_wrapper table.table.dataTable.empty thead
+{
+    display: none;
+}
+
+.dataTables_wrapper table.table.dataTable.not-empty thead
+{
+    display: table-header-group;
+}
+
+.dataTables_wrapper table.table.dataTable,
+.dataTables_wrapper table.table.dataTable.empty
+{
+    border-width: 0px;
+}
+
+.dataTables_wrapper table.table.dataTable.not-empty
+{
+
+}

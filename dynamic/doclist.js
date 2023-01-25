@@ -485,6 +485,7 @@
                 $(el).find(".list-button-multi-documents-action-selector").addClass("disabled");
 
                 self.formatSortDirectionSelector(model, el);
+                $(el).find(".buttonbar").show();
 
                 callback();
             });

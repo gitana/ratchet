@@ -163,6 +163,8 @@
             this.findHandler = function(context)
             {
                 var handler = null;
+                
+                var guidRegex = new RegExp("^[0-9a-fA-F]{20}$");
 
                 // walk through the routes and find one that matches this URI and method
                 var discoveredMatches = [];
@@ -182,22 +184,26 @@
                             discoveredMatch.text = context.route.uri;
     
                             discoveredMatch.tokenCount = Object.keys(matchedTokens).length;
+                            discoveredMatch.guidTokenCount = 0;
                             if (discoveredMatch.tokenCount > 0)
                             {
-                                var singleValue = true;
+                                var guid = true;
                                 for (var k in matchedTokens)
                                 {
                                     var v = matchedTokens[k];
-            
-                                    if (v && v.indexOf("/") > -1)
+    
+                                    if (!guidRegex.test(v))
                                     {
-                                        singleValue = false;
-                                        break;
+                                        guid = false;
+                                    }
+                                    else
+                                    {
+                                        discoveredMatch.guidTokenCount++;
                                     }
                                 }
         
-                                if (singleValue) {
-                                    discoveredMatch.singleValue = true;
+                                if (guid) {
+                                    discoveredMatch.guid = true;
                                 }
                             }
     
@@ -229,10 +235,10 @@
                 }
                 
                 // break into two lists
-                //      1) a list where we have single-value token values (no "/" characters)
-                //      2) a list where values are mixed (single-value and/or "/" characters)
+                //      1) a list where we have token values consisting solely of guids
+                //      2) a list where values are mixed (some guids and some not guids)
                 //
-                // and then for each of those lists, sort to give preference to fewest tokens
+                // and then for each of those lists, sort to give preference to most tokens with guids
                 //
                 // then concatenate
                 //
@@ -244,17 +250,17 @@
                 for (var d = 0; d < discoveredMatches.length; d++)
                 {
                     var discoveredMatch = discoveredMatches[d];
-                    if (discoveredMatch.singleValue) {
+                    if (discoveredMatch.guid) {
                         list1.push(discoveredMatch);
                     } else {
                         list2.push(discoveredMatch);
                     }
                 }
                 list1.sort(function(a, b) {
-                    return a.tokenCount - b.tokenCount;
+                    return b.guidTokenCount - a.guidTokenCount;
                 });
                 list2.sort(function(a, b) {
-                    return a.tokenCount - b.tokenCount;
+                    return b.guidTokenCount - a.guidTokenCount;
                 });
                 
                 // compose back into discovered matches

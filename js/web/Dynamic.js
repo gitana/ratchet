@@ -601,6 +601,9 @@
         //var ratchet = new Ratchet(picker, parentRatchet, function() {});
         var ratchet = new Ratchet(picker, true, function() {});
 
+        // Mark the picker ratchet as disconnected so that it is not considered the primary page ratchet
+        ratchet.disconnected = true;
+
         // ensure we're in handler callbacks mode
         //var previousUseHandlerCallbacks = Ratchet.useHandlerCallbacks;
         //Ratchet.useHandlerCallbacks = true;

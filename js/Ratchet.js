@@ -180,13 +180,34 @@
                             discoveredMatch.uri = route.uri;
                             discoveredMatch.method = route.method;
                             discoveredMatch.text = context.route.uri;
+    
+                            discoveredMatch.tokenCount = Object.keys(matchedTokens).length;
+                            if (discoveredMatch.tokenCount > 0)
+                            {
+                                var singleValue = true;
+                                for (var k in matchedTokens)
+                                {
+                                    var v = matchedTokens[k];
+            
+                                    if (v && v.indexOf("/") > -1)
+                                    {
+                                        singleValue = false;
+                                        break;
+                                    }
+                                }
+        
+                                if (singleValue) {
+                                    discoveredMatch.singleValue = true;
+                                }
+                            }
+    
                             discoveredMatches.push(discoveredMatch);
                         }
                     }
                 }
                 
-                // if any of the matches have URIs that are substrings of the other match URIs
-                // then remove those
+                // filter out any matches where the URIs are prefix substrings of other match URIs
+                // (meaning that they are superdescribed or encapsulated by other URIs)
                 if (discoveredMatches.length > 0)
                 {
                     var discoveredMatchesByUri = {};
@@ -203,10 +224,43 @@
                     for (var d = 0; d < discoveredMatchesKeys.length; d++)
                     {
                         var k = discoveredMatchesKeys[d];
-                        var discoveredMatch = discoveredMatchesByUri[k];
-                        discoveredMatches.push(discoveredMatch);
+                        discoveredMatches.push(discoveredMatchesByUri[k]);
                     }
                 }
+                
+                // break into two lists
+                //      1) a list where we have single-value token values (no "/" characters)
+                //      2) a list where values are mixed (single-value and/or "/" characters)
+                //
+                // and then for each of those lists, sort to give preference to fewest tokens
+                //
+                // then concatenate
+                //
+                // the idea here is to give preference to any matches where exact IDs were found
+                // and further to give preference to cases where the minimum set of tokens were extracted (allowing for exact matches on URI non-token, textual elements)
+                //
+                var list1 = [];
+                var list2 = [];
+                for (var d = 0; d < discoveredMatches.length; d++)
+                {
+                    var discoveredMatch = discoveredMatches[d];
+                    if (discoveredMatch.singleValue) {
+                        list1.push(discoveredMatch);
+                    } else {
+                        list2.push(discoveredMatch);
+                    }
+                }
+                list1.sort(function(a, b) {
+                    return a.tokenCount - b.tokenCount;
+                });
+                list2.sort(function(a, b) {
+                    return a.tokenCount - b.tokenCount;
+                });
+                
+                // compose back into discovered matches
+                discoveredMatches = [];
+                for (var z = 0; z < list1.length; z++) { discoveredMatches.push(list1[z]); }
+                for (var z = 0; z < list2.length; z++) { discoveredMatches.push(list2[z]); }
                 
                 var discoveredHandler = null;
                 var discoveredTokens = null;
@@ -214,8 +268,8 @@
                 // keep the first entry
                 if (discoveredMatches.length > 0)
                 {
-                    // discoveredHandler = discoveredMatches[discoveredMatches.length - 1];
-                    // discoveredTokens = discoveredMatches[discoveredMatches.length - 1];
+                    // discoveredHandler = discoveredMatches[discoveredMatches.length - 1].handler;
+                    // discoveredTokens = discoveredMatches[discoveredMatches.length - 1].tokens;
                     discoveredHandler = discoveredMatches[0].handler;
                     discoveredTokens = discoveredMatches[0].tokens;
                 }
@@ -1827,133 +1881,6 @@
 
     // class for fade ins of modals
     Ratchet.defaultModalFadeClass = "fade";
-
-    // Ratchet.executeMatch = function(matcher, text)
-    // {
-    //     // strip matcher from "/a/b/c" to "a/b/c"
-    //     if (matcher && matcher.length > 0 && matcher.substring(0,1) === "/")
-    //     {
-    //         matcher = matcher.substring(1);
-    //     }
-    //
-    //     // strip text from "/a/b/c" to "a/b/c"
-    //     if (text && text.length > 0 && text.substring(0,1) === "/")
-    //     {
-    //         text = text.substring(1);
-    //     }
-    //
-    //     var tokens = {};
-    //
-    //     var printDebug = function()
-    //     {
-    //         //console.log("Matched - pattern: " + matcher + ", text: " + text + ", tokens: " + JSON.stringify(tokens));
-    //     };
-    //
-    //     var array1 = [];
-    //     if (matcher)
-    //     {
-    //         array1 = matcher.split("/");
-    //     }
-    //     var array2 = [];
-    //     if (text)
-    //     {
-    //         array2 = text.split("/");
-    //     }
-    //
-    //     // short cut - zero length matches
-    //     if ((array1.length === 0) && (array2.length === 0))
-    //     {
-    //         printDebug();
-    //         return tokens;
-    //     }
-    //
-    //     if (matcher)
-    //     {
-    //         // short cut - **
-    //         if (matcher == "**")
-    //         {
-    //             // it's a match, pull out wildcard token
-    //             tokens["**"] = text;
-    //             printDebug();
-    //             return tokens;
-    //         }
-    //
-    //         // if matcher has no wildcards or tokens...
-    //         if ((matcher.indexOf("{") == -1) && (matcher.indexOf("*") == -1))
-    //         {
-    //             // if they're equal...
-    //             if (matcher == text)
-    //             {
-    //                 // it's a match, no tokens
-    //                 printDebug();
-    //                 return tokens;
-    //             }
-    //         }
-    //     }
-    //
-    //     var pattern = null;
-    //     var value = null;
-    //     do
-    //     {
-    //         pattern = array1.shift();
-    //         value = array2.shift();
-    //
-    //         var patternEmpty = (Ratchet.isEmpty(pattern) || pattern === "");
-    //         var valueEmpty = (Ratchet.isEmpty(value) || value === "");
-    //
-    //         // if there are remaining pattern and value elements
-    //         if (!patternEmpty && !valueEmpty)
-    //         {
-    //             if (pattern == "*")
-    //             {
-    //                 // wildcard - element matches
-    //             }
-    //             else if (pattern == "**")
-    //             {
-    //                 // wildcard - match everything else, so break out
-    //                 tokens["**"] = "/" + [].concat(value, array2).join("/");
-    //                 break;
-    //             }
-    //             else if (Ratchet.startsWith(pattern, "{"))
-    //             {
-    //                 // token, assume match, pull into token map
-    //                 var key = pattern.substring(1, pattern.length - 1);
-    //
-    //                 // URL decode the value
-    //                 value = decodeURIComponent(value);
-    //
-    //                 // assign to token collection
-    //                 tokens[key] = value;
-    //             }
-    //             else
-    //             {
-    //                 // check for exact match
-    //                 if (pattern == value)
-    //                 {
-    //                     // exact match
-    //                 }
-    //                 else
-    //                 {
-    //                     // not a match, thus fail
-    //                     return null;
-    //                 }
-    //             }
-    //         }
-    //         else
-    //         {
-    //             // if we expected a pattern but empty value or we have a value but no pattern
-    //             // then it is a mismatch
-    //             if ((pattern && valueEmpty) || (patternEmpty && value))
-    //             {
-    //                 return null;
-    //             }
-    //         }
-    //     }
-    //     while (!Ratchet.isEmpty(pattern) && !Ratchet.isEmpty(value));
-    //
-    //     printDebug();
-    //     return tokens;
-    // };
     
     var cached_regexps = {};
     

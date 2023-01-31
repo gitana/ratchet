@@ -165,8 +165,7 @@
                 var handler = null;
 
                 // walk through the routes and find one that matches this URI and method
-                var discoveredTokensArray = [];
-                var discoveredHandlers = [];
+                var discoveredMatches = [];
                 for (var routeId in _this.routes)
                 {
                     var route = _this.routes[routeId];
@@ -175,73 +174,50 @@
                         var matchedTokens = _this.executeMatch(route.uri, context.route.uri);
                         if (matchedTokens)
                         {
-                            discoveredHandlers.push(route.handler);
-                            discoveredTokensArray.push(matchedTokens);
+                            var discoveredMatch = {};
+                            discoveredMatch.handler = route.handler;
+                            discoveredMatch.tokens = matchedTokens;
+                            discoveredMatch.uri = route.uri;
+                            discoveredMatch.method = route.method;
+                            discoveredMatch.text = context.route.uri;
+                            discoveredMatches.push(discoveredMatch);
                         }
                     }
                 }
                 
-                // filter the handlers down to only keep those with the most token matches
-                var discoveredHandler = null;
-                var discoveredTokens = null;
-                if (discoveredHandlers.length > 0)
+                // if any of the matches have URIs that are substrings of the other match URIs
+                // then remove those
+                if (discoveredMatches.length > 0)
                 {
-                    var candidateHandlers = [];
-                    var candidateTokensArray = [];
-                    var maxKeyLength = 0;
-                    for (var d = 0; d < discoveredTokensArray.length; d++)
+                    var discoveredMatchesByUri = {};
+                    for (var d = 0; d < discoveredMatches.length; d++)
                     {
-                        var l = Object.keys(discoveredTokensArray[d]).length;
-                        
-                        if (l > maxKeyLength)
-                        {
-                            candidateHandlers = [];
-                            candidateTokensArray = [];
-                            maxKeyLength = l;
-                        }
-                        
-                        if (l >= maxKeyLength)
-                        {
-                            candidateHandlers.push(discoveredHandlers[d]);
-                            candidateTokensArray.push(discoveredTokensArray[d]);
-                        }
+                        var discoveredMatch = discoveredMatches[d];
+                        discoveredMatchesByUri[discoveredMatch.uri] = discoveredMatch;
                     }
                     
-                    discoveredHandlers = candidateHandlers;
-                    discoveredTokensArray = candidateTokensArray;
-                }
+                    var discoveredMatchesKeys = Object.keys(discoveredMatchesByUri);
+                    discoveredMatchesKeys = Ratchet.filterEncapsulatedValues(discoveredMatchesKeys);
     
-                if (discoveredHandlers.length > 0)
-                {
-                    var candidateHandlers = [];
-                    var candidateTokensArray = [];
-                    var minJsonLength = 99999999;
-                    for (var d = 0; d < discoveredTokensArray.length; d++)
+                    discoveredMatches = [];
+                    for (var d = 0; d < discoveredMatchesKeys.length; d++)
                     {
-                        var l = JSON.stringify(discoveredTokensArray[d]).length;
-                        if (l < minJsonLength)
-                        {
-                            candidateHandlers = [];
-                            candidateTokensArray = [];
-                            minJsonLength = l;
-                        }
-                        
-                        if (l <= minJsonLength)
-                        {
-                            candidateHandlers.push(discoveredHandlers[d]);
-                            candidateTokensArray.push(discoveredTokensArray[d]);
-                        }
+                        var k = discoveredMatchesKeys[d];
+                        var discoveredMatch = discoveredMatchesByUri[k];
+                        discoveredMatches.push(discoveredMatch);
                     }
-    
-                    discoveredHandlers = candidateHandlers;
-                    discoveredTokensArray = candidateTokensArray;
                 }
                 
-                // keep the most recent override
-                if (discoveredHandlers.length > 0)
+                var discoveredHandler = null;
+                var discoveredTokens = null;
+                
+                // keep the first entry
+                if (discoveredMatches.length > 0)
                 {
-                    discoveredHandler = discoveredHandlers[discoveredHandlers.length - 1];
-                    discoveredTokens = discoveredTokensArray[discoveredTokensArray.length - 1];
+                    // discoveredHandler = discoveredMatches[discoveredMatches.length - 1];
+                    // discoveredTokens = discoveredMatches[discoveredMatches.length - 1];
+                    discoveredHandler = discoveredMatches[0].handler;
+                    discoveredTokens = discoveredMatches[0].tokens;
                 }
     
                 // find a matching handler method
@@ -2165,5 +2141,81 @@
 
         return null;
     };
+    
+    /**
+     * Strips out any values where those values are prefixed subsets of other values in the array.
+     *
+     * For example, given a set of prefixes such as:
+     *
+     *      [
+     *          "/projects/{projectId}",
+     *          "/projects/{projectId}/content"
+     *      ]
+     *
+     * This filters the array to
+     *
+     *      [
+     *          "/projects/{projectId}/content"
+     *      ]
+     *
+     * Since "/projects/{projectId}" is a prefix substring of another key, "/projects/{projectId}/content".
+     *
+     * This method works by inserting all keys into a tree structure (where each level of the tree is a character in the key).
+     * The retained values are then reconstructed by walking the tree to depth.  This filters out any keys that are
+     * described by larger or containing keys.
+     *
+     * @param keys
+     */
+    Ratchet.filterEncapsulatedValues = function(keys)
+    {
+        var insert = function(entry, key)
+        {
+            var root = entry;
+            for (var i = 0; i < key.length; i++)
+            {
+                var c = key.substring(i, i + 1);
+                
+                if (!root.children) {
+                    root.children = {};
+                }
+                if (!root.children[c]) {
+                     root.children[c] = {};
+                }
+                
+                root = root.children[c];
+            }
+        }
+    
+        // collects the results
+        var collect = function(root, str, results)
+        {
+            // If node is leaf node, it indicates end
+            // of String, so a null character is added
+            // and String is displayed
+            if (!root.children)
+            {
+                results.push(str);
+            }
+            else
+            {
+                for (var c in root.children)
+                {
+                    collect(root.children[c], "" + str + c, results);
+                }
+            }
+        }
+    
+        let root = {};
+        
+        // insert keys
+        for (let i = 0; i < keys.length; i++) {
+            insert(root, keys[i]);
+        }
+        
+        var results = [];
+        collect(root, "", results);
+    
+        return results;
+    }
 
 })(jQuery);

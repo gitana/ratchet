@@ -108,6 +108,16 @@
         },
 
         /**
+         * Extension point for letting configuration service asynchronously load model configuration for doclist before applying it.
+         *
+         * @param model
+         */
+        prepareDynamicConfigurationModel: function(model, callback)
+        {
+            callback();
+        },
+
+        /**
          * Extension point for letting configuration service load model configuration for doclist.
          *
          * @param model
@@ -259,205 +269,209 @@
 
             this.base(el, model, function() {
 
-                self.applyDynamicConfiguration(model);
+                self.prepareDynamicConfigurationModel(model, function() {
 
-                self.autoDynamicConfiguration(model);
-
-                // if there is a ""sort-selector" button (dropdown)
-                var sortButton = self._findButton(model, "sort-selector");
-                if (sortButton)
-                {
-                    if (!sortButton.buttons) {
-                        sortButton.buttons = [];
-                    }
-                    Ratchet.clearArray(sortButton.buttons);
-
-                    // load actions from the "sort-selector" dropdown configuration
-                    var selectorGroup = model["selectorGroups"]["sort-selector-group"];
-                    $.each(selectorGroup.fields, function(index, selectorGroupItem) {
-
-                        var key = selectorGroupItem.key;
-                        var title = selectorGroupItem.title;
-                        if (!title) {
-                            title = "Unknown Field";
-                        }
-                        var field = selectorGroupItem.field;
-
-                        // replace sort button
-                        var button = {
-                            "key": "sort-field-" + key,
-                            "title": title,
-                            "field": field,
-                            "selectorGroup": "sort-selector-group"
-                        };
-                        if (selectorGroupItem.iconClass) {
-                            button.iconClass = selectorGroupItem.iconClass;
-                        }
-                        sortButton.buttons.push(button);
-                    });
-
-                    var currentSortField = self.sort(model);
-                    if (currentSortField)
+                    self.applyDynamicConfiguration(model);
+    
+                    self.autoDynamicConfiguration(model);
+    
+                    // if there is a ""sort-selector" button (dropdown)
+                    var sortButton = self._findButton(model, "sort-selector");
+                    if (sortButton)
                     {
-                        var newSortButtonTitle = null;
-
-                        if (model.selectorGroups) {
-                            if (model.selectorGroups["sort-selector-group"]) {
-                                var fields = model.selectorGroups["sort-selector-group"].fields;
-                                if (fields) {
-                                    for (var i = 0; i < fields.length; i++) {
-                                        if (fields[i].field === currentSortField) {
-                                            newSortButtonTitle = fields[i].title ? fields[i].title : fields[i].field;
-                                            break;
+                        if (!sortButton.buttons) {
+                            sortButton.buttons = [];
+                        }
+                        Ratchet.clearArray(sortButton.buttons);
+    
+                        // load actions from the "sort-selector" dropdown configuration
+                        var selectorGroup = model["selectorGroups"]["sort-selector-group"];
+                        $.each(selectorGroup.fields, function(index, selectorGroupItem) {
+    
+                            var key = selectorGroupItem.key;
+                            var title = selectorGroupItem.title;
+                            if (!title) {
+                                title = "Unknown Field";
+                            }
+                            var field = selectorGroupItem.field;
+    
+                            // replace sort button
+                            var button = {
+                                "key": "sort-field-" + key,
+                                "title": title,
+                                "field": field,
+                                "selectorGroup": "sort-selector-group"
+                            };
+                            if (selectorGroupItem.iconClass) {
+                                button.iconClass = selectorGroupItem.iconClass;
+                            }
+                            sortButton.buttons.push(button);
+                        });
+    
+                        var currentSortField = self.sort(model);
+                        if (currentSortField)
+                        {
+                            var newSortButtonTitle = null;
+    
+                            if (model.selectorGroups) {
+                                if (model.selectorGroups["sort-selector-group"]) {
+                                    var fields = model.selectorGroups["sort-selector-group"].fields;
+                                    if (fields) {
+                                        for (var i = 0; i < fields.length; i++) {
+                                            if (fields[i].field === currentSortField) {
+                                                newSortButtonTitle = fields[i].title ? fields[i].title : fields[i].field;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-
-                        sortButton.title = "Sort...";
-                        if (newSortButtonTitle) {
-                            sortButton.title = newSortButtonTitle + "...";
-                        }
-                    }
-                }
-
-                // if there is a "multi-documents-selector" button (dropdown)
-                var selectButton = self._findButton(model, "multi-documents-action-selector");
-                if (selectButton)
-                {
-                    if (!selectButton.buttons) {
-                        selectButton.buttons = [];
-                    }
-                    Ratchet.clearArray(selectButton.buttons);
-
-                    // load actions from the "multi-documents-action-selector" dropdown configuration
-                    var selectorGroup = model["selectorGroups"]["multi-documents-action-selector-group"];
-                    $.each(selectorGroup.actions, function(index, selectorGroupItem) {
-
-                        var button = null;
-
-                        if (selectorGroupItem.divider)
-                        {
-                            button = {
-                                "key": "multi-documents-action-separator" + index,
-                                "divider": true,
-                                "selectorGroup": "multi-documents-action-selector-group"
-                            };
-                        }
-                        else
-                        {
-                            var actionId = selectorGroupItem.action;
-                            //var order = selectorGroupItem.order;
-                            var label = selectorGroupItem.label;
-                            var iconClass = selectorGroupItem.iconClass;
-                            var order = selectorGroupItem.order;
-                            var permissionedObservable = selectorGroupItem.permissionedObservable;
-
-                            // retrieve the action configuration
-                            var actionConfig = null;
-                            var globalConfig = Configuration.evaluate();
-                            if (globalConfig["actions"] && globalConfig["actions"][actionId])
-                            {
-                                actionConfig = globalConfig["actions"][actionId];
+    
+                            sortButton.title = "Sort...";
+                            if (newSortButtonTitle) {
+                                sortButton.title = newSortButtonTitle + "...";
                             }
-                            if (!actionConfig)
+                        }
+                    }
+    
+                    // if there is a "multi-documents-selector" button (dropdown)
+                    var selectButton = self._findButton(model, "multi-documents-action-selector");
+                    if (selectButton)
+                    {
+                        if (!selectButton.buttons) {
+                            selectButton.buttons = [];
+                        }
+                        Ratchet.clearArray(selectButton.buttons);
+    
+                        // load actions from the "multi-documents-action-selector" dropdown configuration
+                        var selectorGroup = model["selectorGroups"]["multi-documents-action-selector-group"];
+                        $.each(selectorGroup.actions, function(index, selectorGroupItem) {
+    
+                            var button = null;
+    
+                            if (selectorGroupItem.divider)
                             {
-                                // skip this one
-                                Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: multi-documents-action-selector-group");
+                                button = {
+                                    "key": "multi-documents-action-separator" + index,
+                                    "divider": true,
+                                    "selectorGroup": "multi-documents-action-selector-group"
+                                };
                             }
                             else
                             {
-                                var title = actionConfig.title;
-                                if (!title)
+                                var actionId = selectorGroupItem.action;
+                                //var order = selectorGroupItem.order;
+                                var label = selectorGroupItem.label;
+                                var iconClass = selectorGroupItem.iconClass;
+                                var order = selectorGroupItem.order;
+                                var permissionedObservable = selectorGroupItem.permissionedObservable;
+    
+                                // retrieve the action configuration
+                                var actionConfig = null;
+                                var globalConfig = Configuration.evaluate();
+                                if (globalConfig["actions"] && globalConfig["actions"][actionId])
                                 {
-                                    title = "Unknown Action Title";
+                                    actionConfig = globalConfig["actions"][actionId];
                                 }
-
-                                if (label)
+                                if (!actionConfig)
                                 {
-                                    title = label;
+                                    // skip this one
+                                    Ratchet.logWarn("The action: " + actionId + " could not be found in actions config for selector group: multi-documents-action-selector-group");
                                 }
-
-                                button = {
-                                    "key": "multi-documents-action-" + actionId,
-                                    "title": title,
-                                    "action": actionId,
-                                    "selectorGroup": "multi-documents-action-selector-group"
-                                };
-
-                                if (actionConfig.iconClass)
+                                else
                                 {
-                                    button.iconClass = actionConfig.iconClass;
-                                }
-
-                                if (iconClass)
-                                {
-                                    button.iconClass = iconClass;
-                                }
-
-                                if (selectorGroupItem.selectionMode) {
-                                    button.selectionMode = selectorGroupItem.selectionMode;
-                                }
-
-                                if (typeof(order) !== "undefined")
-                                {
-                                    button.order = order;
-                                }
-
-                                if (typeof(permissionedObservable) !== "undefined")
-                                {
-                                    button.permissionedObservable = permissionedObservable;
+                                    var title = actionConfig.title;
+                                    if (!title)
+                                    {
+                                        title = "Unknown Action Title";
+                                    }
+    
+                                    if (label)
+                                    {
+                                        title = label;
+                                    }
+    
+                                    button = {
+                                        "key": "multi-documents-action-" + actionId,
+                                        "title": title,
+                                        "action": actionId,
+                                        "selectorGroup": "multi-documents-action-selector-group"
+                                    };
+    
+                                    if (actionConfig.iconClass)
+                                    {
+                                        button.iconClass = actionConfig.iconClass;
+                                    }
+    
+                                    if (iconClass)
+                                    {
+                                        button.iconClass = iconClass;
+                                    }
+    
+                                    if (selectorGroupItem.selectionMode) {
+                                        button.selectionMode = selectorGroupItem.selectionMode;
+                                    }
+    
+                                    if (typeof(order) !== "undefined")
+                                    {
+                                        button.order = order;
+                                    }
+    
+                                    if (typeof(permissionedObservable) !== "undefined")
+                                    {
+                                        button.permissionedObservable = permissionedObservable;
+                                    }
                                 }
                             }
-                        }
-
-                        if (button)
-                        {
-                            if (selectorGroupItem.allowPermission)
+    
+                            if (button)
                             {
-                                button.allowPermission = selectorGroupItem.allowPermission;
+                                if (selectorGroupItem.allowPermission)
+                                {
+                                    button.allowPermission = selectorGroupItem.allowPermission;
+                                }
+                                if (selectorGroupItem.rejectPermission)
+                                {
+                                    button.rejectPermission = selectorGroupItem.rejectPermission;
+                                }
+                                if (selectorGroupItem.allowAuthority)
+                                {
+                                    button.allowAuthority = selectorGroupItem.allowAuthority;
+                                }
+                                if (selectorGroupItem.rejectAuthority)
+                                {
+                                    button.rejectAuthority = selectorGroupItem.rejectAuthority;
+                                }
+    
+                                selectButton.buttons.push(button);
                             }
-                            if (selectorGroupItem.rejectPermission)
-                            {
-                                button.rejectPermission = selectorGroupItem.rejectPermission;
-                            }
-                            if (selectorGroupItem.allowAuthority)
-                            {
-                                button.allowAuthority = selectorGroupItem.allowAuthority;
-                            }
-                            if (selectorGroupItem.rejectAuthority)
-                            {
-                                button.rejectAuthority = selectorGroupItem.rejectAuthority;
-                            }
-
-                            selectButton.buttons.push(button);
-                        }
-
-                    });
-
-                    // allow for custom sort of select
-                    self.sortFilterButtons(selectButton.buttons);
-                }
-
-                // if there is an "options-filter", update with value of currently selected value
-                // update "selected"
-                var optionsFilterButton = self._findButton(model, "options-filter");
-                if (optionsFilterButton)
-                {
-                    var currentOptionsFilter = self.optionsFilter(model);
-                    if (currentOptionsFilter)
+    
+                        });
+    
+                        // allow for custom sort of select
+                        self.sortFilterButtons(selectButton.buttons);
+                    }
+    
+                    // if there is an "options-filter", update with value of currently selected value
+                    // update "selected"
+                    var optionsFilterButton = self._findButton(model, "options-filter");
+                    if (optionsFilterButton)
                     {
-                        var options = optionsFilterButton.options;
-                        if (options) {
-                            for (var i = 0; i < options.length; i++) {
-                                options[i].selected = (options[i].value === currentOptionsFilter);
+                        var currentOptionsFilter = self.optionsFilter(model);
+                        if (currentOptionsFilter)
+                        {
+                            var options = optionsFilterButton.options;
+                            if (options) {
+                                for (var i = 0; i < options.length; i++) {
+                                    options[i].selected = (options[i].value === currentOptionsFilter);
+                                }
                             }
                         }
                     }
-                }
+    
+                    callback();
+                });
 
-                callback();
 
             });
         },

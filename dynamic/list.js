@@ -2196,11 +2196,8 @@
         {
             var self = this;
 
-            debugger;
-            
-            self.oTable.dataTable().ajax.reload();
+            self.oTable.dataTable().api().ajax.reload();
         }
-
 
     }));
 

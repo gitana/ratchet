@@ -335,7 +335,7 @@
             config = {};
         }
 
-        if (!config.modalClass) {
+        if (typeof(config.modalClass) === "undefined") {
             config.modalClass = Ratchet.defaultModalFadeClass;
         }
 
@@ -589,7 +589,7 @@
 
         var picker = $('<div gadget="' + pickerType + '" id="' + pickerId + '"></div>');
         picker.css("display", "none");
-        $(document.body).append(picker);
+        //$(document.body).append(picker);
 
         // ratchet it up
         var currentHash = window.location.hash;
@@ -609,81 +609,86 @@
         //Ratchet.useHandlerCallbacks = true;
         ratchet.useHandlerCallbacks = true;
 
-        // render
-        ratchet.run("GET", currentHash, {}, function() {
+        // modal dialog
+        var fadeModalConfig = {
+            "title": config.title,
+            "cancel": true,
+            "big": config.big ? true : false
+        };
+        if (typeof(config.modalClass) !== "undefined") {
+            fadeModalConfig.modalClass = config.modalClass;
+        }
+        Ratchet.fadeModal(fadeModalConfig, function(div, renderCallback) {
 
-            // revert back to previous setting
-            //Ratchet.useHandlerCallbacks = previousUseHandlerCallbacks;
+            // append the "Pick" button
+            $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right pick' disabled='disabled'>" + config.pickTitle + "</button>");
 
-            // modal dialog
-            Ratchet.fadeModal({
-                "title": config.title,
-                "cancel": true,
-                "big": config.big ? true : false
-            }, function(div, renderCallback) {
+            // body
+            $(div).find(".modal-body").html("");
+            var b = $(div).find(".modal-body");
+            b.addClass("picker");
+            picker.css("display", "block");
+            b.append(picker);
 
-                // append the "Pick" button
-                $(div).find('.modal-footer').append("<button class='btn btn-primary pull-right pick' disabled='disabled'>" + config.pickTitle + "</button>");
+            // override the "onPickItems" method so that we can listen to when things are selected
+            // and store the ids back here
+            var pickedItems = [];
+            gadget.prototype.onPickItems = function(items)
+            {
+                pickedItems = items;
 
-                // body
-                $(div).find(".modal-body").html("");
-                var b = $(div).find(".modal-body");
-                b.addClass("picker");
-                picker.css("display", "block");
-                b.append(picker);
-
-                // override the "onPickItems" method so that we can listen to when things are selected
-                // and store the ids back here
-                var pickedItems = [];
-                gadget.prototype.onPickItems = function(items)
+                if (pickedItems && pickedItems.length > 0)
                 {
-                    pickedItems = items;
+                    // enable
+                    $(div).find('.pick').prop("disabled", false);
+                }
+                else
+                {
+                    // disable
+                    $(div).find('.pick').prop("disabled", true);
+                }
+            };
 
-                    if (pickedItems && pickedItems.length > 0)
+            // pick button
+            $(div).find('.pick').click(function() {
+
+                picked = true;
+
+                $(div).on('hidden.bs.modal', function() {
+
+                    if (onPickFn)
                     {
-                        // enable
-                        $(div).find('.pick').prop("disabled", false);
-                    }
-                    else
-                    {
-                        // disable
-                        $(div).find('.pick').prop("disabled", true);
-                    }
-                };
-
-                // pick button
-                $(div).find('.pick').click(function() {
-
-                    picked = true;
-
-                    $(div).on('hidden.bs.modal', function() {
-
-                        if (onPickFn)
-                        {
-                            onPickFn(pickedItems);
-                        }
-                    });
-                    $(div).modal('hide');
-                });
-
-                // if closed for any other reason
-                $(div).on("hide.bs.modal", function() {
-
-                    // destroy ratchet
-                    ratchet.teardown();
-
-                    // unregister the gadget that we dynamically instantiated
-                    Ratchet.GadgetRegistry.deregister(pickerType, pickerId);
-
-                    if (!picked && onPickFn)
-                    {
-                        onPickFn(null);
+                        onPickFn(pickedItems);
                     }
                 });
+                $(div).modal('hide');
+            });
 
+            // if closed for any other reason
+            $(div).on("hide.bs.modal", function() {
 
-                renderCallback(function() {
+                // destroy ratchet
+                ratchet.teardown();
+
+                // unregister the gadget that we dynamically instantiated
+                Ratchet.GadgetRegistry.deregister(pickerType, pickerId);
+
+                if (!picked && onPickFn)
+                {
+                    onPickFn(null);
+                }
+            });
+
+            renderCallback(function() {
+
+                // render
+                ratchet.run("GET", currentHash, {}, function() {
+
+                    // revert back to previous setting
+                    //Ratchet.useHandlerCallbacks = previousUseHandlerCallbacks;
+
                 });
+
             });
 
         });

@@ -6,10 +6,16 @@
         {
             this.base();
 
+            // create a fragment
+            // var frag = document.createDocumentFragment();
+            // var container = document.createElement("div");
+            // container.classList.add("temp-wrapper");
+            // frag.appendChild(container);
+
             var container = $("<div class='temp-wrapper'></div>");
             if (domEl)
             {
-                container.html($(domEl).html());
+                $(container).html($(domEl).html());
             }
 
             // copy container properties into this
@@ -108,7 +114,7 @@
                         strategy = "insert";
                     }
 
-                    if (strategy == "replace")
+                    if (strategy === "replace")
                     {
                         // look through the rendered children to see if we can find a merge point
                         // a merge point means that there is just one top-most rendered child
@@ -256,7 +262,7 @@
 
 
                         // we'll use these to replace the current el
-                        var replacements = $($(self)[0].childNodes);
+                        var replacements = $(self[0].childNodes);
 
                         // swap in replacements
                         var replacementsEl = $(replacements); // an array of elements
@@ -278,7 +284,7 @@
                             if ($(replacementsEl).filter("*").length == 1)
                             {
                                 // then copy original dom attributes (from gadget tag) back to replacement node
-                                var replacement = $($(replacementsEl).filter("*")[0]);
+                                var replacement = $(replacementsEl.filter("*")[0]);
                                 $.each(originalAttributes, function(name, value) {
 
                                     if (name == "id")

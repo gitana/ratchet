@@ -1774,7 +1774,7 @@
                 value = attr.nodeValue;
             }
 
-            if (name == "tag" || name == "region")
+            if (name === "tag" || name === "region")
             {
                 // these don't get copied
             }

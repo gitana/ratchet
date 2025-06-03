@@ -1118,6 +1118,11 @@
                     }
                 };
 
+                if (isPrimary)
+                {
+                    Ratchet.clearTasks();
+                }
+
                 // allow for before dispatch
                 _this.beforeDispatch(config, params, context, function() {
 

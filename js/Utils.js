@@ -1538,6 +1538,31 @@
     };
 
 
+    var tasks = new Set();
+    Ratchet.setTimeout = function(f, delay)
+    {
+        var timeout = setTimeout(function() {
+            try
+            {
+                f();
+            }
+            finally
+            {
+                tasks.delete(timeout);
+            }
+        }, delay);
+        tasks.add(timeout);
+    }
+
+    Ratchet.clearTasks = function()
+    {
+        for (var task of tasks)
+        {
+            clearTimeout(task);
+        }
+
+        tasks.clear();
+    };
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1635,13 +1660,33 @@
             if (typeof setImmediate === 'function') {
                 async.nextTick = function (fn) {
                     // not a direct alias for IE10 compatibility
-                    setImmediate(fn);
+                    var task = setImmediate(function() {
+                        try
+                        {
+                            fn()
+                        }
+                        finally
+                        {
+                            tasks.delete(task);
+                        }
+                    });
+                    tasks.add(task);
                 };
                 async.setImmediate = async.nextTick;
             }
             else {
                 async.nextTick = function (fn) {
-                    setTimeout(fn, 0);
+                    var task = setTimeout(function() {
+                        try
+                        {
+                            fn()
+                        }
+                        finally
+                        {
+                            tasks.delete(task);
+                        }
+                    }, 0);
+                    tasks.add(task);
                 };
                 async.setImmediate = async.nextTick;
             }

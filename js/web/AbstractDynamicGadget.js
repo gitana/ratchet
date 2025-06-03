@@ -463,6 +463,19 @@
             }
         },
 
+        refreshHandler: function(el, options, callback)
+        {
+            // return function(el, options, callback)
+            // {
+                var handler = this.base(el, options, callback);
+                return function(newValue, oldValue) {
+                    Alpaca.nextTick(function() {
+                        handler(newValue, oldValue);
+                    });
+                }
+            // }(el, options, callback);
+        },
+
         checkPermission: function(observableHolder, permissionedId, permissionId, defaultValue, item)
         {
             return defaultValue;

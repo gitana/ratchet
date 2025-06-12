@@ -1051,7 +1051,7 @@
                 config.uri = config.uri.substring(1);
             }
 
-            var isPrimary = true;
+            var isPrimary = false;
             var showPageTransition = true;
 
             if (params)

@@ -452,14 +452,14 @@
             }
         },
 
-        refresh: function(model) {
+        refresh: function(model, ...params) {
 
             // forces refresh by clearing selected items
             var self = this;
 
             if (model && model.observables && model.observables.refresh)
             {
-                self.trigger(model.observables.refresh);
+                self.trigger(model.observables.refresh, params);
             }
         },
 

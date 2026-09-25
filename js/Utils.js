@@ -99,7 +99,7 @@
 
     Ratchet.isArray = function(thing)
     {
-        return Array.isArray(obj);
+        return Array.isArray(thing);
     };
 
     Ratchet.isUndefined = function(thing)

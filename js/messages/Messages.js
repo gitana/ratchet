@@ -191,7 +191,7 @@
 
                     if (ago)
                     {
-                        text += " " + f("ago");
+                        text += " " + f("relative.ago");
                     }
 
                     return text;

@@ -1,0 +1,27 @@
+{
+  "name": "ratchet",
+  "description": "The handy framework for building JavaScript MVC applications.",
+  "version": "1.0.3",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gitana/ratchet.git"
+  },
+  "main": "dist/js/ratchet.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "test": "node scripts/build.mjs && vitest run",
+    "test:watch": "vitest",
+    "serve": "node scripts/serve.mjs",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12",
+    "jquery": "^3.7.1",
+    "jsdom": "^26.1.0",
+    "vitest": "^3.2.7"
+  }
+}

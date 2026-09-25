@@ -8,7 +8,7 @@
  * Every bundle is written twice:
  *
  *   dist/js/<name>.js               - plain script for <script> tags (plus .min.js)
- *   dist/components/ratchet/<file>  - the same code wrapped as a UMD/AMD module (e.g. "ratchet/web")
+ *   dist/ratchet/<file>  - the same code wrapped as a UMD/AMD module (e.g. "ratchet/web")
  *
  * `component` describes the UMD wrapper:
  *
@@ -21,25 +21,25 @@ export const bundles = {
 
     "ratchet": {
         files: [
-            "thirdparty/base.js",
-            "thirdparty/json2.js",
-            "thirdparty/jquery.hashchange.js",
-            "thirdparty/form2object.js",
-            "js/Ratchet.js",
-            "js/Utils.js",
-            "js/Observable.js",
-            "js/Observables.js",
-            "js/ScopedObservables.js",
-            "js/Storage.js",
-            "js/RenderContext.js",
-            "js/Gadget.js",
-            "js/GadgetRegistry.js",
-            "js/TemplateEngineRegistry.js",
-            "js/BaseTemplateEngine.js",
-            "js/AbstractAuthenticator.js",
-            "js/Events.js",
-            "js/jQueryAdapter.js",
-            "js/DefaultRegionResolver.js"
+            "src/thirdparty/base.js",
+            "src/thirdparty/json2.js",
+            "src/thirdparty/jquery.hashchange.js",
+            "src/thirdparty/form2object.js",
+            "src/js/Ratchet.js",
+            "src/js/Utils.js",
+            "src/js/Observable.js",
+            "src/js/Observables.js",
+            "src/js/ScopedObservables.js",
+            "src/js/Storage.js",
+            "src/js/RenderContext.js",
+            "src/js/Gadget.js",
+            "src/js/GadgetRegistry.js",
+            "src/js/TemplateEngineRegistry.js",
+            "src/js/BaseTemplateEngine.js",
+            "src/js/AbstractAuthenticator.js",
+            "src/js/Events.js",
+            "src/js/jQueryAdapter.js",
+            "src/js/DefaultRegionResolver.js"
         ],
         component: {
             file: "ratchet.js",
@@ -52,7 +52,7 @@ export const bundles = {
 
     "ratchet-tmpl": {
         files: [
-            "js/engines/jQueryTemplateEngine.js"
+            "src/js/engines/jQueryTemplateEngine.js"
         ],
         component: {
             file: "tmpl.js",
@@ -65,7 +65,7 @@ export const bundles = {
 
     "ratchet-handlebars": {
         files: [
-            "js/engines/HandlebarsTemplateEngine.js"
+            "src/js/engines/HandlebarsTemplateEngine.js"
         ],
         component: {
             file: "handlebars.js",
@@ -78,20 +78,20 @@ export const bundles = {
 
     "ratchet-config": {
         files: [
-            "thirdparty/base.js",
-            "js/config/Configuration.js",
-            "js/config/AbstractConfigurationEvaluator.js",
-            "js/config/TypeConfigurationEvaluator.js",
-            "js/config/ActionGroupConfigurationEvaluator.js",
-            "js/config/LocaleConfigurationEvaluator.js",
-            "js/config/GadgetConfigurationEvaluator.js",
-            "js/config/ApplicationConfigurationEvaluator.js",
-            "js/config/PageConfigurationEvaluator.js",
-            "js/config/ViewerConfigurationEvaluator.js",
-            "js/config/EditorConfigurationEvaluator.js",
-            "js/config/logic/and.js",
-            "js/config/logic/or.js",
-            "js/config/logic/not.js"
+            "src/thirdparty/base.js",
+            "src/js/config/Configuration.js",
+            "src/js/config/AbstractConfigurationEvaluator.js",
+            "src/js/config/TypeConfigurationEvaluator.js",
+            "src/js/config/ActionGroupConfigurationEvaluator.js",
+            "src/js/config/LocaleConfigurationEvaluator.js",
+            "src/js/config/GadgetConfigurationEvaluator.js",
+            "src/js/config/ApplicationConfigurationEvaluator.js",
+            "src/js/config/PageConfigurationEvaluator.js",
+            "src/js/config/ViewerConfigurationEvaluator.js",
+            "src/js/config/EditorConfigurationEvaluator.js",
+            "src/js/config/logic/and.js",
+            "src/js/config/logic/or.js",
+            "src/js/config/logic/not.js"
         ],
         component: {
             file: "config.js",
@@ -104,11 +104,11 @@ export const bundles = {
 
     "ratchet-actions": {
         files: [
-            "thirdparty/base.js",
-            "js/actions/Actions.js",
-            "js/actions/AbstractAction.js",
-            "js/actions/AbstractUIAction.js",
-            "js/actions/ConsoleLogAction.js"
+            "src/thirdparty/base.js",
+            "src/js/actions/Actions.js",
+            "src/js/actions/AbstractAction.js",
+            "src/js/actions/AbstractUIAction.js",
+            "src/js/actions/ConsoleLogAction.js"
         ],
         component: {
             file: "actions.js",
@@ -121,9 +121,9 @@ export const bundles = {
 
     "ratchet-messages": {
         files: [
-            "thirdparty/base.js",
-            "thirdparty/date.js",
-            "js/messages/Messages.js"
+            "src/thirdparty/base.js",
+            "src/thirdparty/date.js",
+            "src/js/messages/Messages.js"
         ],
         component: {
             file: "messages.js",
@@ -136,17 +136,17 @@ export const bundles = {
 
     "ratchet-web": {
         files: [
-            "thirdparty/base.js",
-            "js/web/Dynamic.js",
-            "js/web/AbstractDynamicGadget.js",
-            "js/web/AbstractDynamicPage.js",
-            "js/web/DynamicRegionResolver.js",
-            "js/web/AbstractViewer.js",
-            "js/web/ViewerRegistry.js",
-            "js/web/AbstractEditor.js",
-            "js/web/EditorRegistry.js",
-            "js/error/ErrorHandlerRegistry.js",
-            "js/error/AbstractErrorHandler.js"
+            "src/thirdparty/base.js",
+            "src/js/web/Dynamic.js",
+            "src/js/web/AbstractDynamicGadget.js",
+            "src/js/web/AbstractDynamicPage.js",
+            "src/js/web/DynamicRegionResolver.js",
+            "src/js/web/AbstractViewer.js",
+            "src/js/web/ViewerRegistry.js",
+            "src/js/web/AbstractEditor.js",
+            "src/js/web/EditorRegistry.js",
+            "src/js/error/ErrorHandlerRegistry.js",
+            "src/js/error/AbstractErrorHandler.js"
         ],
         component: {
             file: "web.js",
@@ -159,10 +159,10 @@ export const bundles = {
 
     "ratchet-gitana": {
         files: [
-            "js/gitana/GitanaAuthentication.js",
-            "js/gitana/AbstractGitanaAuthenticator.js",
-            "js/gitana/GitanaImplicitFlowAuthenticator.js",
-            "js/gitana/GitanaUsernamePasswordAuthenticator.js"
+            "src/js/gitana/GitanaAuthentication.js",
+            "src/js/gitana/AbstractGitanaAuthenticator.js",
+            "src/js/gitana/GitanaImplicitFlowAuthenticator.js",
+            "src/js/gitana/GitanaUsernamePasswordAuthenticator.js"
         ],
         component: {
             file: "gitana.js",

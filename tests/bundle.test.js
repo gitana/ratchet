@@ -36,18 +36,18 @@ describe("dist/js", () => {
     });
 });
 
-describe("dist/components/ratchet", () => {
-    const COMPONENTS = path.join(DIST, "components", "ratchet");
+describe("dist/ratchet", () => {
+    const COMPONENTS = path.join(DIST, "ratchet");
 
     it("writes component.json with the package version", () => {
-        const json = JSON.parse(read("components", "ratchet", "component.json"));
+        const json = JSON.parse(read("ratchet", "component.json"));
         expect(json.name).toBe("ratchet");
         expect(json.version).toBe(pkg.version);
         expect(json.main).toEqual(["ratchet.js"]);
     });
 
     it("ships the dynamic gadgets and web styles", () => {
-        const dynamic = fs.readdirSync(path.join(ROOT, "dynamic"), { recursive: true }).filter((f) => !f.endsWith(".DS_Store"));
+        const dynamic = fs.readdirSync(path.join(ROOT, "src", "dynamic"), { recursive: true }).filter((f) => !f.endsWith(".DS_Store"));
         for (const file of dynamic) {
             expect(fs.existsSync(path.join(COMPONENTS, "dynamic", file)), file).toBe(true);
         }
@@ -78,7 +78,7 @@ describe("dist/components/ratchet", () => {
         {
             const { file, deps } = bundles[name].component;
             pending = null;
-            window.eval(read("components", "ratchet", file));
+            window.eval(read("ratchet", file));
 
             expect(pending, `${file} calls define()`).not.toBeNull();
             expect(pending.deps).toEqual(deps);
@@ -105,8 +105,8 @@ describe("dist/components/ratchet", () => {
 
     it("falls back to browser globals when there is no AMD loader", () => {
         const env = createRatchet({ bundles: [] });
-        env.window.eval(read("components", "ratchet", "ratchet.js"));
-        env.window.eval(read("components", "ratchet", "config.js"));
+        env.window.eval(read("ratchet", "ratchet.js"));
+        env.window.eval(read("ratchet", "config.js"));
 
         expect(typeof env.window.Ratchet).toBe("function");
         expect(typeof env.window.Ratchet.Configuration.evaluate).toBe("function");

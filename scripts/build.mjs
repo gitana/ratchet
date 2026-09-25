@@ -5,9 +5,9 @@
  *
  *   dist/js/<name>.js                 plain browser script
  *   dist/js/<name>.min.js (+ .map)    minified, with a source map back to the original files
- *   dist/components/ratchet/<file>    UMD/AMD module (what Cloud CMS loads as "ratchet/...")
+ *   dist/ratchet/<file>               UMD/AMD module (what Cloud CMS loads as "ratchet/...")
  *
- * dist/components/ratchet also gets component.json, the web/ styles and the dynamic/ gadgets.
+ * dist/ratchet also gets the rest of src/: component.json, the web/ styles and the dynamic/ gadgets.
  *
  * Usage:
  *   node scripts/build.mjs            build once
@@ -22,7 +22,7 @@ import { bundles } from "./bundles.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
 const JS_DIR = path.join(DIST, "js");
-const COMPONENT_DIR = path.join(DIST, "components", "ratchet");
+const COMPONENT_DIR = path.join(DIST, "ratchet");
 
 // esbuild won't emit syntax newer than this (the sources already use let / for...of)
 const TARGET = "es2015";
@@ -180,14 +180,13 @@ function shiftMap(mapJson, banner)
 
 function buildComponentAssets(version)
 {
-    // everything in components/ratchet (styles etc.), with the version stamped into component.json
-    fs.cpSync(path.join(ROOT, "components", "ratchet"), COMPONENT_DIR, { recursive: true, filter: notJunk });
-    const componentJson = JSON.parse(read("components/ratchet/component.json"));
+    // the rest of src/ is shipped as-is: the dynamic gadgets (loaded by AMD as "ratchet/dynamic/..."), the web/
+    // styles and component.json, which gets the version stamped in (src/js and src/thirdparty are already in the bundles)
+    const bundled = ["js", "thirdparty"].map((dir) => path.join(ROOT, "src", dir));
+    fs.cpSync(path.join(ROOT, "src"), COMPONENT_DIR, { recursive: true, filter: (src) => notJunk(src) && !bundled.includes(src) });
+    const componentJson = JSON.parse(read("src/component.json"));
     componentJson.version = version;
     fs.writeFileSync(path.join(COMPONENT_DIR, "component.json"), JSON.stringify(componentJson, null, 4) + "\n");
-
-    // dynamic gadgets are shipped as-is and loaded by AMD as "ratchet/dynamic/..."
-    fs.cpSync(path.join(ROOT, "dynamic"), path.join(COMPONENT_DIR, "dynamic"), { recursive: true, filter: notJunk });
 }
 
 const notJunk = (src) => ![".DS_Store", ".idea"].includes(path.basename(src));
@@ -198,7 +197,7 @@ export async function build()
     const { version } = pkg();
 
     const banner = read("license.txt").replace(/Ratchet Version \S+/, `Ratchet Version ${version}`) + "\n";
-    const componentBanner = read("js/license.js") + "\n";
+    const componentBanner = read("src/js/license.js") + "\n";
 
     fs.rmSync(DIST, { recursive: true, force: true });
     fs.mkdirSync(JS_DIR, { recursive: true });
@@ -220,10 +219,10 @@ export function watch()
         clearTimeout(timer);
         timer = setTimeout(() => build().catch((err) => console.error(err)), 100);
     };
-    for (const dir of ["js", "thirdparty", "dynamic", "components"]) {
+    for (const dir of ["src"]) {
         fs.watch(path.join(ROOT, dir), { recursive: true }, rebuild);
     }
-    console.log("Watching js/, thirdparty/, dynamic/ and components/ for changes...");
+    console.log("Watching src/ for changes...");
 }
 
 // run as script

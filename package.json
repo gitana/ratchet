@@ -1,7 +1,7 @@
 {
   "name": "ratchet",
   "description": "The handy framework for building JavaScript MVC applications.",
-  "version": "1.0.3",
+  "version": "2.0.1",
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
@@ -16,6 +16,7 @@
     "test": "node scripts/build.mjs && vitest run",
     "test:watch": "vitest",
     "serve": "node scripts/serve.mjs",
+    "bump": "npm version patch --no-git-tag-version",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
   },
   "devDependencies": {

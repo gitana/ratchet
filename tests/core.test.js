@@ -82,7 +82,7 @@ describe.each([
         env = createRatchet({
             min,
             bundles: ["ratchet", "ratchet-config", "ratchet-actions"],
-            scripts: ["js/actions/TestAction.js"]
+            scripts: ["src/js/actions/TestAction.js"]
         });
         const { Ratchet } = env;
 
@@ -129,7 +129,7 @@ describe.each([
         });
         expect(messages.using("de_DE").message("relative.minutes")).toBe("vor {0} Minuten");
 
-        // date formatting (Date.parse is extended by thirdparty/date.js)
+        // date formatting (Date.parse is extended by src/thirdparty/date.js)
         const date = window.Date.parse("July 8th, 2007, 10:30 PM");
         bundle = messages.using(messages.DEFAULT_LOCALE);
         expect(bundle.dateFormat(date, "shortTime")).toBe("10:30 PM");

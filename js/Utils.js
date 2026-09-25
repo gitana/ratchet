@@ -63,7 +63,7 @@
      * @returns {Boolean} whether it is a Function
      */
     Ratchet.isFunction = function(arg) {
-        return Object.prototype.toString.call(arg) === "[object Function]";
+        return typeof arg === "function";
     };
 
     /**
@@ -99,15 +99,7 @@
 
     Ratchet.isArray = function(thing)
     {
-        if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing === null) {
-            return false;
-        }
-
-        if (thing.push && thing.slice) {
-            return true;
-        }
-
-        return false;
+        return Array.isArray(obj);
     };
 
     Ratchet.isUndefined = function(thing)
@@ -138,16 +130,6 @@
         if (thing === true || thing === false || Ratchet.isUndefined(thing) || thing === null) {
             return false;
         }
-
-        /*
-        if (Ratchet.isArray(thing)) {
-            return false;
-        }
-
-        if (typeof(thing) === "object") {
-            return true;
-        }
-        */
 
         return thing != null && typeof thing === 'object' && Ratchet.isArray(thing) === false;
     };
@@ -1530,39 +1512,73 @@
         });
     };
 
-    Ratchet.nextTick = function(f)
-    {
-        async.nextTick(function() {
-            f();
-        });
-    };
+    // NEXT TICK
 
-
-    var tasks = new Set();
-    Ratchet.setTimeout = function(f, delay)
+    // method used to run a task immediately
+    var runMicrotask = null;
+    if (typeof(queueMicrotask) !== "undefined")
     {
-        var timeout = setTimeout(function() {
-            try
-            {
-                f();
-            }
-            finally
-            {
-                tasks.delete(timeout);
-            }
-        }, delay);
-        tasks.add(timeout);
+        runMicrotask = queueMicrotask;
+    }
+    else
+    {
+        runMicrotask = function(fn) {
+            return setTimeout(fn, 0);
+        };
     }
 
-    Ratchet.clearTasks = function()
+    var ticks = new Set();
+
+    Ratchet.nextTick = Ratchet.nextTick || function (fn, delayMs)
     {
-        for (var task of tasks)
+        var tick = null;
+
+        if (typeof(delayMs) === "undefined" || delayMs === null || delayMs <= 0)
         {
-            clearTimeout(task);
+            tick = runMicrotask(function()
+            {
+                try
+                {
+                    fn();
+                }
+                finally
+                {
+                    ticks.delete(tick);
+                }
+            });
+        }
+        else
+        {
+            tick = setTimeout(function() {
+
+                try
+                {
+                    fn();
+                }
+                finally
+                {
+                    ticks.delete(tick);
+                }
+
+            }, delayMs);
         }
 
-        tasks.clear();
+        ticks.add(tick);
+
+        return tick;
     };
+
+    Ratchet.clearTasks = Ratchet.clearTicks = function()
+    {
+        for (var tick of ticks)
+        {
+            clearTimeout(tick);
+        }
+
+        ticks.clear();
+    };
+
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////

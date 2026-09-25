@@ -214,7 +214,7 @@
                         // this make attempts for 10 seconds to see if the autofill happens by checking CSS
                         var t1 = new Date().getTime();
                         var fx = function() {
-                            setTimeout(function() {
+                            Ratchet.nextTick(function() {
                                 var x = control.field.find(":-webkit-autofill");
                                 if (x.length > 0)
                                 {

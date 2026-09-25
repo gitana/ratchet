@@ -577,7 +577,7 @@
             var self = this;
 
             // wait a little for modal to render (if there is one, a
-            setTimeout(function() {
+            Ratchet.nextTick(function() {
 
                 var selectedItems = self.selectedItems(model);
                 if (selectedItems)

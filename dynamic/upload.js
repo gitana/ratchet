@@ -146,7 +146,7 @@ define(function(require, exports, module) {
                 } else {
                     dropZone.removeClass('hover');
                 }
-                window.dropZoneTimeout = setTimeout(function () {
+                window.dropZoneTimeout = Ratchet.nextTick(function () {
                     window.dropZoneTimeout = null;
                     dropZone.removeClass('in hover');
                 }, 100);

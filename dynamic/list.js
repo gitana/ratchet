@@ -1549,7 +1549,7 @@
             // we do this on a timeout so as to prevent UI flickering as the visual DOM element is being cleaned up
             if (this.oTable)
             {
-                setTimeout(function(_this) {
+                Ratchet.nextTick(function(_this) {
                     return function() {
                         if (_this.oTable && _this.oTable.fnDestroy) {
                             _this.oTable.fnDestroy();

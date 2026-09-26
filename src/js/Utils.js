@@ -97,8 +97,18 @@
         }
     };
 
+    Ratchet.isJQuery = function(obj)
+    {
+        return !!obj && typeof obj === "object" && typeof obj.jquery === "string" && typeof obj.length === "number";
+    };
+
     Ratchet.isArray = function(thing)
     {
+        if (Ratchet.isJQuery(thing))
+        {
+            return true;
+        }
+
         return Array.isArray(thing);
     };
 
@@ -1671,54 +1681,54 @@
 
         //// exported async module functions ////
 
-        //// nextTick implementation with browser-compatible fallback ////
-        if (typeof process === 'undefined' || !(process.nextTick)) {
-            if (typeof setImmediate === 'function') {
-                async.nextTick = function (fn) {
-                    // not a direct alias for IE10 compatibility
-                    var task = setImmediate(function() {
-                        try
-                        {
-                            fn()
-                        }
-                        finally
-                        {
-                            tasks.delete(task);
-                        }
-                    });
-                    tasks.add(task);
-                };
-                async.setImmediate = async.nextTick;
-            }
-            else {
-                async.nextTick = function (fn) {
-                    var task = setTimeout(function() {
-                        try
-                        {
-                            fn()
-                        }
-                        finally
-                        {
-                            tasks.delete(task);
-                        }
-                    }, 0);
-                    tasks.add(task);
-                };
-                async.setImmediate = async.nextTick;
-            }
-        }
-        else {
-            async.nextTick = process.nextTick;
-            if (typeof setImmediate !== 'undefined') {
-                async.setImmediate = function (fn) {
-                    // not a direct alias for IE10 compatibility
-                    setImmediate(fn);
-                };
-            }
-            else {
-                async.setImmediate = async.nextTick;
-            }
-        }
+        // //// nextTick implementation with browser-compatible fallback ////
+        // if (typeof process === 'undefined' || !(process.nextTick)) {
+        //     if (typeof setImmediate === 'function') {
+        //         async.nextTick = function (fn) {
+        //             // not a direct alias for IE10 compatibility
+        //             var task = setImmediate(function() {
+        //                 try
+        //                 {
+        //                     fn()
+        //                 }
+        //                 finally
+        //                 {
+        //                     tasks.delete(task);
+        //                 }
+        //             });
+        //             tasks.add(task);
+        //         };
+        //         async.setImmediate = async.nextTick;
+        //     }
+        //     else {
+        //         async.nextTick = function (fn) {
+        //             var task = setTimeout(function() {
+        //                 try
+        //                 {
+        //                     fn()
+        //                 }
+        //                 finally
+        //                 {
+        //                     tasks.delete(task);
+        //                 }
+        //             }, 0);
+        //             tasks.add(task);
+        //         };
+        //         async.setImmediate = async.nextTick;
+        //     }
+        // }
+        // else {
+        //     async.nextTick = process.nextTick;
+        //     if (typeof setImmediate !== 'undefined') {
+        //         async.setImmediate = function (fn) {
+        //             // not a direct alias for IE10 compatibility
+        //             setImmediate(fn);
+        //         };
+        //     }
+        //     else {
+        //         async.setImmediate = async.nextTick;
+        //     }
+        // }
 
         async.each = function (arr, iterator, callback) {
             callback = callback || function () {};

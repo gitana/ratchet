@@ -47,23 +47,38 @@
 
         var descendants = [];
 
-        var drill = function(node)
+        // native matching, unless the selector uses jQuery extensions (e.g. ":visible") that only .is() understands
+        var matches = function(el) {
+            return el.matches(selector);
+        };
+        try {
+            document.createElement("div").matches(selector);
+        } catch (e) {
+            matches = function(el) {
+                return $(el).is(selector);
+            };
+        }
+
+        var drill = function(el)
         {
-            if (node.is(selector))
+            if (matches(el))
             {
-                descendants.push(node);
+                descendants.push(el);
                 return;
             }
 
-            // children
-            var children = node.children();
-            for (var i = 0; i < children.length; i++)
+            for (var child = el.firstElementChild; child; child = child.nextElementSibling)
             {
-                drill($(children[i]));
+                drill(child);
             }
         };
 
-        drill(this);
+        for (var i = 0; i < this.length; i++)
+        {
+            if (this[i] && this[i].nodeType === 1) {
+                drill(this[i]);
+            }
+        }
 
         return $(descendants);
     };

@@ -162,10 +162,48 @@
     });
 
 
+    // compiled templates, keyed by template text (helpers and partials are looked up at render time, so
+    // registering them later doesn't invalidate anything)
+    var compiledTemplates = new Map();
+    var MAX_COMPILED_TEMPLATES = 1000;
+
+    var compile = function(html)
+    {
+        var template = compiledTemplates.get(html);
+        if (template)
+        {
+            return template;
+        }
+
+        var functionString = Handlebars.precompile(html);
+        template = eval("(" + functionString + ")"); // jshint ignore:line
+
+        // convert to function - fn(model)
+        template = Handlebars.template(template);
+
+        // templates normally come from a fixed set of files, but inline html can be generated, so keep this
+        // bounded (Maps iterate in insertion order, so the first key is the oldest)
+        if (compiledTemplates.size >= MAX_COMPILED_TEMPLATES)
+        {
+            compiledTemplates.delete(compiledTemplates.keys().next().value);
+        }
+        compiledTemplates.set(html, template);
+
+        return template;
+    };
+
     Ratchet.HandlebarsTemplateEngine = Ratchet.BaseTemplateEngine.extend(
     {
         fileExtension: function() {
             return "html";
+        },
+
+        /**
+         * Discards all compiled templates.
+         */
+        clearCache: function()
+        {
+            compiledTemplates.clear();
         },
 
         doRender: function(el, name, html, model, callback)
@@ -175,15 +213,12 @@
             // compile
             try
             {
-                var functionString = Handlebars.precompile(html);
-                template = eval("(" + functionString + ")"); // jshint ignore:line
-
-                // convert to function - fn(model)
-                template = Handlebars.template(template);
+                template = compile(html);
             }
             catch (e)
             {
                 callback(e);
+                return;
             }
 
             // render template

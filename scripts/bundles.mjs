@@ -3,7 +3,8 @@
  *
  * Ratchet's sources are plain scripts (not modules) that talk to each other through globals in
  * non-strict mode (e.g. `Ratchet = Base.extend(...)`), so they're concatenated in this order rather
- * than fed to a module bundler.
+ * than fed to a module bundler. The exception is .mjs files, which are ES modules that pull in npm packages
+ * (e.g. morphdom); esbuild bundles each into a self-contained IIFE that's spliced in at that position.
  *
  * Every bundle is written twice:
  *
@@ -26,6 +27,7 @@ export const bundles = {
             "src/thirdparty/jquery.hashchange.js",
             "src/thirdparty/form2object.js",
             "src/js/Ratchet.js",
+            "src/js/morphdom.mjs",
             "src/js/Utils.js",
             "src/js/Observable.js",
             "src/js/Observables.js",

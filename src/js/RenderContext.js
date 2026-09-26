@@ -1,5 +1,62 @@
 (function($)
 {
+    /**
+     * Morphs the children of a ratchet's live element into the freshly rendered nodes in `container`.
+     *
+     * Unlike "insert", which empties the live element and appends the rendered nodes, this keeps any live nodes
+     * that match the rendered ones (updating their attributes and content in place) and only adds, removes or
+     * changes what differs, so the browser doesn't redo layout for the whole gadget and scroll position and
+     * focus survive.
+     *
+     * Because matched live nodes survive, event handlers bound to them survive too. Gadgets that re-bind their
+     * handlers on every render must do so idempotently (e.g. off() before on()) or use delegated events.
+     * Likewise, handlers or data attached to the rendered nodes before swap() are lost wherever a live node is
+     * kept in their place.
+     */
+    var morphChildren = function(ratchet, container)
+    {
+        var liveEl = $(ratchet.el)[0];
+
+        // rendered node -> the live node it was morphed into
+        var morphed = new Map();
+
+        Ratchet.morphdom(liveEl, container, {
+            childrenOnly: true,
+            onBeforeElUpdated: function(fromEl, toEl) {
+                morphed.set(toEl, fromEl);
+                return true;
+            },
+            onNodeDiscarded: function(node) {
+                // what html("") would have done: release jQuery data and handlers (firing "destroyed")
+                if (node.nodeType === 1) {
+                    $.cleanData([node]);
+                }
+            }
+        });
+
+        // child gadgets were rendered into the (now discarded) rendered nodes, so point them at the live ones
+        var remap = function(el)
+        {
+            if (el && el.nodeType) {
+                return morphed.get(el) || el;
+            }
+            if (el && el.jquery) {
+                return $($.map(el.toArray(), remap));
+            }
+            return el;
+        };
+        var remapChildren = function(r)
+        {
+            for (var id in r.childRatchets)
+            {
+                var child = r.childRatchets[id];
+                child.el = remap(child.el);
+                remapChildren(child);
+            }
+        };
+        remapChildren(ratchet);
+    };
+
     Ratchet.RenderContext = Base.extend(
     {
         constructor: function(ratchet, routeContext, domEl, params)
@@ -15,7 +72,15 @@
             var container = $("<div class='temp-wrapper'></div>");
             if (domEl)
             {
-                $(container).html($(domEl).html());
+                // copy the current dom by cloning nodes rather than serializing to html and parsing it back
+                var source = $(domEl)[0];
+                if (source)
+                {
+                    for (var child = source.firstChild; child; child = child.nextSibling)
+                    {
+                        container[0].appendChild(child.cloneNode(true));
+                    }
+                }
             }
 
             // copy container properties into this
@@ -106,12 +171,29 @@
                     //   "insert" - the rendered nodes become children of the ratchet el
                     //   "replace" - the ratchet el is removed and replaced entirely by rendered nodes
                     //               if there is only one top-child, then it is merged with attributes of the ratchet el
+                    //   "morph" - the ratchet el's children are morphed into the rendered nodes, keeping any nodes
+                    //             that haven't changed (see morphChildren below)
+                    //
+                    // the default is "insert" unless Ratchet.defaultGadgetStrategy says otherwise
                     //
 
-                    // assume we are going to insert
                     var strategy = this.gadgetStrategy;
                     if (!strategy) {
-                        strategy = "insert";
+                        strategy = Ratchet.defaultGadgetStrategy || "insert";
+                    }
+
+                    if (strategy === "morph")
+                    {
+                        morphChildren(self.ratchet(), self[0]);
+
+                        postSwap(function() {
+                            if (callback)
+                            {
+                                callback.call(self, $(self.ratchet().el));
+                            }
+                        });
+
+                        return;
                     }
 
                     if (strategy === "replace")

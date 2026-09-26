@@ -24,5 +24,8 @@
     "jquery": "^3.7.1",
     "jsdom": "^26.1.0",
     "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "morphdom": "^2.7.8"
   }
 }

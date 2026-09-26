@@ -565,41 +565,30 @@
             }
 
             //
-            // find any sub-gadgets defined by tag
-            //
-            // these are:
+            // find regions, which are either tags (which get converted to the attribute form):
             //
             //  <region id="<regionId>"></region>
             //
-            $(context.closestDescendants('region')).each(function() {
-                Ratchet.convertRegionTag(this);
-                /*
-                Ratchet.logDebug("Converted region tag: " + $(this).html());
-                */
-            });
-
-
-
-
-            //
-            // deal with an tagged sub-regions
-            //
-            // these are:
+            // or tagged elements:
             //
             //  <div region="<regionId>"></div>
             //
             var _rarray = [];
             var regions = {};
-            $(context.closestDescendants("[region]")).each(function()
-            {
-                var regionId = $(this).attr("region");
-                regions[regionId] = this;
-                _rarray.push(regionId);
 
-                /*
-                Ratchet.logDebug("Found region: " + regionId);
-                */
-            });
+            // the element each region id resolves into (the first one, if the same id appears more than once)
+            var regionEls = {};
+
+            var markers = resolveMarkers(context, "region", "region", Ratchet.convertRegionTag);
+            for (var m = 0; m < markers.length; m++)
+            {
+                var regionId = $(markers[m]).attr("region");
+                regions[regionId] = markers[m];
+                if (!regionEls[regionId]) {
+                    regionEls[regionId] = markers[m];
+                }
+                _rarray.push(regionId);
+            }
 
             // resolve all of these regions
             resolver.resolve.call(resolver, this, regions, function(resolutions) {
@@ -620,8 +609,9 @@
                         var attrs = resolution["attrs"];
 
                         // store a copy of the original dom attributes
+                        var regionEl = regionEls[regionId];
                         var originalAttributes = {};
-                        $(context.closestDescendants("[region=" + regionId + "]")[0]).each(function() {
+                        $(regionEl).each(function() {
                             $.each($(this)[0].attributes, function(index, attr) {
                                 var name = attr.nodeName;
                                 var value = null;
@@ -669,8 +659,13 @@
                         // set strategy
                         tag.attr("gadget-strategy", "replace");
 
-                        // substitute in
-                        $(context.closestDescendants("[region=" + regionId + "]")[0]).replaceWith(tag);
+                        // substitute in (the new tag carries the region attribute, so any further resolutions
+                        // for this region replace it in turn)
+                        if (regionEl)
+                        {
+                            $(regionEl).replaceWith(tag);
+                            regionEls[regionId] = tag[0];
+                        }
                     }
                 }
 
@@ -690,30 +685,16 @@
             var _this = this;
 
             //
-            // find any sub-gadgets defined by tag
-            //
-            // these are:
+            // find sub-gadgets, which are either tags (which get converted to the attribute form):
             //
             //  <gadget type="<gadgetType>" [strategy="<strategy>"]></gadget>
             //
-            $(context.closestDescendants('gadget')).each(function() {
-                Ratchet.convertGadgetTag(this);
-                /*
-                Ratchet.logDebug("Converted gadget tag: " + $(this).html());
-                */
-            });
-
-
-
-            //
-            // deal with an tagged sub-gadgets
-            //
-            // these are:
+            // or tagged elements:
             //
             //  <div gadget="<gadgetType>"></div>
             //
             var params = {};
-            $(context.closestDescendants("[gadget]")).each(function()
+            $(resolveMarkers(context, "gadget", "gadget", Ratchet.convertGadgetTag)).each(function()
             {
                 var subGadgetType = $(this).attr("gadget");
                 var subGadgetId = $(this).attr("id");
@@ -1687,6 +1668,92 @@
     /**
      * Converts the current "gadget" tag to a tag-represented version (i.e. <div gadget="<gadget>"/>
      */
+    /**
+     * Finds region or gadget markers beneath the given element(s) in a single walk of the DOM.
+     *
+     * Markers come in two forms: a custom tag (e.g. <gadget type="x">) and an attribute (e.g. <div gadget="x">).
+     * This hands back:
+     *
+     *   tags  - the first <tagName> element on each branch (these get converted into attribute form)
+     *   all   - the first element on each branch that is either a <tagName> or has the attribute
+     *
+     * which is what two closestDescendants() walks (one for the tag, then one for the attribute once the tags
+     * have been converted) would produce, but without wrapping every node in a jQuery object.
+     *
+     * @param roots a DOM element, array of elements or jQuery-like object
+     * @param {String} tagName lowercase tag name, e.g. "gadget"
+     * @param {String} attrName attribute name, e.g. "gadget"
+     */
+    Ratchet.findMarkers = function(roots, tagName, attrName)
+    {
+        var tags = [];
+        var all = [];
+
+        var walk = function(el, belowMatch)
+        {
+            if (el.nodeName.toLowerCase() === tagName)
+            {
+                // tags don't get walked into (they're converted wholesale)
+                tags.push(el);
+                if (!belowMatch) {
+                    all.push(el);
+                }
+                return;
+            }
+
+            if (!belowMatch && el.hasAttribute(attrName))
+            {
+                all.push(el);
+                belowMatch = true;
+            }
+
+            // keep walking to find any tags nested inside
+            for (var child = el.firstElementChild; child; child = child.nextElementSibling)
+            {
+                walk(child, belowMatch);
+            }
+        };
+
+        if (roots && roots.nodeType) {
+            roots = [roots];
+        }
+        for (var i = 0; roots && i < roots.length; i++)
+        {
+            if (roots[i] && roots[i].nodeType === 1) {
+                walk(roots[i], false);
+            }
+        }
+
+        return { "tags": tags, "all": all };
+    };
+
+    /**
+     * Runs Ratchet.findMarkers() and converts any tags found to their attribute form using the given converter.
+     *
+     * @return {Array} the marker elements (the converted element in place of each tag)
+     */
+    var resolveMarkers = function(roots, tagName, attrName, convert)
+    {
+        var found = Ratchet.findMarkers(roots, tagName, attrName);
+
+        var converted = new Map();
+        for (var i = 0; i < found.tags.length; i++)
+        {
+            converted.set(found.tags[i], convert(found.tags[i]));
+        }
+
+        var markers = [];
+        for (var j = 0; j < found.all.length; j++)
+        {
+            var el = converted.get(found.all[j]) || found.all[j];
+            if (el) {
+                markers.push(el);
+            }
+        }
+
+        return markers;
+    };
+
     Ratchet.convertGadgetTag = function(domEl)
     {
         var tag = $(domEl).attr("tag");

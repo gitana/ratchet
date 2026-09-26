@@ -35,9 +35,14 @@ export function distFile(...parts)
  * @param {Boolean} options.min        load the .min.js variants
  * @param {String[]} options.scripts   extra scripts (relative to the repo root) loaded after the bundles
  * @param {String} options.body        initial <body> html
+ * @param {Boolean} options.handlebars  load Handlebars and the "ratchet-handlebars" template engine
  */
-export function createRatchet({ bundles = ["ratchet"], min = false, scripts = [], body = "" } = {})
+export function createRatchet({ bundles = ["ratchet"], min = false, scripts = [], body = "", handlebars = false } = {})
 {
+    if (handlebars) {
+        bundles = [...bundles, "ratchet-handlebars"];
+    }
+
     const dom = new JSDOM(`<!DOCTYPE html><html><head></head><body>${body}</body></html>`, {
         url: "http://localhost/",
         runScripts: "outside-only",
@@ -46,6 +51,9 @@ export function createRatchet({ bundles = ["ratchet"], min = false, scripts = []
     const { window } = dom;
 
     window.eval(source(JQUERY));
+    if (handlebars) {
+        window.eval(source(path.join(ROOT, "lib", "handlebars", "handlebars.js")));
+    }
     for (const bundle of bundles) {
         window.eval(source(distFile("js", `${bundle}${min ? ".min" : ""}.js`)));
     }

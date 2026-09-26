@@ -32,3 +32,19 @@ The version comes from `package.json`. To add a source file, add it to the relev
 Tests live in `tests/` and run with [Vitest](https://vitest.dev). Each test boots a fresh [jsdom](https://github.com/jsdom/jsdom)
 window with jQuery and the built bundles loaded as browser globals (see `tests/harness.js`), and the core suites
 run against both the plain and minified bundles.
+
+## Swap strategies ##
+
+When a gadget calls `swap()`, its rendered nodes are put into the page using one of these strategies:
+
+| Strategy | Behavior |
+| --- | --- |
+| `insert` (default) | empties the gadget's element and appends the rendered nodes |
+| `replace` | replaces the gadget's element with the rendered nodes (used for region gadgets) |
+| `morph` | morphs the existing nodes into the rendered ones with [morphdom](https://github.com/patrick-steele-idem/morphdom), keeping anything that hasn't changed |
+
+`morph` avoids rebuilding the whole gadget, so it's faster and preserves scroll position and focus. It's opt-in,
+per gadget (`gadget-strategy="morph"`) or globally (`Ratchet.defaultGadgetStrategy = "morph"`), because nodes that
+survive a morph keep their event handlers: gadgets must bind handlers idempotently (e.g. `off()` before `on()`)
+or use delegated events, and anything attached to the rendered nodes before `swap()` is lost where an existing
+node is kept in their place.

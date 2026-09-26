@@ -33,26 +33,39 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), "utf8").replace(/^ï»
 const pkg = () => JSON.parse(read("package.json"));
 
 /**
+ * Loads a bundle source. Plain scripts are read as-is; ES modules (.mjs), used to pull in npm packages, are
+ * bundled by esbuild into a self-contained IIFE.
+ */
+async function load(file)
+{
+    if (!file.endsWith(".mjs")) {
+        return read(file);
+    }
+
+    const result = await esbuild.build({
+        entryPoints: [path.join(ROOT, file)],
+        bundle: true,
+        format: "iife",
+        target: TARGET,
+        write: false,
+        legalComments: "inline",
+        logLevel: "error"
+    });
+    return result.outputFiles[0].text;
+}
+
+/**
  * Concatenates source files, returning the code plus a line-level source map back to the originals.
  * Files are joined with a newline since most of them don't end with one.
  */
-function concat(files, { header = "" } = {})
+async function concat(files)
 {
     const code = [];
     const mappings = [];
     let prevSource = 0;
     let prevLine = 0;
 
-    // header lines map to nothing
-    if (header)
-    {
-        code.push(header);
-        for (let i = 0; i < header.split("\n").length - 1; i++) {
-            mappings.push("");
-        }
-    }
-
-    const contents = files.map(read);
+    const contents = await Promise.all(files.map(load));
     contents.forEach((text, sourceIndex) => {
         code.push(text, "\n");
 
@@ -144,7 +157,7 @@ ${script}
 async function buildBundle(name, bundle, banner, componentBanner)
 {
     // plain script
-    const { code, map } = concat(bundle.files);
+    const { code, map } = await concat(bundle.files);
     const js = banner + code;
     fs.writeFileSync(path.join(JS_DIR, `${name}.js`), js);
 

@@ -43,7 +43,11 @@ When a gadget calls `swap()`, its rendered nodes are put into the page using one
 | `replace` | replaces the gadget's element with the rendered nodes (used for region gadgets) |
 | `morph` | morphs the existing nodes into the rendered ones with [morphdom](https://github.com/patrick-steele-idem/morphdom), keeping anything that hasn't changed |
 
-`morph` avoids rebuilding the whole gadget, so it's faster and preserves scroll position and focus. It's opt-in,
+`morph` avoids rebuilding the whole gadget, preserving scroll position and focus. Child gadgets are the
+exception: they're rendered (and may bind handlers and build widgets) before their parent swaps, so each child's
+subtree is swapped in as rendered, like `insert`, and only the layout around the children morphs. On pages that
+are mostly child gadgets, `morph` is therefore about as fast as `insert`; it pays off when a gadget with a large
+layout of its own re-renders. It's opt-in,
 per gadget (`gadget-strategy="morph"`) or globally (`Ratchet.defaultGadgetStrategy = "morph"`), because nodes that
 survive a morph keep their event handlers: gadgets must bind handlers idempotently (e.g. `off()` before `on()`)
 or use delegated events, and anything attached to the rendered nodes before `swap()` is lost where an existing

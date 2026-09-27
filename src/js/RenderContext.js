@@ -12,17 +12,41 @@
      * handlers on every render must do so idempotently (e.g. off() before on()) or use delegated events.
      * Likewise, handlers or data attached to the rendered nodes before swap() are lost wherever a live node is
      * kept in their place.
+     *
+     * Child gadgets are the exception: their roots are replaced by the rendered nodes rather than morphed. Children
+     * are dispatched into the rendered nodes before this runs (and without Ratchet.useHandlerCallbacks, may already
+     * have run their after-swap code there), so they hold references to those nodes and have built widgets and
+     * bound handlers on them. Morphing would leave all of that off-screen, so each child's subtree is swapped in
+     * as-is, exactly as "insert" would, while the layout around the children still morphs.
      */
     var morphChildren = function(ratchet, container)
     {
         var liveEl = $(ratchet.el)[0];
 
+        // the rendered roots of our child gadgets (a "replace" child's el can be several nodes)
+        var childRoots = new Set();
+        for (var id in ratchet.childRatchets)
+        {
+            $(ratchet.childRatchets[id].el).each(function() {
+                if (this.nodeType === 1) {
+                    childRoots.add(this);
+                }
+            });
+        }
+
         // rendered node -> the live node it was morphed into
         var morphed = new Map();
+
+        // [live node, rendered child root] pairs to swap once the morph is done
+        var replacements = [];
 
         Ratchet.morphdom(liveEl, container, {
             childrenOnly: true,
             onBeforeElUpdated: function(fromEl, toEl) {
+                if (childRoots.has(toEl)) {
+                    replacements.push([fromEl, toEl]);
+                    return false;
+                }
                 morphed.set(toEl, fromEl);
                 return true;
             },
@@ -34,7 +58,13 @@
             }
         });
 
-        // child gadgets were rendered into the (now discarded) rendered nodes, so point them at the live ones
+        // swap in the child gadgets (replaceWith also releases the old nodes' jQuery data and handlers)
+        for (var i = 0; i < replacements.length; i++)
+        {
+            $(replacements[i][0]).replaceWith(replacements[i][1]);
+        }
+
+        // anything else rendered into the (now discarded) rendered nodes gets pointed at the live ones
         var remap = function(el)
         {
             if (el && el.nodeType) {

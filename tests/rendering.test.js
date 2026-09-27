@@ -265,7 +265,7 @@ describe("morph strategy", () => {
         expect(destroyed).toHaveBeenCalledTimes(1);
     });
 
-    it("points child gadgets at the live nodes so they keep working", async () => {
+    it("swaps in child gadgets as rendered rather than morphing them", async () => {
         env = null;
         const ratchet = await mount(function() {
             env.Ratchet.defaultGadgetStrategy = "morph";
@@ -275,14 +275,66 @@ describe("morph strategy", () => {
         const { $, document } = env;
         await until(() => $("#kid em").length === 1, { message: "child gadget" });
 
+        const h2 = $("#app h2")[0];
         const kid = $("#kid")[0];
         await refresh(ratchet);
         await until(() => $("#kid em").text() === "child render 2", { message: "child re-render" });
 
-        expect($("#kid")[0]).toBe(kid);
+        // the layout around the child morphs, the child's root is the freshly rendered node
+        expect($("#app h2")[0]).toBe(h2);
+        expect($("#kid")[0]).not.toBe(kid);
+        expect($("#kid").length).toBe(1);
+
         const children = Object.values(ratchet.childRatchets);
         expect(children).toHaveLength(1);
         expect(document.contains($(children[0].el)[0])).toBe(true);
+    });
+
+    it("keeps widgets and handlers that child gadgets build in their swap callbacks", async () => {
+        // like the documents tree: a child (and a region child, which uses "replace") renders synchronously
+        // and binds handlers after swapping, which (without handler callbacks) happens off-screen, before
+        // the page itself swaps
+        env = null;
+        let render = 0;
+        const clicks = [];
+        const ratchet = await mount(function() {
+            const { Ratchet, $ } = env;
+            Ratchet.defaultGadgetStrategy = "morph";
+            Ratchet.regionMappings = { "side": "tree" };
+
+            Ratchet.GadgetRegistry.register("tree", Ratchet.Gadget.extend({
+                constructor: function(type, ratchet, id) {
+                    this.base(type, ratchet, id);
+                },
+                setup: function() {
+                    this.get("/", function(el) {
+                        const n = render;
+                        el.html("<div class='holder'><a class='node'>node</a></div>").swap(function(swapped) {
+                            $(swapped).find(".node").on("click", () => clicks.push(n));
+                        });
+                    });
+                }
+            }));
+
+            this.get("/", function(el) {
+                render++;
+                el.html("<h2>page " + render + "</h2><div gadget='tree' id='tree'></div><region id='side'></region>").swap();
+            });
+        });
+        const { $ } = env;
+
+        await until(() => $("#app .node").length === 2, { message: "trees" });
+        $("#app .node").trigger("click");
+        expect(clicks).toEqual([1, 1]);
+
+        await refresh(ratchet);
+        await until(() => $("#app h2").text() === "page 2", { message: "page re-render" });
+
+        // the live trees are the ones built by the second render, and their handlers fire exactly once
+        clicks.length = 0;
+        expect($("#app .node").length).toBe(2);
+        $("#app .node").trigger("click");
+        expect(clicks).toEqual([2, 2]);
     });
 
     it("is opt-in: the default insert strategy still replaces the nodes", async () => {

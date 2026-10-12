@@ -38,8 +38,8 @@
                 "columns": [],
                 "loader": "remote",
                 "lengthMenu": {
-                    "values": [5, 10, 25, 50, 100, -1],
-                    "labels": [5, 10, 25, 50, 100, "All"]
+                    "values": [5, 10, 25, 50, 100, 1000],
+                    "labels": [5, 10, 25, 50, 100, 1000]
                 },
                 "selectorGroups": {
                     "multi-documents-action-selector-group": {

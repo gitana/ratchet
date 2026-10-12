@@ -78,8 +78,8 @@
                 }],
                 "loader": "remote",
                 "lengthMenu": {
-                    "values": [10, 25, 50, 100, 999999],
-                    "labels": [10, 25, 50, 100, "All"]
+                    "values": [10, 25, 50, 100, 1000],
+                    "labels": [10, 25, 50, 100, 1000]
                 },
                 "selectorGroups": {
                     "multi-documents-action-selector-group": {

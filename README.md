@@ -10,7 +10,7 @@ For more information, please visit [Cloud CMS](https://gitana.io)
 
 ## Development ##
 
-Requires Node.js 20+.
+Requires Node.js 22.12+.
 
     npm install
     npm run build        # build into dist/
